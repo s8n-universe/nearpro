@@ -211,15 +211,36 @@ async function renderDirectoryLayout() {
     document.getElementById('filterPanelElement').innerHTML = renderFilterPanel();
     bindFilterPanelEvents();
 
-    // Trigger initial content query load
-    await queryProfessionals(true);
-
     if (!State.fingerprint) {
         State.fingerprint = generateBrowserFingerprint();
     }
 
-    const isDemoDone = localStorage.getItem('nearpro_demo_completed') === 'true';
-    if (!isDemoDone && !State.demo_active && !State.locked) {
+    const isPremium = State.profile && (State.profile.is_premium === true || (State.profile.tier && State.profile.tier !== 'free'));
+    let showWelcomeModal = false;
+
+    if (!isPremium) {
+        try {
+            const trial = await Api.checkTrial(State.fingerprint);
+            if (!trial) {
+                showWelcomeModal = true;
+            } else {
+                const elapsed = Math.floor((Date.now() - new Date(trial.started_at).getTime()) / 1000);
+                if (elapsed >= 120) {
+                    State.locked = true;
+                } else {
+                    const remaining = 120 - elapsed;
+                    startSessionTimer(remaining, true);
+                }
+            }
+        } catch (err) {
+            console.error("Failed to check database trial status:", err);
+        }
+    }
+
+    // Trigger initial content query load after lock status is determined
+    await queryProfessionals(true);
+
+    if (showWelcomeModal && !State.demo_active && !State.locked) {
         if (!document.getElementById('welcomeDemoModal')) {
             const popup = document.createElement('div');
             popup.id = 'welcomeDemoModal';
@@ -229,7 +250,7 @@ async function renderDirectoryLayout() {
                     <div style="font-size: 40px; margin-bottom: 20px;">🚀</div>
                     <h2 style="font-size: 22px; margin-bottom: 12px; font-family: var(--font-heading);">Explore NearPro</h2>
                     <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 14px; line-height: 1.5;">
-                        Search and map premium verified business leads in Mumbai. Enter the niche you are targeting to start a guided feature walkthrough.
+                        Search and map premium verified business leads in Mumbai. <br><span style="color: var(--accent-gold); font-weight: 600; display: inline-block; margin-top: 8px;">Enter the niche you are targeting to start a guided feature walkthrough.</span>
                     </p>
                     <div class="search-input-wrap" style="margin-bottom: 20px; background: var(--bg-base); border-color: var(--border);">
                         <input type="text" id="demoNicheInput" placeholder="e.g. Dentist, CA, Salon" style="padding: 10px; width: 100%; background: transparent; border: none; color: white; outline: none; font-size: 14px;">
@@ -249,28 +270,10 @@ async function renderDirectoryLayout() {
                     console.warn("Trial registration failed, using local timer:", err);
                 }
                 
+                popup.remove();
                 startSessionTimer(120, false);
                 runGuidedDemo(nicheText);
             });
-        }
-    } else {
-        const isPremium = State.profile && (State.profile.is_premium === true || (State.profile.tier && State.profile.tier !== 'free'));
-        if (!isPremium && !State.locked) {
-            try {
-                const trial = await Api.checkTrial(State.fingerprint);
-                if (trial) {
-                    const elapsed = Math.floor((Date.now() - new Date(trial.started_at).getTime()) / 1000);
-                    if (elapsed >= 120) {
-                        State.locked = true;
-                        State.notify();
-                    } else {
-                        const remaining = 120 - elapsed;
-                        startSessionTimer(remaining, true);
-                    }
-                }
-            } catch (err) {
-                console.error("Failed to check database trial status:", err);
-            }
         }
     }
 }
