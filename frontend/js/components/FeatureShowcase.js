@@ -52,31 +52,19 @@ export function renderFeatureShowcase() {
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon">✓</span>
-                                <div>View Verified Names & Categories</div>
+                                <div>Spot Targets Missing Websites</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon">✓</span>
-                                <div>Access Completeness Scores Index</div>
+                                <div>Filter by 10 Suburbs & 11 Categories</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon">✓</span>
-                                <div>Read Open Status Hours</div>
+                                <div>Read Verified Opening Hours</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon">✓</span>
-                                <div>Search By Category Or Parents</div>
-                            </li>
-                            <li class="pricing-feature-item">
-                                <span class="pricing-feature-icon">✓</span>
-                                <div>Instant Local Area Filtering</div>
-                            </li>
-                            <li class="pricing-feature-item">
-                                <span class="pricing-feature-icon">✓</span>
-                                <div>Guided Tour Walkthrough Instructions</div>
-                            </li>
-                            <li class="pricing-feature-item">
-                                <span class="pricing-feature-icon">✓</span>
-                                <div>Search Up To 5000 Active Leads</div>
+                                <div>Search Up to 4,700+ Verified Listings</div>
                             </li>
                         </ul>
                         <button class="brand-btn pricing-btn" onclick="localStorage.setItem('selected_nearpro_tier', 'starter'); window.State.locked = false; window.State.session_started = null; window.State.setAuthModal(true);">
@@ -100,31 +88,23 @@ export function renderFeatureShowcase() {
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon">✓</span>
-                                <div>Direct Phone Numbers for Call Outreach</div>
+                                <div>Direct Phone Numbers Unmasked</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon">✓</span>
-                                <div>Direct Verified Website Connections</div>
+                                <div>Direct Verified Website Links Unlocked</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon">✓</span>
-                                <div>Spatial Coordinates Map Pins</div>
+                                <div>Interactive Spatial Coordinates Map Pins</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon">✓</span>
-                                <div>Distance Estimates From Your Area</div>
+                                <div>Distance Estimator & Route Mapping</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon">✓</span>
-                                <div>Save Bookmarks to Local Favorites</div>
-                            </li>
-                            <li class="pricing-feature-item">
-                                <span class="pricing-feature-icon">✓</span>
-                                <div>Share Directory Card Links</div>
-                            </li>
-                            <li class="pricing-feature-item">
-                                <span class="pricing-feature-icon">✓</span>
-                                <div>Priority Support Queue Response</div>
+                                <div>Save & Export Favorites List</div>
                             </li>
                         </ul>
                         <button class="brand-btn pricing-btn" onclick="localStorage.setItem('selected_nearpro_tier', 'connect'); window.State.locked = false; window.State.session_started = null; window.State.setAuthModal(true);">
@@ -147,35 +127,23 @@ export function renderFeatureShowcase() {
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon" style="color: var(--accent-pink);">✓</span>
-                                <div>Advanced Suburb Opportunity Indices</div>
+                                <div>Bulk CRM-Ready CSV Leads Downloader</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon" style="color: var(--accent-pink);">✓</span>
-                                <div>Competitor Quality Analytics Dashboard</div>
+                                <div>Underserved Suburb Market Gaps Table</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon" style="color: var(--accent-pink);">✓</span>
-                                <div>Average Ratings Analysis Maps</div>
+                                <div>Density Breakdown Distribution Charts</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon" style="color: var(--accent-pink);">✓</span>
-                                <div>Category Density Breakdown Charts</div>
+                                <div>Filter by Google Maps Review Counts</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon" style="color: var(--accent-pink);">✓</span>
-                                <div>Suburb Verification Ratio Reports</div>
-                            </li>
-                            <li class="pricing-feature-item">
-                                <span class="pricing-feature-icon" style="color: var(--accent-pink);">✓</span>
-                                <div>Filter By Professional Review Count</div>
-                            </li>
-                            <li class="pricing-feature-item">
-                                <span class="pricing-feature-icon" style="color: var(--accent-pink);">✓</span>
-                                <div>Custom Business Intelligence Reports</div>
-                            </li>
-                            <li class="pricing-feature-item">
-                                <span class="pricing-feature-icon" style="color: var(--accent-pink);">✓</span>
-                                <div>Dedicated Client Success Manager</div>
+                                <div>Target High ratings vs Low completeness Gaps</div>
                             </li>
                         </ul>
                         <button class="brand-btn pricing-btn" style="background: linear-gradient(135deg, var(--accent-pink), #a855f7);" onclick="localStorage.setItem('selected_nearpro_tier', 'pro'); window.State.locked = false; window.State.session_started = null; window.State.setAuthModal(true);">

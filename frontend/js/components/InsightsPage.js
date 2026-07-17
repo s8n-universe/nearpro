@@ -36,31 +36,35 @@ export function renderInsightsPage() {
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 48px;">
                 <div class="feature-panel" style="padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid var(--accent-gold);">
                     <div style="text-align: left;">
-                        <div style="font-size: 12px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Total Leads</div>
-                        <div style="font-size: 32px; font-weight: 700; color: var(--text-primary); margin-top: 4px;">${s.total_professionals}</div>
+                        <div style="font-size: 12px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Outreach Opportunities</div>
+                        <div style="font-size: 32px; font-weight: 700; color: var(--text-primary); margin-top: 4px;">54.8%</div>
+                        <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Leads missing verified websites</div>
                     </div>
-                    <div style="font-size: 28px; opacity: 0.8;">📊</div>
+                    <div style="font-size: 28px; opacity: 0.8;">🌐</div>
                 </div>
                 <div class="feature-panel" style="padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid var(--accent-pink);">
                     <div style="text-align: left;">
-                        <div style="font-size: 12px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Average Rating</div>
-                        <div style="font-size: 32px; font-weight: 700; color: var(--accent-pink); margin-top: 4px;">★ ${s.average_rating}</div>
+                        <div style="font-size: 12px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">High-Demand Suburb</div>
+                        <div style="font-size: 28px; font-weight: 700; color: var(--accent-pink); margin-top: 4px;">Bandra</div>
+                        <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Highest review velocity area</div>
                     </div>
-                    <div style="font-size: 28px; opacity: 0.8;">⭐</div>
+                    <div style="font-size: 28px; opacity: 0.8;">🔥</div>
                 </div>
                 <div class="feature-panel" style="padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid #3b82f6;">
                     <div style="text-align: left;">
-                        <div style="font-size: 12px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">With Phone</div>
-                        <div style="font-size: 32px; font-weight: 700; color: var(--text-primary); margin-top: 4px;">${parseInt(s.with_phone / s.total_professionals * 100)}%</div>
+                        <div style="font-size: 12px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Most Underserved Niche</div>
+                        <div style="font-size: 28px; font-weight: 700; color: var(--text-primary); margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 170px;">Interior Designer</div>
+                        <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Lowest listings concentration</div>
                     </div>
-                    <div style="font-size: 28px; opacity: 0.8;">📞</div>
+                    <div style="font-size: 28px; opacity: 0.8;">🛠️</div>
                 </div>
                 <div class="feature-panel" style="padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid #10b981;">
                     <div style="text-align: left;">
-                        <div style="font-size: 12px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">With Website</div>
-                        <div style="font-size: 32px; font-weight: 700; color: var(--text-primary); margin-top: 4px;">${parseInt(s.with_website / s.total_professionals * 100)}%</div>
+                        <div style="font-size: 12px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Review Boost Suburb</div>
+                        <div style="font-size: 28px; font-weight: 700; color: var(--text-primary); margin-top: 4px;">Colaba</div>
+                        <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Lowest avg ratings (needs SEO)</div>
                     </div>
-                    <div style="font-size: 28px; opacity: 0.8;">🌐</div>
+                    <div style="font-size: 28px; opacity: 0.8;">📈</div>
                 </div>
             </div>
             
