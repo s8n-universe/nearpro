@@ -89,7 +89,8 @@ CREATE OR REPLACE FUNCTION get_professionals_v2(
     search_term TEXT DEFAULT NULL,
     sort_col TEXT DEFAULT 'rating_desc',
     offset_val INT DEFAULT 0,
-    limit_val INT DEFAULT 24
+    limit_val INT DEFAULT 24,
+    has_no_web BOOLEAN DEFAULT FALSE
 )
 RETURNS TABLE (
     id UUID,
@@ -168,6 +169,7 @@ BEGIN
         AND (NOT has_em OR (p.email IS NOT NULL AND p.email != ''))
         AND (NOT has_ph OR (p.phone IS NOT NULL AND p.phone != ''))
         AND (NOT has_web OR (p.website IS NOT NULL AND p.website != ''))
+        AND (NOT has_no_web OR (p.website IS NULL OR p.website = ''))
         AND (search_term IS NULL OR p.name ILIKE '%' || search_term || '%' OR p.address ILIKE '%' || search_term || '%' OR p.category ILIKE '%' || search_term || '%')
     ORDER BY
         CASE WHEN sort_col = 'rating_desc' THEN p.rating END DESC,

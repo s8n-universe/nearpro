@@ -12,6 +12,8 @@ export const State = {
     demo_niche: "",
     user: null,
     profile: null,
+    user_survey: JSON.parse(localStorage.getItem('nearpro_user_survey') || 'null'),
+    survey_modal_open: false,
     auth_modal_open: false,
     selected_tier: null,
     
@@ -23,7 +25,7 @@ export const State = {
         min_rating: null,
         has_email: false,
         has_phone: false,
-        has_website: false,
+        website_filter: "all", // "all" | "has_website" | "no_website"
         open_now: false,
         search: "",          // Raw search text
         sort_by: "rating_desc",
@@ -67,7 +69,7 @@ export const State = {
             min_rating: null,
             has_email: false,
             has_phone: false,
-            has_website: false,
+            website_filter: "all",
             open_now: false,
             search: "",
             sort_by: "rating_desc",
@@ -113,6 +115,35 @@ export const State = {
     
     setPricingModal(isOpen) {
         this.pricing_modal_open = isOpen;
+        this.notify();
+    },
+
+    setSurvey(surveyData) {
+        this.user_survey = surveyData;
+        if (surveyData) {
+            localStorage.setItem('nearpro_user_survey', JSON.stringify(surveyData));
+            
+            const patch = {};
+            if (surveyData.target_industry) {
+                patch.parentCategory = surveyData.target_industry;
+            }
+            if (surveyData.base_suburb) {
+                patch.area = surveyData.base_suburb;
+            }
+            if (surveyData.role === 'web_developer') {
+                patch.website_filter = 'no_website';
+            } else {
+                patch.website_filter = 'all';
+            }
+            this.updateFilters(patch);
+        } else {
+            localStorage.removeItem('nearpro_user_survey');
+            this.resetFilters();
+        }
+    },
+
+    setSurveyModal(isOpen) {
+        this.survey_modal_open = isOpen;
         this.notify();
     }
 };

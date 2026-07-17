@@ -185,9 +185,10 @@ export const Api = {
         // 2. Fetch the paginated and masked results via get_professionals_v2 RPC
         let items = [];
         let errorOccurred = false;
+        let clientSideFilterNoWeb = false;
         
         try {
-            const { data, error } = await supabase.rpc('get_professionals_v2', {
+            const rpcParams = {
                 client_fingerprint: fingerprint || '',
                 parent_cat: filters.parentCategory || null,
                 sub_cat: filters.category || null,
@@ -195,21 +196,46 @@ export const Api = {
                 min_rat: filters.min_rating ? parseFloat(filters.min_rating) : null,
                 has_em: !!filters.has_email,
                 has_ph: !!filters.has_phone,
-                has_web: !!filters.has_website,
+                has_web: filters.website_filter === 'has_website',
                 search_term: filters.search && filters.search.trim() ? filters.search.trim() : null,
                 sort_col: filters.sort_by || 'rating_desc',
                 offset_val: offset,
                 limit_val: limit
-            });
+            };
+            
+            if (filters.website_filter === 'no_website') {
+                rpcParams.has_no_web = true;
+            }
+            
+            let { data, error } = await supabase.rpc('get_professionals_v2', rpcParams);
             
             if (error) {
-                if (error.code === '42883' || error.message.includes('Could not find the function') || error.message.includes('schema cache')) {
+                if (error.code === '42883' && filters.website_filter === 'no_website') {
+                    console.warn("⚠️ get_professionals_v2 signature mismatch for has_no_web. Retrying without has_no_web and filtering client-side.");
+                    clientSideFilterNoWeb = true;
+                    delete rpcParams.has_no_web;
+                    const retryResult = await supabase.rpc('get_professionals_v2', rpcParams);
+                    if (retryResult.error) {
+                        if (retryResult.error.code === '42883' || retryResult.error.message.includes('Could not find the function') || retryResult.error.message.includes('schema cache')) {
+                            errorOccurred = true;
+                        } else {
+                            throw retryResult.error;
+                        }
+                    } else {
+                        data = retryResult.data;
+                    }
+                } else if (error.code === '42883' || error.message.includes('Could not find the function') || error.message.includes('schema cache')) {
                     errorOccurred = true;
                 } else {
                     throw error;
                 }
-            } else {
+            }
+            
+            if (!errorOccurred) {
                 items = data || [];
+                if (clientSideFilterNoWeb) {
+                    items = items.filter(p => !p.website || p.website === '');
+                }
             }
         } catch (e) {
             if (e.message && (e.message.includes('Could not find') || e.message.includes('schema cache'))) {
@@ -229,7 +255,13 @@ export const Api = {
             if (filters.min_rating) fallbackQuery = fallbackQuery.gte('rating', parseFloat(filters.min_rating));
             if (filters.has_email) fallbackQuery = fallbackQuery.not('email', 'is', null).neq('email', '');
             if (filters.has_phone) fallbackQuery = fallbackQuery.not('phone', 'is', null).neq('phone', '');
-            if (filters.has_website) fallbackQuery = fallbackQuery.not('website', 'is', null).neq('website', '');
+            
+            if (filters.website_filter === 'has_website') {
+                fallbackQuery = fallbackQuery.not('website', 'is', null).neq('website', '');
+            } else if (filters.website_filter === 'no_website') {
+                fallbackQuery = fallbackQuery.or('website.is.null,website.eq.');
+            }
+            
             if (filters.search && filters.search.trim()) {
                 const s = filters.search.trim();
                 fallbackQuery = fallbackQuery.or(`name.ilike.%${s}%,address.ilike.%${s}%,category.ilike.%${s}%`);

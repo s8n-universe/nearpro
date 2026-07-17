@@ -15,7 +15,7 @@ export function renderFilterPanel() {
     `).join('');
 
     return `
-        <div class="filter-wrap" style="margin-bottom: 24px; padding: 12px 24px; gap: 20px;">
+        <div class="filter-wrap" style="margin-bottom: 24px; padding: 12px 24px; gap: 20px; flex-wrap: wrap;">
             <div style="display: flex; align-items: center; gap: 8px;">
                 <span style="font-size: 13px; color: var(--text-muted); font-family: var(--font-mono);">AREA:</span>
                 <select id="areaFilter" class="filter-select" style="padding: 6px 12px; font-size: 13px;">
@@ -30,6 +30,15 @@ export function renderFilterPanel() {
                     <option value="">Any Rating</option>
                     <option value="4" ${State.filters.min_rating == 4 ? 'selected' : ''}>4+ Stars</option>
                     <option value="3" ${State.filters.min_rating == 3 ? 'selected' : ''}>3+ Stars</option>
+                </select>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 13px; color: var(--text-muted); font-family: var(--font-mono);">WEBSITE:</span>
+                <select id="websiteFilter" class="filter-select" style="padding: 6px 12px; font-size: 13px;">
+                    <option value="all" ${State.filters.website_filter === 'all' ? 'selected' : ''}>All</option>
+                    <option value="has_website" ${State.filters.website_filter === 'has_website' ? 'selected' : ''}>Has Website</option>
+                    <option value="no_website" ${State.filters.website_filter === 'no_website' ? 'selected' : ''}>No Website (Gap)</option>
                 </select>
             </div>
             
@@ -61,13 +70,17 @@ export function renderFilterPanel() {
                 </label>
                 
                 <label class="toggle-switch">
-                    <input type="checkbox" id="hasWebsiteFilter" ${State.filters.has_website ? 'checked' : ''}>
+                    <input type="checkbox" id="hasPhoneFilter" ${State.filters.has_phone ? 'checked' : ''}>
                     <div class="toggle-switch-track">
                         <div class="toggle-switch-thumb"></div>
                     </div>
-                    <span>Has Website</span>
+                    <span>Has Phone</span>
                 </label>
             </div>
+
+            <button id="surveySettingsBtn" class="secondary-btn" style="padding: 6px 12px; font-size: 12.5px; display: flex; align-items: center; gap: 6px; border-radius: var(--radius-sm); border: 1px solid ${State.user_survey ? 'rgba(255, 160, 0, 0.4)' : 'rgba(255,255,255,0.1)'}; background: ${State.user_survey ? 'rgba(255, 160, 0, 0.05)' : 'rgba(255,255,255,0.02)'}; color: ${State.user_survey ? 'var(--accent-gold)' : 'var(--text-secondary)'}; cursor: pointer; margin-left: auto;">
+                🎯 ${State.user_survey ? 'Profile: Active' : 'Sales Profile'}
+            </button>
         </div>
     `;
 }
@@ -75,10 +88,12 @@ export function renderFilterPanel() {
 export function bindFilterPanelEvents() {
     const areaFilter = document.getElementById('areaFilter');
     const ratingFilter = document.getElementById('ratingFilter');
+    const websiteFilter = document.getElementById('websiteFilter');
     const sortFilter = document.getElementById('sortFilter');
     const openNowFilter = document.getElementById('openNowFilter');
     const hasEmailFilter = document.getElementById('hasEmailFilter');
-    const hasWebsiteFilter = document.getElementById('hasWebsiteFilter');
+    const hasPhoneFilter = document.getElementById('hasPhoneFilter');
+    const surveySettingsBtn = document.getElementById('surveySettingsBtn');
 
     if (areaFilter) {
         areaFilter.addEventListener('change', (e) => {
@@ -89,6 +104,12 @@ export function bindFilterPanelEvents() {
     if (ratingFilter) {
         ratingFilter.addEventListener('change', (e) => {
             State.updateFilters({ min_rating: e.target.value ? parseInt(e.target.value) : null });
+        });
+    }
+
+    if (websiteFilter) {
+        websiteFilter.addEventListener('change', (e) => {
+            State.updateFilters({ website_filter: e.target.value });
         });
     }
 
@@ -110,9 +131,15 @@ export function bindFilterPanelEvents() {
         });
     }
 
-    if (hasWebsiteFilter) {
-        hasWebsiteFilter.addEventListener('change', (e) => {
-            State.updateFilters({ has_website: e.target.checked });
+    if (hasPhoneFilter) {
+        hasPhoneFilter.addEventListener('change', (e) => {
+            State.updateFilters({ has_phone: e.target.checked });
+        });
+    }
+
+    if (surveySettingsBtn) {
+        surveySettingsBtn.addEventListener('click', () => {
+            State.setSurveyModal(true);
         });
     }
 }

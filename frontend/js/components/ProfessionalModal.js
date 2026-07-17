@@ -146,6 +146,52 @@ export function renderProfessionalModal(lead) {
                     </div>
                 </div>
                 
+                <!-- AI Outreach Pitch Block -->
+                ${(() => {
+                    if (!State.user_survey) return '';
+                    const survey = State.user_survey;
+                    let pitchText = '';
+                    let strategyTitle = '';
+
+                    if (survey.role === 'web_developer') {
+                        strategyTitle = '💻 Website Creation Proposal';
+                        pitchText = `Hi ${lead.name} team,\n\nI was browsing local businesses in ${lead.area || 'Mumbai'} and noticed your profile has a great rating of ${rating}★ from ${reviewCount} customers. However, you don't have a website link configured.\n\nI build high-converting websites for local ${lead.category || 'professionals'} to automate bookings and capture leads directly. I put together a quick website draft for your brand. Do you have 2 minutes for a brief call?\n\nBest,\n[Your Name]`;
+                    } else if (survey.role === 'seo_marketer') {
+                        strategyTitle = '📈 Local Google SEO / Review Boosting';
+                        if (rating < 4.0) {
+                            strategyTitle = '⚠️ Negative Ratings Mitigation';
+                            pitchText = `Hi ${lead.name} team,\n\nI'm local in Mumbai and noticed your profile in ${lead.area || 'Mumbai'} has over ${reviewCount} customer reviews but holds a ${rating}★ rating. Many prospective clients check ratings before buying, and having it below 4 stars could be turning leads away.\n\nI run a localized review boosting system that filters out negative spam and secures verified 5-star customer ratings. Can I share a quick audit for you?\n\nBest,\n[Your Name]`;
+                        } else {
+                            pitchText = `Hi ${lead.name} team,\n\nI noticed you have a top-tier rating of ${rating}★ in ${lead.area || 'Mumbai'}. However, you're missing some essential details on your Google maps listing (like website links/hours) which is hurting your local search ranking.\n\nI optimize Google profiles to double review visibility and rank you above competitors. Do you have time for a short call?\n\nBest,\n[Your Name]`;
+                        }
+                    } else if (survey.role === 'finance_ca') {
+                        strategyTitle = '⚖️ Financial Audit & Tax Support Proposal';
+                        pitchText = `Hi ${lead.name} team,\n\nI support growing ${lead.category || 'businesses'} in ${lead.area || 'Mumbai'} with accounting, legal compliance, and tax planning.\n\nSince you are actively scaling with a strong ${rating}★ track record, I would love to offer a free 15-minute consultation to review your current tax structure and identify compliance savings.\n\nBest,\n[Your Name]`;
+                    } else if (survey.role === 'real_estate') {
+                        strategyTitle = '🏢 Commercial Space / Office Relocation Matching';
+                        pitchText = `Hi ${lead.name} team,\n\nI specialize in office search, commercial acquisition, and corporate relocation in the ${lead.area || 'Mumbai'} sector.\n\nI'm currently mapping commercial spaces in ${lead.area || 'Mumbai'} and have 3 prime off-market offices that match the profile of top-tier ${lead.category || 'companies'} like yours. Would you be open to a quick relocation catalog?\n\nBest,\n[Your Name]`;
+                    } else {
+                        strategyTitle = '💼 B2B Collaboration Pitch';
+                        pitchText = `Hi ${lead.name} team,\n\nI noticed your established local business in ${lead.area || 'Mumbai'}. I run a B2B service agency in Mumbai and work with high-quality ${lead.category || 'providers'} to cross-promote and supply qualified B2B clients.\n\nWould you be open to a quick call this week to explore a referral partnership?\n\nBest,\n[Your Name]`;
+                    }
+
+                    return `
+                        <div class="feature-panel outreach-assistant-panel" style="margin-top: 24px; padding: 20px; border: 1px solid rgba(255, 160, 0, 0.2); background: rgba(255, 160, 0, 0.02); border-radius: var(--radius-md);">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                                <div style="font-size: 11px; font-family: var(--font-mono); color: var(--accent-gold); font-weight: bold; text-transform: uppercase;">
+                                    Outreach Assistant — ${strategyTitle}
+                                </div>
+                                <button id="copyPitchBtn" class="secondary-btn" style="padding: 4px 8px; font-size: 11px; border-radius: var(--radius-sm); cursor: pointer;" data-pitch="${encodeURIComponent(pitchText)}">
+                                    Copy Pitch Template
+                                </button>
+                            </div>
+                            <div style="position: relative;">
+                                <textarea readonly style="width: 100%; height: 110px; background: rgba(0,0,0,0.25); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px; font-size: 12px; color: var(--text-secondary); font-family: sans-serif; resize: none; line-height: 1.4; outline: none; border-color: rgba(255, 160, 0, 0.15);">${pitchText}</textarea>
+                            </div>
+                        </div>
+                    `;
+                })()}
+                
                 ${mapHTML}
                 
                 <div class="modal-ctas">
@@ -239,6 +285,27 @@ export function bindProfessionalModalEvents(lead, onClose) {
             } else {
                 qrPlaceholder.style.display = 'none';
             }
+        });
+    }
+
+    // AI Outreach Pitch Copy listener
+    const copyPitchBtn = document.getElementById('copyPitchBtn');
+    if (copyPitchBtn) {
+        copyPitchBtn.addEventListener('click', () => {
+            const rawPitch = decodeURIComponent(copyPitchBtn.getAttribute('data-pitch'));
+            navigator.clipboard.writeText(rawPitch).then(() => {
+                const originalText = copyPitchBtn.innerHTML;
+                copyPitchBtn.innerHTML = '✓ Copied!';
+                copyPitchBtn.style.borderColor = 'var(--accent-gold)';
+                copyPitchBtn.style.color = 'var(--accent-gold)';
+                setTimeout(() => {
+                    copyPitchBtn.innerHTML = originalText;
+                    copyPitchBtn.style.borderColor = '';
+                    copyPitchBtn.style.color = '';
+                }, 2000);
+            }).catch(err => {
+                console.error("Failed to copy text: ", err);
+            });
         });
     }
 }

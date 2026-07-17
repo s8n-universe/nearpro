@@ -16,6 +16,7 @@ import { renderMarketingHero } from './components/MarketingHero.js';
 import { renderFeatureShowcase } from './components/FeatureShowcase.js';
 import { renderAuthModal, bindAuthModalEvents } from './components/AuthModal.js';
 import { renderPricingModal, bindPricingModalEvents } from './components/PricingModal.js';
+import { renderSurveyModal, bindSurveyModalEvents } from './components/SurveyModal.js';
 
 // Main Application shell reference
 const appShell = document.getElementById('app');
@@ -113,6 +114,13 @@ State.subscribe(async (currentState) => {
         pricingPlaceholder.innerHTML = renderPricingModal();
         bindPricingModalEvents();
     }
+
+    // Dynamically render/update Survey Modal
+    const surveyPlaceholder = document.getElementById('surveyModalPlaceholder');
+    if (surveyPlaceholder) {
+        surveyPlaceholder.innerHTML = renderSurveyModal();
+        bindSurveyModalEvents();
+    }
 });
 
 // Initialize Routing bindings
@@ -161,6 +169,7 @@ function renderMarketingLayout() {
             </main>
             <div id="authModalPlaceholder"></div>
             <div id="pricingModalPlaceholder"></div>
+            <div id="surveyModalPlaceholder"></div>
             <footer class="main-footer">
                 NearPro — Made with ❤️ by S8N
             </footer>
@@ -190,6 +199,7 @@ async function renderDirectoryLayout() {
             <div class="modal-overlay" id="compareModalOverlay"></div>
             <div id="authModalPlaceholder"></div>
             <div id="pricingModalPlaceholder"></div>
+            <div id="surveyModalPlaceholder"></div>
             
             <footer class="main-footer">
                 NearPro — Made with ❤️ by S8N
@@ -252,17 +262,57 @@ async function renderDirectoryLayout() {
                     <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 14px; line-height: 1.5;">
                         Search and map premium verified business leads in Mumbai. <br><span style="color: var(--accent-gold); font-weight: 600; display: inline-block; margin-top: 8px;">Enter the niche you are targeting to start a guided feature walkthrough.</span>
                     </p>
-                    <div class="search-input-wrap" style="margin-bottom: 20px; background: var(--bg-base); border-color: var(--border);">
-                        <input type="text" id="demoNicheInput" placeholder="e.g. Dentist, CA, Salon" style="padding: 10px; width: 100%; background: transparent; border: none; color: white; outline: none; font-size: 14px;">
+                    
+                    <div style="display: flex; flex-direction: column; gap: 12px; text-align: left; margin-bottom: 24px;">
+                        <div>
+                            <label style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">My Service Role</label>
+                            <select id="welcomeRole" class="filter-select" style="width: 100%; padding: 8px; background: var(--bg-base); border-color: var(--border); font-size: 13px;" required>
+                                <option value="web_developer">💻 Web Developer (Targets: No Website)</option>
+                                <option value="seo_marketer">📈 SEO & Reputation Marketer</option>
+                                <option value="finance_ca">⚖️ Chartered Accountant / Legal</option>
+                                <option value="real_estate">🏢 Real Estate Agent</option>
+                                <option value="other">💼 General B2B Services</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Base Suburb Location</label>
+                            <select id="welcomeBase" class="filter-select" style="width: 100%; padding: 8px; background: var(--bg-base); border-color: var(--border); font-size: 13px;" required>
+                                <option value="Bandra">Bandra</option>
+                                <option value="Andheri">Andheri</option>
+                                <option value="BKC">BKC</option>
+                                <option value="Colaba">Colaba</option>
+                                <option value="Dadar">Dadar</option>
+                                <option value="Borivali">Borivali</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Target Client Industry</label>
+                            <select id="welcomeIndustry" class="filter-select" style="width: 100%; padding: 8px; background: var(--bg-base); border-color: var(--border); font-size: 13px;" required>
+                                <option value="Healthcare">Healthcare (Dentists, Clinics)</option>
+                                <option value="Beauty & Wellness">Beauty & Wellness (Salons)</option>
+                                <option value="Real Estate">Real Estate (Agencies)</option>
+                                <option value="Food & Dining">Food & Dining (Restaurants)</option>
+                                <option value="Finance & Legal">Finance & Legal (CA, Law)</option>
+                            </select>
+                        </div>
                     </div>
+                    
                     <button id="startDemoBtn" class="brand-btn" style="width: 100%;">Start Walkthrough</button>
                 </div>
             `;
             document.body.appendChild(popup);
             
             document.getElementById('startDemoBtn').addEventListener('click', async () => {
-                const nicheInput = document.getElementById('demoNicheInput');
-                const nicheText = nicheInput.value.trim() || 'Dentist';
+                const role = document.getElementById('welcomeRole').value;
+                const base_suburb = document.getElementById('welcomeBase').value;
+                const target_industry = document.getElementById('welcomeIndustry').value;
+                
+                // Initialize user survey in state
+                State.setSurvey({
+                    role,
+                    base_suburb,
+                    target_industry
+                });
                 
                 try {
                     await Api.startTrial(State.fingerprint);
@@ -272,7 +322,7 @@ async function renderDirectoryLayout() {
                 
                 popup.remove();
                 startSessionTimer(120, false);
-                runGuidedDemo(nicheText);
+                runGuidedDemo(target_industry);
             });
         }
     }
@@ -286,6 +336,7 @@ async function renderInsightsLayout() {
             <main class="main-layout" style="display: block;" id="insightsWrap"></main>
             <div id="authModalPlaceholder"></div>
             <div id="pricingModalPlaceholder"></div>
+            <div id="surveyModalPlaceholder"></div>
             <footer class="main-footer">
                 NearPro — Made with ❤️ by S8N
             </footer>

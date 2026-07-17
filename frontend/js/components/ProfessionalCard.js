@@ -1,6 +1,51 @@
 import { isOpenNow } from '../api.js';
 import { State } from '../state.js';
 
+// Approx latitude and longitude coordinates for Mumbai neighborhood centers
+const suburbCoordinates = {
+    "Bandra": { lat: 19.0596, lng: 72.8295 },
+    "Andheri": { lat: 19.1136, lng: 72.8697 },
+    "Borivali": { lat: 19.2307, lng: 72.8567 },
+    "Malad": { lat: 19.1874, lng: 72.8484 },
+    "Goregaon": { lat: 19.1663, lng: 72.8490 },
+    "Kandivali": { lat: 19.2045, lng: 72.8515 },
+    "Powai": { lat: 19.1176, lng: 72.9060 },
+    "Vikhroli": { lat: 19.1102, lng: 72.9261 },
+    "Ghatkopar": { lat: 19.0886, lng: 72.9080 },
+    "Kurla": { lat: 19.0726, lng: 72.8839 },
+    "Chembur": { lat: 19.0622, lng: 72.8974 },
+    "Worli": { lat: 19.0117, lng: 72.8180 },
+    "Lower Parel": { lat: 18.9953, lng: 72.8300 },
+    "Prabhadevi": { lat: 19.0166, lng: 72.8295 },
+    "Dadar": { lat: 19.0178, lng: 72.8478 },
+    "Matunga": { lat: 19.0269, lng: 72.8500 },
+    "BKC": { lat: 19.0607, lng: 72.8643 },
+    "Juhu": { lat: 19.1023, lng: 72.8267 },
+    "Versova": { lat: 19.1351, lng: 72.8136 },
+    "Lokhandwala": { lat: 19.1308, lng: 72.8292 },
+    "Thane": { lat: 19.2183, lng: 72.9781 },
+    "Navi Mumbai": { lat: 19.0330, lng: 73.0297 },
+    "Vashi": { lat: 19.0745, lng: 72.9978 },
+    "Kharghar": { lat: 19.0272, lng: 73.0722 },
+    "Belapur": { lat: 19.0195, lng: 73.0398 },
+    "Mulund": { lat: 19.1726, lng: 72.9565 },
+    "Bhandup": { lat: 19.1439, lng: 72.9373 },
+    "Colaba": { lat: 18.9067, lng: 72.8147 },
+    "Churchgate": { lat: 18.9322, lng: 72.8264 },
+    "Fort": { lat: 18.9345, lng: 72.8371 }
+};
+
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // radius of Earth in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+}
+
 // Color map for categories to style the avatar border/ring dynamically
 const categoryColors = {
     "Healthcare": "#3b82f6",       // blue
@@ -63,6 +108,15 @@ export function renderProfessionalCard(lead) {
 
     const isSelected = State.selected_ids.includes(lead.id);
 
+    let distanceHTML = '';
+    if (State.user_survey && State.user_survey.base_suburb && lead.latitude && lead.longitude) {
+        const baseCoords = suburbCoordinates[State.user_survey.base_suburb];
+        if (baseCoords) {
+            const dist = calculateDistance(baseCoords.lat, baseCoords.lng, lead.latitude, lead.longitude);
+            distanceHTML = `<span class="distance-pill" style="font-family: var(--font-mono); font-size: 10px; color: var(--accent-gold); display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 20px; background: rgba(255, 160, 0, 0.08); border: 1px solid rgba(255, 160, 0, 0.15); margin-left: 8px;">📍 ${dist.toFixed(1)} km</span>`;
+        }
+    }
+
     return `
         <div class="prof-card" data-id="${lead.id}">
             ${freshnessTag}
@@ -89,9 +143,10 @@ export function renderProfessionalCard(lead) {
                 <span class="review-count">(${reviewCount} reviews)</span>
             </div>
             
-            <div class="card-meta-row">
+            <div class="card-meta-row" style="display: flex; align-items: center; flex-wrap: wrap;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 <span>${lead.area || "Mumbai"}</span>
+                ${distanceHTML}
             </div>
             
             <p class="card-desc">${lead.address || "Address details not verified."}</p>
