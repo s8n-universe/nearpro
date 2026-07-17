@@ -13,8 +13,8 @@ export function renderMarketingHero() {
                         Browse Professional Directory
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                     </a>
-                    <a href="https://play.google.com/store/apps/details?id=com.mappcall" target="_blank" class="secondary-btn">
-                        Get MappCall Mobile App
+                    <a href="#" class="secondary-btn">
+                        Get NearPro Mobile App
                     </a>
                 </div>
                 <div class="hero-bullets">

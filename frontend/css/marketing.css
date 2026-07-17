@@ -9,20 +9,7 @@
     overflow: hidden;
 }
 
-/* Infinity background accent matching s8n.in */
-.marketing-hero::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 800px;
-    height: 400px;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50' width='100%25' height='100%25'%3E%3Cpath d='M25,25 C25,12 35,5 50,25 C65,45 75,38 75,25 C75,12 65,5 50,25 C35,45 25,38 25,25 Z' fill='none' stroke='rgba(255, 160, 0, 0.03)' stroke-width='0.7'/%3E%3C/svg%3E") no-repeat center center;
-    background-size: contain;
-    z-index: 0;
-    pointer-events: none;
-}
+
 
 .hero-content {
     position: relative;

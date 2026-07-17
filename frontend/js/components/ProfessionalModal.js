@@ -109,8 +109,8 @@ export function renderProfessionalModal(lead) {
                         </a>
                     ` : ''}
                     
-                    <a href="https://play.google.com/store/apps/details?id=com.mappcall" target="_blank" class="secondary-btn" style="width: 100%; border-color: var(--accent-pink); color: var(--text-primary);">
-                        Connect on MappCall Mobile App
+                    <a href="#" class="secondary-btn" style="width: 100%; border-color: var(--accent-pink); color: var(--text-primary);">
+                        Connect on NearPro Mobile App
                     </a>
                     
                     <div style="display: flex; gap: 12px; width: 100%;">

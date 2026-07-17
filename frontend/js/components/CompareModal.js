@@ -59,7 +59,7 @@ export function renderCompareModalContent(professionals) {
 
     const actionRow = professionals.map(p => `
         <td>
-            <a href="https://play.google.com/store/apps/details?id=com.mappcall" target="_blank" class="brand-btn" style="padding: 6px 12px; font-size: 12px; border-radius: var(--radius-sm);">
+            <a href="#" class="brand-btn" style="padding: 6px 12px; font-size: 12px; border-radius: var(--radius-sm);">
                 Connect
             </a>
         </td>
