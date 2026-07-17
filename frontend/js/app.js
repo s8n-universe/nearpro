@@ -888,10 +888,10 @@ async function runGuidedDemo(niche) {
     const cursor = document.getElementById('demoCursor');
     if (cursor) cursor.remove();
 
-    // Step 5: Lockout Blocker
-    State.locked = true;
+    // Step 5: Transition to free exploration mode (unlocked until timer expires)
     State.demo_active = false;
     localStorage.setItem('nearpro_demo_completed', 'true');
+    window.location.hash = '#/browse';
     State.notify();
 }
 
