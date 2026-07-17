@@ -38,7 +38,7 @@ export function renderHeader() {
                 
                 <div class="header-actions">
                     ${viewToggleHTML}
-                    <a href="https://play.google.com/store/apps/details?id=com.mappcall" target="_blank" class="brand-btn" style="padding: 8px 16px; font-size: 13px; border-radius: var(--radius-sm);">
+                    <a href="#" class="brand-btn" style="padding: 8px 16px; font-size: 13px; border-radius: var(--radius-sm);">
                         Connect App
                     </a>
                 </div>
