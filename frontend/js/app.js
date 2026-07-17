@@ -184,8 +184,11 @@ async function renderDirectoryLayout() {
         if (!State.session_started && !State.locked) {
             State.session_started = Date.now();
             setTimeout(() => {
-                State.locked = true;
-                State.notify();
+                const isPremium = State.profile && State.profile.is_premium;
+                if (!isPremium) {
+                    State.locked = true;
+                    State.notify();
+                }
             }, 120000);
         }
     }
@@ -341,6 +344,11 @@ function renderFeedContent(hasMore) {
             document.body.appendChild(overlay);
         }
         return;
+    } else {
+        const existingOverlay = document.getElementById('sessionLockoutOverlay');
+        if (existingOverlay) {
+            existingOverlay.remove();
+        }
     }
 
     if (State.professionals.length === 0) {
