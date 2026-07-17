@@ -45,17 +45,26 @@ export function renderFilterPanel() {
             
             <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
                 <label class="toggle-switch">
-                    <input type="checkbox" id="openNowFilter" ${State.filters.open_now ? 'checked' : ''} style="accent-color: var(--accent-gold);">
+                    <input type="checkbox" id="openNowFilter" ${State.filters.open_now ? 'checked' : ''}>
+                    <div class="toggle-switch-track">
+                        <div class="toggle-switch-thumb"></div>
+                    </div>
                     <span>Open Now</span>
                 </label>
                 
                 <label class="toggle-switch">
-                    <input type="checkbox" id="hasEmailFilter" ${State.filters.has_email ? 'checked' : ''} style="accent-color: var(--accent-gold);">
+                    <input type="checkbox" id="hasEmailFilter" ${State.filters.has_email ? 'checked' : ''}>
+                    <div class="toggle-switch-track">
+                        <div class="toggle-switch-thumb"></div>
+                    </div>
                     <span>Has Email</span>
                 </label>
                 
                 <label class="toggle-switch">
-                    <input type="checkbox" id="hasWebsiteFilter" ${State.filters.has_website ? 'checked' : ''} style="accent-color: var(--accent-gold);">
+                    <input type="checkbox" id="hasWebsiteFilter" ${State.filters.has_website ? 'checked' : ''}>
+                    <div class="toggle-switch-track">
+                        <div class="toggle-switch-thumb"></div>
+                    </div>
                     <span>Has Website</span>
                 </label>
             </div>

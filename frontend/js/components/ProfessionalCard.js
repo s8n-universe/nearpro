@@ -67,8 +67,9 @@ export function renderProfessionalCard(lead) {
         <div class="prof-card" data-id="${lead.id}">
             ${freshnessTag}
             
-            <label class="compare-checkbox-label" onclick="event.stopPropagation();">
-                <input type="checkbox" class="compare-checkbox" data-id="${lead.id}" ${isSelected ? 'checked' : ''}>
+            <label class="compare-checkbox-label ${isSelected ? 'active' : ''}" onclick="event.stopPropagation();">
+                <input type="checkbox" class="compare-checkbox" data-id="${lead.id}" ${isSelected ? 'checked' : ''} style="display: none;">
+                <span class="compare-pill-dot"></span>
                 Compare
             </label>
             
