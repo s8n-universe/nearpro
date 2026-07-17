@@ -8,6 +8,8 @@ export const State = {
     limit: 24,
     loading: false,
     locked: false, // SaaS lockout gating flag
+    demo_active: false,
+    demo_niche: "",
     
     // Filters state
     filters: {

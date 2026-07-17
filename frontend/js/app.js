@@ -132,13 +132,42 @@ async function renderDirectoryLayout() {
     // Trigger initial content query load
     await queryProfessionals(true);
 
-    // Start 2 minute free trial session timer (strictly no hyphens)
-    if (!State.session_started) {
-        State.session_started = Date.now();
-        setTimeout(() => {
-            State.locked = true;
-            State.notify();
-        }, 120000);
+    const isDemoDone = localStorage.getItem('nearpro_demo_completed') === 'true';
+    if (!isDemoDone && !State.demo_active && !State.locked) {
+        if (!document.getElementById('welcomeDemoModal')) {
+            const popup = document.createElement('div');
+            popup.id = 'welcomeDemoModal';
+            popup.className = 'lockout_screen_overlay';
+            popup.innerHTML = `
+                <div class="lockout_modal" style="max-width: 440px;">
+                    <div style="font-size: 40px; margin-bottom: 20px;">🚀</div>
+                    <h2 style="font-size: 22px; margin-bottom: 12px; font-family: var(--font-heading);">Explore NearPro</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 14px; line-height: 1.5;">
+                        Search and map premium verified business leads in Mumbai. Enter the niche you are targeting to start a guided feature walkthrough.
+                    </p>
+                    <div class="search-input-wrap" style="margin-bottom: 20px; background: var(--bg-base); border-color: var(--border);">
+                        <input type="text" id="demoNicheInput" placeholder="e.g. Dentist, CA, Salon" style="padding: 10px; width: 100%; background: transparent; border: none; color: white; outline: none; font-size: 14px;">
+                    </div>
+                    <button id="startDemoBtn" class="brand-btn" style="width: 100%;">Start Walkthrough</button>
+                </div>
+            `;
+            document.body.appendChild(popup);
+            
+            document.getElementById('startDemoBtn').addEventListener('click', () => {
+                const nicheInput = document.getElementById('demoNicheInput');
+                const nicheText = nicheInput.value.trim() || 'Dentist';
+                runGuidedDemo(nicheText);
+            });
+        }
+    } else {
+        // Start 2 minute free trial session timer (strictly no hyphens)
+        if (!State.session_started && !State.locked) {
+            State.session_started = Date.now();
+            setTimeout(() => {
+                State.locked = true;
+                State.notify();
+            }, 120000);
+        }
     }
 }
 
@@ -401,6 +430,74 @@ function showCompareModal(professionalsList) {
             overlay.className = 'modal-overlay';
         });
     }
+}
+
+/* --- Guided Demo Walkthrough --- */
+
+async function runGuidedDemo(niche) {
+    State.demo_active = true;
+    State.demo_niche = niche;
+
+    // Close welcome popup
+    const popup = document.getElementById('welcomeDemoModal');
+    if (popup) popup.remove();
+
+    // Step 1: Auto Type in Search
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        State.resetFilters();
+        searchInput.value = '';
+        
+        // Type letter by letter
+        for (let i = 0; i < niche.length; i++) {
+            await new Promise(resolve => setTimeout(resolve, 80));
+            searchInput.value += niche[i];
+            searchInput.dispatchEvent(new Event('input'));
+        }
+    }
+
+    // Wait for data load
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    // Step 2: Open First Card Details
+    const firstCard = document.querySelector('.prof-card');
+    if (firstCard) {
+        firstCard.style.borderColor = 'var(--accent-gold)';
+        firstCard.style.boxShadow = '0 0 20px rgba(255, 160, 0, 0.4)';
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        firstCard.click();
+    }
+
+    // Wait in detail modal
+    await new Promise(resolve => setTimeout(resolve, 4000));
+
+    // Step 3: Close Modal and Toggle Map View
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    if (closeModalBtn) {
+        closeModalBtn.click();
+    }
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // Switch view to Map View
+    const mapBtn = document.getElementById('mapBtn');
+    if (mapBtn) {
+        mapBtn.click();
+    }
+
+    // Wait on Map View
+    await new Promise(resolve => setTimeout(resolve, 4000));
+
+    // Step 4: Switch to Insights/Analytics
+    window.location.hash = '#/insights';
+
+    // Wait for insights load
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    // Step 5: Lockout Blocker
+    State.locked = true;
+    State.demo_active = false;
+    localStorage.setItem('nearpro_demo_completed', 'true');
+    State.notify();
 }
 
 /* --- Startup --- */
