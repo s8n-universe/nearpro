@@ -27,15 +27,15 @@ RETURNS JSON AS $$
     FROM (
         SELECT 
             parent_category as name,
-            COUNT(*) as total,
-            MAX(scraped_at) as last_updated,
+            SUM(sub_count) as total,
+            MAX(last_updated) as last_updated,
             json_agg(json_build_object(
                 'name', category,
                 'slug', LOWER(REPLACE(category, ' ', '-')),
                 'count', sub_count
             ) ORDER BY sub_count DESC) as subcategories
         FROM (
-            SELECT parent_category, category, COUNT(*) as sub_count
+            SELECT parent_category, category, COUNT(*) as sub_count, MAX(scraped_at) as last_updated
             FROM professionals
             WHERE parent_category IS NOT NULL
             GROUP BY parent_category, category
@@ -44,6 +44,7 @@ RETURNS JSON AS $$
         ORDER BY total DESC
     ) t;
 $$ LANGUAGE SQL STABLE;
+
 
 -- 3. Area insights (replaces GET /api/insights)
 CREATE OR REPLACE FUNCTION get_area_insights()

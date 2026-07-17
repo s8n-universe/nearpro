@@ -1,0 +1,17 @@
+[project]
+name = "nearpro"
+version = "0.1.0"
+description = "NearPro — Web Directory Platform Sync Tool"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "supabase>=2.0.0",
+    "duckdb>=0.10.2",
+    "python-dotenv>=1.0.1"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0"
+]
