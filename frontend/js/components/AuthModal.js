@@ -190,9 +190,29 @@ export function bindAuthModalEvents() {
             try {
                 if (currentTab === 'signin') {
                     const result = await Api.signIn(email, password);
+                    const queuedTier = localStorage.getItem('selected_nearpro_tier');
+                    if (queuedTier && result.user) {
+                        try {
+                            const updated = await Api.updateProfileTier(result.user.id, queuedTier);
+                            State.profile = updated;
+                            localStorage.removeItem('selected_nearpro_tier');
+                        } catch (err) {
+                            console.error("Auto tier upgrade failed: ", err);
+                        }
+                    }
                     State.setAuthModal(false);
                 } else {
                     const result = await Api.signUp(email, password);
+                    const queuedTier = localStorage.getItem('selected_nearpro_tier');
+                    if (queuedTier && result.user) {
+                        try {
+                            const updated = await Api.updateProfileTier(result.user.id, queuedTier);
+                            State.profile = updated;
+                            localStorage.removeItem('selected_nearpro_tier');
+                        } catch (err) {
+                            console.error("Auto tier upgrade failed: ", err);
+                        }
+                    }
                     alert("Registration successful. Please check your inbox for verification links.");
                     State.setAuthModal(false);
                 }

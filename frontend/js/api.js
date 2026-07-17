@@ -199,6 +199,12 @@ export const Api = {
         return data;
     },
 
+    async updateProfileTier(userId, tier) {
+        const { data, error } = await supabase.from('profiles').update({ tier: tier }).eq('id', userId).select().single();
+        if (error) throw error;
+        return data;
+    },
+
     async signIn(email, password) {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;

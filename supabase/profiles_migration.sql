@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     id          UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
     email       TEXT,
     is_premium  BOOLEAN DEFAULT FALSE,
+    tier        TEXT DEFAULT 'free',
     created_at  TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -21,8 +22,8 @@ CREATE POLICY "Allow users to update their own profiles" ON public.profiles
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-    INSERT INTO public.profiles (id, email, is_premium)
-    VALUES (new.id, new.email, false);
+    INSERT INTO public.profiles (id, email, is_premium, tier)
+    VALUES (new.id, new.email, false, 'free');
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

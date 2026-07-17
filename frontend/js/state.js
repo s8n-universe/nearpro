@@ -13,6 +13,7 @@ export const State = {
     user: null,
     profile: null,
     auth_modal_open: false,
+    selected_tier: null,
     
     // Filters state
     filters: {

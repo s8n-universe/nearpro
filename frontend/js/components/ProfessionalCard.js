@@ -96,24 +96,33 @@ export function renderProfessionalCard(lead) {
             <p class="card-desc">${lead.address || "Address details not verified."}</p>
             
             <div class="card-actions" onclick="event.stopPropagation();">
-                ${lead.phone ? `
-                    <a href="tel:${lead.phone}" class="secondary-btn" style="padding: 8px 12px; font-size: 13px; text-align: center; justify-content: center;">
-                        Call Now
-                    </a>
-                ` : `
-                    <button class="secondary-btn" disabled style="padding: 8px 12px; font-size: 13px; text-align: center; justify-content: center; opacity: 0.5;">
-                        No Phone
+                ${!(State.profile && (State.profile.tier === 'connect' || State.profile.tier === 'pro')) ? `
+                    <button class="secondary-btn" onclick="window.State.setPricingModal(true);" style="padding: 8px 12px; font-size: 13px; text-align: center; justify-content: center;">
+                        🔒 Phone Locked
                     </button>
-                `}
-                
-                ${lead.website ? `
-                    <a href="${lead.website}" target="_blank" class="brand-btn" style="padding: 8px 12px; font-size: 13px; text-align: center; justify-content: center;">
-                        Website
-                    </a>
-                ` : `
-                    <button class="brand-btn" disabled style="padding: 8px 12px; font-size: 13px; text-align: center; justify-content: center; opacity: 0.5;">
-                        No Site
+                    <button class="brand-btn" onclick="window.State.setPricingModal(true);" style="padding: 8px 12px; font-size: 13px; text-align: center; justify-content: center;">
+                        🔒 Site Locked
                     </button>
+                ` : `
+                    ${lead.phone ? `
+                        <a href="tel:${lead.phone}" class="secondary-btn" style="padding: 8px 12px; font-size: 13px; text-align: center; justify-content: center;">
+                            Call Now
+                        </a>
+                    ` : `
+                        <button class="secondary-btn" disabled style="padding: 8px 12px; font-size: 13px; text-align: center; justify-content: center; opacity: 0.5;">
+                            No Phone
+                        </button>
+                    `}
+                    
+                    ${lead.website ? `
+                        <a href="${lead.website}" target="_blank" class="brand-btn" style="padding: 8px 12px; font-size: 13px; text-align: center; justify-content: center;">
+                            Website
+                        </a>
+                    ` : `
+                        <button class="brand-btn" disabled style="padding: 8px 12px; font-size: 13px; text-align: center; justify-content: center; opacity: 0.5;">
+                            No Site
+                        </button>
+                    `}
                 `}
             </div>
         </div>

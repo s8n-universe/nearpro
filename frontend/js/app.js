@@ -184,7 +184,7 @@ async function renderDirectoryLayout() {
         if (!State.session_started && !State.locked) {
             State.session_started = Date.now();
             setTimeout(() => {
-                const isPremium = State.profile && State.profile.is_premium;
+                const isPremium = State.profile && (State.profile.is_premium === true || (State.profile.tier && State.profile.tier !== 'free'));
                 if (!isPremium) {
                     State.locked = true;
                     State.notify();
@@ -323,7 +323,7 @@ function renderFeedContent(hasMore) {
     const feed = document.getElementById('feedElement');
     if (!feed) return;
 
-    const isPremium = State.profile && State.profile.is_premium;
+    const isPremium = State.profile && (State.profile.is_premium === true || (State.profile.tier && State.profile.tier !== 'free'));
 
     // Handle full session timer lockout (Mitigation of V2)
     if (State.locked === true && !isPremium) {

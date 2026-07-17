@@ -13,7 +13,7 @@ export function renderInsightsPage() {
     }
 
     const s = State.stats;
-    const isPremium = State.user && State.profile && State.profile.is_premium === true;
+    const isPro = State.user && State.profile && State.profile.tier === 'pro';
     
     // Convert UTC last scraped to local time
     const lastScrapedStr = s.last_scraped 
@@ -75,7 +75,7 @@ export function renderInsightsPage() {
                 <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 24px;">Identifying high opportunity locations. Shows categories with fewer than 10 listings in specific suburbs.</p>
                 
                 <div style="position: relative;">
-                    ${!isPremium ? `
+                    ${!isPro ? `
                         <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(9, 9, 11, 0.4); z-index: 10; min-height: 180px;">
                             <div style="text-align: center; max-width: 320px; padding: 24px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
                                 <div style="font-size: 24px; margin-bottom: 12px;">🔒</div>
@@ -86,7 +86,7 @@ export function renderInsightsPage() {
                         </div>
                     ` : ''}
                     
-                    <div class="compare-table-wrap" style="${!isPremium ? 'filter: blur(8px); pointer-events: none; user-select: none;' : ''}">
+                    <div class="compare-table-wrap" style="${!isPro ? 'filter: blur(8px); pointer-events: none; user-select: none;' : ''}">
                         <table class="compare-table" style="width: 100%;">
                             <thead>
                                 <tr>
@@ -112,7 +112,7 @@ export function renderInsightsPage() {
                 <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 24px;">Comparing lead score distributions and verification metrics against competitor listing sources.</p>
                 
                 <div style="position: relative;">
-                    ${!isPremium ? `
+                    ${!isPro ? `
                         <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(9, 9, 11, 0.4); z-index: 10; min-height: 150px;">
                             <div style="text-align: center; max-width: 320px; padding: 24px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
                                 <div style="font-size: 24px; margin-bottom: 12px;">🔒</div>
@@ -123,7 +123,7 @@ export function renderInsightsPage() {
                         </div>
                     ` : ''}
                     
-                    <div style="${!isPremium ? 'filter: blur(8px); pointer-events: none; user-select: none;' : ''}">
+                    <div style="${!isPro ? 'filter: blur(8px); pointer-events: none; user-select: none;' : ''}">
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                             <div style="padding: 16px; border: 1px solid var(--border); border-radius: var(--radius-sm); text-align: center; background: var(--bg-base);">
                                 <h4 style="font-size: 14px; margin-bottom: 8px;">Verification Ratios</h4>

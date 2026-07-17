@@ -26,73 +26,117 @@ export function renderFeatureShowcase() {
                     </div>
                 </div>
             </div>
-        <section class="pro-plans-section" style="background: var(--bg-surface); padding: 80px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+        <section class="pro_plans_section" style="background: var(--bg-surface); padding: 80px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
             <div class="container">
                 <div class="features-title-wrap" style="margin-bottom: 48px;">
-                    <span style="font-family: var(--font-mono); font-size: 12px; color: var(--accent-gold); text-transform: uppercase;">Growth Architecture</span>
-                    <h2 style="font-size: 28px; margin-top: 8px;">Premium Platform vs Mobile App</h2>
-                    <p>Select the platform matching your business outreach strategy or communication needs.</p>
+                    <span style="font-family: var(--font-mono); font-size: 12px; color: var(--accent-gold); text-transform: uppercase;">Monetization & Growth</span>
+                    <h2 style="font-size: 28px; margin-top: 8px;">Select Your Premium Plan</h2>
+                    <p style="max-width: 600px; margin: 12px auto 0; font-size: 14.5px; line-height: 1.6; color: var(--text-secondary);">
+                        Spend ₹29 on random snacks vs spend ₹29 on verified local data to scale your freelancer client outreach and business revenue. Choose a tier optimized for your client acquisitions.
+                    </p>
                 </div>
                 
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px;">
-                    <!-- Web Premium Box -->
-                    <div class="feature-panel" style="padding: 40px; background: rgba(9, 9, 11, 0.6); border-color: rgba(255, 160, 0, 0.15); display: flex; flex-direction: column;">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
-                            <div>
-                                <h3 style="font-size: 20px; font-family: var(--font-heading); color: var(--accent-gold);">Web Premium Plan</h3>
-                                <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase;">Lead Generation & Analytics</span>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; max-width: 1000px; margin: 0 auto;">
+                    <!-- Starter Plan -->
+                    <div class="feature-panel" style="padding: 32px; background: rgba(9, 9, 11, 0.6); border-color: rgba(255, 160, 0, 0.1); display: flex; flex-direction: column; height: 100%;">
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="font-size: 18px; font-family: var(--font-heading); color: var(--accent-gold); margin-bottom: 4px;">Starter Plan</h3>
+                            <div style="font-size: 28px; font-weight: bold; color: white; margin-top: 8px;">
+                                ₹29 <span style="font-size: 12px; color: var(--text-muted); font-weight: normal;">/ month</span>
                             </div>
-                            <span style="font-size: 28px;">💻</span>
                         </div>
-                        
-                        <ul style="list-style: none; padding: 0; margin: 0 0 32px 0; font-size: 14px; line-height: 1.8; color: var(--text-secondary);">
-                            <li style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 8px;">
+                        <ul style="list-style: none; padding: 0; margin: 0 0 auto 0; font-size: 13px; line-height: 1.8; color: var(--text-secondary);">
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
                                 <span style="color: var(--accent-gold);">✓</span>
-                                <div><strong>Freelancer Client Acquisition</strong>: Extract direct email lists and contact phone numbers to pitch local businesses.</div>
+                                <div>Unlimited Directory Searches</div>
                             </li>
-                            <li style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 8px;">
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
                                 <span style="color: var(--accent-gold);">✓</span>
-                                <div><strong>Niche Opportunity Indexes</strong>: Surf suburb market gaps to discover underserved locations with zero competition.</div>
+                                <div>View Verified Names & Categories</div>
                             </li>
-                            <li style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 8px;">
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
                                 <span style="color: var(--accent-gold);">✓</span>
-                                <div><strong>Business Pipeline Feeds</strong>: Export full lead lists to clean CSV formats or push data to CRM pipelines.</div>
+                                <div>Access Completeness Scores Index</div>
                             </li>
-                            <li style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-gold);">✓</span>
-                                <div><strong>Geospatial Map Filtering</strong>: Analyze professional densities inside Mumbai with custom cluster parameters.</div>
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px; opacity: 0.4;">
+                                <span>✗</span>
+                                <div>Direct Phone & Website CTAs</div>
+                            </li>
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px; opacity: 0.4;">
+                                <span>✗</span>
+                                <div>Bulk CSV Database Exports</div>
                             </li>
                         </ul>
+                        <button class="brand-btn" style="width: 100%; padding: 10px; font-size: 13px; margin-top: 24px;" onclick="localStorage.setItem('selected_nearpro_tier', 'starter'); window.State.locked = false; window.State.session_started = null; window.State.setAuthModal(true);">
+                            Select Starter
+                        </button>
                     </div>
-                    
-                    <!-- Mobile App Box -->
-                    <div class="feature-panel" style="padding: 40px; background: rgba(9, 9, 11, 0.6); border-color: rgba(236, 72, 153, 0.15); display: flex; flex-direction: column;">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
-                            <div>
-                                <h3 style="font-size: 20px; font-family: var(--font-heading); color: var(--accent-pink);">Mobile Application</h3>
-                                <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase;">Live Communication & Actions</span>
+
+                    <!-- Connect Plan -->
+                    <div class="feature-panel" style="padding: 32px; background: rgba(9, 9, 11, 0.6); border-color: var(--accent-gold); display: flex; flex-direction: column; height: 100%; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                        <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--accent-gold); color: black; font-size: 10px; font-family: var(--font-mono); padding: 4px 12px; border-radius: 20px; font-weight: bold; text-transform: uppercase;">Popular</div>
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="font-size: 18px; font-family: var(--font-heading); color: var(--accent-gold); margin-bottom: 4px;">Connect Plan</h3>
+                            <div style="font-size: 28px; font-weight: bold; color: white; margin-top: 8px;">
+                                ₹59 <span style="font-size: 12px; color: var(--text-muted); font-weight: normal;">/ month</span>
                             </div>
-                            <span style="font-size: 28px;">📱</span>
                         </div>
-                        
-                        <ul style="list-style: none; padding: 0; margin: 0 0 32px 0; font-size: 14px; line-height: 1.8; color: var(--text-secondary);">
-                            <li style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-pink);">✓</span>
-                                <div><strong>Instant Connection</strong>: Initiate phone calls, WhatsApp messages, or secure live chats in one tap.</div>
+                        <ul style="list-style: none; padding: 0; margin: 0 0 auto 0; font-size: 13px; line-height: 1.8; color: var(--text-secondary);">
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-gold);">✓</span>
+                                <div><strong>All Starter Features</strong></div>
                             </li>
-                            <li style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-pink);">✓</span>
-                                <div><strong>Spatial Routing Maps</strong>: Compute precise distances, travel times, and directions to local offices.</div>
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-gold);">✓</span>
+                                <div>Direct Phone Numbers for Call Outreach</div>
                             </li>
-                            <li style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-pink);">✓</span>
-                                <div><strong>Offline Directory Bookmarking</strong>: Save business profiles to local device lists for offline access.</div>
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-gold);">✓</span>
+                                <div>Direct Verified Website Connections</div>
                             </li>
-                            <li style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-pink);">✓</span>
-                                <div><strong>Scan Card Profiles</strong>: Generate and scan QR codes to instantly share local directory cards.</div>
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-gold);">✓</span>
+                                <div>Spatial Coordinates Map Pins</div>
+                            </li>
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px; opacity: 0.4;">
+                                <span>✗</span>
+                                <div>Bulk CSV Database Exports</div>
                             </li>
                         </ul>
+                        <button class="brand-btn" style="width: 100%; padding: 10px; font-size: 13px; margin-top: 24px;" onclick="localStorage.setItem('selected_nearpro_tier', 'connect'); window.State.locked = false; window.State.session_started = null; window.State.setAuthModal(true);">
+                            Select Connect
+                        </button>
+                    </div>
+
+                    <!-- Elite Pro Plan -->
+                    <div class="feature-panel" style="padding: 32px; background: rgba(9, 9, 11, 0.6); border-color: rgba(236, 72, 153, 0.2); display: flex; flex-direction: column; height: 100%;">
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="font-size: 18px; font-family: var(--font-heading); color: var(--accent-pink); margin-bottom: 4px;">Elite Pro Plan</h3>
+                            <div style="font-size: 28px; font-weight: bold; color: white; margin-top: 8px;">
+                                ₹99 <span style="font-size: 12px; color: var(--text-muted); font-weight: normal;">/ month</span>
+                            </div>
+                        </div>
+                        <ul style="list-style: none; padding: 0; margin: 0 0 auto 0; font-size: 13px; line-height: 1.8; color: var(--text-secondary);">
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-pink);">✓</span>
+                                <div><strong>All Connect Features</strong></div>
+                            </li>
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-pink);">✓</span>
+                                <div><strong>Bulk CSV Database Exports</strong></div>
+                            </li>
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-pink);">✓</span>
+                                <div>Advanced Suburb Opportunity Indices</div>
+                            </li>
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-pink);">✓</span>
+                                <div>Competitor Quality Analytics Dashboard</div>
+                            </li>
+                        </ul>
+                        <button class="brand-btn" style="width: 100%; padding: 10px; font-size: 13px; margin-top: 24px; background: linear-gradient(135deg, var(--accent-pink), #a855f7);" onclick="localStorage.setItem('selected_nearpro_tier', 'pro'); window.State.locked = false; window.State.session_started = null; window.State.setAuthModal(true);">
+                            Select Elite Pro
+                        </button>
                     </div>
                 </div>
             </div>

@@ -5,56 +5,60 @@ export function renderPricingModal() {
 
     return `
         <div class="modal-overlay open" id="pricingModalOverlay" style="z-index: 10000;">
-            <div class="modal-card" style="max-width: 440px; padding: 40px; text-align: center; position: relative;">
+            <div class="modal-card" style="max-width: 460px; padding: 32px; text-align: center; position: relative;">
                 <button class="modal-close-btn" id="closePricingModalBtn" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer;">&times;</button>
                 
-                <div style="font-size: 48px; margin-bottom: 16px;">🚀</div>
+                <div style="font-size: 40px; margin-bottom: 12px;">🚀</div>
                 
-                <h2 style="font-size: 24px; margin-bottom: 8px; font-family: var(--font-heading); color: white;">
+                <h2 style="font-size: 22px; margin-bottom: 6px; font-family: var(--font-heading); color: white;">
                     Unlock Premium Access
                 </h2>
                 
-                <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 24px; line-height: 1.5;">
-                    Gain full access to the most complete Mumbai verified directory database and lead generation analytics.
+                <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 24px; line-height: 1.5;">
+                    Spend ₹29 on random snacks vs spend ₹29 on verified local data to scale your freelancer client outreach and business revenue. Choose your tier:
                 </p>
                 
-                <!-- Pricing Highlights -->
-                <div style="background: rgba(255, 160, 0, 0.08); border: 1px dashed var(--accent-gold); padding: 16px; border-radius: var(--radius-md); margin-bottom: 28px;">
-                    <div style="font-size: 32px; font-family: var(--font-heading); color: var(--accent-gold); font-weight: bold; margin-bottom: 4px;">
-                        ₹29 <span style="font-size: 14px; font-weight: normal; color: var(--text-muted);">/ month</span>
+                <!-- Plan Options Stack -->
+                <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; text-align: left;">
+                    
+                    <!-- Starter Row -->
+                    <div style="background: rgba(255, 160, 0, 0.04); border: 1px solid rgba(255, 160, 0, 0.2); padding: 16px; border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; gap: 12px;">
+                        <div>
+                            <h4 style="font-size: 14px; color: var(--accent-gold); margin: 0 0 4px 0; font-family: var(--font-heading);">Starter Plan — ₹29/mo</h4>
+                            <p style="font-size: 11px; color: var(--text-secondary); margin: 0; line-height: 1.4;">Unlimited searches, verified categories, completeness ratings.</p>
+                        </div>
+                        <button class="brand-btn" style="padding: 6px 12px; font-size: 11px; flex-shrink: 0;" onclick="localStorage.setItem('selected_nearpro_tier', 'starter'); window.State.locked = false; window.State.session_started = null; window.State.setPricingModal(false); window.State.setAuthModal(true);">
+                            Choose ₹29
+                        </button>
                     </div>
-                    <div style="font-size: 12px; color: var(--text-secondary); font-family: var(--font-mono);">
-                        SPECIAL PROMOTIONAL RATE • CANCEL ANYTIME
+
+                    <!-- Connect Row -->
+                    <div style="background: rgba(255, 160, 0, 0.08); border: 1px solid var(--accent-gold); padding: 16px; border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; gap: 12px; position: relative;">
+                        <div style="position: absolute; top: -10px; right: 12px; background: var(--accent-gold); color: black; font-size: 8px; font-family: var(--font-mono); padding: 2px 8px; border-radius: 10px; font-weight: bold; text-transform: uppercase;">Best Value</div>
+                        <div>
+                            <h4 style="font-size: 14px; color: var(--accent-gold); margin: 0 0 4px 0; font-family: var(--font-heading);">Connect Plan — ₹59/mo</h4>
+                            <p style="font-size: 11px; color: var(--text-secondary); margin: 0; line-height: 1.4;">Adds direct phone numbers, website links, Leaflet map location pins.</p>
+                        </div>
+                        <button class="brand-btn" style="padding: 6px 12px; font-size: 11px; flex-shrink: 0;" onclick="localStorage.setItem('selected_nearpro_tier', 'connect'); window.State.locked = false; window.State.session_started = null; window.State.setPricingModal(false); window.State.setAuthModal(true);">
+                            Choose ₹59
+                        </button>
                     </div>
+
+                    <!-- Elite Pro Row -->
+                    <div style="background: rgba(236, 72, 153, 0.04); border: 1px solid rgba(236, 72, 153, 0.2); padding: 16px; border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; gap: 12px;">
+                        <div>
+                            <h4 style="font-size: 14px; color: var(--accent-pink); margin: 0 0 4px 0; font-family: var(--font-heading);">Elite Pro Plan — ₹99/mo</h4>
+                            <p style="font-size: 11px; color: var(--text-secondary); margin: 0; line-height: 1.4;">Adds bulk CSV database exports, opportunity metrics, gaps score.</p>
+                        </div>
+                        <button class="brand-btn" style="padding: 6px 12px; font-size: 11px; flex-shrink: 0; background: linear-gradient(135deg, var(--accent-pink), #a855f7);" onclick="localStorage.setItem('selected_nearpro_tier', 'pro'); window.State.locked = false; window.State.session_started = null; window.State.setPricingModal(false); window.State.setAuthModal(true);">
+                            Choose ₹99
+                        </button>
+                    </div>
+
                 </div>
                 
-                <!-- Benefits list -->
-                <ul style="list-style: none; padding: 0; margin: 0 0 32px 0; text-align: left; font-size: 13.5px; line-height: 1.8; color: var(--text-secondary);">
-                    <li style="margin-bottom: 10px; display: flex; align-items: flex-start; gap: 8px;">
-                        <span style="color: var(--accent-gold);">✓</span>
-                        <div><strong>Unlimited Searches</strong>: Unlock all 4,700+ verified professionals (no row gating bounds).</div>
-                    </li>
-                    <li style="margin-bottom: 10px; display: flex; align-items: flex-start; gap: 8px;">
-                        <span style="color: var(--accent-gold);">✓</span>
-                        <div><strong>Niche Opportunity Mapping</strong>: Locate local suburbs with high demand but zero competition.</div>
-                    </li>
-                    <li style="margin-bottom: 10px; display: flex; align-items: flex-start; gap: 8px;">
-                        <span style="color: var(--accent-gold);">✓</span>
-                        <div><strong>Bulk CSV Database Exports</strong>: Download complete phone lists and email directories.</div>
-                    </li>
-                    <li style="margin-bottom: 10px; display: flex; align-items: flex-start; gap: 8px;">
-                        <span style="color: var(--accent-gold);">✓</span>
-                        <div><strong>Coordinate Accuracy Maps</strong>: Access verified maps and clusters with 99% accuracy.</div>
-                    </li>
-                </ul>
-                
-                <!-- Call to action -->
-                <button id="activatePremiumBtn" class="brand-btn" style="width: 100%; padding: 14px; font-size: 14px; margin-bottom: 16px;">
-                    Activate Premium — ₹29 Monthly
-                </button>
-                
                 <div style="font-size: 11px; color: var(--text-muted);">
-                    By subscribing, you agree to create an account for access sync.
+                    Select a plan to start your registration. Cancel your subscription anytime.
                 </div>
             </div>
         </div>
@@ -66,15 +70,6 @@ export function bindPricingModalEvents() {
     if (closeBtn) {
         closeBtn.addEventListener('click', () => {
             State.setPricingModal(false);
-        });
-    }
-
-    const activateBtn = document.getElementById('activatePremiumBtn');
-    if (activateBtn) {
-        activateBtn.addEventListener('click', () => {
-            // Close pricing and open auth register modal
-            State.setPricingModal(false);
-            State.setAuthModal(true);
         });
     }
 }

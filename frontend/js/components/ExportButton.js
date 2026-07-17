@@ -26,8 +26,14 @@ export function bindExportButtonEvents(selectedLeadsFetcher) {
     const csvBtn = document.getElementById('exportCSVBtn');
     const webhookBtn = document.getElementById('exportWebhookBtn');
 
+    const isPro = State.profile && State.profile.tier === 'pro';
+
     if (csvBtn) {
         csvBtn.addEventListener('click', async () => {
+            if (!isPro) {
+                State.setPricingModal(true);
+                return;
+            }
             if (selectedLeadsFetcher) {
                 const leads = await selectedLeadsFetcher();
                 Api.exportToCSV(leads);
@@ -37,6 +43,10 @@ export function bindExportButtonEvents(selectedLeadsFetcher) {
 
     if (webhookBtn) {
         webhookBtn.addEventListener('click', async () => {
+            if (!isPro) {
+                State.setPricingModal(true);
+                return;
+            }
             if (selectedLeadsFetcher) {
                 const leads = await selectedLeadsFetcher();
                 
