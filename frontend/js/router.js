@@ -38,9 +38,10 @@ export const Router = {
     
     routeToRegExp(route) {
         // Convert route pattern like '#/category/:parent/:sub' to a RegExp
+        // Match anything except a forward slash to support spaces and URL-encoded chars
         const pattern = route
-            .replace(/:[^\s/]+/g, '([\\w-]+)') // match params like :parent
-            .replace(/\*/g, '.*');             // match wildcard *
+            .replace(/:[^\s/]+/g, '([^/]+)') // match params like :parent
+            .replace(/\*/g, '.*');           // match wildcard *
         return new RegExp('^' + pattern + '$');
     },
     
