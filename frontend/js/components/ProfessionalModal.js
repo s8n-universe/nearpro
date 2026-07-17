@@ -197,10 +197,6 @@ export function renderProfessionalModal(lead) {
                 <div class="modal-ctas">
                     ${bottomCtaHTML}
                     
-                    <a href="#" class="secondary-btn" style="width: 100%; border-color: var(--accent-pink); color: var(--text-primary);">
-                        Connect on NearPro Mobile App
-                    </a>
-                    
                     <div style="display: flex; gap: 12px; width: 100%;">
                         <button id="shareQRBtn" class="secondary-btn" style="flex: 1;">Share via QR Code</button>
                         ${lead.source_url && hasConnectAccess ? `

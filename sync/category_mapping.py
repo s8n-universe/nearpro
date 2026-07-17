@@ -29,7 +29,8 @@ PARENT_CATEGORIES = {
         "keywords": [
             "real estate", "property", "builder", "developer", "constructor",
             "architect", "interior", "design", "decorator", "renovation", "contractor",
-            "civil engineer", "housing", "flat", "apartment", "villa", "commercial property"
+            "civil engineer", "housing", "flat", "apartment", "villa", "commercial property",
+            "corporate office", "condominium", "gated community"
         ]
     },
     "Education": {
@@ -54,7 +55,7 @@ PARENT_CATEGORIES = {
             "chartered accountant", "ca firm", "lawyer", "law", "advocate", "legal",
             "solicitor", "financial", "insurance", "investment", "bank", "loan",
             "tax", "audit", "compliance", "consultant", "advisory", "wealth",
-            "certified public accountant"
+            "certified public accountant", "appraiser"
         ]
     },
     "Technology": {
