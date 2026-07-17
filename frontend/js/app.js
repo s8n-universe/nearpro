@@ -622,6 +622,53 @@ async function runGuidedDemo(niche) {
     // Wait for search data load
     await new Promise(resolve => setTimeout(resolve, 2500));
 
+    // Step 1.5: Compare Leads Autopilot demonstration
+    const cards = document.querySelectorAll('.prof-card');
+    if (cards && cards.length >= 2) {
+        const check1 = cards[0].querySelector('.compare-checkbox');
+        if (check1) {
+            await moveCursorTo(check1);
+            DemoAudio.playClick();
+            check1.click();
+        }
+        await new Promise(resolve => setTimeout(resolve, 800));
+
+        const check2 = cards[1].querySelector('.compare-checkbox');
+        if (check2) {
+            await moveCursorTo(check2);
+            DemoAudio.playClick();
+            check2.click();
+        }
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        const compareTriggerBtn = document.getElementById('compareTriggerBtn');
+        if (compareTriggerBtn) {
+            await moveCursorTo('#compareTriggerBtn');
+            DemoAudio.playClick();
+            DemoAudio.playWhoosh();
+            compareTriggerBtn.click();
+
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            const compareCard = document.querySelector('#compareModalOverlay .modal-card');
+            if (compareCard) {
+                const rect = compareCard.getBoundingClientRect();
+                showThoughtCloud("🌟 Compare multiple professionals side by side on category, area, ratings, and completeness.", rect.left + 50, rect.top + 80, 3500);
+            }
+            await new Promise(resolve => setTimeout(resolve, 3500));
+
+            const closeCompareBtn = document.getElementById('closeCompareModalBtn');
+            if (closeCompareBtn) {
+                await moveCursorTo('#closeCompareModalBtn');
+                DemoAudio.playClick();
+                DemoAudio.playWhoosh();
+                closeCompareBtn.click();
+            }
+        }
+        
+        State.clearSelection();
+        await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+
     // Step 2: Open First Card Details
     const firstCard = document.querySelector('.prof-card');
     if (firstCard) {
