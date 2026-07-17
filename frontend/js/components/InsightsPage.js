@@ -13,7 +13,7 @@ export function renderInsightsPage() {
     }
 
     const s = State.stats;
-    const isPro = State.user && State.profile && State.profile.tier === 'pro';
+    const isPro = State.user && State.profile && (State.profile.is_premium === true || State.profile.tier === 'pro');
     
     // Convert UTC last scraped to local time
     const lastScrapedStr = s.last_scraped 

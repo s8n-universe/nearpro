@@ -1,5 +1,6 @@
 import { isOpenNow } from '../api.js';
 import L from 'leaflet';
+import { State } from '../state.js';
 
 export function renderProfessionalModal(lead) {
     // Initial avatar extract
@@ -50,6 +51,54 @@ export function renderProfessionalModal(lead) {
         `;
     }
 
+    const hasConnectAccess = State.profile && (State.profile.is_premium === true || State.profile.tier === 'connect' || State.profile.tier === 'pro');
+
+    const phoneDisplay = !hasConnectAccess 
+        ? `<span onclick="window.State.setPricingModal(true);" style="color: var(--accent-gold); cursor: pointer; text-decoration: underline; font-size: 13px;">🔒 Locked (Upgrade to Connect)</span>`
+        : (lead.phone || '<span style="color: var(--text-muted);">Not available</span>');
+
+    const emailDisplay = !hasConnectAccess
+        ? `<span onclick="window.State.setPricingModal(true);" style="color: var(--accent-gold); cursor: pointer; text-decoration: underline; font-size: 13px;">🔒 Locked (Upgrade to Connect)</span>`
+        : (lead.email || '<span style="color: var(--text-muted);">Not available</span>');
+
+    const websiteDisplay = !hasConnectAccess
+        ? `<span onclick="window.State.setPricingModal(true);" style="color: var(--accent-gold); cursor: pointer; text-decoration: underline; font-size: 13px;">🔒 Locked (Upgrade to Connect)</span>`
+        : (lead.website ? `<a href="${lead.website}" target="_blank" style="color: var(--accent-gold); text-decoration: underline;">Visit Site</a>` : '<span style="color: var(--text-muted);">Not available</span>');
+
+    const mapHTML = lead.latitude && lead.longitude
+        ? (hasConnectAccess 
+            ? `
+                <div class="sidebar-title">Location Map</div>
+                <div id="modalMapElement" class="modal-map"></div>
+              `
+            : `
+                <div class="sidebar-title">Location Map</div>
+                <div class="modal-map" style="display: flex; align-items: center; justify-content: center; background: rgba(9, 9, 11, 0.4); border: 1px dashed var(--border); height: 180px; border-radius: var(--radius-md); flex-direction: column;">
+                    <div style="font-size: 24px; margin-bottom: 8px;">🔒</div>
+                    <span style="font-size: 12px; color: var(--text-muted); text-align: center; max-width: 240px; line-height: 1.4;">
+                        Location maps are locked. Upgrade to Connect to view professional map locations.
+                    </span>
+                    <button class="brand-btn" style="padding: 6px 12px; font-size: 11px; margin-top: 12px;" onclick="window.State.setPricingModal(true);">Upgrade Plan</button>
+                </div>
+              `
+          )
+        : '';
+
+    const bottomCtaHTML = !hasConnectAccess
+        ? `
+            <button class="brand-btn" style="width: 100%;" onclick="window.State.setPricingModal(true);">
+                🔒 Unlock Phone & Contact Details
+            </button>
+          `
+        : (lead.phone 
+            ? `
+                <a href="tel:${lead.phone}" class="brand-btn" style="width: 100%;">
+                    Call Now (${lead.phone})
+                </a>
+              `
+            : ''
+          );
+
     return `
         <div class="modal-card">
             <button class="modal-close-btn" id="closeModalBtn">&times;</button>
@@ -70,13 +119,13 @@ export function renderProfessionalModal(lead) {
                     <div>
                         <div class="sidebar-title">Contact Info</div>
                         <div style="margin-bottom: 12px; font-size: 14px;">
-                            <strong>Phone:</strong> ${lead.phone || '<span style="color: var(--text-muted);">Not available</span>'}
+                            <strong>Phone:</strong> ${phoneDisplay}
                         </div>
                         <div style="margin-bottom: 12px; font-size: 14px;">
-                            <strong>Email:</strong> ${lead.email || '<span style="color: var(--text-muted);">Not available</span>'}
+                            <strong>Email:</strong> ${emailDisplay}
                         </div>
                         <div style="margin-bottom: 12px; font-size: 14px;">
-                            <strong>Website:</strong> ${lead.website ? `<a href="${lead.website}" target="_blank" style="color: var(--accent-gold); text-decoration: underline;">Visit Site</a>` : '<span style="color: var(--text-muted);">Not available</span>'}
+                            <strong>Website:</strong> ${websiteDisplay}
                         </div>
                         <div style="margin-bottom: 12px; font-size: 14px;">
                             <strong>Area:</strong> ${lead.area || "Mumbai"}
@@ -97,17 +146,10 @@ export function renderProfessionalModal(lead) {
                     </div>
                 </div>
                 
-                ${lead.latitude && lead.longitude ? `
-                    <div class="sidebar-title">Location Map</div>
-                    <div id="modalMapElement" class="modal-map"></div>
-                ` : ''}
+                ${mapHTML}
                 
                 <div class="modal-ctas">
-                    ${lead.phone ? `
-                        <a href="tel:${lead.phone}" class="brand-btn" style="width: 100%;">
-                            Call Now (${lead.phone})
-                        </a>
-                    ` : ''}
+                    ${bottomCtaHTML}
                     
                     <a href="#" class="secondary-btn" style="width: 100%; border-color: var(--accent-pink); color: var(--text-primary);">
                         Connect on NearPro Mobile App
@@ -115,7 +157,7 @@ export function renderProfessionalModal(lead) {
                     
                     <div style="display: flex; gap: 12px; width: 100%;">
                         <button id="shareQRBtn" class="secondary-btn" style="flex: 1;">Share via QR Code</button>
-                        ${lead.source_url ? `
+                        ${lead.source_url && hasConnectAccess ? `
                             <a href="${lead.source_url}" target="_blank" class="secondary-btn" style="flex: 1; text-align: center; justify-content: center;">
                                 View on Google Maps
                             </a>
@@ -139,8 +181,10 @@ export function bindProfessionalModalEvents(lead, onClose) {
         });
     }
 
-    // Initialize Leaflet Mini-Map if coordinates are available
-    if (lead.latitude && lead.longitude) {
+    const hasConnectAccess = State.profile && (State.profile.is_premium === true || State.profile.tier === 'connect' || State.profile.tier === 'pro');
+
+    // Initialize Leaflet Mini-Map if coordinates are available and user has connect access
+    if (lead.latitude && lead.longitude && hasConnectAccess) {
         try {
             // Leaflet requires a brief pause to render inside a newly created DOM element
             setTimeout(() => {
