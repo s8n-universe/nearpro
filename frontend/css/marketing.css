@@ -1,0 +1,207 @@
+/* Marketing Landing Page styles (S8N brand premium dark theme) */
+
+/* Hero area container */
+.marketing-hero {
+    position: relative;
+    padding: 120px 0 80px;
+    text-align: center;
+    background: radial-gradient(circle at 50% 30%, rgba(236, 72, 153, 0.08) 0%, rgba(9, 9, 11, 0) 70%);
+    overflow: hidden;
+}
+
+/* Infinity background accent matching s8n.in */
+.marketing-hero::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 400px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50' width='100%25' height='100%25'%3E%3Cpath d='M25,25 C25,12 35,5 50,25 C65,45 75,38 75,25 C75,12 65,5 50,25 C35,45 25,38 25,25 Z' fill='none' stroke='rgba(255, 160, 0, 0.03)' stroke-width='0.7'/%3E%3C/svg%3E") no-repeat center center;
+    background-size: contain;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    border: 1px solid rgba(255, 160, 0, 0.2);
+    background: rgba(255, 160, 0, 0.05);
+    color: var(--accent-gold);
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 24px;
+}
+
+.hero-title {
+    font-size: 54px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--text-primary);
+    margin-bottom: 24px;
+    letter-spacing: -1px;
+}
+
+.hero-desc {
+    font-size: 18px;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+    line-height: 1.6;
+}
+
+.hero-ctas {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 48px;
+}
+
+.hero-bullets {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+}
+.hero-bullets span::before {
+    content: '●';
+    color: var(--accent-pink);
+    display: inline-block;
+    margin-right: 8px;
+}
+
+/* Feature grid panel */
+.marketing-features {
+    padding: 80px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+.features-title-wrap {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 56px;
+}
+.features-title-wrap h2 {
+    font-size: 32px;
+    margin-bottom: 16px;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 32px;
+}
+.feature-panel {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    transition: var(--transition);
+}
+.feature-panel:hover {
+    border-color: var(--accent-pink);
+    transform: translateY(-2px);
+}
+.feature-icon-wrap {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    background: rgba(236, 72, 153, 0.1);
+    color: var(--accent-pink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    font-size: 20px;
+}
+.feature-panel h3 {
+    font-size: 18px;
+    margin-bottom: 12px;
+}
+.feature-panel p {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+/* CTA Download panels */
+.app-cta-banner {
+    padding: 80px 0;
+    text-align: center;
+    background: radial-gradient(circle at 50% 80%, rgba(255, 160, 0, 0.05) 0%, rgba(9, 9, 11, 0) 60%);
+}
+.cta-banner-content {
+    max-width: 600px;
+    margin: 0 auto;
+}
+.cta-banner-content h2 {
+    font-size: 36px;
+    margin-bottom: 16px;
+}
+.cta-banner-content p {
+    font-size: 16px;
+    margin-bottom: 32px;
+}
+.download-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+.store-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: #000000;
+    border: 1px solid var(--border);
+    padding: 10px 20px;
+    border-radius: var(--radius-md);
+    color: #ffffff;
+    transition: var(--transition);
+}
+.store-btn:hover {
+    border-color: var(--accent-gold);
+    transform: translateY(-1px);
+}
+.store-btn-text {
+    text-align: left;
+}
+.store-btn-text .sub {
+    font-size: 10px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    display: block;
+}
+.store-btn-text .main {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+@media (max-width: 640px) {
+    .hero-title {
+        font-size: 38px;
+    }
+    .hero-ctas {
+        flex-direction: column;
+        padding: 0 20px;
+    }
+    .hero-ctas button, .hero-ctas a {
+        width: 100%;
+    }
+    .marketing-hero {
+        padding: 80px 0 40px;
+    }
+}

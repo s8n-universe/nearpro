@@ -1,0 +1,183 @@
+/* Design System Variables & Base Resets (S8N Brand-aligned) */
+
+:root {
+    /* Color Palette */
+    --brand-gradient: linear-gradient(135deg, #ffa000, #ec4899);
+    --brand-gradient-hover: linear-gradient(135deg, #ffb333, #f062a8);
+    --accent-gold: #ffa000;
+    --accent-pink: #ec4899;
+    --bg-base: #09090b;
+    --bg-surface: #18181b;
+    --bg-surface-hover: #27272a;
+    --text-primary: #f4f4f5;
+    --text-secondary: #a1a1aa;
+    --text-muted: #52525b;
+    --border: #27272a;
+    --border-focus: #ffa000;
+    --shadow-gold: rgba(255, 160, 0, 0.15);
+    
+    /* Typography */
+    --font-heading: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+    --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    
+    /* Spacing & Borders */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Base Reset */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-base);
+    color: var(--text-secondary);
+    font-family: var(--font-body);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+button, input, select, textarea {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+    outline: none;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-base);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+/* Utility classes */
+.container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.brand-text {
+    background: var(--brand-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.brand-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--brand-gradient);
+    color: #ffffff;
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition);
+}
+.brand-btn:hover {
+    background: var(--brand-gradient-hover);
+    box-shadow: 0 0 15px var(--shadow-gold);
+    transform: translateY(-1px);
+}
+
+.secondary-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    font-weight: 500;
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition);
+}
+.secondary-btn:hover {
+    background: var(--bg-surface-hover);
+    border-color: var(--text-muted);
+    transform: translateY(-1px);
+}
+
+/* Spinner */
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border);
+    border-top: 3px solid var(--accent-gold);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Shimmer/Skeleton Effect */
+.shimmer {
+    background: linear-gradient(
+        90deg,
+        var(--bg-surface) 25%,
+        var(--bg-surface-hover) 50%,
+        var(--bg-surface) 75%
+    );
+    background-size: 200% 100%;
+    animation: loading-shimmer 1.5s infinite;
+}
+
+@keyframes loading-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Initial loader */
+.app-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    height: 100vh;
+}
+.app-loading p {
+    font-family: var(--font-heading);
+    color: var(--text-primary);
+    font-weight: 500;
+}

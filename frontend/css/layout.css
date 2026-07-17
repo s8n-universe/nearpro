@@ -1,0 +1,191 @@
+/* App layout and responsive grid styles */
+
+/* Root Grid layout */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header */
+.main-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(9, 9, 11, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    height: 72px;
+}
+.header-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+}
+.header-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--text-primary);
+}
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* Nav */
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+.nav-link {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+.nav-link:hover, .nav-link.active {
+    color: var(--text-primary);
+}
+
+/* Main Area Container */
+.main-layout {
+    display: flex;
+    flex: 1;
+}
+
+/* Sidebar */
+.app-sidebar {
+    width: 280px;
+    background: var(--bg-surface);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 72px;
+    height: calc(100vh - 72px);
+    overflow-y: auto;
+    padding: 24px;
+}
+
+/* Feed / Main content space */
+.app-content {
+    flex: 1;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* Prevents flex children from overflowing */
+}
+
+/* Grid & map views container */
+.view-container {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Professional Grid */
+.prof-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+/* Feed Header area */
+.feed-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+.feed-title-wrap h2 {
+    font-size: 24px;
+    font-family: var(--font-heading);
+    margin-bottom: 4px;
+}
+.feed-subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+/* Footer styling */
+.main-footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 0;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+}
+
+/* Page states visibility */
+.view-page {
+    display: none;
+}
+.view-page.active {
+    display: block;
+}
+.view-flex-page {
+    display: none;
+}
+.view-flex-page.active {
+    display: flex;
+}
+
+/* Responsive constraints */
+@media (max-width: 1024px) {
+    .app-sidebar {
+        width: 240px;
+    }
+}
+
+@media (max-width: 860px) {
+    .app-sidebar {
+        position: fixed;
+        left: -280px;
+        top: 72px;
+        height: calc(100vh - 72px);
+        z-index: 99;
+        transition: var(--transition);
+        box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+    }
+    .app-sidebar.open {
+        left: 0;
+    }
+    .main-layout {
+        position: relative;
+    }
+    .drawer-overlay {
+        display: none;
+        position: fixed;
+        top: 72px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(9, 9, 11, 0.7);
+        backdrop-filter: blur(4px);
+        z-index: 98;
+    }
+    .drawer-overlay.open {
+        display: block;
+    }
+}
+
+@media (max-width: 640px) {
+    .app-content {
+        padding: 16px;
+    }
+    .feed-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+    .header-nav {
+        display: none;
+    }
+}

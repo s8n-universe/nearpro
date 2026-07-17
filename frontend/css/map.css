@@ -1,0 +1,131 @@
+/* Leaflet Customizations for Dark-Theme S8N Brand Continuity */
+
+/* Map container */
+.map-element {
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-base);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    position: absolute;
+    inset: 0;
+}
+
+/* Modal map specific height */
+.modal-map {
+    height: 200px;
+    position: relative;
+    border-radius: var(--radius-md);
+    margin-top: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+/* CSS Filter trick to dark-theme standard OSM tiles (completely free!) */
+.leaflet-tile-container {
+    filter: invert(90%) hue-rotate(180deg) brightness(85%) contrast(95%);
+}
+
+.leaflet-container {
+    background: var(--bg-base) !important;
+    font-family: var(--font-body) !important;
+}
+
+/* Popups styling */
+.leaflet-popup-content-wrapper {
+    background: var(--bg-surface) !important;
+    color: var(--text-secondary) !important;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md) !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
+}
+.leaflet-popup-tip {
+    background: var(--bg-surface) !important;
+    border-left: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+.leaflet-popup-content h4 {
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+.leaflet-popup-content p {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+.leaflet-popup-content .popup-btn {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent-gold);
+}
+
+/* Custom categories Pin icon */
+.custom-pin {
+    width: 30px;
+    height: 30px;
+    background-color: var(--bg-surface);
+    border: 2px solid var(--border);
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    transition: var(--transition);
+}
+.custom-pin:hover {
+    transform: rotate(-45deg) scale(1.1);
+    box-shadow: 0 0 15px var(--shadow-gold);
+}
+.custom-pin-inner {
+    transform: rotate(45deg);
+    font-size: 14px;
+}
+
+/* Pin category border colors */
+.pin-healthcare { border-color: #3b82f6 !important; }
+.pin-beauty { border-color: #ec4899 !important; }
+.pin-realestate { border-color: #10b981 !important; }
+.pin-education { border-color: #8b5cf6 !important; }
+.pin-dining { border-color: #f59e0b !important; }
+.pin-finance { border-color: #06b6d4 !important; }
+.pin-tech { border-color: #3b82f6 !important; }
+.pin-services { border-color: #6366f1 !important; }
+.pin-shopping { border-color: #f43f5e !important; }
+.pin-events { border-color: #a855f7 !important; }
+.pin-other { border-color: var(--text-muted) !important; }
+
+/* Custom Marker cluster adjustments */
+.marker-cluster-small {
+    background-color: rgba(255, 160, 0, 0.2) !important;
+}
+.marker-cluster-small div {
+    background-color: rgba(255, 160, 0, 0.6) !important;
+    color: #ffffff !important;
+    font-family: var(--font-heading);
+    font-weight: 600;
+}
+.marker-cluster-medium {
+    background-color: rgba(236, 72, 153, 0.2) !important;
+}
+.marker-cluster-medium div {
+    background-color: rgba(236, 72, 153, 0.6) !important;
+    color: #ffffff !important;
+    font-family: var(--font-heading);
+    font-weight: 600;
+}
+.marker-cluster-large {
+    background-color: rgba(239, 68, 68, 0.2) !important;
+}
+.marker-cluster-large div {
+    background-color: rgba(239, 68, 68, 0.6) !important;
+    color: #ffffff !important;
+    font-family: var(--font-heading);
+    font-weight: 600;
+}
+.marker-cluster div {
+    border-radius: 50%;
+}
