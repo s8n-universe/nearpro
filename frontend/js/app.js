@@ -16,6 +16,7 @@ import { renderMapView, initFullMap } from './components/MapView.js';
 import { renderMarketingHero } from './components/MarketingHero.js';
 import { renderFeatureShowcase } from './components/FeatureShowcase.js';
 import { renderAuthModal, bindAuthModalEvents } from './components/AuthModal.js';
+import { renderPricingModal, bindPricingModalEvents } from './components/PricingModal.js';
 
 // Main Application shell reference
 const appShell = document.getElementById('app');
@@ -41,6 +42,13 @@ State.subscribe(async (currentState) => {
     if (authPlaceholder) {
         authPlaceholder.innerHTML = renderAuthModal();
         bindAuthModalEvents();
+    }
+
+    // Dynamically render/update Pricing Modal
+    const pricingPlaceholder = document.getElementById('pricingModalPlaceholder');
+    if (pricingPlaceholder) {
+        pricingPlaceholder.innerHTML = renderPricingModal();
+        bindPricingModalEvents();
     }
 });
 
@@ -89,6 +97,7 @@ function renderMarketingLayout() {
                 ${renderFeatureShowcase()}
             </main>
             <div id="authModalPlaceholder"></div>
+            <div id="pricingModalPlaceholder"></div>
             <footer class="main-footer">
                 NearPro — Made with ❤️ by S8N
             </footer>
@@ -118,6 +127,7 @@ async function renderDirectoryLayout() {
             <div class="modal-overlay" id="detailModalOverlay"></div>
             <div class="modal-overlay" id="compareModalOverlay"></div>
             <div id="authModalPlaceholder"></div>
+            <div id="pricingModalPlaceholder"></div>
             
             <footer class="main-footer">
                 NearPro — Made with ❤️ by S8N
@@ -188,6 +198,7 @@ async function renderInsightsLayout() {
             ${renderHeader()}
             <main class="main-layout" style="display: block;" id="insightsWrap"></main>
             <div id="authModalPlaceholder"></div>
+            <div id="pricingModalPlaceholder"></div>
             <footer class="main-footer">
                 NearPro — Made with ❤️ by S8N
             </footer>
@@ -322,7 +333,7 @@ function renderFeedContent(hasMore) {
                     <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 15px; line-height: 1.6;">
                         You have browsed NearPro for 2 minutes. Upgrade to the premium plan to unlock unlimited search access, coordinate mapping, and full database exports.
                     </p>
-                    <button class="brand-btn" style="width: 100%;" onclick="State.setAuthModal(true);">Unlock Full Access</button>
+                    <button class="brand-btn" style="width: 100%;" onclick="State.setPricingModal(true);">Unlock Full Access</button>
                 </div>
             `;
             document.body.appendChild(overlay);
@@ -356,7 +367,7 @@ function renderFeedContent(hasMore) {
                     <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.6;">
                         Access verified phone numbers, email addresses, websites, business hours, and coordinate mapping for all professionals in this niche.
                     </p>
-                    <button class="brand-btn" style="padding: 10px 24px; font-size: 14px;" onclick="State.setAuthModal(true);">Unlock Full Access</button>
+                    <button class="brand-btn" style="padding: 10px 24px; font-size: 14px;" onclick="State.setPricingModal(true);">Unlock Full Access</button>
                 </div>
             </div>
         ` : '';

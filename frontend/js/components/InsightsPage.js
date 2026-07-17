@@ -81,7 +81,7 @@ export function renderInsightsPage() {
                                 <div style="font-size: 24px; margin-bottom: 12px;">🔒</div>
                                 <h4 style="font-size: 15px; margin-bottom: 8px;">Upgrade to Premium</h4>
                                 <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.4;">Unlock niche local market gap insights and density indexes.</p>
-                                <button class="brand-btn" style="padding: 8px 16px; font-size: 12px; border-radius: var(--radius-sm);" onclick="State.setAuthModal(true);">Access Now</button>
+                                <button class="brand-btn" style="padding: 8px 16px; font-size: 12px; border-radius: var(--radius-sm);" onclick="State.setPricingModal(true);">Access Now</button>
                             </div>
                         </div>
                     ` : ''}
@@ -118,7 +118,7 @@ export function renderInsightsPage() {
                                 <div style="font-size: 24px; margin-bottom: 12px;">🔒</div>
                                 <h4 style="font-size: 15px; margin-bottom: 8px;">Upgrade to Premium</h4>
                                 <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.4;">Unlock competitor lead quality analysis and verification ratios.</p>
-                                <button class="brand-btn" style="padding: 8px 16px; font-size: 12px; border-radius: var(--radius-sm);" onclick="State.setAuthModal(true);">Access Now</button>
+                                <button class="brand-btn" style="padding: 8px 16px; font-size: 12px; border-radius: var(--radius-sm);" onclick="State.setPricingModal(true);">Access Now</button>
                             </div>
                         </div>
                     ` : ''}

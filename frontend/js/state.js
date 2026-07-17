@@ -106,5 +106,12 @@ export const State = {
     setAuthModal(isOpen) {
         this.auth_modal_open = isOpen;
         this.notify();
+    },
+
+    pricing_modal_open: false,
+    
+    setPricingModal(isOpen) {
+        this.pricing_modal_open = isOpen;
+        this.notify();
     }
 };
