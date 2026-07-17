@@ -1,0 +1,33 @@
+# Local Environment Variables
+.env
+.env.local
+
+# Dependency directories
+node_modules/
+jspm_packages/
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Build output
+dist/
+build/
+out/
+
+# Sync state
+sync/.sync_state
+
+# IDE and OS files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+.DS_Store
+Thumbs.db
