@@ -10,7 +10,6 @@ import { renderFilterPanel, bindFilterPanelEvents } from './components/FilterPan
 import { renderProfessionalCard, bindProfessionalCardEvents } from './components/ProfessionalCard.js';
 import { renderProfessionalModal, bindProfessionalModalEvents } from './components/ProfessionalModal.js';
 import { renderComparePanel, renderCompareModalContent, bindComparePanelEvents } from './components/CompareModal.js';
-import { renderExportButton, bindExportButtonEvents } from './components/ExportButton.js';
 import { renderInsightsPage, initInsightsCharts } from './components/InsightsPage.js';
 import { renderMapView, initFullMap } from './components/MapView.js';
 import { renderMarketingHero } from './components/MarketingHero.js';
@@ -117,7 +116,6 @@ async function renderDirectoryLayout() {
                 <section class="app-content">
                     <div id="searchBarElement"></div>
                     <div id="filterPanelElement"></div>
-                    <div id="exportBtnElement"></div>
                     <div class="view-container" id="feedElement"></div>
                     <div id="comparePanelPlaceholder"></div>
                 </section>
@@ -247,25 +245,12 @@ async function updateDirectoryView() {
     sidebar.innerHTML = renderCategorySidebar();
     bindCategorySidebarEvents();
 
-    // Update compare/export buttons
+    // Update compare panel
     document.getElementById('comparePanelPlaceholder').innerHTML = renderComparePanel();
     bindComparePanelEvents(showCompareModal);
 
-    document.getElementById('exportBtnElement').innerHTML = renderExportButton();
-    bindExportButtonEvents(fetchSelectedLeadsDetails);
-
     // Update feed grid or maps view
     await queryProfessionals(false);
-}
-
-// Fetch selected leads details for client CSV or Webhook export
-async function fetchSelectedLeadsDetails() {
-    const details = [];
-    for (const id of State.selected_ids) {
-        const p = State.professionals.find(x => x.id === id);
-        if (p) details.push(p);
-    }
-    return details;
 }
 
 // Main query handler contacting Supabase API

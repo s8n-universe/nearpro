@@ -48,7 +48,7 @@ export function renderPricingModal() {
                     <div style="background: rgba(236, 72, 153, 0.04); border: 1px solid rgba(236, 72, 153, 0.2); padding: 16px; border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; gap: 12px;">
                         <div>
                             <h4 style="font-size: 14px; color: var(--accent-pink); margin: 0 0 4px 0; font-family: var(--font-heading);">Elite Pro Plan — ₹99/mo</h4>
-                            <p style="font-size: 11px; color: var(--text-secondary); margin: 0; line-height: 1.4;">Adds bulk CSV database exports, opportunity metrics, gaps score.</p>
+                            <p style="font-size: 11px; color: var(--text-secondary); margin: 0; line-height: 1.4;">Adds opportunity metrics, market gaps scoring, density charts, ratings analysis.</p>
                         </div>
                         <button class="brand-btn" style="padding: 6px 12px; font-size: 11px; flex-shrink: 0; background: linear-gradient(135deg, var(--accent-pink), #a855f7);" onclick="localStorage.setItem('selected_nearpro_tier', 'pro'); window.State.locked = false; window.State.session_started = null; window.State.setPricingModal(false); window.State.setAuthModal(true);">
                             Choose ₹99

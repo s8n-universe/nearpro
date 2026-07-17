@@ -58,13 +58,25 @@ export function renderFeatureShowcase() {
                                 <span style="color: var(--accent-gold);">✓</span>
                                 <div>Access Completeness Scores Index</div>
                             </li>
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px; opacity: 0.4;">
-                                <span>✗</span>
-                                <div>Direct Phone & Website CTAs</div>
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-gold);">✓</span>
+                                <div>Read Open Status Hours</div>
                             </li>
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px; opacity: 0.4;">
-                                <span>✗</span>
-                                <div>Bulk CSV Database Exports</div>
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-gold);">✓</span>
+                                <div>Search By Category Or Parents</div>
+                            </li>
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-gold);">✓</span>
+                                <div>Instant Local Area Filtering</div>
+                            </li>
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-gold);">✓</span>
+                                <div>Guided Tour Walkthrough Instructions</div>
+                            </li>
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-gold);">✓</span>
+                                <div>Search Up To 5000 Active Leads</div>
                             </li>
                         </ul>
                         <button class="brand-btn" style="width: 100%; padding: 10px; font-size: 13px; margin-top: 24px;" onclick="localStorage.setItem('selected_nearpro_tier', 'starter'); window.State.locked = false; window.State.session_started = null; window.State.setAuthModal(true);">
@@ -84,7 +96,7 @@ export function renderFeatureShowcase() {
                         <ul style="list-style: none; padding: 0; margin: 0 0 auto 0; font-size: 13px; line-height: 1.8; color: var(--text-secondary);">
                             <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
                                 <span style="color: var(--accent-gold);">✓</span>
-                                <div><strong>All Starter Features</strong></div>
+                                <div><strong>All Starter Features Included</strong></div>
                             </li>
                             <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
                                 <span style="color: var(--accent-gold);">✓</span>
@@ -98,9 +110,21 @@ export function renderFeatureShowcase() {
                                 <span style="color: var(--accent-gold);">✓</span>
                                 <div>Spatial Coordinates Map Pins</div>
                             </li>
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px; opacity: 0.4;">
-                                <span>✗</span>
-                                <div>Bulk CSV Database Exports</div>
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-gold);">✓</span>
+                                <div>Distance Estimates From Your Area</div>
+                            </li>
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-gold);">✓</span>
+                                <div>Save Favorites List to Local Bookmarks</div>
+                            </li>
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-gold);">✓</span>
+                                <div>Share Directory Card Links</div>
+                            </li>
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-gold);">✓</span>
+                                <div>Priority Support Queue Response</div>
                             </li>
                         </ul>
                         <button class="brand-btn" style="width: 100%; padding: 10px; font-size: 13px; margin-top: 24px;" onclick="localStorage.setItem('selected_nearpro_tier', 'connect'); window.State.locked = false; window.State.session_started = null; window.State.setAuthModal(true);">
@@ -119,11 +143,7 @@ export function renderFeatureShowcase() {
                         <ul style="list-style: none; padding: 0; margin: 0 0 auto 0; font-size: 13px; line-height: 1.8; color: var(--text-secondary);">
                             <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
                                 <span style="color: var(--accent-pink);">✓</span>
-                                <div><strong>All Connect Features</strong></div>
-                            </li>
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-pink);">✓</span>
-                                <div><strong>Bulk CSV Database Exports</strong></div>
+                                <div><strong>All Connect Features Included</strong></div>
                             </li>
                             <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
                                 <span style="color: var(--accent-pink);">✓</span>
@@ -132,6 +152,30 @@ export function renderFeatureShowcase() {
                             <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
                                 <span style="color: var(--accent-pink);">✓</span>
                                 <div>Competitor Quality Analytics Dashboard</div>
+                            </li>
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-pink);">✓</span>
+                                <div>Average Ratings Analysis Maps</div>
+                            </li>
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-pink);">✓</span>
+                                <div>Category Density Breakdown Charts</div>
+                            </li>
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-pink);">✓</span>
+                                <div>Suburb Verification Ratio Reports</div>
+                            </li>
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-pink);">✓</span>
+                                <div>Filter By Professional Review Count</div>
+                            </li>
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-pink);">✓</span>
+                                <div>Custom Business Intelligence Reports</div>
+                            </li>
+                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-pink);">✓</span>
+                                <div>Dedicated Client Success Manager</div>
                             </li>
                         </ul>
                         <button class="brand-btn" style="width: 100%; padding: 10px; font-size: 13px; margin-top: 24px; background: linear-gradient(135deg, var(--accent-pink), #a855f7);" onclick="localStorage.setItem('selected_nearpro_tier', 'pro'); window.State.locked = false; window.State.session_started = null; window.State.setAuthModal(true);">
