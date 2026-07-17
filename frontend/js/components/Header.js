@@ -46,7 +46,7 @@ export function renderHeader() {
                 <div class="header-actions" style="display: flex; align-items: center; gap: 12px;">
                     ${viewToggleHTML}
                     ${authActionsHTML}
-                    <a href="#" class="brand-btn" style="padding: 8px 16px; font-size: 13px; border-radius: var(--radius-sm); display: none; @media(min-width: 600px){display: inline-block;}">
+                    <a href="#" class="brand-btn connect-app-btn" style="padding: 8px 16px; font-size: 13px; border-radius: var(--radius-sm);">
                         Connect App
                     </a>
                 </div>

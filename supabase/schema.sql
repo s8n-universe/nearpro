@@ -64,3 +64,19 @@ CREATE POLICY "Public read access" ON professionals
 CREATE POLICY "Service role write access" ON professionals
     FOR ALL
     USING (auth.role() = 'service_role');
+
+-- Create anonymous trials tracking table
+CREATE TABLE IF NOT EXISTS public.anonymous_trials (
+    fingerprint TEXT PRIMARY KEY,
+    started_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Enable Row Level Security (RLS)
+ALTER TABLE public.anonymous_trials ENABLE ROW LEVEL SECURITY;
+
+-- Policies for trials table
+CREATE POLICY "Allow public read access to trials" ON public.anonymous_trials
+    FOR SELECT USING (true);
+
+CREATE POLICY "Allow public insert access to trials" ON public.anonymous_trials
+    FOR INSERT WITH CHECK (true);

@@ -26,7 +26,7 @@ export function renderFeatureShowcase() {
                     </div>
                 </div>
             </div>
-        <section class="pro_plans_section" style="background: var(--bg-surface); padding: 80px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+        <section class="pricing-section">
             <div class="container">
                 <div class="features-title-wrap" style="margin-bottom: 48px;">
                     <span style="font-family: var(--font-mono); font-size: 12px; color: var(--accent-gold); text-transform: uppercase;">Monetization & Growth</span>
@@ -36,149 +36,149 @@ export function renderFeatureShowcase() {
                     </p>
                 </div>
                 
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; max-width: 1000px; margin: 0 auto;">
+                <div class="pricing-grid">
                     <!-- Starter Plan -->
-                    <div class="feature-panel" style="padding: 32px; background: rgba(9, 9, 11, 0.6); border-color: rgba(255, 160, 0, 0.1); display: flex; flex-direction: column; height: 100%;">
-                        <div style="margin-bottom: 20px;">
-                            <h3 style="font-size: 18px; font-family: var(--font-heading); color: var(--accent-gold); margin-bottom: 4px;">Starter Plan</h3>
-                            <div style="font-size: 28px; font-weight: bold; color: white; margin-top: 8px;">
-                                ₹29 <span style="font-size: 12px; color: var(--text-muted); font-weight: normal;">/ month</span>
+                    <div class="pricing-card">
+                        <div class="pricing-header">
+                            <h3 class="pricing-title" style="color: var(--accent-gold);">Starter Plan</h3>
+                            <div class="pricing-price">
+                                ₹29 <span>/ month</span>
                             </div>
                         </div>
-                        <ul style="list-style: none; padding: 0; margin: 0 0 auto 0; font-size: 13px; line-height: 1.8; color: var(--text-secondary);">
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-gold);">✓</span>
+                        <ul class="pricing-features-list">
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon">✓</span>
                                 <div>Unlimited Directory Searches</div>
                             </li>
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-gold);">✓</span>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon">✓</span>
                                 <div>View Verified Names & Categories</div>
                             </li>
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-gold);">✓</span>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon">✓</span>
                                 <div>Access Completeness Scores Index</div>
                             </li>
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-gold);">✓</span>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon">✓</span>
                                 <div>Read Open Status Hours</div>
                             </li>
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-gold);">✓</span>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon">✓</span>
                                 <div>Search By Category Or Parents</div>
                             </li>
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-gold);">✓</span>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon">✓</span>
                                 <div>Instant Local Area Filtering</div>
                             </li>
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-gold);">✓</span>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon">✓</span>
                                 <div>Guided Tour Walkthrough Instructions</div>
                             </li>
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-gold);">✓</span>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon">✓</span>
                                 <div>Search Up To 5000 Active Leads</div>
                             </li>
                         </ul>
-                        <button class="brand-btn" style="width: 100%; padding: 10px; font-size: 13px; margin-top: 24px;" onclick="localStorage.setItem('selected_nearpro_tier', 'starter'); window.State.locked = false; window.State.session_started = null; window.State.setAuthModal(true);">
+                        <button class="brand-btn pricing-btn" onclick="localStorage.setItem('selected_nearpro_tier', 'starter'); window.State.locked = false; window.State.session_started = null; window.State.setAuthModal(true);">
                             Select Starter
                         </button>
                     </div>
 
                     <!-- Connect Plan -->
-                    <div class="feature-panel" style="padding: 32px; background: rgba(9, 9, 11, 0.6); border-color: var(--accent-gold); display: flex; flex-direction: column; height: 100%; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-                        <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--accent-gold); color: black; font-size: 10px; font-family: var(--font-mono); padding: 4px 12px; border-radius: 20px; font-weight: bold; text-transform: uppercase;">Popular</div>
-                        <div style="margin-bottom: 20px;">
-                            <h3 style="font-size: 18px; font-family: var(--font-heading); color: var(--accent-gold); margin-bottom: 4px;">Connect Plan</h3>
-                            <div style="font-size: 28px; font-weight: bold; color: white; margin-top: 8px;">
-                                ₹59 <span style="font-size: 12px; color: var(--text-muted); font-weight: normal;">/ month</span>
+                    <div class="pricing-card popular">
+                        <div class="pricing-badge">Popular</div>
+                        <div class="pricing-header">
+                            <h3 class="pricing-title" style="color: var(--accent-gold);">Connect Plan</h3>
+                            <div class="pricing-price">
+                                ₹59 <span>/ month</span>
                             </div>
                         </div>
-                        <ul style="list-style: none; padding: 0; margin: 0 0 auto 0; font-size: 13px; line-height: 1.8; color: var(--text-secondary);">
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-gold);">✓</span>
-                                <div><strong>All Starter Features Included</strong></div>
+                        <ul class="pricing-features-list">
+                            <li class="pricing-feature-item highlight">
+                                <span class="pricing-feature-icon">✓</span>
+                                <div>All Starter Features Included</div>
                             </li>
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-gold);">✓</span>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon">✓</span>
                                 <div>Direct Phone Numbers for Call Outreach</div>
                             </li>
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-gold);">✓</span>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon">✓</span>
                                 <div>Direct Verified Website Connections</div>
                             </li>
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-gold);">✓</span>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon">✓</span>
                                 <div>Spatial Coordinates Map Pins</div>
                             </li>
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-gold);">✓</span>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon">✓</span>
                                 <div>Distance Estimates From Your Area</div>
                             </li>
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-gold);">✓</span>
-                                <div>Save Favorites List to Local Bookmarks</div>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon">✓</span>
+                                <div>Save Bookmarks to Local Favorites</div>
                             </li>
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-gold);">✓</span>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon">✓</span>
                                 <div>Share Directory Card Links</div>
                             </li>
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-gold);">✓</span>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon">✓</span>
                                 <div>Priority Support Queue Response</div>
                             </li>
                         </ul>
-                        <button class="brand-btn" style="width: 100%; padding: 10px; font-size: 13px; margin-top: 24px;" onclick="localStorage.setItem('selected_nearpro_tier', 'connect'); window.State.locked = false; window.State.session_started = null; window.State.setAuthModal(true);">
+                        <button class="brand-btn pricing-btn" onclick="localStorage.setItem('selected_nearpro_tier', 'connect'); window.State.locked = false; window.State.session_started = null; window.State.setAuthModal(true);">
                             Select Connect
                         </button>
                     </div>
 
                     <!-- Elite Pro Plan -->
-                    <div class="feature-panel" style="padding: 32px; background: rgba(9, 9, 11, 0.6); border-color: rgba(236, 72, 153, 0.2); display: flex; flex-direction: column; height: 100%;">
-                        <div style="margin-bottom: 20px;">
-                            <h3 style="font-size: 18px; font-family: var(--font-heading); color: var(--accent-pink); margin-bottom: 4px;">Elite Pro Plan</h3>
-                            <div style="font-size: 28px; font-weight: bold; color: white; margin-top: 8px;">
-                                ₹99 <span style="font-size: 12px; color: var(--text-muted); font-weight: normal;">/ month</span>
+                    <div class="pricing-card">
+                        <div class="pricing-header">
+                            <h3 class="pricing-title" style="color: var(--accent-pink);">Elite Pro Plan</h3>
+                            <div class="pricing-price">
+                                ₹99 <span>/ month</span>
                             </div>
                         </div>
-                        <ul style="list-style: none; padding: 0; margin: 0 0 auto 0; font-size: 13px; line-height: 1.8; color: var(--text-secondary);">
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-pink);">✓</span>
-                                <div><strong>All Connect Features Included</strong></div>
+                        <ul class="pricing-features-list">
+                            <li class="pricing-feature-item highlight">
+                                <span class="pricing-feature-icon" style="color: var(--accent-pink);">✓</span>
+                                <div>All Connect Features Included</div>
                             </li>
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-pink);">✓</span>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon" style="color: var(--accent-pink);">✓</span>
                                 <div>Advanced Suburb Opportunity Indices</div>
                             </li>
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-pink);">✓</span>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon" style="color: var(--accent-pink);">✓</span>
                                 <div>Competitor Quality Analytics Dashboard</div>
                             </li>
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-pink);">✓</span>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon" style="color: var(--accent-pink);">✓</span>
                                 <div>Average Ratings Analysis Maps</div>
                             </li>
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-pink);">✓</span>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon" style="color: var(--accent-pink);">✓</span>
                                 <div>Category Density Breakdown Charts</div>
                             </li>
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-pink);">✓</span>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon" style="color: var(--accent-pink);">✓</span>
                                 <div>Suburb Verification Ratio Reports</div>
                             </li>
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-pink);">✓</span>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon" style="color: var(--accent-pink);">✓</span>
                                 <div>Filter By Professional Review Count</div>
                             </li>
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-pink);">✓</span>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon" style="color: var(--accent-pink);">✓</span>
                                 <div>Custom Business Intelligence Reports</div>
                             </li>
-                            <li style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
-                                <span style="color: var(--accent-pink);">✓</span>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon" style="color: var(--accent-pink);">✓</span>
                                 <div>Dedicated Client Success Manager</div>
                             </li>
                         </ul>
-                        <button class="brand-btn" style="width: 100%; padding: 10px; font-size: 13px; margin-top: 24px; background: linear-gradient(135deg, var(--accent-pink), #a855f7);" onclick="localStorage.setItem('selected_nearpro_tier', 'pro'); window.State.locked = false; window.State.session_started = null; window.State.setAuthModal(true);">
+                        <button class="brand-btn pricing-btn" style="background: linear-gradient(135deg, var(--accent-pink), #a855f7);" onclick="localStorage.setItem('selected_nearpro_tier', 'pro'); window.State.locked = false; window.State.session_started = null; window.State.setAuthModal(true);">
                             Select Elite Pro
                         </button>
                     </div>

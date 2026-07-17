@@ -6,15 +6,22 @@
     --brand-gradient-hover: linear-gradient(135deg, #ffb333, #f062a8);
     --accent-gold: #ffa000;
     --accent-pink: #ec4899;
-    --bg-base: #09090b;
-    --bg-surface: #18181b;
-    --bg-surface-hover: #27272a;
-    --text-primary: #f4f4f5;
-    --text-secondary: #a1a1aa;
-    --text-muted: #52525b;
-    --border: #27272a;
+    --bg-base: #030303;
+    --bg-surface: #0a0a0c;
+    --bg-surface-hover: #121215;
+    --text-primary: #ffffff;
+    --text-secondary: #c5c5c9;
+    --text-muted: #6f6f76;
+    --border: rgba(255, 255, 255, 0.06);
     --border-focus: #ffa000;
-    --shadow-gold: rgba(255, 160, 0, 0.15);
+    --shadow-gold: rgba(255, 160, 0, 0.12);
+    
+    /* Glassmorphism & premium UI additions */
+    --glass-bg: rgba(10, 10, 12, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.06);
+    --glass-border-hover: rgba(255, 255, 255, 0.12);
+    --glow-gold: rgba(255, 160, 0, 0.20);
+    --glow-pink: rgba(236, 72, 153, 0.20);
     
     /* Typography */
     --font-heading: 'Space Grotesk', system-ui, -apple-system, sans-serif;
@@ -22,10 +29,10 @@
     --font-mono: 'JetBrains Mono', monospace;
     
     /* Spacing & Borders */
-    --radius-sm: 6px;
-    --radius-md: 10px;
-    --radius-lg: 16px;
-    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Base Reset */

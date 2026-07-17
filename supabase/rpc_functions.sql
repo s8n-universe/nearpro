@@ -75,3 +75,106 @@ RETURNS JSON AS $$
         )
     );
 $$ LANGUAGE SQL STABLE;
+
+-- 4. Secure professional retriever with automated trials check & data masking
+CREATE OR REPLACE FUNCTION get_professionals_v2(
+    client_fingerprint TEXT,
+    parent_cat TEXT DEFAULT NULL,
+    sub_cat TEXT DEFAULT NULL,
+    filter_area TEXT DEFAULT NULL,
+    min_rat REAL DEFAULT NULL,
+    has_em BOOLEAN DEFAULT FALSE,
+    has_ph BOOLEAN DEFAULT FALSE,
+    has_web BOOLEAN DEFAULT FALSE,
+    search_term TEXT DEFAULT NULL,
+    sort_col TEXT DEFAULT 'rating_desc',
+    offset_val INT DEFAULT 0,
+    limit_val INT DEFAULT 24
+)
+RETURNS TABLE (
+    id UUID,
+    name TEXT,
+    category TEXT,
+    parent_category TEXT,
+    address TEXT,
+    area TEXT,
+    phone TEXT,
+    website TEXT,
+    email TEXT,
+    rating REAL,
+    review_count INT,
+    completeness_score INT,
+    hours JSONB,
+    latitude REAL,
+    longitude REAL,
+    source TEXT,
+    source_url TEXT,
+    scraped_at TIMESTAMPTZ,
+    synced_at TIMESTAMPTZ
+) AS $$
+DECLARE
+    is_premium_user BOOLEAN := FALSE;
+    is_trial_active BOOLEAN := FALSE;
+BEGIN
+    -- Check if authenticated user is premium
+    IF auth.uid() IS NOT NULL THEN
+        SELECT (is_premium OR tier IN ('connect', 'pro')) INTO is_premium_user
+        FROM public.profiles
+        WHERE profiles.id = auth.uid();
+    END IF;
+    
+    -- Check if anonymous 2-minute trial is active
+    IF NOT is_premium_user AND client_fingerprint IS NOT NULL THEN
+        SELECT EXISTS (
+            SELECT 1 FROM public.anonymous_trials
+            WHERE fingerprint = client_fingerprint
+              AND (NOW() - started_at) < INTERVAL '2 minutes'
+        ) INTO is_trial_active;
+    END IF;
+    
+    RETURN QUERY
+    SELECT 
+        p.id,
+        p.name,
+        p.category,
+        p.parent_category,
+        p.address,
+        p.area,
+        CASE 
+            WHEN is_premium_user OR is_trial_active THEN p.phone
+            ELSE NULL
+        END as phone,
+        CASE 
+            WHEN is_premium_user OR is_trial_active THEN p.website
+            ELSE NULL
+        END as website,
+        p.email,
+        p.rating,
+        p.review_count,
+        p.completeness_score,
+        p.hours,
+        p.latitude,
+        p.longitude,
+        p.source,
+        p.source_url,
+        p.scraped_at,
+        p.synced_at
+    FROM professionals p
+    WHERE 
+        (parent_cat IS NULL OR p.parent_category = parent_cat)
+        AND (sub_cat IS NULL OR p.category = sub_cat)
+        AND (filter_area IS NULL OR p.area = filter_area)
+        AND (min_rat IS NULL OR p.rating >= min_rat)
+        AND (NOT has_em OR (p.email IS NOT NULL AND p.email != ''))
+        AND (NOT has_ph OR (p.phone IS NOT NULL AND p.phone != ''))
+        AND (NOT has_web OR (p.website IS NOT NULL AND p.website != ''))
+        AND (search_term IS NULL OR p.name ILIKE '%' || search_term || '%' OR p.address ILIKE '%' || search_term || '%' OR p.category ILIKE '%' || search_term || '%')
+    ORDER BY
+        CASE WHEN sort_col = 'rating_desc' THEN p.rating END DESC,
+        CASE WHEN sort_col = 'reviews_desc' THEN p.review_count END DESC,
+        CASE WHEN sort_col = 'completeness_desc' THEN p.completeness_score END DESC,
+        CASE WHEN sort_col = 'scraped_desc' THEN p.scraped_at END DESC
+    OFFSET offset_val
+    LIMIT limit_val;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;

@@ -1,5 +1,40 @@
 import { supabase } from './supabase.js';
 
+export function generateBrowserFingerprint() {
+    try {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return "fallback_" + Math.random().toString(36).substring(7);
+        
+        ctx.textBaseline = "top";
+        ctx.font = "14px 'Arial'";
+        ctx.fillStyle = "#f60";
+        ctx.fillRect(125, 1, 62, 20);
+        ctx.fillStyle = "#069";
+        ctx.fillText("NearProFingerprint!", 2, 15);
+        ctx.fillStyle = "rgba(102, 204, 0, 0.7)";
+        ctx.fillText("NearProFingerprint!", 4, 17);
+        
+        const data = canvas.toDataURL();
+        let hash = 0;
+        for (let i = 0; i < data.length; i++) {
+            hash = (hash << 5) - hash + data.charCodeAt(i);
+            hash |= 0;
+        }
+        
+        const entropy = [
+            navigator.userAgent.replace(/[^a-zA-Z0-9]/g, '').slice(0, 40),
+            navigator.language,
+            screen.width + "x" + screen.height,
+            new Date().getTimezoneOffset()
+        ].join('_');
+        
+        return Math.abs(hash).toString(16) + "_" + entropy;
+    } catch (e) {
+        return "fallback_" + Math.random().toString(36).substring(7);
+    }
+}
+
 // Open now parsing helper (Vulnerability V6 Mitigation)
 export function isOpenNow(hours) {
     if (!hours || typeof hours !== 'object' || Object.keys(hours).length === 0) {
@@ -94,62 +129,81 @@ export const Api = {
         return data;
     },
     
-    async getProfessionals(filters, offset = 0, limit = 24) {
-        // Base Query
-        let query = supabase.from('professionals').select('*', { count: 'exact' });
+    async checkTrial(fingerprint) {
+        const { data, error } = await supabase
+            .from('anonymous_trials')
+            .select('*')
+            .eq('fingerprint', fingerprint)
+            .maybeSingle();
+        if (error) throw error;
+        return data;
+    },
+    
+    async startTrial(fingerprint) {
+        const { data, error } = await supabase
+            .from('anonymous_trials')
+            .insert([{ fingerprint }])
+            .select()
+            .maybeSingle();
+        if (error) throw error;
+        return data;
+    },
+
+    async getProfessionals(filters, offset = 0, limit = 24, fingerprint = '') {
+        // 1. Query the total count matching the filters securely (selecting only ID)
+        let countQuery = supabase.from('professionals').select('id', { count: 'exact', head: true });
         
-        // Apply Filters
         if (filters.parentCategory) {
-            query = query.eq('parent_category', filters.parentCategory);
+            countQuery = countQuery.eq('parent_category', filters.parentCategory);
         }
         if (filters.category) {
-            query = query.eq('category', filters.category);
+            countQuery = countQuery.eq('category', filters.category);
         }
         if (filters.area) {
-            query = query.eq('area', filters.area);
+            countQuery = countQuery.eq('area', filters.area);
         }
         if (filters.min_rating) {
-            query = query.gte('rating', parseFloat(filters.min_rating));
+            countQuery = countQuery.gte('rating', parseFloat(filters.min_rating));
         }
         if (filters.has_email) {
-            query = query.not('email', 'is', null).neq('email', '');
+            countQuery = countQuery.not('email', 'is', null).neq('email', '');
         }
         if (filters.has_phone) {
-            query = query.not('phone', 'is', null).neq('phone', '');
+            countQuery = countQuery.not('phone', 'is', null).neq('phone', '');
         }
         if (filters.has_website) {
-            query = query.not('website', 'is', null).neq('website', '');
+            countQuery = countQuery.not('website', 'is', null).neq('website', '');
         }
-        
-        // Full text search
         if (filters.search && filters.search.trim()) {
             const s = filters.search.trim();
-            query = query.or(`name.ilike.%${s}%,address.ilike.%${s}%,category.ilike.%${s}%`);
+            countQuery = countQuery.or(`name.ilike.%${s}%,address.ilike.%${s}%,category.ilike.%${s}%`);
         }
         
-        // Sort order
-        if (filters.sort_by === 'rating_desc') {
-            query = query.order('rating', { ascending: false }).order('review_count', { ascending: false });
-        } else if (filters.sort_by === 'reviews_desc') {
-            query = query.order('review_count', { ascending: false });
-        } else if (filters.sort_by === 'scraped_desc') {
-            query = query.order('scraped_at', { ascending: false });
-        } else if (filters.sort_by === 'completeness_desc') {
-            query = query.order('completeness_score', { ascending: false });
-        }
-        
-        // Pagination Range
-        query = query.range(offset, offset + limit - 1);
-        
-        const { data, error, count } = await query;
+        const { error: countErr, count } = await countQuery;
+        if (countErr) throw countErr;
+
+        // 2. Fetch the paginated and masked results via get_professionals_v2 RPC
+        const { data, error } = await supabase.rpc('get_professionals_v2', {
+            client_fingerprint: fingerprint || '',
+            parent_cat: filters.parentCategory || null,
+            sub_cat: filters.category || null,
+            filter_area: filters.area || null,
+            min_rat: filters.min_rating ? parseFloat(filters.min_rating) : null,
+            has_em: !!filters.has_email,
+            has_ph: !!filters.has_phone,
+            has_web: !!filters.has_website,
+            search_term: filters.search && filters.search.trim() ? filters.search.trim() : null,
+            sort_col: filters.sort_by || 'rating_desc',
+            offset_val: offset,
+            limit_val: limit
+        });
         if (error) throw error;
-        
-        // Client-side Open Now filtering (Mitigates TZ alignment issues)
+
         let items = data || [];
         if (filters.open_now) {
             items = items.filter(p => isOpenNow(p.hours) === true);
         }
-        
+
         return {
             items,
             total: count || 0,

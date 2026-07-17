@@ -1,5 +1,5 @@
 import { State } from './state.js';
-import { Api } from './api.js';
+import { Api, generateBrowserFingerprint } from './api.js';
 import { Router } from './router.js';
 
 // Import UI Renderers
@@ -20,8 +20,72 @@ import { renderPricingModal, bindPricingModalEvents } from './components/Pricing
 // Main Application shell reference
 const appShell = document.getElementById('app');
 
+let timerInterval = null;
+
+function startSessionTimer(durationSeconds, startDocked = false) {
+    if (timerInterval) clearInterval(timerInterval);
+    
+    let timerEl = document.getElementById('sessionTimer');
+    if (!timerEl) {
+        timerEl = document.createElement('div');
+        timerEl.id = 'sessionTimer';
+        document.body.appendChild(timerEl);
+    }
+    
+    timerEl.className = startDocked ? 'timer-docked' : 'timer-center';
+    
+    const updateDisplay = (secs) => {
+        const m = String(Math.floor(secs / 60)).padStart(2, '0');
+        const s = String(secs % 60).padStart(2, '0');
+        timerEl.innerHTML = `
+            <span>⏳</span>
+            <span>Premium Free Trial: ${m}:${s}</span>
+        `;
+    };
+    
+    let timeRemaining = durationSeconds;
+    updateDisplay(timeRemaining);
+    
+    if (!startDocked) {
+        setTimeout(() => {
+            const currentEl = document.getElementById('sessionTimer');
+            if (currentEl && currentEl.classList.contains('timer-center')) {
+                currentEl.className = 'timer-docked';
+            }
+        }, 3000);
+    }
+    
+    timerInterval = setInterval(() => {
+        timeRemaining--;
+        if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            if (timerEl) timerEl.remove();
+            
+            State.locked = true;
+            State.notify();
+            State.setPricingModal(true);
+        } else {
+            updateDisplay(timeRemaining);
+            if (timeRemaining <= 30) {
+                timerEl.classList.add('timer-urgent');
+            }
+        }
+    }, 1000);
+}
+
 // State Subscription - Centralized UI synchronization
 State.subscribe(async (currentState) => {
+    const isPremium = State.profile && (State.profile.is_premium === true || (State.profile.tier && State.profile.tier !== 'free'));
+    if (isPremium) {
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+        const timerEl = document.getElementById('sessionTimer');
+        if (timerEl) timerEl.remove();
+    }
+
     // If we're on browse/directory routes, trigger list re-render
     const isBrowse = window.location.hash.startsWith('#/browse') || window.location.hash.startsWith('#/category');
     if (isBrowse) {
@@ -150,6 +214,10 @@ async function renderDirectoryLayout() {
     // Trigger initial content query load
     await queryProfessionals(true);
 
+    if (!State.fingerprint) {
+        State.fingerprint = generateBrowserFingerprint();
+    }
+
     const isDemoDone = localStorage.getItem('nearpro_demo_completed') === 'true';
     if (!isDemoDone && !State.demo_active && !State.locked) {
         if (!document.getElementById('welcomeDemoModal')) {
@@ -171,23 +239,38 @@ async function renderDirectoryLayout() {
             `;
             document.body.appendChild(popup);
             
-            document.getElementById('startDemoBtn').addEventListener('click', () => {
+            document.getElementById('startDemoBtn').addEventListener('click', async () => {
                 const nicheInput = document.getElementById('demoNicheInput');
                 const nicheText = nicheInput.value.trim() || 'Dentist';
+                
+                try {
+                    await Api.startTrial(State.fingerprint);
+                } catch (err) {
+                    console.warn("Trial registration failed, using local timer:", err);
+                }
+                
+                startSessionTimer(120, false);
                 runGuidedDemo(nicheText);
             });
         }
     } else {
-        // Start 2 minute free trial session timer (strictly no hyphens)
-        if (!State.session_started && !State.locked) {
-            State.session_started = Date.now();
-            setTimeout(() => {
-                const isPremium = State.profile && (State.profile.is_premium === true || (State.profile.tier && State.profile.tier !== 'free'));
-                if (!isPremium) {
-                    State.locked = true;
-                    State.notify();
+        const isPremium = State.profile && (State.profile.is_premium === true || (State.profile.tier && State.profile.tier !== 'free'));
+        if (!isPremium && !State.locked) {
+            try {
+                const trial = await Api.checkTrial(State.fingerprint);
+                if (trial) {
+                    const elapsed = Math.floor((Date.now() - new Date(trial.started_at).getTime()) / 1000);
+                    if (elapsed >= 120) {
+                        State.locked = true;
+                        State.notify();
+                    } else {
+                        const remaining = 120 - elapsed;
+                        startSessionTimer(remaining, true);
+                    }
                 }
-            }, 120000);
+            } catch (err) {
+                console.error("Failed to check database trial status:", err);
+            }
         }
     }
 }
@@ -268,9 +351,11 @@ async function queryProfessionals(isInitialLoad = false) {
             </div>
         `;
     }
-
     try {
-        const result = await Api.getProfessionals(State.filters, State.offset, State.limit);
+        if (!State.fingerprint) {
+            State.fingerprint = generateBrowserFingerprint();
+        }
+        const result = await Api.getProfessionals(State.filters, State.offset, State.limit, State.fingerprint);
         
         // Append or replace dataset
         if (State.offset === 0) {
@@ -395,6 +480,12 @@ function renderFeedContent(hasMore) {
                 localStorage.removeItem('nearpro_demo_completed');
                 State.locked = false;
                 State.session_started = null;
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                }
+                const timerEl = document.getElementById('sessionTimer');
+                if (timerEl) timerEl.remove();
                 renderDirectoryLayout();
             });
         }

@@ -34,21 +34,33 @@ export function renderInsightsPage() {
             
             <!-- Key Metric Grid -->
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 48px;">
-                <div class="feature-panel" style="padding: 24px; text-align: center;">
-                    <div style="font-size: 13px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase;">Total Leads</div>
-                    <div style="font-size: 36px; font-weight: 700; color: var(--accent-gold); margin-top: 8px;">${s.total_professionals}</div>
+                <div class="feature-panel" style="padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid var(--accent-gold);">
+                    <div style="text-align: left;">
+                        <div style="font-size: 12px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Total Leads</div>
+                        <div style="font-size: 32px; font-weight: 700; color: var(--text-primary); margin-top: 4px;">${s.total_professionals}</div>
+                    </div>
+                    <div style="font-size: 28px; opacity: 0.8;">📊</div>
                 </div>
-                <div class="feature-panel" style="padding: 24px; text-align: center;">
-                    <div style="font-size: 13px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase;">Average Rating</div>
-                    <div style="font-size: 36px; font-weight: 700; color: var(--accent-pink); margin-top: 8px;">★ ${s.average_rating}</div>
+                <div class="feature-panel" style="padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid var(--accent-pink);">
+                    <div style="text-align: left;">
+                        <div style="font-size: 12px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Average Rating</div>
+                        <div style="font-size: 32px; font-weight: 700; color: var(--accent-pink); margin-top: 4px;">★ ${s.average_rating}</div>
+                    </div>
+                    <div style="font-size: 28px; opacity: 0.8;">⭐</div>
                 </div>
-                <div class="feature-panel" style="padding: 24px; text-align: center;">
-                    <div style="font-size: 13px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase;">With Phone</div>
-                    <div style="font-size: 36px; font-weight: 700; color: var(--text-primary); margin-top: 8px;">${parseInt(s.with_phone / s.total_professionals * 100)}%</div>
+                <div class="feature-panel" style="padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid #3b82f6;">
+                    <div style="text-align: left;">
+                        <div style="font-size: 12px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">With Phone</div>
+                        <div style="font-size: 32px; font-weight: 700; color: var(--text-primary); margin-top: 4px;">${parseInt(s.with_phone / s.total_professionals * 100)}%</div>
+                    </div>
+                    <div style="font-size: 28px; opacity: 0.8;">📞</div>
                 </div>
-                <div class="feature-panel" style="padding: 24px; text-align: center;">
-                    <div style="font-size: 13px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase;">With Website</div>
-                    <div style="font-size: 36px; font-weight: 700; color: var(--text-primary); margin-top: 8px;">${parseInt(s.with_website / s.total_professionals * 100)}%</div>
+                <div class="feature-panel" style="padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid #10b981;">
+                    <div style="text-align: left;">
+                        <div style="font-size: 12px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">With Website</div>
+                        <div style="font-size: 32px; font-weight: 700; color: var(--text-primary); margin-top: 4px;">${parseInt(s.with_website / s.total_professionals * 100)}%</div>
+                    </div>
+                    <div style="font-size: 28px; opacity: 0.8;">🌐</div>
                 </div>
             </div>
             
