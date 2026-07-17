@@ -183,23 +183,74 @@ export const Api = {
         if (countErr) throw countErr;
 
         // 2. Fetch the paginated and masked results via get_professionals_v2 RPC
-        const { data, error } = await supabase.rpc('get_professionals_v2', {
-            client_fingerprint: fingerprint || '',
-            parent_cat: filters.parentCategory || null,
-            sub_cat: filters.category || null,
-            filter_area: filters.area || null,
-            min_rat: filters.min_rating ? parseFloat(filters.min_rating) : null,
-            has_em: !!filters.has_email,
-            has_ph: !!filters.has_phone,
-            has_web: !!filters.has_website,
-            search_term: filters.search && filters.search.trim() ? filters.search.trim() : null,
-            sort_col: filters.sort_by || 'rating_desc',
-            offset_val: offset,
-            limit_val: limit
-        });
-        if (error) throw error;
+        let items = [];
+        let errorOccurred = false;
+        
+        try {
+            const { data, error } = await supabase.rpc('get_professionals_v2', {
+                client_fingerprint: fingerprint || '',
+                parent_cat: filters.parentCategory || null,
+                sub_cat: filters.category || null,
+                filter_area: filters.area || null,
+                min_rat: filters.min_rating ? parseFloat(filters.min_rating) : null,
+                has_em: !!filters.has_email,
+                has_ph: !!filters.has_phone,
+                has_web: !!filters.has_website,
+                search_term: filters.search && filters.search.trim() ? filters.search.trim() : null,
+                sort_col: filters.sort_by || 'rating_desc',
+                offset_val: offset,
+                limit_val: limit
+            });
+            
+            if (error) {
+                if (error.code === '42883' || error.message.includes('Could not find the function') || error.message.includes('schema cache')) {
+                    errorOccurred = true;
+                } else {
+                    throw error;
+                }
+            } else {
+                items = data || [];
+            }
+        } catch (e) {
+            if (e.message && (e.message.includes('Could not find') || e.message.includes('schema cache'))) {
+                errorOccurred = true;
+            } else {
+                throw e;
+            }
+        }
+        
+        if (errorOccurred) {
+            console.warn("⚠️ get_professionals_v2 RPC function not found in Supabase. Falling back to direct public table query. Please run the Supabase database migration script!");
+            
+            let fallbackQuery = supabase.from('professionals').select('*');
+            if (filters.parentCategory) fallbackQuery = fallbackQuery.eq('parent_category', filters.parentCategory);
+            if (filters.category) fallbackQuery = fallbackQuery.eq('category', filters.category);
+            if (filters.area) fallbackQuery = fallbackQuery.eq('area', filters.area);
+            if (filters.min_rating) fallbackQuery = fallbackQuery.gte('rating', parseFloat(filters.min_rating));
+            if (filters.has_email) fallbackQuery = fallbackQuery.not('email', 'is', null).neq('email', '');
+            if (filters.has_phone) fallbackQuery = fallbackQuery.not('phone', 'is', null).neq('phone', '');
+            if (filters.has_website) fallbackQuery = fallbackQuery.not('website', 'is', null).neq('website', '');
+            if (filters.search && filters.search.trim()) {
+                const s = filters.search.trim();
+                fallbackQuery = fallbackQuery.or(`name.ilike.%${s}%,address.ilike.%${s}%,category.ilike.%${s}%`);
+            }
+            
+            if (filters.sort_by === 'rating_desc') {
+                fallbackQuery = fallbackQuery.order('rating', { ascending: false }).order('review_count', { ascending: false });
+            } else if (filters.sort_by === 'reviews_desc') {
+                fallbackQuery = fallbackQuery.order('review_count', { ascending: false });
+            } else if (filters.sort_by === 'scraped_desc') {
+                fallbackQuery = fallbackQuery.order('scraped_at', { ascending: false });
+            } else if (filters.sort_by === 'completeness_desc') {
+                fallbackQuery = fallbackQuery.order('completeness_score', { ascending: false });
+            }
+            
+            fallbackQuery = fallbackQuery.range(offset, offset + limit - 1);
+            const { data: fallbackData, error: fallbackErr } = await fallbackQuery;
+            if (fallbackErr) throw fallbackErr;
+            items = fallbackData || [];
+        }
 
-        let items = data || [];
         if (filters.open_now) {
             items = items.filter(p => isOpenNow(p.hours) === true);
         }
