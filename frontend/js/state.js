@@ -7,6 +7,7 @@ export const State = {
     offset: 0,
     limit: 24,
     loading: false,
+    locked: false, // SaaS lockout gating flag
     
     // Filters state
     filters: {

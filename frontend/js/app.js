@@ -131,6 +131,15 @@ async function renderDirectoryLayout() {
 
     // Trigger initial content query load
     await queryProfessionals(true);
+
+    // Start 2 minute free trial session timer (strictly no hyphens)
+    if (!State.session_started) {
+        State.session_started = Date.now();
+        setTimeout(() => {
+            State.locked = true;
+            State.notify();
+        }, 120000);
+    }
 }
 
 // Layer 2 Insights shell
@@ -260,6 +269,27 @@ function renderFeedContent(hasMore) {
     const feed = document.getElementById('feedElement');
     if (!feed) return;
 
+    // Handle full session timer lockout (Mitigation of V2)
+    if (State.locked === true) {
+        if (!document.getElementById('sessionLockoutOverlay')) {
+            const overlay = document.createElement('div');
+            overlay.id = 'sessionLockoutOverlay';
+            overlay.className = 'lockout_screen_overlay';
+            overlay.innerHTML = `
+                <div class="lockout_modal">
+                    <div class="lock_icon">🔒</div>
+                    <h2 style="font-size: 24px; margin-bottom: 16px; font-family: var(--font-heading);">Free Session Expired</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 15px; line-height: 1.6;">
+                        You have browsed NearPro for 2 minutes. Upgrade to the premium plan to unlock unlimited search access, coordinate mapping, and full database exports.
+                    </p>
+                    <button class="brand-btn" style="width: 100%;" onclick="window.location.reload();">Unlock Full Access</button>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+        }
+        return;
+    }
+
     if (State.professionals.length === 0) {
         feed.innerHTML = `
             <div style="padding: 80px 24px; text-align: center; border: 1px dashed var(--border); border-radius: var(--radius-lg);">
@@ -272,8 +302,25 @@ function renderFeedContent(hasMore) {
     }
 
     if (State.view === 'grid') {
-        const cardsHTML = State.professionals.map(p => renderProfessionalCard(p)).join('');
+        // Only show first 9 cards (3 rows in 3 column layout)
+        const isListExceeded = State.professionals.length > 9;
+        const displayedLeads = isListExceeded ? State.professionals.slice(0, 9) : State.professionals;
+        const cardsHTML = displayedLeads.map(p => renderProfessionalCard(p)).join('');
         
+        const remainingCount = State.total - 9;
+        const paywallHTML = isListExceeded ? `
+            <div class="row_lockup_banner">
+                <div class="lockup_content">
+                    <div class="lock_icon">🔒</div>
+                    <h3 style="font-size: 20px; margin-bottom: 12px; font-family: var(--font-heading);">Unlock remaining ${remainingCount} leads</h3>
+                    <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.6;">
+                        Access verified phone numbers, email addresses, websites, business hours, and coordinate mapping for all professionals in this niche.
+                    </p>
+                    <button class="brand-btn" style="padding: 10px 24px; font-size: 14px;" onclick="window.location.reload();">Unlock Full Access</button>
+                </div>
+            </div>
+        ` : '';
+
         feed.innerHTML = `
             <div class="feed-header">
                 <div class="feed-title-wrap">
@@ -284,23 +331,25 @@ function renderFeedContent(hasMore) {
             <div class="prof-grid">
                 ${cardsHTML}
             </div>
-            ${hasMore ? `
+            ${isListExceeded ? paywallHTML : (hasMore ? `
                 <div class="load-more-wrap">
                     <button id="loadMoreBtn" class="secondary-btn load-more-btn">Load More Results</button>
                 </div>
-            ` : ''}
+            ` : '')}
         `;
         
         bindProfessionalCardEvents(showDetailModal);
         
-        const loadMoreBtn = document.getElementById('loadMoreBtn');
-        if (loadMoreBtn) {
-            loadMoreBtn.addEventListener('click', async () => {
-                State.offset += State.limit;
-                // Query additional pagination items
-                await queryProfessionals(false);
-            });
+        if (!isListExceeded && hasMore) {
+            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            if (loadMoreBtn) {
+                loadMoreBtn.addEventListener('click', async () => {
+                    State.offset += State.limit;
+                    await queryProfessionals(false);
+                });
+            }
         }
+
     } else {
         // Map view representation
         feed.innerHTML = `

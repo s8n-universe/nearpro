@@ -16,7 +16,7 @@ export function renderFeatureShowcase() {
                     <div class="feature-panel">
                         <div class="feature-icon-wrap">⚡</div>
                         <h3>Open Now Calculator</h3>
-                        <p>Our algorithms parse temporal hour profiles against India Standard Time (IST) in real-time, showing you exactly who is open right now.</p>
+                        <p>Our algorithms parse temporal hour profiles against India Standard Time (IST) in real time, showing you exactly who is open right now.</p>
                     </div>
                     
                     <div class="feature-panel">

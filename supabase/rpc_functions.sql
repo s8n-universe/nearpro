@@ -31,7 +31,7 @@ RETURNS JSON AS $$
             MAX(last_updated) as last_updated,
             json_agg(json_build_object(
                 'name', category,
-                'slug', LOWER(REPLACE(category, ' ', '-')),
+                'slug', LOWER(REPLACE(category, ' ', '_')),
                 'count', sub_count
             ) ORDER BY sub_count DESC) as subcategories
         FROM (

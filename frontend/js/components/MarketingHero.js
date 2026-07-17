@@ -5,8 +5,8 @@ export function renderMarketingHero() {
                 <div class="hero-tag">INTELLIGENCE, ARCHITECTED</div>
                 <h1 class="hero-title">Discover Local Professionals <br>with <span class="brand-text">Verified Data.</span></h1>
                 <p class="hero-desc">
-                    NearPro exposes real-time, verified Google-rated intelligence for Mumbai professionals. 
-                    Connecting you with high-quality services, direct links, and seamless lead acquisition.
+                    NearPro exposes real time, verified Google rated intelligence for Mumbai professionals. 
+                    Connecting you with high quality services, direct links, and seamless lead acquisition.
                 </p>
                 <div class="hero-ctas">
                     <a href="#/browse" class="brand-btn">
