@@ -320,8 +320,10 @@ function renderFeedContent(hasMore) {
     const feed = document.getElementById('feedElement');
     if (!feed) return;
 
+    const isPremium = State.profile && State.profile.is_premium;
+
     // Handle full session timer lockout (Mitigation of V2)
-    if (State.locked === true) {
+    if (State.locked === true && !isPremium) {
         if (!document.getElementById('sessionLockoutOverlay')) {
             const overlay = document.createElement('div');
             overlay.id = 'sessionLockoutOverlay';
@@ -353,8 +355,8 @@ function renderFeedContent(hasMore) {
     }
 
     if (State.view === 'grid') {
-        // Only show first 9 cards (3 rows in 3 column layout)
-        const isListExceeded = State.professionals.length > 9;
+        // Only show first 9 cards (3 rows in 3 column layout) if not premium
+        const isListExceeded = !isPremium && State.professionals.length > 9;
         const displayedLeads = isListExceeded ? State.professionals.slice(0, 9) : State.professionals;
         const cardsHTML = displayedLeads.map(p => renderProfessionalCard(p)).join('');
         
