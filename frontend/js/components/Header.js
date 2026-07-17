@@ -12,6 +12,13 @@ export function renderHeader() {
         </div>
     ` : '';
 
+    const authActionsHTML = State.user ? `
+        <span style="font-size: 13px; color: var(--text-secondary); font-family: var(--font-mono); max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block;">${State.user.email}</span>
+        <button id="signOutBtn" class="secondary-btn" style="padding: 8px 16px; font-size: 13px; border-radius: var(--radius-sm);">Sign Out</button>
+    ` : `
+        <button id="openLoginBtn" class="brand-btn" style="padding: 8px 16px; font-size: 13px; border-radius: var(--radius-sm);">Login</button>
+    `;
+
     return `
         <header class="main-header">
             <div class="container header-wrap">
@@ -36,9 +43,10 @@ export function renderHeader() {
                     <a href="#/insights" class="nav-link ${isInsightsActive ? 'active' : ''}">Insights</a>
                 </nav>
                 
-                <div class="header-actions">
+                <div class="header-actions" style="display: flex; align-items: center; gap: 12px;">
                     ${viewToggleHTML}
-                    <a href="#" class="brand-btn" style="padding: 8px 16px; font-size: 13px; border-radius: var(--radius-sm);">
+                    ${authActionsHTML}
+                    <a href="#" class="brand-btn" style="padding: 8px 16px; font-size: 13px; border-radius: var(--radius-sm); display: none; @media(min-width: 600px){display: inline-block;}">
                         Connect App
                     </a>
                 </div>
@@ -50,6 +58,8 @@ export function renderHeader() {
 export function bindHeaderEvents() {
     const gridBtn = document.getElementById('gridBtn');
     const mapBtn = document.getElementById('mapBtn');
+    const openLoginBtn = document.getElementById('openLoginBtn');
+    const signOutBtn = document.getElementById('signOutBtn');
     
     if (gridBtn) {
         gridBtn.addEventListener('click', () => {
@@ -60,6 +70,23 @@ export function bindHeaderEvents() {
     if (mapBtn) {
         mapBtn.addEventListener('click', () => {
             State.toggleView('map');
+        });
+    }
+
+    if (openLoginBtn) {
+        openLoginBtn.addEventListener('click', () => {
+            State.setAuthModal(true);
+        });
+    }
+
+    if (signOutBtn) {
+        signOutBtn.addEventListener('click', async () => {
+            try {
+                const { Api } = await import('../api.js');
+                await Api.signOut();
+            } catch (err) {
+                console.error("Sign out failed: ", err);
+            }
         });
     }
 }

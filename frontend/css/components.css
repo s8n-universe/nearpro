@@ -537,3 +537,21 @@
     to { transform: scale(1); opacity: 1; }
 }
 
+/* Guided Demo Cloud Tooltips (strictly no hyphens in names) */
+.thought_cloud {
+    animation: scale_cloud 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-origin: top left;
+}
+
+@keyframes scale_cloud {
+    from {
+        transform: scale(0.6);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+

@@ -10,6 +10,9 @@ export const State = {
     locked: false, // SaaS lockout gating flag
     demo_active: false,
     demo_niche: "",
+    user: null,
+    profile: null,
+    auth_modal_open: false,
     
     // Filters state
     filters: {
@@ -91,6 +94,17 @@ export const State = {
     
     clearSelection() {
         this.selected_ids = [];
+        this.notify();
+    },
+
+    setAuth(user, profile) {
+        this.user = user;
+        this.profile = profile;
+        this.notify();
+    },
+
+    setAuthModal(isOpen) {
+        this.auth_modal_open = isOpen;
         this.notify();
     }
 };

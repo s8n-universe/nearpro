@@ -15,6 +15,7 @@ import { renderInsightsPage, initInsightsCharts } from './components/InsightsPag
 import { renderMapView, initFullMap } from './components/MapView.js';
 import { renderMarketingHero } from './components/MarketingHero.js';
 import { renderFeatureShowcase } from './components/FeatureShowcase.js';
+import { renderAuthModal, bindAuthModalEvents } from './components/AuthModal.js';
 
 // Main Application shell reference
 const appShell = document.getElementById('app');
@@ -33,6 +34,13 @@ State.subscribe(async (currentState) => {
         } else {
             renderMarketingLayout();
         }
+    }
+
+    // Dynamically render/update Auth Modal
+    const authPlaceholder = document.getElementById('authModalPlaceholder');
+    if (authPlaceholder) {
+        authPlaceholder.innerHTML = renderAuthModal();
+        bindAuthModalEvents();
     }
 });
 
@@ -80,6 +88,7 @@ function renderMarketingLayout() {
                 ${renderMarketingHero()}
                 ${renderFeatureShowcase()}
             </main>
+            <div id="authModalPlaceholder"></div>
             <footer class="main-footer">
                 NearPro — Made with ❤️ by S8N
             </footer>
@@ -108,6 +117,7 @@ async function renderDirectoryLayout() {
             <!-- Global Modal Overlays -->
             <div class="modal-overlay" id="detailModalOverlay"></div>
             <div class="modal-overlay" id="compareModalOverlay"></div>
+            <div id="authModalPlaceholder"></div>
             
             <footer class="main-footer">
                 NearPro — Made with ❤️ by S8N
@@ -177,6 +187,7 @@ async function renderInsightsLayout() {
         <div class="app-container">
             ${renderHeader()}
             <main class="main-layout" style="display: block;" id="insightsWrap"></main>
+            <div id="authModalPlaceholder"></div>
             <footer class="main-footer">
                 NearPro — Made with ❤️ by S8N
             </footer>
@@ -395,6 +406,11 @@ function renderFeedContent(hasMore) {
         
         // Initialize Leaflet markers overlays
         State.map_instance = initFullMap(State.professionals, showDetailModal);
+
+        // Center on target lead coordinates during demo walkthrough
+        if (State.demo_active && State.demo_lead_lat && State.demo_lead_lng && State.map_instance) {
+            State.map_instance.setView([State.demo_lead_lat, State.demo_lead_lng], 16);
+        }
     }
 }
 
@@ -432,7 +448,141 @@ function showCompareModal(professionalsList) {
     }
 }
 
-/* --- Guided Demo Walkthrough --- */
+const DemoAudio = {
+    ctx: null,
+    
+    playFile(path) {
+        const a = new Audio(path);
+        a.volume = 0.4;
+        a.play().catch(e => {
+            console.warn("Real audio file not loaded yet, playing synthesizer clicks", path);
+            this.synthesizeClick();
+        });
+    },
+    
+    playTyping() {
+        this.playFile('/audio/typing.mp3');
+    },
+    
+    playClick() {
+        this.playFile('/audio/click.mp3');
+    },
+    
+    playWhoosh() {
+        this.playFile('/audio/whoosh.mp3');
+    },
+    
+    synthesizeClick() {
+        try {
+            if (!this.ctx) {
+                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            const ctx = this.ctx;
+            if (ctx.state === 'suspended') {
+                ctx.resume();
+            }
+            
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(1200 + Math.random() * 600, ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(150, ctx.currentTime + 0.04);
+            
+            gain.gain.setValueAtTime(0.08, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+            
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            
+            osc.start();
+            osc.stop(ctx.currentTime + 0.04);
+        } catch (e) {
+            console.error("Audio synthesis failed", e);
+        }
+    }
+};
+
+function createVirtualCursor() {
+    let cursor = document.getElementById('demoCursor');
+    if (!cursor) {
+        cursor = document.createElement('div');
+        cursor.id = 'demoCursor';
+        cursor.style.position = 'fixed';
+        cursor.style.width = '24px';
+        cursor.style.height = '24px';
+        cursor.style.zIndex = '99999';
+        cursor.style.pointerEvents = 'none';
+        cursor.style.transition = 'all 1s cubic-bezier(0.25, 1, 0.5, 1)';
+        cursor.style.transform = 'translate(-5px, -5px)';
+        
+        cursor.innerHTML = `
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M4 4L12 20L15 15L20 12L4 4Z" fill="#ffa000" stroke="#ffffff" stroke-width="2" stroke-linejoin="round"/>
+            </svg>
+        `;
+        
+        // Start center
+        cursor.style.left = '50%';
+        cursor.style.top = '50%';
+        
+        document.body.appendChild(cursor);
+    }
+    return cursor;
+}
+
+async function moveCursorTo(selectorOrElement, offset = { x: 0, y: 0 }) {
+    const cursor = createVirtualCursor();
+    let target = null;
+    if (typeof selectorOrElement === 'string') {
+        target = document.querySelector(selectorOrElement);
+    } else {
+        target = selectorOrElement;
+    }
+    
+    if (target) {
+        const rect = target.getBoundingClientRect();
+        const targetX = rect.left + rect.width / 2 + offset.x;
+        const targetY = rect.top + rect.height / 2 + offset.y;
+        
+        cursor.style.left = `${targetX}px`;
+        cursor.style.top = `${targetY}px`;
+        
+        await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+}
+
+function showThoughtCloud(text, x, y, duration = 3000) {
+    const cloud = document.createElement('div');
+    cloud.className = 'thought_cloud';
+    cloud.style.position = 'fixed';
+    cloud.style.left = `${x}px`;
+    cloud.style.top = `${y}px`;
+    cloud.style.zIndex = '99998';
+    cloud.style.background = 'var(--bg-surface)';
+    cloud.style.border = '1px solid var(--border)';
+    cloud.style.padding = '12px 16px';
+    cloud.style.borderRadius = 'var(--radius-lg)';
+    cloud.style.maxWidth = '240px';
+    cloud.style.boxShadow = '0 10px 30px rgba(0,0,0,0.6)';
+    cloud.style.fontSize = '13px';
+    cloud.style.color = 'white';
+    cloud.style.pointerEvents = 'none';
+    
+    cloud.innerHTML = `
+        <div style="font-family: var(--font-heading); margin-bottom: 4px; color: var(--accent-gold); font-size: 11px; text-transform: uppercase;">NearPro Cloud</div>
+        <div style="line-height: 1.4;">${text}</div>
+    `;
+    
+    document.body.appendChild(cloud);
+    
+    setTimeout(() => {
+        cloud.style.transition = 'all 0.3s ease-out';
+        cloud.style.opacity = '0';
+        cloud.style.transform = 'scale(0.8)';
+        setTimeout(() => cloud.remove(), 300);
+    }, duration);
+}
 
 async function runGuidedDemo(niche) {
     State.demo_active = true;
@@ -442,38 +592,80 @@ async function runGuidedDemo(niche) {
     const popup = document.getElementById('welcomeDemoModal');
     if (popup) popup.remove();
 
+    // Init virtual pointer cursor position
+    createVirtualCursor();
+    await new Promise(resolve => setTimeout(resolve, 500));
+
     // Step 1: Auto Type in Search
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
+        await moveCursorTo('#searchInput');
+        DemoAudio.playClick();
+        
         State.resetFilters();
         searchInput.value = '';
+        searchInput.focus();
         
-        // Type letter by letter
+        // Type letter by letter playing sound
         for (let i = 0; i < niche.length; i++) {
-            await new Promise(resolve => setTimeout(resolve, 80));
+            await new Promise(resolve => setTimeout(resolve, 100));
             searchInput.value += niche[i];
             searchInput.dispatchEvent(new Event('input'));
+            DemoAudio.playTyping();
         }
+        
+        // Show Thought bubble
+        const rect = searchInput.getBoundingClientRect();
+        showThoughtCloud("🌟 Type any niche. NearPro filters leads instantly.", rect.left, rect.bottom + 15, 3000);
     }
 
-    // Wait for data load
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    // Wait for search data load
+    await new Promise(resolve => setTimeout(resolve, 2500));
 
     // Step 2: Open First Card Details
     const firstCard = document.querySelector('.prof-card');
     if (firstCard) {
+        // Extract coordinate targets for map centering step
+        const firstCardId = firstCard.getAttribute('data-id');
+        const lead = State.professionals.find(x => x.id === firstCardId);
+        if (lead) {
+            State.demo_lead_lat = lead.latitude;
+            State.demo_lead_lng = lead.longitude;
+        }
+
+        await moveCursorTo(firstCard);
+        
         firstCard.style.borderColor = 'var(--accent-gold)';
         firstCard.style.boxShadow = '0 0 20px rgba(255, 160, 0, 0.4)';
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        DemoAudio.playClick();
+        await new Promise(resolve => setTimeout(resolve, 200));
+        
+        DemoAudio.playWhoosh();
         firstCard.click();
     }
 
+    // Wait for details modal open transition
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    // Highlight card verification thought bubble
+    const modalContent = document.querySelector('.modal-content');
+    if (modalContent) {
+        const rect = modalContent.getBoundingClientRect();
+        showThoughtCloud("🌟 Realtime verified rating. 5 completeness dots mapping quality parameters.", rect.left + 20, rect.top + 100, 3500);
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        showThoughtCloud("📞 Direct phone, website, maps, and offline sharing connections.", rect.left + 200, rect.bottom - 100, 3500);
+    }
+
     // Wait in detail modal
-    await new Promise(resolve => setTimeout(resolve, 4000));
+    await new Promise(resolve => setTimeout(resolve, 3000));
 
     // Step 3: Close Modal and Toggle Map View
     const closeModalBtn = document.getElementById('closeModalBtn');
     if (closeModalBtn) {
+        await moveCursorTo('#closeModalBtn');
+        DemoAudio.playClick();
+        DemoAudio.playWhoosh();
         closeModalBtn.click();
     }
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -481,17 +673,44 @@ async function runGuidedDemo(niche) {
     // Switch view to Map View
     const mapBtn = document.getElementById('mapBtn');
     if (mapBtn) {
+        await moveCursorTo('#mapBtn');
+        DemoAudio.playClick();
+        DemoAudio.playWhoosh();
         mapBtn.click();
+        
+        // Show thought overlay on map
+        setTimeout(() => {
+            const feedRect = document.getElementById('feedElement').getBoundingClientRect();
+            showThoughtCloud("📍 Coordinates verified and clustered inside Mumbai region.", feedRect.left + 50, feedRect.top + 100, 3500);
+        }, 1500);
     }
 
     // Wait on Map View
-    await new Promise(resolve => setTimeout(resolve, 4000));
+    await new Promise(resolve => setTimeout(resolve, 4500));
 
     // Step 4: Switch to Insights/Analytics
+    const insightsLink = document.querySelector('a[href="#/insights"]');
+    if (insightsLink) {
+        await moveCursorTo(insightsLink);
+    }
+    DemoAudio.playClick();
+    DemoAudio.playWhoosh();
     window.location.hash = '#/insights';
 
     // Wait for insights load
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 2500));
+
+    // Show locked insights thought cloud
+    const insightsHeader = document.querySelector('h2');
+    if (insightsHeader) {
+        const rect = insightsHeader.getBoundingClientRect();
+        showThoughtCloud("📊 Competitor quality analysis and local gap indexes locked for premium users.", rect.left, rect.bottom + 50, 4000);
+    }
+    await new Promise(resolve => setTimeout(resolve, 2500));
+
+    // Remove cursor from screen
+    const cursor = document.getElementById('demoCursor');
+    if (cursor) cursor.remove();
 
     // Step 5: Lockout Blocker
     State.locked = true;
@@ -517,6 +736,34 @@ async function initApp() {
         
     } catch (e) {
         console.error("Initialization check failed. Database offline: ", e);
+    }
+
+    // 3. Initialize Supabase Auth session state listener
+    try {
+        const { supabase } = await import('./supabase.js');
+        
+        // Initial session fetch
+        supabase.auth.getSession().then(async ({ data: { session } }) => {
+            if (session) {
+                State.user = session.user;
+                State.profile = await Api.getProfile(session.user.id);
+                State.notify();
+            }
+        });
+
+        // Listen for session state changes
+        supabase.auth.onAuthStateChange(async (event, session) => {
+            if (session) {
+                State.user = session.user;
+                State.profile = await Api.getProfile(session.user.id);
+            } else {
+                State.user = null;
+                State.profile = null;
+            }
+            State.notify();
+        });
+    } catch (err) {
+        console.error("Auth listener initialization failed: ", err);
     }
 }
 
