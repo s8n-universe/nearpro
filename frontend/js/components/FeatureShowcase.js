@@ -26,8 +26,78 @@ export function renderFeatureShowcase() {
                     </div>
                 </div>
             </div>
+        <section class="pro-plans-section" style="background: var(--bg-surface); padding: 80px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+            <div class="container">
+                <div class="features-title-wrap" style="margin-bottom: 48px;">
+                    <span style="font-family: var(--font-mono); font-size: 12px; color: var(--accent-gold); text-transform: uppercase;">Growth Architecture</span>
+                    <h2 style="font-size: 28px; margin-top: 8px;">Premium Platform vs Mobile App</h2>
+                    <p>Select the platform matching your business outreach strategy or communication needs.</p>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px;">
+                    <!-- Web Premium Box -->
+                    <div class="feature-panel" style="padding: 40px; background: rgba(9, 9, 11, 0.6); border-color: rgba(255, 160, 0, 0.15); display: flex; flex-direction: column;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+                            <div>
+                                <h3 style="font-size: 20px; font-family: var(--font-heading); color: var(--accent-gold);">Web Premium Plan</h3>
+                                <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase;">Lead Generation & Analytics</span>
+                            </div>
+                            <span style="font-size: 28px;">💻</span>
+                        </div>
+                        
+                        <ul style="list-style: none; padding: 0; margin: 0 0 32px 0; font-size: 14px; line-height: 1.8; color: var(--text-secondary);">
+                            <li style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-gold);">✓</span>
+                                <div><strong>Freelancer Client Acquisition</strong>: Extract direct email lists and contact phone numbers to pitch local businesses.</div>
+                            </li>
+                            <li style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-gold);">✓</span>
+                                <div><strong>Niche Opportunity Indexes</strong>: Surf suburb market gaps to discover underserved locations with zero competition.</div>
+                            </li>
+                            <li style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-gold);">✓</span>
+                                <div><strong>Business Pipeline Feeds</strong>: Export full lead lists to clean CSV formats or push data to CRM pipelines.</div>
+                            </li>
+                            <li style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-gold);">✓</span>
+                                <div><strong>Geospatial Map Filtering</strong>: Analyze professional densities inside Mumbai with custom cluster parameters.</div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Mobile App Box -->
+                    <div class="feature-panel" style="padding: 40px; background: rgba(9, 9, 11, 0.6); border-color: rgba(236, 72, 153, 0.15); display: flex; flex-direction: column;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+                            <div>
+                                <h3 style="font-size: 20px; font-family: var(--font-heading); color: var(--accent-pink);">Mobile Application</h3>
+                                <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase;">Live Communication & Actions</span>
+                            </div>
+                            <span style="font-size: 28px;">📱</span>
+                        </div>
+                        
+                        <ul style="list-style: none; padding: 0; margin: 0 0 32px 0; font-size: 14px; line-height: 1.8; color: var(--text-secondary);">
+                            <li style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-pink);">✓</span>
+                                <div><strong>Instant Connection</strong>: Initiate phone calls, WhatsApp messages, or secure live chats in one tap.</div>
+                            </li>
+                            <li style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-pink);">✓</span>
+                                <div><strong>Spatial Routing Maps</strong>: Compute precise distances, travel times, and directions to local offices.</div>
+                            </li>
+                            <li style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-pink);">✓</span>
+                                <div><strong>Offline Directory Bookmarking</strong>: Save business profiles to local device lists for offline access.</div>
+                            </li>
+                            <li style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 8px;">
+                                <span style="color: var(--accent-pink);">✓</span>
+                                <div><strong>Scan Card Profiles</strong>: Generate and scan QR codes to instantly share local directory cards.</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </section>
-        
+
         <section class="app-cta-banner">
             <div class="container cta-banner-content">
                 <h2>Ready to Connect?</h2>

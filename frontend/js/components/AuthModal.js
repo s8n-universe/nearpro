@@ -57,6 +57,11 @@ export function renderAuthModal() {
                     <button type="submit" id="authSubmitBtn" class="brand-btn" style="width: 100%; padding: 12px; font-size: 14px;">
                         Sign In
                     </button>
+                    
+                    <div style="margin-top: 20px; text-align: center; font-size: 13px; color: var(--text-secondary);">
+                        <span id="authToggleHintText">New to NearPro?</span>
+                        <a href="#" id="authToggleLinkBtn" style="color: var(--accent-gold); text-decoration: underline; margin-left: 4px;">Create an account</a>
+                    </div>
                 </form>
             </div>
         </div>
@@ -76,8 +81,42 @@ export function bindAuthModalEvents() {
     const passwordInput = document.getElementById('authPasswordInput');
     const errorMsg = document.getElementById('authErrorMsg');
     const submitBtn = document.getElementById('authSubmitBtn');
+    const toggleLink = document.getElementById('authToggleLinkBtn');
+    const toggleHint = document.getElementById('authToggleHintText');
 
     let currentTab = 'signin'; // 'signin' | 'signup'
+
+    const setTab = (tab) => {
+        if (tab === 'signin') {
+            currentTab = 'signin';
+            if (signInTab) {
+                signInTab.style.borderBottomColor = 'var(--accent-gold)';
+                signInTab.style.color = 'white';
+            }
+            if (signUpTab) {
+                signUpTab.style.borderBottomColor = 'transparent';
+                signUpTab.style.color = 'var(--text-muted)';
+            }
+            submitBtn.innerText = 'Sign In';
+            toggleHint.innerText = 'Already using NearPro?';
+            toggleLink.innerText = 'Sign In';
+            if (errorMsg) errorMsg.style.display = 'none';
+        } else {
+            currentTab = 'signup';
+            if (signUpTab) {
+                signUpTab.style.borderBottomColor = 'var(--accent-gold)';
+                signUpTab.style.color = 'white';
+            }
+            if (signInTab) {
+                signInTab.style.borderBottomColor = 'transparent';
+                signInTab.style.color = 'var(--text-muted)';
+            }
+            submitBtn.innerText = 'Register';
+            toggleHint.innerText = 'Already using NearPro?';
+            toggleLink.innerText = 'Sign In';
+            if (errorMsg) errorMsg.style.display = 'none';
+        }
+    };
 
     // Close Modal
     if (closeBtn) {
@@ -110,6 +149,8 @@ export function bindAuthModalEvents() {
             signUpTab.style.borderBottomColor = 'transparent';
             signUpTab.style.color = 'var(--text-muted)';
             submitBtn.innerText = 'Sign In';
+            toggleHint.innerText = 'New to NearPro?';
+            toggleLink.innerText = 'Create an account';
             if (errorMsg) errorMsg.style.display = 'none';
         });
     }
@@ -122,7 +163,16 @@ export function bindAuthModalEvents() {
             signInTab.style.borderBottomColor = 'transparent';
             signInTab.style.color = 'var(--text-muted)';
             submitBtn.innerText = 'Register';
+            toggleHint.innerText = 'Already using NearPro?';
+            toggleLink.innerText = 'Sign In';
             if (errorMsg) errorMsg.style.display = 'none';
+        });
+    }
+
+    if (toggleLink) {
+        toggleLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            setTab(currentTab === 'signin' ? 'signup' : 'signin');
         });
     }
 

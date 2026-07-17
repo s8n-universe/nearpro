@@ -322,7 +322,7 @@ function renderFeedContent(hasMore) {
                     <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 15px; line-height: 1.6;">
                         You have browsed NearPro for 2 minutes. Upgrade to the premium plan to unlock unlimited search access, coordinate mapping, and full database exports.
                     </p>
-                    <button class="brand-btn" style="width: 100%;" onclick="window.location.reload();">Unlock Full Access</button>
+                    <button class="brand-btn" style="width: 100%;" onclick="State.setAuthModal(true);">Unlock Full Access</button>
                 </div>
             `;
             document.body.appendChild(overlay);
@@ -356,7 +356,7 @@ function renderFeedContent(hasMore) {
                     <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.6;">
                         Access verified phone numbers, email addresses, websites, business hours, and coordinate mapping for all professionals in this niche.
                     </p>
-                    <button class="brand-btn" style="padding: 10px 24px; font-size: 14px;" onclick="window.location.reload();">Unlock Full Access</button>
+                    <button class="brand-btn" style="padding: 10px 24px; font-size: 14px;" onclick="State.setAuthModal(true);">Unlock Full Access</button>
                 </div>
             </div>
         ` : '';
@@ -769,6 +769,8 @@ async function runGuidedDemo(niche) {
 /* --- Startup --- */
 
 async function initApp() {
+    window.State = State; // Expose globally for inline Paywall triggers
+    
     // 1. Initial Router and state setup
     initRoutes();
     
