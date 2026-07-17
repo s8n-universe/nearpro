@@ -362,11 +362,14 @@ function renderFeedContent(hasMore) {
         ` : '';
 
         feed.innerHTML = `
-            <div class="feed-header">
+            <div class="feed-header" style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 24px;">
                 <div class="feed-title-wrap">
                     <h2>Directory Search Results</h2>
                     <span class="feed-subtitle">${State.total} verified professional listing${State.total !== 1 ? 's' : ''} found</span>
                 </div>
+                <button id="restartDemoBtn" class="secondary-btn" style="padding: 6px 12px; font-size: 12px; border-radius: var(--radius-sm);">
+                    Restart Tour
+                </button>
             </div>
             <div class="prof-grid">
                 ${cardsHTML}
@@ -379,6 +382,16 @@ function renderFeedContent(hasMore) {
         `;
         
         bindProfessionalCardEvents(showDetailModal);
+
+        const restartBtn = document.getElementById('restartDemoBtn');
+        if (restartBtn) {
+            restartBtn.addEventListener('click', () => {
+                localStorage.removeItem('nearpro_demo_completed');
+                State.locked = false;
+                State.session_started = null;
+                renderDirectoryLayout();
+            });
+        }
         
         if (!isListExceeded && hasMore) {
             const loadMoreBtn = document.getElementById('loadMoreBtn');

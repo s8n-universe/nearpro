@@ -13,9 +13,9 @@ export function renderMarketingHero() {
                         Browse Professional Directory
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                     </a>
-                    <a href="#" class="secondary-btn">
-                        Get NearPro Mobile App
-                    </a>
+                    <button class="secondary-btn" onclick="localStorage.removeItem('nearpro_demo_completed'); window.State.locked = false; window.State.session_started = null; window.location.hash = '#/browse';" style="cursor: pointer;">
+                        Start Guided Tour
+                    </button>
                 </div>
                 <div class="hero-bullets">
                     <span>4,700+ Verified Leads</span>
