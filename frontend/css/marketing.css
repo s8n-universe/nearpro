@@ -111,7 +111,7 @@
 
 /* Feature grid panel */
 .marketing-features {
-    padding: 80px 0;
+    padding: 80px 0 100px;
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
 }
@@ -119,6 +119,7 @@
     text-align: center;
     max-width: 600px;
     margin: 0 auto 56px;
+    padding: 0 16px;
 }
 .features-title-wrap h2 {
     font-size: 32px;
@@ -129,6 +130,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 32px;
+    padding: 0 16px;
 }
 .feature-panel {
     background: var(--glass-bg);
@@ -355,18 +357,117 @@
     font-weight: 600;
 }
 
-@media (max-width: 640px) {
+/* ===== Responsive Marketing Breakpoints ===== */
+
+/* Tablet */
+@media (max-width: 860px) {
+    .marketing-hero {
+        padding: 100px 0 60px;
+    }
     .hero-title {
-        font-size: 38px;
+        font-size: 42px;
+        letter-spacing: -1px;
+    }
+    .hero-desc {
+        font-size: 16px;
+        padding: 0 16px;
+    }
+    .marketing-features {
+        padding: 60px 0 80px;
+    }
+    .features-title-wrap h2 {
+        font-size: 28px;
+    }
+    .feature-panel {
+        padding: 32px 24px;
+    }
+    .pricing-section {
+        padding: 60px 0;
+    }
+    .pricing-grid {
+        grid-template-columns: 1fr;
+        max-width: 480px;
+        gap: 24px;
+    }
+    .pricing-card {
+        padding: 32px 24px;
+    }
+}
+
+/* Phone */
+@media (max-width: 640px) {
+    .marketing-hero {
+        padding: 80px 0 40px;
+    }
+    .hero-title {
+        font-size: 32px;
+        letter-spacing: -0.5px;
+        padding: 0 12px;
+    }
+    .hero-desc {
+        font-size: 15px;
+        padding: 0 20px;
+        margin-bottom: 28px;
     }
     .hero-ctas {
         flex-direction: column;
         padding: 0 20px;
+        gap: 12px;
     }
     .hero-ctas button, .hero-ctas a {
         width: 100%;
     }
-    .marketing-hero {
-        padding: 80px 0 40px;
+    .hero-bullets {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        padding: 0 16px;
+    }
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .feature-panel {
+        padding: 28px 20px;
+    }
+    .feature-panel h3 {
+        font-size: 17px;
+    }
+    .feature-panel p {
+        font-size: 13.5px;
+    }
+    .pricing-section {
+        padding: 48px 0;
+    }
+    .pricing-grid {
+        padding: 0 12px;
+    }
+    .pricing-card {
+        padding: 28px 20px;
+    }
+    .pricing-header {
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+    }
+    .pricing-price {
+        font-size: 30px;
+    }
+    .pricing-title {
+        font-size: 18px;
     }
 }
+
+/* Tiny phone */
+@media (max-width: 400px) {
+    .hero-title {
+        font-size: 26px;
+    }
+    .hero-tag {
+        font-size: 9px;
+        padding: 4px 12px;
+    }
+    .feature-panel {
+        padding: 24px 16px;
+    }
+}
+
