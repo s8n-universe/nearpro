@@ -571,7 +571,23 @@ const DemoAudio = {
     },
     
     playTyping() {
-        this.playFile('/audio/typing.mp3');
+        try {
+            const a = new Audio('/audio/typing.mp3');
+            a.volume = 0.4;
+            a.play().then(() => {
+                setTimeout(() => {
+                    try {
+                        a.pause();
+                        a.currentTime = 0;
+                    } catch (err) {}
+                }, 2000);
+            }).catch(e => {
+                console.warn("Real audio file not loaded yet, playing synthesizer clicks");
+                this.synthesizeClick();
+            });
+        } catch (e) {
+            this.synthesizeClick();
+        }
     },
     
     playClick() {
