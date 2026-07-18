@@ -4,9 +4,8 @@ export function renderMarketingHero() {
             <div class="container hero-content">
                 <div class="hero-tag">INTELLIGENCE, ARCHITECTED</div>
                 <h1 class="hero-title">Discover Local Professionals <br>with <span class="brand-text">Verified Data.</span></h1>
-                <p class="hero-desc">
-                    NearPro exposes real time, verified Google rated intelligence for Mumbai professionals. 
-                    Connecting you with high quality services, direct links, and seamless lead acquisition.
+                <p class="hero-desc" style="max-width: 680px; margin: 0 auto 32px; line-height: 1.6;">
+                    India's first trusted lead intelligence platform. While US tools guess Indian business details, NearPro maps every suburb, street, and pin code with 100% verified data.
                 </p>
                 <div class="hero-ctas">
                     <a href="#/browse" class="brand-btn">
