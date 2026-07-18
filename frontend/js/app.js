@@ -18,6 +18,7 @@ import { renderAuthModal, bindAuthModalEvents } from './components/AuthModal.js'
 import { renderPricingModal, bindPricingModalEvents } from './components/PricingModal.js';
 import { renderSurveyModal, bindSurveyModalEvents } from './components/SurveyModal.js';
 import { renderPersonalizationModal, bindPersonalizationModalEvents } from './components/PersonalizationModal.js';
+import { renderPrivacyPolicyPage, renderTermsOfServicePage } from './components/LegalPages.js';
 import { renderUpgradeModal, bindUpgradeModalEvents } from './components/UpgradeModal.js';
 import { renderDashboardShell, bindDashboardShellEvents } from './components/DashboardShell.js';
 import { renderLeadCRM, bindCRMWorkspaceEvents } from './components/LeadCRM.js';
@@ -209,6 +210,16 @@ function initRoutes() {
         }
     });
 
+    Router.on('#/privacy', () => {
+        appShell.innerHTML = renderPrivacyPolicyPage();
+        bindHeaderEvents();
+    });
+
+    Router.on('#/terms', () => {
+        appShell.innerHTML = renderTermsOfServicePage();
+        bindHeaderEvents();
+    });
+
     Router.on('*', () => {
         Router.navigate('#/');
     });
@@ -231,8 +242,12 @@ function renderMarketingLayout() {
             <div id="pricingModalPlaceholder"></div>
             <div id="surveyModalPlaceholder"></div>
             <div id="upgradeModalPlaceholder"></div>
-            <footer class="main-footer">
-                NearPro — Made with ❤️ by S8N
+            <footer class="main-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid var(--border); font-size: 13px; color: var(--text-muted); flex-wrap: wrap; gap: 12px;">
+                <div>NearPro — Made with ❤️ by S8N</div>
+                <div style="display: flex; gap: 20px;">
+                    <a href="#/privacy" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Privacy Policy</a>
+                    <a href="#/terms" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Terms Of Service</a>
+                </div>
             </footer>
         </div>
     `;
@@ -263,8 +278,12 @@ async function renderDirectoryLayout() {
             <div id="surveyModalPlaceholder"></div>
             <div id="upgradeModalPlaceholder"></div>
             
-            <footer class="main-footer">
-                NearPro — Made with ❤️ by S8N
+            <footer class="main-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid var(--border); font-size: 13px; color: var(--text-muted); flex-wrap: wrap; gap: 12px;">
+                <div>NearPro — Made with ❤️ by S8N</div>
+                <div style="display: flex; gap: 20px;">
+                    <a href="#/privacy" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Privacy Policy</a>
+                    <a href="#/terms" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Terms Of Service</a>
+                </div>
             </footer>
         </div>
     `;
