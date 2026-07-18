@@ -189,17 +189,32 @@ export function bindAuthModalEvents() {
 
             try {
                 if (currentTab === 'signin') {
-                    await Api.signIn(email, password);
+                    const result = await Api.signIn(email, password);
                     // Clear any stale queued tier from localStorage to prevent
                     // accidental Razorpay checkout triggers on future sign-ins
                     localStorage.removeItem('selected_nearpro_tier');
                     localStorage.removeItem('selected_nearpro_interval');
                     State.setAuthModal(false);
+
+                    // Fetch user profile and redirect to pricing modal if they are on free tier
+                    if (result?.user) {
+                        try {
+                            const profile = await Api.getProfile(result.user.id);
+                            const tier = (profile?.subscription_tier || profile?.tier || 'free').toLowerCase();
+                            if (tier === 'free') {
+                                State.setPricingModal(true);
+                            }
+                        } catch (err) {
+                            console.error("Failed to check user tier on sign in:", err);
+                        }
+                    }
                 } else {
                     await Api.signUp(email, password);
                     localStorage.removeItem('selected_nearpro_tier');
                     localStorage.removeItem('selected_nearpro_interval');
                     State.setAuthModal(false);
+                    // Since it's a new signup, they are Explorer (free) by default. Show pricing modal.
+                    State.setPricingModal(true);
                     alert("Registration successful. Please check your inbox for verification links.");
                 }
             } catch (err) {

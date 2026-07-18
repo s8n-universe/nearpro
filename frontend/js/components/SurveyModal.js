@@ -1,4 +1,5 @@
 import { State } from '../state.js';
+import { Api } from '../api.js';
 
 export function renderSurveyModal() {
     if (!State.survey_modal_open) return '';
@@ -80,20 +81,41 @@ export function bindSurveyModalEvents() {
 
     const form = document.getElementById('surveyForm');
     if (form) {
-        form.addEventListener('submit', (e) => {
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const role = document.getElementById('surveyRole').value;
             const base_suburb = document.getElementById('surveyBase').value;
             const target_industry = document.getElementById('surveyIndustry').value;
 
-            State.setSurvey({
-                role,
-                base_suburb,
-                target_industry
-            });
+            try {
+                // Persist survey to database profiles table
+                const { error } = await Api.supabase.from('profiles').update({
+                    onboarding_completed: true,
+                    survey_role: role,
+                    survey_niches: [target_industry]
+                }).eq('id', State.user.id);
 
-            State.setSurveyModal(false);
+                if (error) throw error;
+
+                if (State.profile) {
+                    State.profile.onboarding_completed = true;
+                    State.profile.survey_role = role;
+                    State.profile.survey_niches = [target_industry];
+                }
+
+                State.setSurvey({
+                    role,
+                    base_suburb,
+                    target_industry
+                });
+
+                State.setSurveyModal(false);
+                window.location.hash = '#/browse';
+            } catch (err) {
+                console.error("Failed to save welcome survey details:", err);
+                alert("Could not save your preferences. Please try again.");
+            }
         });
     }
 }

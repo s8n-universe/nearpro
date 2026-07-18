@@ -565,11 +565,26 @@ export const Api = {
         if (error) throw error;
 
         if (data.mock) {
-            const updated = await this.getProfile(userId);
-            window.State.profile = updated;
-            window.State.notify();
-            alert(`Test Mode Checkout: ${planId.toUpperCase()} subscription activated successfully.`);
-            return true;
+            const { showPreparationLoader } = await import('./components/PreparationLoader.js');
+            return new Promise((resolve) => {
+                showPreparationLoader(async () => {
+                    try {
+                        const updated = await this.getProfile(userId);
+                        window.State.profile = updated;
+                        window.State.notify();
+                        
+                        if (!updated.onboarding_completed) {
+                            window.State.setSurveyModal(true);
+                        } else {
+                            window.location.hash = '#/browse';
+                        }
+                        resolve(true);
+                    } catch (err) {
+                        console.error("Profile refresh failed:", err);
+                        resolve(true);
+                    }
+                });
+            });
         }
 
         if (!window.Razorpay) {
@@ -599,10 +614,18 @@ export const Api = {
                         
                         if (updated.error) throw updated.error;
 
-                        window.State.profile = updated.data;
-                        window.State.notify();
-                        alert("Subscription activated successfully!");
-                        resolve(true);
+                        const { showPreparationLoader } = await import('./components/PreparationLoader.js');
+                        showPreparationLoader(() => {
+                            window.State.profile = updated.data;
+                            window.State.notify();
+
+                            if (!updated.data.onboarding_completed) {
+                                window.State.setSurveyModal(true);
+                            } else {
+                                window.location.hash = '#/browse';
+                            }
+                            resolve(true);
+                        });
                     } catch (err) {
                         reject(err);
                     }
