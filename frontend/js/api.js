@@ -105,6 +105,7 @@ export function isOpenNow(hours) {
 }
 
 export const Api = {
+    supabase,
     async getStats() {
         const { data, error } = await supabase.rpc('get_stats');
         if (error) throw error;

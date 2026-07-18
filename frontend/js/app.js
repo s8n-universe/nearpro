@@ -1176,15 +1176,16 @@ async function renderDashboardLayout(tab) {
                 .from('outreach_templates')
                 .select('*');
 
+            const templatesList = templates || [];
             const searchParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
             const activeLeadId = searchParams.get('lead_id');
-            const activeTemplateId = searchParams.get('template_id') || (templates && templates[0]?.id);
+            const activeTemplateId = searchParams.get('template_id') || (templatesList && templatesList[0]?.id);
 
             let composedMessage = '';
             let composedFollowUp = '';
 
             if (activeLeadId) {
-                const activeItem = savedLeads.find(item => item.professionals.id === activeLeadId);
+                const activeItem = savedLeads.find(item => item.professionals?.id === activeLeadId);
                 const lead = activeItem?.professionals;
 
                 if (lead) {
@@ -1198,7 +1199,7 @@ async function renderDashboardLayout(tab) {
                         audit = data;
                     }
 
-                    const template = templates.find(t => t.id === activeTemplateId) || templates[0];
+                    const template = templatesList.find(t => t.id === activeTemplateId) || templatesList[0];
                     if (template) {
                         composedMessage = buildOutreach(template.template_text, lead, audit);
                         composedFollowUp = buildOutreach(template.follow_up_text || '', lead, audit);
@@ -1207,8 +1208,8 @@ async function renderDashboardLayout(tab) {
             }
 
             if (content) {
-                content.innerHTML = renderOutreachStudio(savedLeads, activeLeadId, templates, activeTemplateId, composedMessage, composedFollowUp);
-                bindOutreachStudioEvents(templates, 
+                content.innerHTML = renderOutreachStudio(savedLeads, activeLeadId, templatesList, activeTemplateId, composedMessage, composedFollowUp);
+                bindOutreachStudioEvents(templatesList, 
                     (leadId) => {
                         window.location.hash = `#/dashboard/outreach?lead_id=${leadId}&template_id=${activeTemplateId}`;
                     }, 
