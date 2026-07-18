@@ -10,37 +10,37 @@ export function renderFeatureShowcase() {
                     <div class="feature-panel">
                         <div class="feature-icon-wrap">📍</div>
                         <h3>Smart Pipelines & Mapping</h3>
-                        <p>Locate target leads visually on coordinate maps. Segment your results into client campaigns, save leads, and track progress using the Lead CRM kanban board.</p>
+                        <p>Locate target leads visually on <span style="color: var(--accent-gold); font-weight: 600;">coordinate maps</span>. Segment your results into <span style="color: var(--accent-gold); font-weight: 600;">client campaigns</span>, save leads, and track progress using the <span style="color: var(--accent-gold); font-weight: 600;">Lead CRM kanban board</span>.</p>
                     </div>
                     
                     <div class="feature-panel">
                         <div class="feature-icon-wrap">⚡</div>
                         <h3>Instant Website Audits</h3>
-                        <p>Run 10-second automated checks on PageSpeed, mobile layouts, and SSL status. Estimate lost monthly revenue for target prospects instantly to back up your pitch.</p>
+                        <p>Run <span style="color: var(--accent-gold); font-weight: 600;">10-second automated checks</span> on PageSpeed, mobile layouts, and SSL status. Estimate <span style="color: var(--accent-gold); font-weight: 600;">lost monthly revenue</span> for target prospects instantly to back up your pitch.</p>
                     </div>
                     
                     <div class="feature-panel">
                         <div class="feature-icon-wrap">📊</div>
                         <h3>AI Outreach & Personalization</h3>
-                        <p>Evaluate prospects with Conversion Scores. Automatically generate customized cold pitches for WhatsApp, email, or Instagram DM in Hinglish and English.</p>
+                        <p>Evaluate prospects with <span style="color: var(--accent-gold); font-weight: 600;">Conversion Scores</span>. Automatically generate customized cold pitches for <span style="color: var(--accent-gold); font-weight: 600;">WhatsApp, email, or Instagram DM</span> in Hinglish and English.</p>
                     </div>
 
                     <div class="feature-panel">
                         <div class="feature-icon-wrap">🔗</div>
                         <h3>Integration Connection Hub</h3>
-                        <p>Push tracked leads directly to your Google Sheets or connect customized n8n webhooks to automate your slack or email outreach workflows instantly.</p>
+                        <p>Push tracked leads directly to your <span style="color: var(--accent-gold); font-weight: 600;">Google Sheets</span> or connect customized <span style="color: var(--accent-gold); font-weight: 600;">n8n webhooks</span> to automate your slack or email outreach workflows instantly.</p>
                     </div>
                     
                     <div class="feature-panel">
                         <div class="feature-icon-wrap">👥</div>
                         <h3>Collaborative Team Workspace</h3>
-                        <p>Invite colleagues to collaborate in shared team workspaces. Assign seats, share smart lists, and compile white-label client reports together.</p>
+                        <p>Invite colleagues to collaborate in <span style="color: var(--accent-gold); font-weight: 600;">shared team workspaces</span>. Assign seats, share <span style="color: var(--accent-gold); font-weight: 600;">smart lists</span>, and compile <span style="color: var(--accent-gold); font-weight: 600;">white-label client reports</span> together.</p>
                     </div>
                     
                     <div class="feature-panel">
                         <div class="feature-icon-wrap">🛠️</div>
                         <h3>Website Builder Prompts</h3>
-                        <p>Generate precise, copy-paste prompts tailored for Bolt.new and Lovable to rebuild outdated prospect websites with one click from your audit results.</p>
+                        <p>Generate precise, copy-paste prompts tailored for <span style="color: var(--accent-gold); font-weight: 600;">Bolt.new and Lovable</span> to rebuild outdated prospect websites with <span style="color: var(--accent-gold); font-weight: 600;">one click</span> from your audit results.</p>
                     </div>
                 </div>
             </div>

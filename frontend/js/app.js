@@ -274,7 +274,7 @@ async function renderDirectoryLayout() {
     
     document.getElementById('filterPanelElement').innerHTML = renderFilterPanel();
     bindFilterPanelEvents();
-
+ 
     if (!State.fingerprint) {
         State.fingerprint = generateBrowserFingerprint();
     }
@@ -282,24 +282,30 @@ async function renderDirectoryLayout() {
     // Re-check premium status; profile may have been loaded asynchronously
     const isPremium = currentUserHasAccess('scout');
     let showWelcomeModal = false;
-
+ 
     if (!isPremium && !State.user) {
-        // Only run trial timer logic for anonymous/free users who are NOT logged in
-        try {
-            const trial = await Api.checkTrial(State.fingerprint);
-            if (!trial) {
-                showWelcomeModal = true;
-            } else {
-                const elapsed = Math.floor((Date.now() - new Date(trial.started_at).getTime()) / 1000);
-                if (elapsed >= 120) {
-                    State.locked = true;
+        const demoCompleted = localStorage.getItem('nearpro_demo_completed') === 'true';
+        if (!demoCompleted) {
+            showWelcomeModal = true;
+            State.locked = false;
+        } else {
+            // Only run trial timer logic for anonymous/free users who have completed the demo
+            try {
+                const trial = await Api.checkTrial(State.fingerprint);
+                if (!trial) {
+                    showWelcomeModal = true;
                 } else {
-                    const remaining = 120 - elapsed;
-                    startSessionTimer(remaining, true);
+                    const elapsed = Math.floor((Date.now() - new Date(trial.started_at).getTime()) / 1000);
+                    if (elapsed >= 120) {
+                        State.locked = true;
+                    } else {
+                        const remaining = 120 - elapsed;
+                        startSessionTimer(remaining, true);
+                    }
                 }
+            } catch (err) {
+                console.error("Failed to check database trial status:", err);
             }
-        } catch (err) {
-            console.error("Failed to check database trial status:", err);
         }
     } else if (isPremium) {
         // Premium user: ensure clean state
@@ -476,7 +482,7 @@ function renderFeedContent(hasMore) {
     const isPremium = currentUserHasAccess('scout');
 
     // Handle full session timer lockout (Mitigation of V2)
-    if (State.locked === true && !isPremium) {
+    if (State.locked === true && !isPremium && !State.demo_active) {
         if (!document.getElementById('sessionLockoutOverlay')) {
             const overlay = document.createElement('div');
             overlay.id = 'sessionLockoutOverlay';
