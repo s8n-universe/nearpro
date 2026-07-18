@@ -1,4 +1,15 @@
-export function renderMarketingHero() {
+export function renderMarketingHero(stats = null) {
+    // Dynamic values with default fallbacks
+    const totalLeads = stats?.total_professionals 
+        ? `${stats.total_professionals.toLocaleString('en-IN')}+` 
+        : '5,390+';
+    const avgRating = stats?.average_rating 
+        ? `${stats.average_rating}★` 
+        : '4.7★';
+    const totalCategories = stats?.total_categories 
+        ? `${stats.total_categories}+` 
+        : '400+';
+
     return `
         <section class="marketing-hero">
             <div class="container hero-content">
@@ -17,10 +28,10 @@ export function renderMarketingHero() {
                     </button>
                 </div>
                 <div class="hero-bullets">
-                    <span>4,700+ Verified Leads</span>
-                    <span>11 Active Parent Industries</span>
-                    <span>99% Coordinate Accuracy</span>
-                    <span>Mumbai Focus</span>
+                    <span>${totalLeads} Verified Leads</span>
+                    <span>${totalCategories} Sub Categories</span>
+                    <span>${avgRating} Average Rating</span>
+                    <span>India Focussed</span>
                 </div>
             </div>
         </section>

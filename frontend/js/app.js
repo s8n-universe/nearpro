@@ -147,9 +147,23 @@ State.subscribe(async (currentState) => {
 
 // Initialize Routing bindings
 function initRoutes() {
-    Router.on('#/', () => {
+    Router.on('#/', async () => {
         State.resetFilters();
         renderMarketingLayout();
+        if (!State.stats) {
+            try {
+                State.stats = await Api.getStats();
+                const mainEl = document.querySelector('.main-layout');
+                if (mainEl) {
+                    mainEl.innerHTML = `
+                        ${renderMarketingHero(State.stats)}
+                        ${renderFeatureShowcase()}
+                    `;
+                }
+            } catch (e) {
+                console.warn("Failed to load home page dynamic stats: ", e);
+            }
+        }
     });
 
     Router.on('#/browse', () => {
@@ -204,7 +218,7 @@ function renderMarketingLayout() {
         <div class="app-container">
             ${renderHeader()}
             <main class="main-layout" style="display: block;">
-                ${renderMarketingHero()}
+                ${renderMarketingHero(State.stats)}
                 ${renderFeatureShowcase()}
             </main>
             <div id="authModalPlaceholder"></div>
