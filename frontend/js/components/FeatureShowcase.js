@@ -3,26 +3,26 @@ export function renderFeatureShowcase() {
         <section class="marketing-features">
             <div class="container">
                 <div class="features-title-wrap">
-                    <h2>Directory Intelligence Features</h2>
-                    <p>NearPro bridges the gap between raw web directories and verified business intelligence. Powered by local scraper integrations.</p>
+                    <h2>Lead Intelligence & Outreach Features</h2>
+                    <p>NearPro transforms raw business directory search results into actionable sales pipelines. Find leads, audit websites, generate AI outreach, and track conversions.</p>
                 </div>
                 <div class="features-grid">
                     <div class="feature-panel">
                         <div class="feature-icon-wrap">📍</div>
-                        <h3>Interactive Map Densities</h3>
-                        <p>Locate service providers and businesses visually. Leaflet.js rendering displays exact coordinates and spatial clusters across Mumbai.</p>
+                        <h3>Smart Pipelines & Mapping</h3>
+                        <p>Locate target leads visually on coordinate maps. Segment your results into client campaigns, save leads, and track progress using the Lead CRM kanban board.</p>
                     </div>
                     
                     <div class="feature-panel">
                         <div class="feature-icon-wrap">⚡</div>
-                        <h3>Open Now Calculator</h3>
-                        <p>Our algorithms parse temporal hour profiles against India Standard Time (IST) in real time, showing you exactly who is open right now.</p>
+                        <h3>Instant Website Audits</h3>
+                        <p>Run 10-second automated checks on PageSpeed, mobile layouts, and SSL status. Estimate lost monthly revenue for target prospects instantly to back up your pitch.</p>
                     </div>
                     
                     <div class="feature-panel">
                         <div class="feature-icon-wrap">📊</div>
-                        <h3>Completeness Scoring</h3>
-                        <p>Every lead is graded (0-5 stars) on phone, email, website, coordinates, and hours availability. No more incomplete profiles.</p>
+                        <h3>AI Outreach & Personalization</h3>
+                        <p>Evaluate prospects with Conversion Scores. Automatically generate customized cold pitches for WhatsApp, email, or Instagram DM in Hinglish and English.</p>
                     </div>
                 </div>
             </div>
