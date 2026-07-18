@@ -188,6 +188,8 @@ export function bindAuthModalEvents() {
             submitBtn.disabled = true;
 
             try {
+                const TIER_LEVELS = { free: 0, scout: 1, hunter: 2, agency: 3, enterprise: 4 };
+
                 if (currentTab === 'signin') {
                     const result = await Api.signIn(email, password);
                     const queuedTier = localStorage.getItem('selected_nearpro_tier');
@@ -197,7 +199,12 @@ export function bindAuthModalEvents() {
                         try {
                             localStorage.removeItem('selected_nearpro_tier');
                             localStorage.removeItem('selected_nearpro_interval');
-                            await Api.checkoutSubscription(queuedTier, queuedInterval);
+                            const profile = await Api.getProfile(result.user.id);
+                            const userTier = (profile?.subscription_tier || 'free').toLowerCase();
+                            const targetTier = queuedTier.toLowerCase();
+                            if ((TIER_LEVELS[userTier] || 0) < (TIER_LEVELS[targetTier] || 0)) {
+                                await Api.checkoutSubscription(queuedTier, queuedInterval);
+                            }
                         } catch (err) {
                             console.error("Auto tier checkout failed: ", err);
                         }
@@ -211,7 +218,12 @@ export function bindAuthModalEvents() {
                         try {
                             localStorage.removeItem('selected_nearpro_tier');
                             localStorage.removeItem('selected_nearpro_interval');
-                            await Api.checkoutSubscription(queuedTier, queuedInterval);
+                            const profile = await Api.getProfile(result.user.id);
+                            const userTier = (profile?.subscription_tier || 'free').toLowerCase();
+                            const targetTier = queuedTier.toLowerCase();
+                            if ((TIER_LEVELS[userTier] || 0) < (TIER_LEVELS[targetTier] || 0)) {
+                                await Api.checkoutSubscription(queuedTier, queuedInterval);
+                            }
                         } catch (err) {
                             console.error("Auto tier checkout failed: ", err);
                         }
