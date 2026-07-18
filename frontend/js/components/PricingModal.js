@@ -102,6 +102,20 @@ export function renderPricingModal() {
                         </button>
                     </div>
 
+                    <!-- Enterprise -->
+                    <div style="background: rgba(255, 255, 255, 0.01); border: 1px dashed rgba(255, 255, 255, 0.15); padding: 18px 20px; border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; gap: 12px;">
+                        <div style="flex: 1;">
+                            <h4 style="font-size: 14px; color: white; margin: 0 0 4px 0; font-family: var(--font-heading);">Enterprise — Custom</h4>
+                            <p style="font-size: 11px; color: var(--text-secondary); margin: 0; line-height: 1.4; margin-bottom:4px;">
+                                Unlimited team seats, API access (PostgREST), multi-city data scraping on request, Salesforce/HubSpot integrations, and dedicated SLA support.
+                            </p>
+                            <span style="font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase;">For large teams & custom scraping</span>
+                        </div>
+                        <a href="mailto:hello@s8n.in?subject=NearPro%20Enterprise%20Plan%20Inquiry" class="brand-btn" style="padding: 8px 14px; font-size: 11.5px; flex-shrink: 0; background: var(--bg-surface); color: white; border: 1px solid var(--border); text-decoration: none; text-align: center; display: inline-block;">
+                            Contact Us
+                        </a>
+                    </div>
+
                 </div>
                 
                 <div style="font-size: 11px; color: var(--text-muted);">

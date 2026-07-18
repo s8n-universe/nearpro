@@ -56,7 +56,8 @@ export function renderProfessionalModal(lead) {
         `;
     }
 
-    const hasConnectAccess = currentUserHasAccess('scout') || (!State.locked && !State.user);
+    // Scout+ required for contact access — Explorer always sees masked data per spec
+    const hasConnectAccess = currentUserHasAccess('scout');
 
     const phoneDisplay = !hasConnectAccess 
         ? `<span onclick="window.State.setPricingModal(true);" style="color: var(--accent-gold); cursor: pointer; text-decoration: underline; font-size: 13px;">🔒 Locked (Upgrade to Scout Plan)</span>`
@@ -153,6 +154,7 @@ export function renderProfessionalModal(lead) {
                 
                 <!-- AI Outreach Pitch Block -->
                 ${(() => {
+                    if (!currentUserHasAccess('hunter')) return ''; // Outreach pitch is Hunter+ only
                     if (!State.user_survey) return '';
                     const survey = State.user_survey;
                     let pitchText = '';
@@ -206,7 +208,11 @@ export function renderProfessionalModal(lead) {
                         <button id="modalTrackLeadBtn" class="secondary-btn ${isTracked ? 'active' : ''}" style="flex: 1; border-color: ${isTracked ? 'var(--accent-gold)' : ''}; color: ${isTracked ? 'var(--accent-gold)' : ''};">
                             📁 ${isTracked ? 'Tracked' : 'Track This Lead'}
                         </button>
-                        <button id="shareQRBtn" class="secondary-btn" style="flex: 1;">Share via QR Code</button>
+                        ${currentUserHasAccess('scout') ? `
+                            <button id="shareQRBtn" class="secondary-btn" style="flex: 1;">Share via QR Code</button>
+                        ` : `
+                            <button class="secondary-btn" style="flex: 1; opacity: 0.5; cursor: not-allowed;" disabled>🔒 QR Code (Scout+)</button>
+                        `}
                     </div>
                     ${lead.source_url && hasConnectAccess ? `
                         <a href="${lead.source_url}" target="_blank" class="secondary-btn" style="width: 100%; text-align: center; justify-content: center; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
@@ -246,7 +252,8 @@ export function bindProfessionalModalEvents(lead, onClose) {
         });
     }
 
-    const hasConnectAccess = currentUserHasAccess('scout') || (!State.locked && !State.user);
+    // Scout+ required for contact access — Explorer always sees masked data per spec
+    const hasConnectAccess = currentUserHasAccess('scout');
 
     // Initialize Leaflet Mini-Map if coordinates are available and user has connect access
     if (lead.latitude && lead.longitude && hasConnectAccess) {

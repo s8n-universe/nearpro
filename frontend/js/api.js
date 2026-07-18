@@ -296,9 +296,36 @@ export const Api = {
         };
     },
     
-    // Client-side CSV Exporter (Zero server dependencies)
+    // Client-side CSV Exporter with tier-based limits
     exportToCSV(leads) {
         if (!leads || leads.length === 0) return;
+
+        // Tier-based export enforcement
+        const { State } = window;
+        const profile = State?.profile;
+        const tier = (profile?.subscription_tier || profile?.tier || 'free').toLowerCase();
+
+        if (tier === 'free') {
+            alert("CSV export is not available on the Explorer plan. Upgrade to Scout (₹499/mo) to export leads.");
+            State?.setPricingModal(true);
+            return;
+        }
+
+        // Scout: 100 rows/month limit
+        if (tier === 'scout') {
+            const used = profile?.monthly_export_rows_used || 0;
+            const limit = profile?.monthly_export_rows_limit || 100;
+            if (used + leads.length > limit) {
+                const remaining = Math.max(0, limit - used);
+                alert(`Export limit: You have ${remaining} of ${limit} rows remaining this month on the Scout plan. Upgrade to Hunter for unlimited exports.`);
+                if (remaining === 0) {
+                    State?.setPricingModal(true);
+                    return;
+                }
+                // Trim to remaining allowance
+                leads = leads.slice(0, remaining);
+            }
+        }
         
         const headers = ["Name", "Category", "Parent Category", "Address", "Area", "Phone", "Website", "Email", "Rating", "Reviews", "Completeness", "Latitude", "Longitude", "Scraped At"];
         const rows = leads.map(l => [
@@ -328,6 +355,17 @@ export const Api = {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+
+        // Update usage counter in profile (best-effort, non-blocking)
+        if (profile && tier === 'scout') {
+            const newUsed = (profile.monthly_export_rows_used || 0) + leads.length;
+            profile.monthly_export_rows_used = newUsed;
+            supabase.from('profiles')
+                .update({ monthly_export_rows_used: newUsed })
+                .eq('id', profile.id)
+                .then(() => {})
+                .catch(err => console.error("Failed to update export usage:", err));
+        }
     },
 
     async getProfile(userId) {

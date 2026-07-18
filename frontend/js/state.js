@@ -90,10 +90,21 @@ export const State = {
     toggleSelect(id) {
         if (this.selected_ids.includes(id)) {
             this.selected_ids = this.selected_ids.filter(x => x !== id);
+            this.notify();
         } else {
+            const tier = (this.profile?.subscription_tier || this.profile?.tier || 'free').toLowerCase();
+            const maxCompare = (tier === 'scout') ? 2 : (tier === 'free' ? 0 : 4);
+            if (this.selected_ids.length >= maxCompare) {
+                alert(`You can compare a maximum of ${maxCompare} professionals on the ${tier.toUpperCase()} plan. Please upgrade to compare more.`);
+                this.setPricingModal(true);
+                // Uncheck the checkbox if it was checked in the DOM
+                const cb = document.querySelector(`.compare-checkbox[data-id="${id}"]`);
+                if (cb) cb.checked = false;
+                return;
+            }
             this.selected_ids.push(id);
+            this.notify();
         }
-        this.notify();
     },
     
     clearSelection() {
@@ -170,6 +181,12 @@ export const State = {
 
         this.setPricingModal(false);
         try {
+            const { hasAccess, getUserTier } = await import('./auth.js');
+            const currentTier = getUserTier();
+            if (hasAccess(currentTier, planId)) {
+                alert(`You already have the ${currentTier.toUpperCase()} plan which includes ${planId.toUpperCase()} features.`);
+                return;
+            }
             const { Api } = await import('./api.js');
             await Api.checkoutSubscription(planId, interval);
         } catch (err) {

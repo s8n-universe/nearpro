@@ -1,5 +1,14 @@
 import { State } from '../state.js';
 import { Api } from '../api.js';
+import { currentUserHasAccess, getUserTier } from '../auth.js';
+
+// Tier-based limits per V3 spec Section 3
+const TIER_LIMITS = {
+    free:   { maxLists: 1, maxLeadsPerList: 5 },
+    scout:  { maxLists: 5, maxLeadsPerList: 50 },
+    hunter: { maxLists: 20, maxLeadsPerList: Infinity },
+    agency: { maxLists: Infinity, maxLeadsPerList: Infinity }
+};
 
 export function showTrackLeadModal(professionalId, onSavedCallback) {
     if (!State.user) {
@@ -42,8 +51,11 @@ export function showTrackLeadModal(professionalId, onSavedCallback) {
         const body = document.getElementById('trackLeadModalBody');
         if (!body) return;
 
+        const tier = getUserTier();
+        const limits = TIER_LIMITS[tier] || TIER_LIMITS.free;
+
         if (lists.length === 0) {
-            // No lists -> offer to auto create one
+            // No lists -> offer to auto create one (always allowed, first list)
             body.innerHTML = `
                 <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 20px;">
                     You do not have any smart lists created yet. Create a default list to start tracking leads.
@@ -108,7 +120,18 @@ export function showTrackLeadModal(professionalId, onSavedCallback) {
                 const errEl = document.getElementById('trackLeadError');
                 errEl.style.display = 'none';
 
+                const tier = getUserTier();
+                const limits = TIER_LIMITS[tier] || TIER_LIMITS.free;
+
                 try {
+                    // Fetch existing leads in this list to check limits
+                    const existingLeads = await Api.getSavedLeads(listId);
+                    if (existingLeads.length >= limits.maxLeadsPerList) {
+                        alert(`You have reached the maximum number of leads allowed per list on the ${TIER_NAMES[tier] || 'Explorer'} plan (${limits.maxLeadsPerList}). Please upgrade to save more leads.`);
+                        State.setPricingModal(true);
+                        return;
+                    }
+
                     await Api.saveLead(listId, professionalId);
                     
                     // Update state tracking

@@ -1,4 +1,5 @@
 import { State } from '../state.js';
+import { currentUserHasAccess } from '../auth.js';
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 
@@ -13,7 +14,7 @@ export function renderInsightsPage() {
     }
 
     const s = State.stats;
-    const isPro = State.user && State.profile && (State.profile.is_premium === true || State.profile.tier === 'pro');
+    const isPro = currentUserHasAccess('agency');
     
     // Convert UTC last scraped to local time
     const lastScrapedStr = s.last_scraped 

@@ -188,46 +188,18 @@ export function bindAuthModalEvents() {
             submitBtn.disabled = true;
 
             try {
-                const TIER_LEVELS = { free: 0, scout: 1, hunter: 2, agency: 3, enterprise: 4 };
-
                 if (currentTab === 'signin') {
-                    const result = await Api.signIn(email, password);
-                    const queuedTier = localStorage.getItem('selected_nearpro_tier');
-                    const queuedInterval = localStorage.getItem('selected_nearpro_interval') || 'monthly';
+                    await Api.signIn(email, password);
+                    // Clear any stale queued tier from localStorage to prevent
+                    // accidental Razorpay checkout triggers on future sign-ins
+                    localStorage.removeItem('selected_nearpro_tier');
+                    localStorage.removeItem('selected_nearpro_interval');
                     State.setAuthModal(false);
-                    if (queuedTier && queuedTier !== 'free' && result.user) {
-                        try {
-                            localStorage.removeItem('selected_nearpro_tier');
-                            localStorage.removeItem('selected_nearpro_interval');
-                            const profile = await Api.getProfile(result.user.id);
-                            const userTier = (profile?.subscription_tier || 'free').toLowerCase();
-                            const targetTier = queuedTier.toLowerCase();
-                            if ((TIER_LEVELS[userTier] || 0) < (TIER_LEVELS[targetTier] || 0)) {
-                                await Api.checkoutSubscription(queuedTier, queuedInterval);
-                            }
-                        } catch (err) {
-                            console.error("Auto tier checkout failed: ", err);
-                        }
-                    }
                 } else {
-                    const result = await Api.signUp(email, password);
-                    const queuedTier = localStorage.getItem('selected_nearpro_tier');
-                    const queuedInterval = localStorage.getItem('selected_nearpro_interval') || 'monthly';
+                    await Api.signUp(email, password);
+                    localStorage.removeItem('selected_nearpro_tier');
+                    localStorage.removeItem('selected_nearpro_interval');
                     State.setAuthModal(false);
-                    if (queuedTier && queuedTier !== 'free' && result.user) {
-                        try {
-                            localStorage.removeItem('selected_nearpro_tier');
-                            localStorage.removeItem('selected_nearpro_interval');
-                            const profile = await Api.getProfile(result.user.id);
-                            const userTier = (profile?.subscription_tier || 'free').toLowerCase();
-                            const targetTier = queuedTier.toLowerCase();
-                            if ((TIER_LEVELS[userTier] || 0) < (TIER_LEVELS[targetTier] || 0)) {
-                                await Api.checkoutSubscription(queuedTier, queuedInterval);
-                            }
-                        } catch (err) {
-                            console.error("Auto tier checkout failed: ", err);
-                        }
-                    }
                     alert("Registration successful. Please check your inbox for verification links.");
                 }
             } catch (err) {

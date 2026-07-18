@@ -149,11 +149,18 @@ export function renderProfessionalCard(lead) {
                 📁 ${isTracked ? 'Tracked' : 'Track'}
             </button>
 
-            <label class="compare-checkbox-label ${isSelected ? 'active' : ''}" onclick="event.stopPropagation();">
-                <input type="checkbox" class="compare-checkbox" data-id="${lead.id}" ${isSelected ? 'checked' : ''} style="display: none;">
-                <span class="compare-pill-dot"></span>
-                Compare
-            </label>
+            ${currentUserHasAccess('scout') ? `
+                <label class="compare-checkbox-label ${isSelected ? 'active' : ''}" onclick="event.stopPropagation();">
+                    <input type="checkbox" class="compare-checkbox" data-id="${lead.id}" ${isSelected ? 'checked' : ''} style="display: none;">
+                    <span class="compare-pill-dot"></span>
+                    Compare
+                </label>
+            ` : `
+                <span class="compare-checkbox-label" style="opacity: 0.4; cursor: not-allowed;" onclick="event.stopPropagation();">
+                    <span class="compare-pill-dot"></span>
+                    🔒
+                </span>
+            `}
             
             <div class="card-top">
                 <div class="avatar-wrap" style="--brand-gradient: linear-gradient(135deg, ${avatarColor}, #ffffff);">${initials}</div>

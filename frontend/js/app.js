@@ -1,6 +1,7 @@
 import { State } from './state.js';
 import { Api, generateBrowserFingerprint } from './api.js';
 import { Router } from './router.js';
+import { currentUserHasAccess } from './auth.js';
 
 // Import UI Renderers
 import { renderHeader, bindHeaderEvents } from './components/Header.js';
@@ -86,7 +87,7 @@ function startSessionTimer(durationSeconds, startDocked = false) {
 
 // State Subscription - Centralized UI synchronization
 State.subscribe(async (currentState) => {
-    const isPremium = State.profile && (State.profile.is_premium === true || (State.profile.tier && State.profile.tier !== 'free'));
+    const isPremium = currentUserHasAccess('scout');
     if (isPremium) {
         if (timerInterval) {
             clearInterval(timerInterval);
@@ -94,6 +95,14 @@ State.subscribe(async (currentState) => {
         }
         const timerEl = document.getElementById('sessionTimer');
         if (timerEl) timerEl.remove();
+
+        // Ensure premium users are never locked or shown the pricing modal
+        if (State.locked) {
+            State.locked = false;
+        }
+        if (State.pricing_modal_open) {
+            State.pricing_modal_open = false;
+        }
     }
 
     // Check if we are on dashboard or browse routes
@@ -281,10 +290,12 @@ async function renderDirectoryLayout() {
         State.fingerprint = generateBrowserFingerprint();
     }
 
-    const isPremium = State.profile && (State.profile.is_premium === true || (State.profile.tier && State.profile.tier !== 'free'));
+    // Re-check premium status; profile may have been loaded asynchronously
+    const isPremium = currentUserHasAccess('scout');
     let showWelcomeModal = false;
 
-    if (!isPremium) {
+    if (!isPremium && !State.user) {
+        // Only run trial timer logic for anonymous/free users who are NOT logged in
         try {
             const trial = await Api.checkTrial(State.fingerprint);
             if (!trial) {
@@ -300,6 +311,13 @@ async function renderDirectoryLayout() {
             }
         } catch (err) {
             console.error("Failed to check database trial status:", err);
+        }
+    } else if (isPremium) {
+        // Premium user: ensure clean state
+        State.locked = false;
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
         }
     }
 
@@ -504,7 +522,7 @@ function renderFeedContent(hasMore) {
     const feed = document.getElementById('feedElement');
     if (!feed) return;
 
-    const isPremium = State.profile && (State.profile.is_premium === true || (State.profile.tier && State.profile.tier !== 'free'));
+    const isPremium = currentUserHasAccess('scout');
 
     // Handle full session timer lockout (Mitigation of V2)
     if (State.locked === true && !isPremium) {
@@ -544,12 +562,12 @@ function renderFeedContent(hasMore) {
     }
 
     if (State.view === 'grid') {
-        // Only show first 9 cards (3 rows in 3 column layout) if not premium
-        const isListExceeded = !isPremium && State.professionals.length > 9;
-        const displayedLeads = isListExceeded ? State.professionals.slice(0, 9) : State.professionals;
+        // Only show first 12 cards (spec: Explorer = 12 profiles per search) if not premium
+        const isListExceeded = !isPremium && State.professionals.length > 12;
+        const displayedLeads = isListExceeded ? State.professionals.slice(0, 12) : State.professionals;
         const cardsHTML = displayedLeads.map(p => renderProfessionalCard(p)).join('');
         
-        const remainingCount = State.total - 9;
+        const remainingCount = State.total - 12;
         const paywallHTML = isListExceeded ? `
             <div class="row_lockup_banner">
                 <div class="lockup_content">
@@ -1104,14 +1122,14 @@ async function renderDashboardLayout(tab) {
             } else {
                 if (content) {
                     content.innerHTML = renderLeadLists(lists);
-                    bindLeadListsEvents(async () => {
+                    bindLeadListsEvents(async function updateLists() {
                         const updatedLists = await Api.getLeadLists();
                         const container = document.getElementById('dashboardContent');
                         if (container) {
                             container.innerHTML = renderLeadLists(updatedLists);
-                            bindLeadListsEvents(arguments.callee);
+                            bindLeadListsEvents(updateLists, updatedLists.length);
                         }
-                    });
+                    }, lists.length);
                 }
             }
         } catch (err) {

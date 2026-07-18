@@ -1,5 +1,6 @@
 import { State } from '../state.js';
 import { Api } from '../api.js';
+import { currentUserHasAccess } from '../auth.js';
 
 export function buildOutreach(templateText, lead, audit = null) {
     let text = templateText;
@@ -200,10 +201,7 @@ export function bindOutreachStudioEvents(templates, onLeadSelectCallback, onTemp
     const generateAIPitchBtn = document.getElementById('generateAIPitchBtn');
     if (generateAIPitchBtn) {
         generateAIPitchBtn.addEventListener('click', async () => {
-            const userTier = State.profile?.subscription_tier || 'free';
-            const allowedTiers = ['hunter', 'agency', 'enterprise'];
-            
-            if (!allowedTiers.includes(userTier.toLowerCase())) {
+            if (!currentUserHasAccess('hunter')) {
                 alert("The AI Pitch Generator requires the Hunter or Agency plan. Please upgrade to unlock this feature.");
                 State.setPricingModal(true);
                 return;

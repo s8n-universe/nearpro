@@ -1,5 +1,14 @@
 import { State } from '../state.js';
 import { Api } from '../api.js';
+import { getUserTier, TIER_NAMES } from '../auth.js';
+
+// Tier-based limits per V3 spec Section 3
+const TIER_LIMITS = {
+    free:   { maxLists: 1, maxLeadsPerList: 5 },
+    scout:  { maxLists: 5, maxLeadsPerList: 50 },
+    hunter: { maxLists: 20, maxLeadsPerList: Infinity },
+    agency: { maxLists: Infinity, maxLeadsPerList: Infinity }
+};
 
 export function renderLeadLists(listsData, activeListId = null, listLeads = []) {
     if (activeListId) {
@@ -175,7 +184,7 @@ function renderListDetailView(listId, listsData, listLeads) {
     `;
 }
 
-export function bindLeadListsEvents(onUpdateCallback) {
+export function bindLeadListsEvents(onUpdateCallback, listsCount = 0) {
     const listCards = document.querySelectorAll('.list-card');
     const openModalBtn = document.getElementById('openCreateListModalBtn');
     const createListEmptyBtn = document.getElementById('createListBtnEmpty');
@@ -192,6 +201,13 @@ export function bindLeadListsEvents(onUpdateCallback) {
     });
 
     const openModal = () => {
+        const tier = getUserTier();
+        const limits = TIER_LIMITS[tier] || TIER_LIMITS.free;
+        if (listsCount >= limits.maxLists) {
+            alert(`You have reached the maximum number of Smart Lists allowed on the ${TIER_NAMES[tier] || 'Explorer'} plan (${limits.maxLists}). Please upgrade to create more lists.`);
+            State.setPricingModal(true);
+            return;
+        }
         if (modalOverlay) modalOverlay.classList.add('open');
     };
 
@@ -209,6 +225,14 @@ export function bindLeadListsEvents(onUpdateCallback) {
             const name = document.getElementById('listNameInput').value.trim();
             const desc = document.getElementById('listDescInput').value.trim();
             const color = form.querySelector('input[name="listColor"]:checked').value;
+
+            const tier = getUserTier();
+            const limits = TIER_LIMITS[tier] || TIER_LIMITS.free;
+            if (listsCount >= limits.maxLists) {
+                alert(`You have reached the maximum number of Smart Lists allowed on the ${TIER_NAMES[tier] || 'Explorer'} plan (${limits.maxLists}). Please upgrade to create more lists.`);
+                State.setPricingModal(true);
+                return;
+            }
 
             try {
                 await Api.createLeadList(name, desc, color);
