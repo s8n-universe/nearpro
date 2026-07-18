@@ -329,69 +329,65 @@ async function renderDirectoryLayout() {
                     <div style="font-size: 40px; margin-bottom: 20px;">🚀</div>
                     <h2 style="font-size: 22px; margin-bottom: 12px; font-family: var(--font-heading);">Explore NearPro</h2>
                     <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 14px; line-height: 1.5;">
-                        Search and map premium verified business leads in Mumbai. <br><span style="color: var(--accent-gold); font-weight: 600; display: inline-block; margin-top: 8px;">Enter the niche you are targeting to start a guided feature walkthrough.</span>
+                        Search and map premium verified business leads in Mumbai. <br><span style="color: var(--accent-gold); font-weight: 600; display: inline-block; margin-top: 8px;">Select your target client industry to start the walkthrough:</span>
                     </p>
                     
-                    <div style="display: flex; flex-direction: column; gap: 12px; text-align: left; margin-bottom: 24px;">
-                        <div>
-                            <label style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">My Service Role</label>
-                            <select id="welcomeRole" class="filter-select" style="width: 100%; padding: 8px; background: var(--bg-base); border-color: var(--border); font-size: 13px;" required>
-                                <option value="web_developer">💻 Web Developer (Targets: No Website)</option>
-                                <option value="seo_marketer">📈 SEO & Reputation Marketer</option>
-                                <option value="finance_ca">⚖️ Chartered Accountant / Legal</option>
-                                <option value="real_estate">🏢 Real Estate Agent</option>
-                                <option value="other">💼 General B2B Services</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Base Suburb Location</label>
-                            <select id="welcomeBase" class="filter-select" style="width: 100%; padding: 8px; background: var(--bg-base); border-color: var(--border); font-size: 13px;" required>
-                                <option value="Bandra">Bandra</option>
-                                <option value="Andheri">Andheri</option>
-                                <option value="BKC">BKC</option>
-                                <option value="Colaba">Colaba</option>
-                                <option value="Dadar">Dadar</option>
-                                <option value="Borivali">Borivali</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Target Client Industry</label>
-                            <select id="welcomeIndustry" class="filter-select" style="width: 100%; padding: 8px; background: var(--bg-base); border-color: var(--border); font-size: 13px;" required>
-                                <option value="Healthcare">Healthcare (Dentists, Clinics)</option>
-                                <option value="Beauty & Wellness">Beauty & Wellness (Salons)</option>
-                                <option value="Real Estate">Real Estate (Agencies)</option>
-                                <option value="Food & Dining">Food & Dining (Restaurants)</option>
-                                <option value="Finance & Legal">Finance & Legal (CA, Law)</option>
-                            </select>
-                        </div>
+                    <div class="industry-buttons-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; text-align: left; margin-bottom: 8px;">
+                        <button class="industry-opt-btn" data-value="Healthcare" style="padding: 12px 10px; background: var(--bg-base); border: 1.5px solid var(--border); border-radius: var(--radius-md); color: var(--text-primary); cursor: pointer; text-align: left; font-size: 13px; font-weight: 600; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; font-family: var(--font-body);">
+                            <span style="font-size: 16px;">🩺</span> Healthcare
+                        </button>
+                        <button class="industry-opt-btn" data-value="Beauty & Wellness" style="padding: 12px 10px; background: var(--bg-base); border: 1.5px solid var(--border); border-radius: var(--radius-md); color: var(--text-primary); cursor: pointer; text-align: left; font-size: 13px; font-weight: 600; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; font-family: var(--font-body);">
+                            <span style="font-size: 16px;">💅</span> Beauty & Wellness
+                        </button>
+                        <button class="industry-opt-btn" data-value="Real Estate" style="padding: 12px 10px; background: var(--bg-base); border: 1.5px solid var(--border); border-radius: var(--radius-md); color: var(--text-primary); cursor: pointer; text-align: left; font-size: 13px; font-weight: 600; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; font-family: var(--font-body);">
+                            <span style="font-size: 16px;">🏢</span> Real Estate
+                        </button>
+                        <button class="industry-opt-btn" data-value="Food & Dining" style="padding: 12px 10px; background: var(--bg-base); border: 1.5px solid var(--border); border-radius: var(--radius-md); color: var(--text-primary); cursor: pointer; text-align: left; font-size: 13px; font-weight: 600; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; font-family: var(--font-body);">
+                            <span style="font-size: 16px;">🍕</span> Food & Dining
+                        </button>
+                        <button class="industry-opt-btn" data-value="Finance & Legal" style="padding: 12px 10px; background: var(--bg-base); border: 1.5px solid var(--border); border-radius: var(--radius-md); color: var(--text-primary); cursor: pointer; text-align: left; font-size: 13px; font-weight: 600; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; grid-column: span 2; justify-content: center; font-family: var(--font-body);">
+                            <span style="font-size: 16px;">⚖️</span> Finance & Legal (CA/Law)
+                        </button>
                     </div>
-                    
-                    <button id="startDemoBtn" class="brand-btn" style="width: 100%;">Start Walkthrough</button>
                 </div>
             `;
             document.body.appendChild(popup);
             
-            document.getElementById('startDemoBtn').addEventListener('click', async () => {
-                const role = document.getElementById('welcomeRole').value;
-                const base_suburb = document.getElementById('welcomeBase').value;
-                const target_industry = document.getElementById('welcomeIndustry').value;
-                
-                // Initialize user survey in state
-                State.setSurvey({
-                    role,
-                    base_suburb,
-                    target_industry
+            const buttons = popup.querySelectorAll('.industry-opt-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    // Highlight selected button
+                    buttons.forEach(b => {
+                        b.style.borderColor = 'var(--border)';
+                        b.style.background = 'var(--bg-base)';
+                        b.style.color = 'var(--text-primary)';
+                    });
+                    btn.style.borderColor = 'var(--accent-gold)';
+                    btn.style.background = 'rgba(255, 160, 0, 0.15)';
+                    btn.style.color = 'var(--accent-gold)';
+                    
+                    DemoAudio.playClick();
+                    
+                    const target_industry = btn.getAttribute('data-value');
+                    
+                    State.setSurvey({
+                        role: 'other',
+                        base_suburb: 'Bandra',
+                        target_industry
+                    });
+                    
+                    try {
+                        await Api.startTrial(State.fingerprint);
+                    } catch (err) {
+                        console.warn("Trial registration failed, using local timer:", err);
+                    }
+                    
+                    setTimeout(() => {
+                        popup.remove();
+                        startSessionTimer(120, false);
+                        runGuidedDemo(target_industry);
+                    }, 400);
                 });
-                
-                try {
-                    await Api.startTrial(State.fingerprint);
-                } catch (err) {
-                    console.warn("Trial registration failed, using local timer:", err);
-                }
-                
-                popup.remove();
-                startSessionTimer(120, false);
-                runGuidedDemo(target_industry);
             });
         }
     }
@@ -666,7 +662,7 @@ const DemoAudio = {
                         a.pause();
                         a.currentTime = 0;
                     } catch (err) {}
-                }, 2000);
+                }, 1000);
             }).catch(e => {
                 console.warn("Real audio file not loaded yet, playing synthesizer clicks");
                 this.synthesizeClick();
@@ -818,12 +814,14 @@ async function runGuidedDemo(niche) {
         searchInput.value = '';
         searchInput.focus();
         
-        // Type letter by letter playing sound
+        // Play typing audio once at the start of typing for 1 second
+        DemoAudio.playTyping();
+        
+        // Type letter by letter
         for (let i = 0; i < niche.length; i++) {
             await new Promise(resolve => setTimeout(resolve, 100));
             searchInput.value += niche[i];
             searchInput.dispatchEvent(new Event('input'));
-            DemoAudio.playTyping();
         }
         
         // Show Thought bubble
