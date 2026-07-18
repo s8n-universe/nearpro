@@ -574,11 +574,8 @@ export const Api = {
                         window.State.profile = updated;
                         window.State.notify();
                         
-                        if (!updated.onboarding_completed) {
-                            window.State.setSurveyModal(true);
-                        } else {
-                            window.location.hash = '#/browse';
-                        }
+                        // Show personalization settings modal immediately after subscription purchase
+                        window.State.setPersonalizationModal(true);
                         resolve(true);
                     } catch (err) {
                         console.error("Profile refresh failed:", err);
@@ -620,11 +617,8 @@ export const Api = {
                             window.State.profile = updated.data;
                             window.State.notify();
 
-                            if (!updated.data.onboarding_completed) {
-                                window.State.setSurveyModal(true);
-                            } else {
-                                window.location.hash = '#/browse';
-                            }
+                            // Show personalization settings modal immediately after subscription purchase
+                            window.State.setPersonalizationModal(true);
                             resolve(true);
                         });
                     } catch (err) {

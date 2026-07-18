@@ -5,6 +5,17 @@ import { currentUserHasAccess } from '../auth.js';
 export function buildOutreach(templateText, lead, audit = null) {
     let text = templateText;
     
+    const senderName = State.profile?.full_name || 'Shri';
+    const senderCompany = State.profile?.company_name || 'NearPro Agency';
+    const bookingLink = State.profile?.booking_url || '';
+    
+    let demoUrl = `https://lovable.dev/preview/nearpro_${(lead.id || 'preview').slice(0, 8)}`;
+    if (State.profile?.portfolio_url) {
+        const base = State.profile.portfolio_url;
+        const prefix = base.endsWith('/') ? base : base + '/';
+        demoUrl = `${prefix}preview/nearpro_${(lead.id || 'preview').slice(0, 8)}`;
+    }
+    
     const variables = {
         '{{business_name}}': lead.name || '',
         '{{area}}': lead.area || 'Mumbai',
@@ -12,11 +23,21 @@ export function buildOutreach(templateText, lead, audit = null) {
         '{{review_count}}': lead.review_count || '0',
         '{{biggest_gap}}': audit?.biggest_gap || 'Website performance optimizations',
         '{{est_lost_revenue}}': audit?.est_lost_revenue_per_month ? String(audit.est_lost_revenue_per_month) : '8500',
-        '{{demo_url}}': `https://lovable.dev/preview/nearpro_${(lead.id || 'preview').slice(0, 8)}`
+        '{{demo_url}}': demoUrl
     };
 
     for (const [key, val] of Object.entries(variables)) {
         text = text.replaceAll(key, val);
+    }
+
+    // Replace sender specific details
+    text = text.replaceAll('[Your Name]', senderName);
+    text = text.replaceAll('{{sender_name}}', senderName);
+    text = text.replaceAll('[Your Company]', senderCompany);
+    text = text.replaceAll('{{sender_company}}', senderCompany);
+    if (bookingLink) {
+        text = text.replaceAll('[Booking Link]', bookingLink);
+        text = text.replaceAll('{{booking_url}}', bookingLink);
     }
     
     return text;
@@ -204,6 +225,15 @@ export function bindOutreachStudioEvents(templates, onLeadSelectCallback, onTemp
             if (!currentUserHasAccess('hunter')) {
                 alert("The AI Pitch Generator requires the Hunter or Agency plan. Please upgrade to unlock this feature.");
                 State.setPricingModal(true);
+                return;
+            }
+
+            // UX Check: If sender details are missing, prompt personalization
+            const hasPersonalName = State.profile?.full_name?.trim();
+            const hasPersonalCompany = State.profile?.company_name?.trim();
+            if (!hasPersonalName || !hasPersonalCompany) {
+                alert("Please configure your sender details (Name and Agency Name) to generate highly personalized AI pitches.");
+                State.setPersonalizationModal(true);
                 return;
             }
 

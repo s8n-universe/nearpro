@@ -90,6 +90,10 @@ export function renderDashboardShell(activeTab = 'crm') {
             </div>
             
             <!-- Global Upgrade Modal Overlay -->
+            <div id="authModalPlaceholder"></div>
+            <div id="pricingModalPlaceholder"></div>
+            <div id="surveyModalPlaceholder"></div>
+            <div id="personalizationModalPlaceholder"></div>
             <div id="upgradeModalPlaceholder"></div>
         </div>
     `;

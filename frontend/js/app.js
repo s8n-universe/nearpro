@@ -17,6 +17,7 @@ import { renderFeatureShowcase } from './components/FeatureShowcase.js';
 import { renderAuthModal, bindAuthModalEvents } from './components/AuthModal.js';
 import { renderPricingModal, bindPricingModalEvents } from './components/PricingModal.js';
 import { renderSurveyModal, bindSurveyModalEvents } from './components/SurveyModal.js';
+import { renderPersonalizationModal, bindPersonalizationModalEvents } from './components/PersonalizationModal.js';
 import { renderUpgradeModal, bindUpgradeModalEvents } from './components/UpgradeModal.js';
 import { renderDashboardShell, bindDashboardShellEvents } from './components/DashboardShell.js';
 import { renderLeadCRM, bindCRMWorkspaceEvents } from './components/LeadCRM.js';
@@ -137,6 +138,13 @@ State.subscribe(async (currentState) => {
     if (surveyPlaceholder) {
         surveyPlaceholder.innerHTML = renderSurveyModal();
         bindSurveyModalEvents();
+    }
+
+    // Dynamically render/update Personalization Modal
+    const personalizationPlaceholder = document.getElementById('personalizationModalPlaceholder');
+    if (personalizationPlaceholder) {
+        personalizationPlaceholder.innerHTML = renderPersonalizationModal();
+        bindPersonalizationModalEvents();
     }
 
     // Dynamically render/update Upgrade Modal
@@ -1333,11 +1341,16 @@ async function renderDashboardLayout(tab) {
         if (titleEl) titleEl.innerText = 'Workspace Settings';
         if (content) {
             const role = State.profile?.role || 'freelancer';
+            const name = State.profile?.full_name || '';
+            const company = State.profile?.company_name || '';
+            const portfolio = State.profile?.portfolio_url || '';
+            const booking = State.profile?.booking_url || '';
+
             content.innerHTML = `
-                <div class="settings-wrap" style="max-width: 500px; background: rgba(255,255,255,0.01); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 28px;">
-                    <h4 style="margin: 0 0 20px 0; color: white; font-family: var(--font-heading);">Workspace Configurations</h4>
+                <div class="settings-wrap" style="max-width: 500px; background: rgba(255,255,255,0.01); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 28px; display:flex; flex-direction:column; gap:20px;">
+                    <h4 style="margin: 0 0 10px 0; color: white; font-family: var(--font-heading);">Workspace Configurations</h4>
                     
-                    <div style="margin-bottom: 20px;">
+                    <div>
                         <label style="display: block; font-size: 11px; font-family: var(--font-mono); color: var(--text-secondary); text-transform: uppercase; margin-bottom: 8px;">My Professional Role</label>
                         <select id="settingsRole" style="width: 100%; padding: 10px; background: var(--bg-base); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13px;">
                             <option value="freelancer" ${role === 'freelancer' ? 'selected' : ''}>💻 Freelancer</option>
@@ -1346,8 +1359,30 @@ async function renderDashboardLayout(tab) {
                             <option value="startup" ${role === 'startup' ? 'selected' : ''}>🚀 Startup Founder</option>
                         </select>
                     </div>
+
+                    <h4 style="margin: 10px 0 0 0; color: white; font-family: var(--font-heading); border-top: 1px solid var(--border); padding-top: 20px;">Personalization Settings</h4>
                     
-                    <div style="margin-bottom: 24px;">
+                    <div>
+                        <label style="display: block; font-size: 11px; font-family: var(--font-mono); color: var(--text-secondary); text-transform: uppercase; margin-bottom: 8px;">Your Full Name</label>
+                        <input type="text" id="settingsFullName" value="${name}" placeholder="e.g. Shri Naik" style="width: 100%; padding: 10px; background: var(--bg-base); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13px;" />
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-size: 11px; font-family: var(--font-mono); color: var(--text-secondary); text-transform: uppercase; margin-bottom: 8px;">Agency / Company Name</label>
+                        <input type="text" id="settingsCompanyName" value="${company}" placeholder="e.g. NearPro Agency" style="width: 100%; padding: 10px; background: var(--bg-base); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13px;" />
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-size: 11px; font-family: var(--font-mono); color: var(--text-secondary); text-transform: uppercase; margin-bottom: 8px;">Custom Portfolio URL</label>
+                        <input type="url" id="settingsPortfolioUrl" value="${portfolio}" placeholder="e.g. https://myagency.com" style="width: 100%; padding: 10px; background: var(--bg-base); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13px;" />
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-size: 11px; font-family: var(--font-mono); color: var(--text-secondary); text-transform: uppercase; margin-bottom: 8px;">Meeting Booking Link</label>
+                        <input type="url" id="settingsBookingUrl" value="${booking}" placeholder="e.g. https://calendly.com/shri" style="width: 100%; padding: 10px; background: var(--bg-base); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13px;" />
+                    </div>
+                    
+                    <div style="border-top: 1px solid var(--border); padding-top: 20px;">
                         <label style="display: block; font-size: 11px; font-family: var(--font-mono); color: var(--text-secondary); text-transform: uppercase; margin-bottom: 8px;">Billing Information</label>
                         <div style="padding: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; color: var(--text-secondary); display: flex; justify-content: space-between; align-items: center;">
                             <div>Current Tier: <strong style="color: var(--accent-gold); text-transform: uppercase;">${userTier} Plan</strong></div>
@@ -1355,7 +1390,7 @@ async function renderDashboardLayout(tab) {
                         </div>
                     </div>
                     
-                    <button class="brand-btn" id="saveSettingsBtn" style="width: 100%; padding: 10px;">Save Configuration</button>
+                    <button class="brand-btn" id="saveSettingsBtn" style="width: 100%; padding: 12px; font-weight: 600; cursor: pointer; margin-top: 10px;">Save Configuration</button>
                 </div>
             `;
 
@@ -1365,16 +1400,29 @@ async function renderDashboardLayout(tab) {
 
             document.getElementById('saveSettingsBtn').addEventListener('click', async () => {
                 const newRole = document.getElementById('settingsRole').value;
+                const newName = document.getElementById('settingsFullName').value.trim();
+                const newCompany = document.getElementById('settingsCompanyName').value.trim();
+                const newPortfolio = document.getElementById('settingsPortfolioUrl').value.trim();
+                const newBooking = document.getElementById('settingsBookingUrl').value.trim();
+
                 try {
                     const { data, error } = await Api.supabase
                         .from('profiles')
-                        .update({ role: newRole, updated_at: new Date().toISOString() })
+                        .update({ 
+                            role: newRole,
+                            full_name: newName,
+                            company_name: newCompany,
+                            portfolio_url: newPortfolio,
+                            booking_url: newBooking,
+                            updated_at: new Date().toISOString() 
+                        })
                         .eq('id', State.user.id)
                         .select()
                         .single();
                     if (error) throw error;
                     State.profile = data;
-                    alert("Configuration saved successfully");
+                    State.notify();
+                    alert("Configurations saved successfully");
                 } catch (err) {
                     console.error("Failed to save settings: ", err);
                     alert("Failed to save configuration");

@@ -41,7 +41,7 @@ serve(async (req) => {
     // 3. Get user profile details (tier, limits, usage)
     const { data: profile, error: profileErr } = await supabase
       .from('profiles')
-      .select('subscription_tier, monthly_ai_generations_used, monthly_ai_generations_limit')
+      .select('subscription_tier, monthly_ai_generations_used, monthly_ai_generations_limit, full_name, company_name, portfolio_url, booking_url')
       .eq('id', user.id)
       .single();
 
@@ -107,6 +107,16 @@ serve(async (req) => {
     const targetLanguage = (language || 'hinglish').toLowerCase();
     const targetTone = (tone || 'friendly').toLowerCase();
 
+    const senderName = profile.full_name || "Shri";
+    const senderCompany = profile.company_name || "NearPro Agency";
+    const bookingUrl = profile.booking_url || "";
+    let portfolioUrl = `https://lovable.dev/preview/nearpro_${professional_id.slice(0, 8)}`;
+    if (profile.portfolio_url) {
+      const base = profile.portfolio_url;
+      const prefix = base.endsWith('/') ? base : base + '/';
+      portfolioUrl = `${prefix}preview/nearpro_${professional_id.slice(0, 8)}`;
+    }
+
     // Construct prompt
     let promptInstructions = "";
     if (targetLanguage === 'hinglish') {
@@ -140,7 +150,10 @@ Rules:
 2. ${channelFormat}
 3. STRICT HYPHEN CONSTRAINT: Do not use any hyphens ( - ) anywhere in your generated output under any circumstances. Replace all hyphens with spaces, commas, or normal words (e.g., instead of "10-20" say "10 to 20", instead of using a hyphen to separate text, use a comma or a new line).
 4. Do not mention that you are an AI or references to templates.
-5. Provide ONLY the final pitch message.
+5. Sign off using the sender name: "${senderName}" (representing "${senderCompany}"). Never use "[Your Name]" or placeholders.
+6. Only pitch a website preview link (${portfolioUrl}) if they do not have a website. If they already have a website, do not pitch a new website preview link.
+7. If relevant to schedule a call, use this booking link: ${bookingUrl}.
+8. Provide ONLY the final pitch message.
 `;
 
     const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${geminiKey}`;

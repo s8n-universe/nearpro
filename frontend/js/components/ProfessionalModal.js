@@ -157,29 +157,30 @@ export function renderProfessionalModal(lead) {
                     if (!currentUserHasAccess('hunter')) return ''; // Outreach pitch is Hunter+ only
                     if (!State.user_survey) return '';
                     const survey = State.user_survey;
+                    const senderName = State.profile?.full_name || 'Shri';
                     let pitchText = '';
                     let strategyTitle = '';
 
                     if (survey.role === 'web_developer') {
                         strategyTitle = '💻 Website Creation Proposal';
-                        pitchText = `Hi ${lead.name} team,\n\nI was browsing local businesses in ${lead.area || 'Mumbai'} and noticed your profile has a great rating of ${rating}★ from ${reviewCount} customers. However, you don't have a website link configured.\n\nI build high-converting websites for local ${lead.category || 'professionals'} to automate bookings and capture leads directly. I put together a quick website draft for your brand. Do you have 2 minutes for a brief call?\n\nBest,\n[Your Name]`;
+                        pitchText = `Hi ${lead.name} team,\n\nI was browsing local businesses in ${lead.area || 'Mumbai'} and noticed your profile has a great rating of ${rating}★ from ${reviewCount} customers. However, you don't have a website link configured.\n\nI build high-converting websites for local ${lead.category || 'professionals'} to automate bookings and capture leads directly. I put together a quick website draft for your brand. Do you have 2 minutes for a brief call?\n\nBest,\n${senderName}`;
                     } else if (survey.role === 'seo_marketer') {
                         strategyTitle = '📈 Local Google SEO / Review Boosting';
                         if (rating < 4.0) {
                             strategyTitle = '⚠️ Negative Ratings Mitigation';
-                            pitchText = `Hi ${lead.name} team,\n\nI'm local in Mumbai and noticed your profile in ${lead.area || 'Mumbai'} has over ${reviewCount} customer reviews but holds a ${rating}★ rating. Many prospective clients check ratings before buying, and having it below 4 stars could be turning leads away.\n\nI run a localized review boosting system that filters out negative spam and secures verified 5-star customer ratings. Can I share a quick audit for you?\n\nBest,\n[Your Name]`;
+                            pitchText = `Hi ${lead.name} team,\n\nI'm local in Mumbai and noticed your profile in ${lead.area || 'Mumbai'} has over ${reviewCount} customer reviews but holds a ${rating}★ rating. Many prospective clients check ratings before buying, and having it below 4 stars could be turning leads away.\n\nI run a localized review boosting system that filters out negative spam and secures verified 5-star customer ratings. Can I share a quick audit for you?\n\nBest,\n${senderName}`;
                         } else {
-                            pitchText = `Hi ${lead.name} team,\n\nI noticed you have a top-tier rating of ${rating}★ in ${lead.area || 'Mumbai'}. However, you're missing some essential details on your Google maps listing (like website links/hours) which is hurting your local search ranking.\n\nI optimize Google profiles to double review visibility and rank you above competitors. Do you have time for a short call?\n\nBest,\n[Your Name]`;
+                            pitchText = `Hi ${lead.name} team,\n\nI noticed you have a top-tier rating of ${rating}★ in ${lead.area || 'Mumbai'}. However, you're missing some essential details on your Google maps listing (like website links/hours) which is hurting your local search ranking.\n\nI optimize Google profiles to double review visibility and rank you above competitors. Do you have time for a short call?\n\nBest,\n${senderName}`;
                         }
                     } else if (survey.role === 'finance_ca') {
                         strategyTitle = '⚖️ Financial Audit & Tax Support Proposal';
-                        pitchText = `Hi ${lead.name} team,\n\nI support growing ${lead.category || 'businesses'} in ${lead.area || 'Mumbai'} with accounting, legal compliance, and tax planning.\n\nSince you are actively scaling with a strong ${rating}★ track record, I would love to offer a free 15-minute consultation to review your current tax structure and identify compliance savings.\n\nBest,\n[Your Name]`;
+                        pitchText = `Hi ${lead.name} team,\n\nI support growing ${lead.category || 'businesses'} in ${lead.area || 'Mumbai'} with accounting, legal compliance, and tax planning.\n\nSince you are actively scaling with a strong ${rating}★ track record, I would love to offer a free 15-minute consultation to review your current tax structure and identify compliance savings.\n\nBest,\n${senderName}`;
                     } else if (survey.role === 'real_estate') {
                         strategyTitle = '🏢 Commercial Space / Office Relocation Matching';
-                        pitchText = `Hi ${lead.name} team,\n\nI specialize in office search, commercial acquisition, and corporate relocation in the ${lead.area || 'Mumbai'} sector.\n\nI'm currently mapping commercial spaces in ${lead.area || 'Mumbai'} and have 3 prime off-market offices that match the profile of top-tier ${lead.category || 'companies'} like yours. Would you be open to a quick relocation catalog?\n\nBest,\n[Your Name]`;
+                        pitchText = `Hi ${lead.name} team,\n\nI specialize in office search, commercial acquisition, and corporate relocation in the ${lead.area || 'Mumbai'} sector.\n\nI'm currently mapping commercial spaces in ${lead.area || 'Mumbai'} and have 3 prime off-market offices that match the profile of top-tier ${lead.category || 'companies'} like yours. Would you be open to a quick relocation catalog?\n\nBest,\n${senderName}`;
                     } else {
                         strategyTitle = '💼 B2B Collaboration Pitch';
-                        pitchText = `Hi ${lead.name} team,\n\nI noticed your established local business in ${lead.area || 'Mumbai'}. I run a B2B service agency in Mumbai and work with high-quality ${lead.category || 'providers'} to cross-promote and supply qualified B2B clients.\n\nWould you be open to a quick call this week to explore a referral partnership?\n\nBest,\n[Your Name]`;
+                        pitchText = `Hi ${lead.name} team,\n\nI noticed your established local business in ${lead.area || 'Mumbai'}. I run a B2B service agency in Mumbai and work with high-quality ${lead.category || 'providers'} to cross-promote and supply qualified B2B clients.\n\nWould you be open to a quick call this week to explore a referral partnership?\n\nBest,\n${senderName}`;
                     }
 
                     return `

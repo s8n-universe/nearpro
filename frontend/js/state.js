@@ -14,6 +14,7 @@ export const State = {
     profile: null,
     user_survey: JSON.parse(localStorage.getItem('nearpro_user_survey') || 'null'),
     survey_modal_open: false,
+    personalization_modal_open: false,
     auth_modal_open: false,
     selected_tier: null,
     billing_cycle: 'monthly',
@@ -156,6 +157,11 @@ export const State = {
 
     setSurveyModal(isOpen) {
         this.survey_modal_open = isOpen;
+        this.notify();
+    },
+
+    setPersonalizationModal(isOpen) {
+        this.personalization_modal_open = isOpen;
         this.notify();
     },
 
