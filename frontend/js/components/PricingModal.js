@@ -57,7 +57,9 @@ export function renderPricingModal() {
                         <button class="brand-btn" style="padding: 8px 14px; font-size: 11.5px; flex-shrink: 0; background: var(--border); color: white;" onclick="window.State.selectPlan('free');">
                             Start Free
                         </button>
-                         <!-- Scout -->
+                    </div>
+ 
+                    <!-- Scout -->
                     <div style="background: rgba(255, 160, 0, 0.02); border: 1px solid rgba(255, 160, 0, 0.12); padding: 18px 20px; border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; gap: 12px;">
                         <div style="flex: 1;">
                             <h4 style="font-size: 14px; color: var(--accent-gold); margin: 0 0 4px 0; font-family: var(--font-heading);">Scout — ${pricing.scout.price}/${pricing.scout.period === 'month' ? 'mo' : 'yr'}</h4>
