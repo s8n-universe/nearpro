@@ -35,8 +35,7 @@ export function renderFeatureShowcase() {
                         Unlock verified local leads and outreach tools to scale your freelancer client outreach and business revenue. Choose a tier optimized for your client acquisitions.
                     </p>
                 </div>
-                
-                <div class="pricing-grid">
+                         <div class="pricing-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); max-width: 1280px; gap: 24px;">
                     <!-- Scout Plan -->
                     <div class="pricing-card">
                         <div class="pricing-header">
@@ -150,7 +149,43 @@ export function renderFeatureShowcase() {
                             Select Agency
                         </button>
                     </div>
+
+                    <!-- Enterprise Plan -->
+                    <div class="pricing-card" style="border: 1px dashed rgba(255,255,255,0.15);">
+                        <div class="pricing-header">
+                            <h3 class="pricing-title" style="color: white;">Enterprise Plan</h3>
+                            <div class="pricing-price" style="font-size: 28px;">
+                                Custom <span>/ pricing</span>
+                            </div>
+                        </div>
+                        <ul class="pricing-features-list">
+                            <li class="pricing-feature-item highlight">
+                                <span class="pricing-feature-icon" style="color: white;">✓</span>
+                                <div>Unlimited team seats & shared lists</div>
+                            </li>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon" style="color: white;">✓</span>
+                                <div>Developer API access (PostgREST)</div>
+                            </li>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon" style="color: white;">✓</span>
+                                <div>Custom city database scraper runs</div>
+                            </li>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon" style="color: white;">✓</span>
+                                <div>Salesforce and HubSpot CRM sync</div>
+                            </li>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon" style="color: white;">✓</span>
+                                <div>Dedicated account manager & SLA</div>
+                            </li>
+                        </ul>
+                        <a href="mailto:hello@s8n.in?subject=NearPro%20Enterprise%20Plan%20Inquiry" class="brand-btn pricing-btn" style="background: var(--bg-surface); color: white; border: 1px solid var(--border); text-decoration: none; text-align: center; display: inline-flex; align-items: center; justify-content: center;">
+                            Contact Us
+                        </a>
+                    </div>
                 </div>
             </div>
+        </section>
     `;
 }
