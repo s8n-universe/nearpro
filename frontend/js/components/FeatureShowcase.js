@@ -96,7 +96,7 @@ export function renderFeatureShowcase() {
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon">✓</span>
-                                <div>AI Outreach Studio with Hinglish templates</div>
+                                <div>500 WhatsApp AI Pitches per month</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon">✓</span>
@@ -123,7 +123,7 @@ export function renderFeatureShowcase() {
                         <ul class="pricing-features-list">
                             <li class="pricing-feature-item highlight">
                                 <span class="pricing-feature-icon" style="color: var(--accent-pink);">✓</span>
-                                <div>All Hunter features included</div>
+                                <div>All Hunter features with Unlimited AI Pitches</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon" style="color: var(--accent-pink);">✓</span>

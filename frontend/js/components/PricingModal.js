@@ -79,7 +79,7 @@ export function renderPricingModal() {
                         <div style="flex: 1;">
                             <h4 style="font-size: 14px; color: var(--accent-gold); margin: 0 0 4px 0; font-family: var(--font-heading);">Hunter — ${pricing.hunter.price}/${pricing.hunter.period === 'month' ? 'mo' : 'yr'}</h4>
                             <p style="font-size: 11px; color: var(--text-secondary); margin: 0; line-height: 1.4; margin-bottom:4px;">
-                                Business Health Check active. Lead Intelligence Scores visible. AI Outreach Studio active with Hinglish templates. Unlimited exports. 20 lists. Pipeline tracking.
+                                Business Health Check active. Lead Intelligence Scores visible. **500 WhatsApp AI Pitches per month (Hinglish or English)**. Unlimited exports. 20 lists. Pipeline tracking.
                             </p>
                             <span style="font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase;">${pricing.hunter.label}</span>
                         </div>
@@ -93,7 +93,7 @@ export function renderPricingModal() {
                         <div style="flex: 1;">
                             <h4 style="font-size: 14px; color: var(--accent-pink); margin: 0 0 4px 0; font-family: var(--font-heading);">Agency — ${pricing.agency.price}/${pricing.agency.period === 'month' ? 'mo' : 'yr'}</h4>
                             <p style="font-size: 11px; color: var(--text-secondary); margin: 0; line-height: 1.4; margin-bottom:4px;">
-                                Website Prompt Engine active. CRM Kanban pipeline view. Bulk outreach personalization. n8n webhook and Google Sheets push integrations. 3 team seats.
+                                Website Prompt Engine active. CRM Kanban pipeline view. **Unlimited WhatsApp AI Pitches**. n8n webhook and Google Sheets push integrations. 3 team seats.
                             </p>
                             <span style="font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase;">${pricing.agency.label}</span>
                         </div>

@@ -22,6 +22,11 @@ export function buildOutreach(templateText, lead, audit = null) {
 }
 
 export function renderOutreachStudio(savedLeads, activeLeadId = null, templates = [], activeTemplateId = null, composedMessage = '', composedFollowUp = '') {
+    const used = State.profile?.monthly_ai_generations_used || 0;
+    const limit = State.profile?.monthly_ai_generations_limit || 500;
+    const tier = State.profile?.subscription_tier || 'free';
+    const aiUsageLabel = tier === 'agency' ? 'Unlimited AI runs' : `AI Runs: ${used}/${limit}`;
+
     // 1. Render Left panel (Lead Selector)
     const leadsHTML = savedLeads.map(item => {
         const lead = item.professionals || {};
@@ -63,8 +68,39 @@ export function renderOutreachStudio(savedLeads, activeLeadId = null, templates 
                 
                 <!-- Composer panel -->
                 <div class="composer-column" style="display:flex; flex-direction:column; gap:20px;">
+                    <!-- AI Pitch Generator Control Card -->
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 18px; display: flex; flex-direction: column; gap: 12px;">
+                        <h4 style="margin:0; font-size:12px; font-family:var(--font-mono); color:var(--accent-gold); text-transform:uppercase; display:flex; align-items:center; gap:6px;">
+                            🪄 AI Pitch Generator
+                        </h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div>
+                                <label style="display:block; font-size:10px; color:var(--text-secondary); margin-bottom:4px;">Language</label>
+                                <select id="aiLanguage" style="width:100%; padding:8px; background:var(--bg-base); border:1px solid var(--border); border-radius:var(--radius-sm); color:white; font-size:12px;">
+                                    <option value="hinglish">🇮🇳 Hinglish Mix</option>
+                                    <option value="english">🇬🇧 English Only</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="display:block; font-size:10px; color:var(--text-secondary); margin-bottom:4px;">Tone</label>
+                                <select id="aiTone" style="width:100%; padding:8px; background:var(--bg-base); border:1px solid var(--border); border-radius:var(--radius-sm); color:white; font-size:12px;">
+                                    <option value="friendly">🤝 Friendly</option>
+                                    <option value="professional">💼 Professional</option>
+                                    <option value="direct">🎯 Direct</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 4px; gap:12px;">
+                            <span style="font-size:11px; color:var(--text-muted);" id="aiUsageText">${aiUsageLabel}</span>
+                            <button class="brand-btn" id="generateAIPitchBtn" style="padding: 6px 14px; font-size: 11.5px; cursor:pointer;">
+                                Write AI Pitch
+                            </button>
+                        </div>
+                    </div>
+
                     <div>
-                        <label style="display:block; font-size:11px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase; margin-bottom:8px;">Choose Template</label>
+                        <label style="display:block; font-size:11px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase; margin-bottom:8px;">Choose Static Template</label>
                         <select id="outreachTemplateSelect" style="width:100%; padding:10px; background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-sm); color:white; font-size:13px;">
                             <option value="">Create message from scratch</option>
                             ${templateOptionsHTML}
@@ -157,6 +193,57 @@ export function bindOutreachStudioEvents(templates, onLeadSelectCallback, onTemp
         select.addEventListener('change', () => {
             const templateId = select.value;
             if (onTemplateSelectCallback) onTemplateSelectCallback(templateId);
+        });
+    }
+
+    // Generate AI Pitch
+    const generateAIPitchBtn = document.getElementById('generateAIPitchBtn');
+    if (generateAIPitchBtn) {
+        generateAIPitchBtn.addEventListener('click', async () => {
+            const userTier = State.profile?.subscription_tier || 'free';
+            const allowedTiers = ['hunter', 'agency', 'enterprise'];
+            
+            if (!allowedTiers.includes(userTier.toLowerCase())) {
+                alert("The AI Pitch Generator requires the Hunter or Agency plan. Please upgrade to unlock this feature.");
+                State.setPricingModal(true);
+                return;
+            }
+
+            const searchParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+            const leadId = searchParams.get('lead_id');
+            if (!leadId) return;
+
+            const language = document.getElementById('aiLanguage').value;
+            const tone = document.getElementById('aiTone').value;
+            const channel = 'whatsapp'; // Default to WhatsApp pitch channel format
+
+            const mainTextarea = document.getElementById('composerMainText');
+            const originalVal = mainTextarea.value;
+            
+            // Set Loading state
+            mainTextarea.value = "Writing your personalized pitch... please wait...";
+            mainTextarea.disabled = true;
+            generateAIPitchBtn.innerText = "Writing...";
+            generateAIPitchBtn.disabled = true;
+
+            try {
+                const response = await Api.generateAIOutreach(leadId, channel, language, tone);
+                mainTextarea.value = response.text;
+                
+                // Update profile stats counter locally
+                if (State.profile) {
+                    State.profile.monthly_ai_generations_used = response.used;
+                    State.notify();
+                }
+            } catch (err) {
+                console.error("AI Generation failed: ", err);
+                alert(err.message || "Failed to generate AI pitch. Please try again.");
+                mainTextarea.value = originalVal;
+            } finally {
+                mainTextarea.disabled = false;
+                generateAIPitchBtn.innerText = "Write AI Pitch";
+                generateAIPitchBtn.disabled = false;
+            }
         });
     }
 

@@ -577,6 +577,19 @@ export const Api = {
             const rzp = new window.Razorpay(options);
             rzp.open();
         });
+    },
+
+    async generateAIOutreach(professionalId, channel, language, tone) {
+        const { data, error } = await supabase.functions.invoke('generate-ai-outreach', {
+            body: { 
+                professional_id: professionalId, 
+                channel: channel, 
+                language: language, 
+                tone: tone 
+            }
+        });
+        if (error) throw error;
+        return data;
     }
 };
 
