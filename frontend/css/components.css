@@ -686,7 +686,7 @@
 
 #sessionTimer.timer-docked {
     top: 18px;
-    right: 220px; /* Positioned in the header vacant space */
+    right: 360px; /* Positioned in the header vacant space, clear of View / Login elements */
     transform: translate(0, 0) scale(1);
     padding: 6px 16px;
     font-size: 13px;
