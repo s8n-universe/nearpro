@@ -24,8 +24,74 @@ export function renderFeatureShowcase() {
                         <h3>AI Outreach & Personalization</h3>
                         <p>Evaluate prospects with Conversion Scores. Automatically generate customized cold pitches for WhatsApp, email, or Instagram DM in Hinglish and English.</p>
                     </div>
+
+                    <div class="feature-panel">
+                        <div class="feature-icon-wrap">🔗</div>
+                        <h3>Integration Connection Hub</h3>
+                        <p>Push tracked leads directly to your Google Sheets or connect customized n8n webhooks to automate your slack or email outreach workflows instantly.</p>
+                    </div>
+                    
+                    <div class="feature-panel">
+                        <div class="feature-icon-wrap">👥</div>
+                        <h3>Collaborative Team Workspace</h3>
+                        <p>Invite colleagues to collaborate in shared team workspaces. Assign seats, share smart lists, and compile white-label client reports together.</p>
+                    </div>
+                    
+                    <div class="feature-panel">
+                        <div class="feature-icon-wrap">🛠️</div>
+                        <h3>Website Builder Prompts</h3>
+                        <p>Generate precise, copy-paste prompts tailored for Bolt.new and Lovable to rebuild outdated prospect websites with one click from your audit results.</p>
+                    </div>
                 </div>
             </div>
+        </section>
+
+        <!-- Realtime Market Intelligence metrics grid -->
+        <section class="marketing-features" style="padding-top: 0; border-top: none; background: transparent;">
+            <div class="container">
+                <div class="features-title-wrap" style="margin-bottom: 40px;">
+                    <h2>Realtime Market Intelligence</h2>
+                    <p>Live categorical opportunity benchmarks and high-demand neighborhood indicators parsed from Mumbai directories.</p>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 48px;">
+                    <div class="feature-panel" style="padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid var(--accent-gold); text-align: left; background: var(--glass-bg); border-top: 1px solid rgba(255,255,255,0.03); border-right: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03);">
+                        <div style="text-align: left;">
+                            <div style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Outreach Opportunities</div>
+                            <div style="font-size: 32px; font-weight: 700; color: var(--text-primary); margin-top: 4px;">54.8%</div>
+                            <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Leads missing verified websites</div>
+                        </div>
+                        <div style="font-size: 28px; opacity: 0.8;">🌐</div>
+                    </div>
+                    <div class="feature-panel" style="padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid var(--accent-pink); text-align: left; background: var(--glass-bg); border-top: 1px solid rgba(255,255,255,0.03); border-right: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03);">
+                        <div style="text-align: left;">
+                            <div style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">High-Demand Suburb</div>
+                            <div style="font-size: 28px; font-weight: 700; color: var(--accent-pink); margin-top: 4px;">Bandra</div>
+                            <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Highest review velocity area</div>
+                        </div>
+                        <div style="font-size: 28px; opacity: 0.8;">🔥</div>
+                    </div>
+                    <div class="feature-panel" style="padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid #3b82f6; text-align: left; background: var(--glass-bg); border-top: 1px solid rgba(255,255,255,0.03); border-right: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03);">
+                        <div style="text-align: left;">
+                            <div style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Most Underserved Niche</div>
+                            <div style="font-size: 28px; font-weight: 700; color: var(--text-primary); margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 170px;">Interior Designer</div>
+                            <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Lowest listings concentration</div>
+                        </div>
+                        <div style="font-size: 28px; opacity: 0.8;">🛠️</div>
+                    </div>
+                    <div class="feature-panel" style="padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid #10b981; text-align: left; background: var(--glass-bg); border-top: 1px solid rgba(255,255,255,0.03); border-right: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03);">
+                        <div style="text-align: left;">
+                            <div style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Review Boost Suburb</div>
+                            <div style="font-size: 28px; font-weight: 700; color: var(--text-primary); margin-top: 4px;">Colaba</div>
+                            <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Lowest avg ratings (needs SEO)</div>
+                        </div>
+                        <div style="font-size: 28px; opacity: 0.8;">📈</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
         <section class="pricing-section">
             <div class="container">
                 <div class="features-title-wrap" style="margin-bottom: 48px;">
@@ -64,6 +130,10 @@ export function renderFeatureShowcase() {
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon">✓</span>
                                 <div>Add custom notes and generate QR codes</div>
+                            </li>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon" style="color: var(--accent-gold);">✓</span>
+                                <div>Basic rating, completeness & review stats</div>
                             </li>
                         </ul>
                         <button class="brand-btn pricing-btn" onclick="window.State.selectPlan('scout');">
@@ -105,6 +175,10 @@ export function renderFeatureShowcase() {
                                 <span class="pricing-feature-icon">✓</span>
                                 <div>Pipeline status tracking and CRM reminders</div>
                             </li>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon" style="color: var(--accent-gold);">✓</span>
+                                <div>Geospatial metrics & categorical opportunities</div>
+                            </li>
                         </ul>
                         <button class="brand-btn pricing-btn" onclick="window.State.selectPlan('hunter');">
                             Select Hunter
@@ -143,6 +217,10 @@ export function renderFeatureShowcase() {
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon" style="color: var(--accent-pink);">✓</span>
                                 <div>3 team seats and white label client reports</div>
+                            </li>
+                            <li class="pricing-feature-item">
+                                <span class="pricing-feature-icon" style="color: var(--accent-pink);">✓</span>
+                                <div>Density heatmaps & custom market gaps index</div>
                             </li>
                         </ul>
                         <button class="brand-btn pricing-btn" style="background: linear-gradient(135deg, var(--accent-pink), #a855f7);" onclick="window.State.selectPlan('agency');">

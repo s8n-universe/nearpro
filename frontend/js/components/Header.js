@@ -2,8 +2,8 @@ import { State } from '../state.js';
 
 export function renderHeader() {
     const isBrowseActive = window.location.hash.startsWith('#/browse') || window.location.hash.startsWith('#/category');
-    const isInsightsActive = window.location.hash.startsWith('#/insights');
-    const isHomeActive = !isBrowseActive && !isInsightsActive;
+    const isDashboardActive = window.location.hash.startsWith('#/dashboard');
+    const isHomeActive = !isBrowseActive && !isDashboardActive;
     
     const viewToggleHTML = isBrowseActive ? `
         <div class="view-toggle-wrap">
@@ -11,7 +11,7 @@ export function renderHeader() {
             <button id="mapBtn" class="secondary-btn ${State.view === 'map' ? 'brand-btn' : ''}" style="padding: 8px 16px; font-size: 13px; border-radius: var(--radius-sm);">Map View</button>
         </div>
     ` : '';
-
+ 
     let authActionsHTML = '';
     if (State.user) {
         const email = State.user.email || '';
@@ -76,7 +76,7 @@ export function renderHeader() {
             <button id="openLoginBtn" class="brand-btn" style="padding: 8px 16px; font-size: 13px; border-radius: var(--radius-sm);">Login</button>
         `;
     }
-
+ 
     return `
         <header class="main-header">
             <div class="container header-wrap">
@@ -88,8 +88,7 @@ export function renderHeader() {
                 <nav class="header-nav">
                     <a href="#/" class="nav-link ${isHomeActive ? 'active' : ''}">Home</a>
                     <a href="#/browse" class="nav-link ${isBrowseActive ? 'active' : ''}">Browse Directory</a>
-                    <a href="#/insights" class="nav-link ${isInsightsActive ? 'active' : ''}">Insights</a>
-                    ${State.user ? `<a href="#/dashboard" class="nav-link ${window.location.hash.startsWith('#/dashboard') ? 'active' : ''}">Dashboard</a>` : ''}
+                    ${State.user ? `<a href="#/dashboard" class="nav-link ${isDashboardActive ? 'active' : ''}">Dashboard</a>` : ''}
                 </nav>
                 
                 <div class="header-actions" style="display: flex; align-items: center; gap: 12px;">

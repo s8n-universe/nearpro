@@ -11,7 +11,6 @@ import { renderFilterPanel, bindFilterPanelEvents } from './components/FilterPan
 import { renderProfessionalCard, bindProfessionalCardEvents } from './components/ProfessionalCard.js';
 import { renderProfessionalModal, bindProfessionalModalEvents } from './components/ProfessionalModal.js';
 import { renderComparePanel, renderCompareModalContent, bindComparePanelEvents } from './components/CompareModal.js';
-import { renderInsightsPage, initInsightsCharts } from './components/InsightsPage.js';
 import { renderMapView, initFullMap } from './components/MapView.js';
 import { renderMarketingHero } from './components/MarketingHero.js';
 import { renderFeatureShowcase } from './components/FeatureShowcase.js';
@@ -116,13 +115,7 @@ State.subscribe(async (currentState) => {
     } else if (isBrowse) {
         await updateDirectoryView();
     } else {
-        // Redraw basic layout shells (header/compare) on home or insights page
-        const isInsights = window.location.hash.startsWith('#/insights');
-        if (isInsights) {
-            renderInsightsLayout();
-        } else {
-            renderMarketingLayout();
-        }
+        renderMarketingLayout();
     }
 
     // Dynamically render/update Auth Modal
@@ -188,10 +181,6 @@ function initRoutes() {
         const decodedParent = decodeURIComponent(parent);
         const decodedSub = decodeURIComponent(sub);
         State.updateFilters({ parentCategory: decodedParent, category: decodedSub });
-    });
-
-    Router.on('#/insights', () => {
-        renderInsightsLayout();
     });
 
     Router.on('#/dashboard', () => {
@@ -402,45 +391,7 @@ async function renderDirectoryLayout() {
     }
 }
 
-// Layer 2 Insights shell
-async function renderInsightsLayout() {
-    appShell.innerHTML = `
-        <div class="app-container">
-            ${renderHeader()}
-            <main class="main-layout" style="display: block;" id="insightsWrap"></main>
-            <div id="authModalPlaceholder"></div>
-            <div id="pricingModalPlaceholder"></div>
-            <div id="surveyModalPlaceholder"></div>
-            <div id="upgradeModalPlaceholder"></div>
-            <footer class="main-footer">
-                NearPro — Made with ❤️ by S8N
-            </footer>
-        </div>
-    `;
-    bindHeaderEvents();
 
-    const wrap = document.getElementById('insightsWrap');
-    wrap.innerHTML = renderInsightsPage();
-
-    if (!State.stats) {
-        try {
-            State.stats = await Api.getStats();
-            wrap.innerHTML = renderInsightsPage();
-        } catch (e) {
-            console.error("Failed to load insights statistics: ", e);
-            wrap.innerHTML = `<div class="container" style="padding: 40px; text-align: center; color: var(--accent-pink);">Failed to load stats. Please check network.</div>`;
-            return;
-        }
-    }
-
-    // Initialize Chart visualizations
-    try {
-        const insights = await Api.getAreaInsights();
-        initInsightsCharts(insights);
-    } catch (e) {
-        console.error("Failed to load chart insights details: ", e);
-    }
-}
 
 /* --- Directory Updates & Querying --- */
 
@@ -990,25 +941,20 @@ async function runGuidedDemo(niche) {
     // Wait on Map View
     await new Promise(resolve => setTimeout(resolve, 4500));
 
-    // Step 4: Switch to Insights/Analytics
-    const insightsLink = document.querySelector('a[href="#/insights"]');
-    if (insightsLink) {
-        await moveCursorTo(insightsLink);
-    }
-    DemoAudio.playClick();
-    DemoAudio.playWhoosh();
-    window.location.hash = '#/insights';
+    // Step 4: Show pricing modal to prompt premium upgrade
+    State.setPricingModal(true);
+    await new Promise(resolve => setTimeout(resolve, 1500));
 
-    // Wait for insights load
-    await new Promise(resolve => setTimeout(resolve, 2500));
-
-    // Show locked insights thought cloud
-    const insightsHeader = document.querySelector('h2');
-    if (insightsHeader) {
-        const rect = insightsHeader.getBoundingClientRect();
-        showThoughtCloud("📊 Competitor quality analysis and local gap indexes locked for premium users.", rect.left, rect.bottom + 50, 4000);
+    // Show premium plans explanation thought cloud
+    const pricingModal = document.querySelector('#pricingModalPlaceholder');
+    if (pricingModal) {
+        showThoughtCloud("💎 Upgrade to Scout, Hunter, or Agency plans to unlock advanced insights & outreach tools.", window.innerWidth / 2 - 200, window.innerHeight / 2 - 100, 4000);
     }
-    await new Promise(resolve => setTimeout(resolve, 2500));
+    await new Promise(resolve => setTimeout(resolve, 4000));
+
+    // Close Pricing Modal to allow free exploration
+    State.setPricingModal(false);
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
     // Remove cursor from screen
     const cursor = document.getElementById('demoCursor');
