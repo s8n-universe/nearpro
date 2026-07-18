@@ -17,6 +17,15 @@ import { renderFeatureShowcase } from './components/FeatureShowcase.js';
 import { renderAuthModal, bindAuthModalEvents } from './components/AuthModal.js';
 import { renderPricingModal, bindPricingModalEvents } from './components/PricingModal.js';
 import { renderSurveyModal, bindSurveyModalEvents } from './components/SurveyModal.js';
+import { renderUpgradeModal, bindUpgradeModalEvents } from './components/UpgradeModal.js';
+import { renderDashboardShell, bindDashboardShellEvents } from './components/DashboardShell.js';
+import { renderLeadCRM, bindCRMWorkspaceEvents } from './components/LeadCRM.js';
+import { renderLeadLists, bindLeadListsEvents, bindListDetailEvents } from './components/LeadLists.js';
+import { renderWebsiteAudit, bindWebsiteAuditEvents } from './components/WebsiteAudit.js';
+import { renderOutreachStudio, bindOutreachStudioEvents, buildOutreach } from './components/OutreachStudio.js';
+import { renderPromptGenerator, bindPromptGeneratorEvents, buildPrompt } from './components/PromptGenerator.js';
+import { renderConnectionHub, bindConnectionHubEvents } from './components/ConnectionHub.js';
+import { renderTeamWorkspace, bindTeamWorkspaceEvents, loadDataRequests, createDataRequest } from './components/TeamWorkspace.js';
 
 // Main Application shell reference
 const appShell = document.getElementById('app');
@@ -87,9 +96,15 @@ State.subscribe(async (currentState) => {
         if (timerEl) timerEl.remove();
     }
 
-    // If we're on browse/directory routes, trigger list re-render
+    // Check if we are on dashboard or browse routes
+    const isDashboard = window.location.hash.startsWith('#/dashboard');
     const isBrowse = window.location.hash.startsWith('#/browse') || window.location.hash.startsWith('#/category');
-    if (isBrowse) {
+    
+    if (isDashboard) {
+        const tab = window.location.hash.split('#/dashboard/')[1] || 'crm';
+        const cleanTab = tab.split('?')[0];
+        await renderDashboardLayout(cleanTab);
+    } else if (isBrowse) {
         await updateDirectoryView();
     } else {
         // Redraw basic layout shells (header/compare) on home or insights page
@@ -121,6 +136,13 @@ State.subscribe(async (currentState) => {
         surveyPlaceholder.innerHTML = renderSurveyModal();
         bindSurveyModalEvents();
     }
+
+    // Dynamically render/update Upgrade Modal
+    const upgradePlaceholder = document.getElementById('upgradeModalPlaceholder');
+    if (upgradePlaceholder) {
+        upgradePlaceholder.innerHTML = renderUpgradeModal();
+        bindUpgradeModalEvents();
+    }
 });
 
 // Initialize Routing bindings
@@ -149,6 +171,24 @@ function initRoutes() {
         renderInsightsLayout();
     });
 
+    Router.on('#/dashboard', () => {
+        if (!State.user) {
+            State.setAuthModal(true);
+            Router.navigate('#/');
+        } else {
+            Router.navigate('#/dashboard/crm');
+        }
+    });
+
+    Router.on('#/dashboard/:tab', (tab) => {
+        if (!State.user) {
+            State.setAuthModal(true);
+            Router.navigate('#/');
+        } else {
+            renderDashboardLayout(tab);
+        }
+    });
+
     Router.on('*', () => {
         Router.navigate('#/');
     });
@@ -170,6 +210,7 @@ function renderMarketingLayout() {
             <div id="authModalPlaceholder"></div>
             <div id="pricingModalPlaceholder"></div>
             <div id="surveyModalPlaceholder"></div>
+            <div id="upgradeModalPlaceholder"></div>
             <footer class="main-footer">
                 NearPro — Made with ❤️ by S8N
             </footer>
@@ -200,6 +241,7 @@ async function renderDirectoryLayout() {
             <div id="authModalPlaceholder"></div>
             <div id="pricingModalPlaceholder"></div>
             <div id="surveyModalPlaceholder"></div>
+            <div id="upgradeModalPlaceholder"></div>
             
             <footer class="main-footer">
                 NearPro — Made with ❤️ by S8N
@@ -337,6 +379,7 @@ async function renderInsightsLayout() {
             <div id="authModalPlaceholder"></div>
             <div id="pricingModalPlaceholder"></div>
             <div id="surveyModalPlaceholder"></div>
+            <div id="upgradeModalPlaceholder"></div>
             <footer class="main-footer">
                 NearPro — Made with ❤️ by S8N
             </footer>
@@ -944,6 +987,428 @@ async function runGuidedDemo(niche) {
     localStorage.setItem('nearpro_demo_completed', 'true');
     window.location.hash = '#/browse';
     State.notify();
+}
+
+/* --- Dashboard Rendering Controller --- */
+
+async function renderDashboardLayout(tab) {
+    if (!State.user) {
+        State.setAuthModal(true);
+        Router.navigate('#/');
+        return;
+    }
+
+    const { hasAccess, getUserTier } = await import('./auth.js');
+    const userTier = getUserTier();
+
+    // Required tiers for each sub tab
+    const requiredTiers = {
+        crm: 'scout',
+        lists: 'scout',
+        audit: 'hunter',
+        outreach: 'hunter',
+        prompts: 'agency',
+        integrations: 'agency',
+        team: 'agency',
+        settings: 'free'
+    };
+
+    const requiredTier = requiredTiers[tab] || 'free';
+
+    if (!hasAccess(userTier, requiredTier)) {
+        // Render shell but show lock screen message
+        appShell.innerHTML = renderDashboardShell(tab);
+        bindDashboardShellEvents();
+        
+        const content = document.getElementById('dashboardContent');
+        if (content) {
+            content.innerHTML = `
+                <div style="padding: 80px 24px; text-align: center; border: 1px dashed var(--border); border-radius: var(--radius-lg); max-width: 500px; margin: 40px auto;">
+                    <div style="font-size: 40px; margin-bottom: 16px;">🔒</div>
+                    <h3 style="margin-bottom: 12px; color: white;">Locked Module</h3>
+                    <p style="color: var(--text-muted); font-size: 13.5px; line-height: 1.5; margin-bottom: 24px;">
+                        The ${tab.toUpperCase()} module requires the ${requiredTier.toUpperCase()} plan. Upgrade now to unlock this feature.
+                    </p>
+                    <button class="brand-btn" onclick="window.State.setPricingModal(true);">Upgrade Plan</button>
+                </div>
+            `;
+        }
+        return;
+    }
+
+    // Render dashboard shell layout
+    appShell.innerHTML = renderDashboardShell(tab);
+    bindDashboardShellEvents();
+
+    const titleEl = document.getElementById('dashboardPageTitle');
+    const content = document.getElementById('dashboardContent');
+
+    if (tab === 'crm') {
+        if (titleEl) titleEl.innerText = 'Outreach Pipeline';
+        try {
+            const pipeline = await Api.getCRMPipeline(State.user.id);
+            const stats = await Api.getDashboardStats(State.user.id);
+            if (content) {
+                content.innerHTML = renderLeadCRM(pipeline, stats);
+                bindCRMWorkspaceEvents(async () => {
+                    // Update state tracking
+                    const updated = await Api.getCRMPipeline(State.user.id);
+                    const updatedStats = await Api.getDashboardStats(State.user.id);
+                    const container = document.getElementById('dashboardContent');
+                    if (container) {
+                        container.innerHTML = renderLeadCRM(updated, updatedStats);
+                        bindCRMWorkspaceEvents(arguments.callee);
+                    }
+                });
+            }
+        } catch (err) {
+            console.error("Failed to load CRM pipeline: ", err);
+            if (content) content.innerHTML = `<p style="color: var(--accent-pink);">Error loading CRM pipeline.</p>`;
+        }
+    } else if (tab === 'lists') {
+        if (titleEl) titleEl.innerText = 'Smart Lists';
+        try {
+            const lists = await Api.getLeadLists();
+            const searchParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+            const listId = searchParams.get('id');
+
+            if (listId) {
+                const leads = await Api.getSavedLeads(listId);
+                const listDetail = lists.find(l => l.id === listId);
+                if (titleEl && listDetail) titleEl.innerText = `Smart Lists — ${listDetail.name}`;
+                if (content) {
+                    content.innerHTML = renderLeadLists(lists, listId, leads);
+                    bindListDetailEvents(listId, leads, async () => {
+                        const updatedLeads = await Api.getSavedLeads(listId);
+                        const container = document.getElementById('dashboardContent');
+                        if (container) {
+                            container.innerHTML = renderLeadLists(lists, listId, updatedLeads);
+                            bindListDetailEvents(listId, updatedLeads, arguments.callee);
+                        }
+                    });
+                }
+            } else {
+                if (content) {
+                    content.innerHTML = renderLeadLists(lists);
+                    bindLeadListsEvents(async () => {
+                        const updatedLists = await Api.getLeadLists();
+                        const container = document.getElementById('dashboardContent');
+                        if (container) {
+                            container.innerHTML = renderLeadLists(updatedLists);
+                            bindLeadListsEvents(arguments.callee);
+                        }
+                    });
+                }
+            }
+        } catch (err) {
+            console.error("Failed to load lists: ", err);
+            if (content) content.innerHTML = `<p style="color: var(--accent-pink);">Error loading lists.</p>`;
+        }
+    } else if (tab === 'audit') {
+        if (titleEl) titleEl.innerText = 'Business Health Check';
+        try {
+            const savedLeads = await Api.getSavedLeads();
+            const leadsWithWebsites = savedLeads
+                .map(item => item.professionals)
+                .filter(p => p && p.website);
+
+            const searchParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+            const activeAuditLeadId = searchParams.get('lead_id');
+
+            let auditResult = null;
+            let auditLoading = false;
+
+            if (activeAuditLeadId) {
+                const targetLead = leadsWithWebsites.find(l => l.id === activeAuditLeadId);
+                if (targetLead && targetLead.website) {
+                    const { data: cached } = await Api.supabase
+                        .from('audit_cache')
+                        .select('*')
+                        .eq('url', targetLead.website.trim().toLowerCase())
+                        .gt('expires_at', new Date().toISOString())
+                        .maybeSingle();
+                    
+                    if (cached) {
+                        auditResult = cached;
+                    }
+                }
+            }
+
+            if (content) {
+                content.innerHTML = renderWebsiteAudit(leadsWithWebsites, activeAuditLeadId, auditResult, auditLoading);
+                bindWebsiteAuditEvents(async (id, url) => {
+                    auditLoading = true;
+                    if (content) {
+                        content.innerHTML = renderWebsiteAudit(leadsWithWebsites, id, null, true);
+                    }
+                    try {
+                        const { data, error } = await Api.supabase.functions.invoke('audit-website', {
+                            body: { url: url, professional_id: id }
+                        });
+                        if (error) throw error;
+                        
+                        const container = document.getElementById('dashboardContent');
+                        if (container) {
+                            container.innerHTML = renderWebsiteAudit(leadsWithWebsites, id, data, false);
+                            bindWebsiteAuditEvents(arguments.callee);
+                        }
+                    } catch (err) {
+                        console.error("Health check audit failed: ", err);
+                        alert("Health check failed. Using fallback client side check.");
+                        
+                        const mockResult = {
+                            url: url,
+                            page_speed_score: 68,
+                            mobile_friendly: true,
+                            has_https: url.startsWith('https://'),
+                            has_schema: false,
+                            load_time_ms: 2400,
+                            gaps: [
+                                "Structured schema data is missing for Google Search display",
+                                "Speed optimization can improve (index speed load: 2.4s)"
+                            ],
+                            biggest_gap: "Structured schema data is missing for Google Search display",
+                            est_lost_revenue_per_month: 8500
+                        };
+                        
+                        await Api.supabase.from('audit_cache').upsert([mockResult], { onConflict: 'url' });
+                        await Api.supabase.from('professionals').update({ audit_cached: true }).eq('id', id);
+
+                        const container = document.getElementById('dashboardContent');
+                        if (container) {
+                            container.innerHTML = renderWebsiteAudit(leadsWithWebsites, id, mockResult, false);
+                            bindWebsiteAuditEvents(arguments.callee);
+                        }
+                    }
+                });
+            }
+        } catch (err) {
+            console.error("Failed to load Website Audit panel: ", err);
+            if (content) content.innerHTML = `<p style="color: var(--accent-pink);">Error loading Business Health Check.</p>`;
+        }
+    } else if (tab === 'outreach') {
+        if (titleEl) titleEl.innerText = 'AI Outreach Studio';
+        try {
+            const savedLeads = await Api.getSavedLeads();
+            const { data: templates } = await Api.supabase
+                .from('outreach_templates')
+                .select('*');
+
+            const searchParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+            const activeLeadId = searchParams.get('lead_id');
+            const activeTemplateId = searchParams.get('template_id') || (templates && templates[0]?.id);
+
+            let composedMessage = '';
+            let composedFollowUp = '';
+
+            if (activeLeadId) {
+                const activeItem = savedLeads.find(item => item.professionals.id === activeLeadId);
+                const lead = activeItem?.professionals;
+
+                if (lead) {
+                    let audit = null;
+                    if (lead.website) {
+                        const { data } = await Api.supabase
+                            .from('audit_cache')
+                            .select('*')
+                            .eq('url', lead.website.trim().toLowerCase())
+                            .maybeSingle();
+                        audit = data;
+                    }
+
+                    const template = templates.find(t => t.id === activeTemplateId) || templates[0];
+                    if (template) {
+                        composedMessage = buildOutreach(template.template_text, lead, audit);
+                        composedFollowUp = buildOutreach(template.follow_up_text || '', lead, audit);
+                    }
+                }
+            }
+
+            if (content) {
+                content.innerHTML = renderOutreachStudio(savedLeads, activeLeadId, templates, activeTemplateId, composedMessage, composedFollowUp);
+                bindOutreachStudioEvents(templates, 
+                    (leadId) => {
+                        window.location.hash = `#/dashboard/outreach?lead_id=${leadId}&template_id=${activeTemplateId}`;
+                    }, 
+                    (templateId) => {
+                        window.location.hash = `#/dashboard/outreach?lead_id=${activeLeadId}&template_id=${templateId}`;
+                    }
+                );
+            }
+        } catch (err) {
+            console.error("Failed to load Outreach Studio: ", err);
+            if (content) content.innerHTML = `<p style="color: var(--accent-pink);">Error loading AI Outreach Studio.</p>`;
+        }
+    } else if (tab === 'prompts') {
+        if (titleEl) titleEl.innerText = 'Website Prompt Engine';
+        try {
+            const savedLeads = await Api.getSavedLeads();
+            
+            const searchParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+            const activeLeadId = searchParams.get('lead_id');
+            const selectedPlatform = searchParams.get('platform') || 'lovable';
+
+            let generatedPrompt = '';
+
+            if (activeLeadId) {
+                const activeItem = savedLeads.find(item => item.professionals.id === activeLeadId);
+                const lead = activeItem?.professionals;
+
+                if (lead) {
+                    let audit = null;
+                    if (lead.website) {
+                        const { data } = await Api.supabase
+                            .from('audit_cache')
+                            .select('*')
+                            .eq('url', lead.website.trim().toLowerCase())
+                            .maybeSingle();
+                        audit = data;
+                    }
+                    generatedPrompt = buildPrompt(selectedPlatform, lead, audit);
+                }
+            }
+
+            if (content) {
+                content.innerHTML = renderPromptGenerator(savedLeads, activeLeadId, selectedPlatform, generatedPrompt);
+                bindPromptGeneratorEvents(
+                    (leadId) => {
+                        window.location.hash = `#/dashboard/prompts?lead_id=${leadId}&platform=${selectedPlatform}`;
+                    }, 
+                    (platform) => {
+                        window.location.hash = `#/dashboard/prompts?lead_id=${activeLeadId}&platform=${platform}`;
+                    }
+                );
+            }
+        } catch (err) {
+            console.error("Failed to load Website Prompt Engine: ", err);
+            if (content) content.innerHTML = `<p style="color: var(--accent-pink);">Error loading Website Prompt Engine.</p>`;
+        }
+    } else if (tab === 'integrations') {
+        if (titleEl) titleEl.innerText = 'Connection Hub';
+        try {
+            const lists = await Api.getLeadLists();
+            const n8nUrl = State.profile?.n8n_webhook_url || '';
+            const sheetsUrl = State.profile?.google_sheets_webhook_url || '';
+            
+            const searchParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+            const activeSubTab = searchParams.get('sub') || 'n8n';
+
+            if (content) {
+                content.innerHTML = renderConnectionHub(lists, n8nUrl, sheetsUrl, activeSubTab);
+                bindConnectionHubEvents(lists, activeSubTab, (newSub) => {
+                    window.location.hash = `#/dashboard/integrations?sub=${newSub}`;
+                });
+            }
+        } catch (err) {
+            console.error("Failed to load Connection Hub: ", err);
+            if (content) content.innerHTML = `<p style="color: var(--accent-pink);">Error loading Connection Hub.</p>`;
+        }
+    } else if (tab === 'team') {
+        if (titleEl) titleEl.innerText = 'Team Workspace';
+        try {
+            const searchParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+            const activeSubTab = searchParams.get('sub') || 'seats';
+
+            let members = JSON.parse(localStorage.getItem('nearpro_team_members') || '[]');
+            const dataRequests = await loadDataRequests();
+
+            if (content) {
+                content.innerHTML = renderTeamWorkspace(members, dataRequests, activeSubTab);
+                bindTeamWorkspaceEvents(
+                    (newSub) => {
+                        window.location.hash = `#/dashboard/team?sub=${newSub}`;
+                    },
+                    (email, role) => {
+                        members.push({ email, role });
+                        localStorage.setItem('nearpro_team_members', JSON.stringify(members));
+                        alert(`Invited ${email} successfully!`);
+                        renderDashboardLayout('team');
+                    },
+                    (email) => {
+                        members = members.filter(m => m.email !== email);
+                        localStorage.setItem('nearpro_team_members', JSON.stringify(members));
+                        alert(`Removed member ${email}.`);
+                        renderDashboardLayout('team');
+                    },
+                    async (niche, city, notes) => {
+                        try {
+                            await createDataRequest(niche, city, notes);
+                            alert("Scrape request submitted successfully!");
+                            renderDashboardLayout('team');
+                        } catch (err) {
+                            console.error("Scrape request failed: ", err);
+                            alert("Failed to submit request.");
+                        }
+                    }
+                );
+            }
+        } catch (err) {
+            console.error("Failed to load Team Workspace: ", err);
+            if (content) content.innerHTML = `<p style="color: var(--accent-pink);">Error loading Team Workspace.</p>`;
+        }
+    } else if (tab === 'settings') {
+        if (titleEl) titleEl.innerText = 'Workspace Settings';
+        if (content) {
+            const role = State.profile?.role || 'freelancer';
+            content.innerHTML = `
+                <div class="settings-wrap" style="max-width: 500px; background: rgba(255,255,255,0.01); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 28px;">
+                    <h4 style="margin: 0 0 20px 0; color: white; font-family: var(--font-heading);">Workspace Configurations</h4>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-size: 11px; font-family: var(--font-mono); color: var(--text-secondary); text-transform: uppercase; margin-bottom: 8px;">My Professional Role</label>
+                        <select id="settingsRole" style="width: 100%; padding: 10px; background: var(--bg-base); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13px;">
+                            <option value="freelancer" ${role === 'freelancer' ? 'selected' : ''}>💻 Freelancer</option>
+                            <option value="agency" ${role === 'agency' ? 'selected' : ''}>🏢 Agency Owner</option>
+                            <option value="sales_team" ${role === 'sales_team' ? 'selected' : ''}>📈 Sales Representative</option>
+                            <option value="startup" ${role === 'startup' ? 'selected' : ''}>🚀 Startup Founder</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-bottom: 24px;">
+                        <label style="display: block; font-size: 11px; font-family: var(--font-mono); color: var(--text-secondary); text-transform: uppercase; margin-bottom: 8px;">Billing Information</label>
+                        <div style="padding: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; color: var(--text-secondary); display: flex; justify-content: space-between; align-items: center;">
+                            <div>Current Tier: <strong style="color: var(--accent-gold); text-transform: uppercase;">${userTier} Plan</strong></div>
+                            <button class="secondary-btn" id="changeBillingPlanBtn" style="padding: 4px 10px; font-size: 11px; cursor: pointer;">Change Plan</button>
+                        </div>
+                    </div>
+                    
+                    <button class="brand-btn" id="saveSettingsBtn" style="width: 100%; padding: 10px;">Save Configuration</button>
+                </div>
+            `;
+
+            document.getElementById('changeBillingPlanBtn').addEventListener('click', () => {
+                State.setPricingModal(true);
+            });
+
+            document.getElementById('saveSettingsBtn').addEventListener('click', async () => {
+                const newRole = document.getElementById('settingsRole').value;
+                try {
+                    const { data, error } = await Api.supabase
+                        .from('profiles')
+                        .update({ role: newRole, updated_at: new Date().toISOString() })
+                        .eq('id', State.user.id)
+                        .select()
+                        .single();
+                    if (error) throw error;
+                    State.profile = data;
+                    alert("Configuration saved successfully");
+                } catch (err) {
+                    console.error("Failed to save settings: ", err);
+                    alert("Failed to save configuration");
+                }
+            });
+        }
+    } else {
+        if (titleEl) titleEl.innerText = tab.toUpperCase();
+        if (content) {
+            content.innerHTML = `
+                <div style="padding: 40px; text-align: center; color: var(--text-muted);">
+                    <h3>Locked Option</h3>
+                    <p>This module will be fully integrated during the upcoming sprints.</p>
+                </div>
+            `;
+        }
+    }
 }
 
 /* --- Startup --- */

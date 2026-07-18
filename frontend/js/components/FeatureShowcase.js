@@ -32,122 +32,122 @@ export function renderFeatureShowcase() {
                     <span style="font-family: var(--font-mono); font-size: 12px; color: var(--accent-gold); text-transform: uppercase;">Monetization & Growth</span>
                     <h2 style="font-size: 28px; margin-top: 8px;">Select Your Premium Plan</h2>
                     <p style="max-width: 600px; margin: 12px auto 0; font-size: 14.5px; line-height: 1.6; color: var(--text-secondary);">
-                        Spend ₹29 on random snacks vs spend ₹29 on verified local data to scale your freelancer client outreach and business revenue. Choose a tier optimized for your client acquisitions.
+                        Unlock verified local leads and outreach tools to scale your freelancer client outreach and business revenue. Choose a tier optimized for your client acquisitions.
                     </p>
                 </div>
                 
                 <div class="pricing-grid">
-                    <!-- Starter Plan -->
+                    <!-- Scout Plan -->
                     <div class="pricing-card">
                         <div class="pricing-header">
-                            <h3 class="pricing-title" style="color: var(--accent-gold);">Starter Plan</h3>
+                            <h3 class="pricing-title" style="color: var(--accent-gold);">Scout Plan</h3>
                             <div class="pricing-price">
-                                ₹29 <span>/ month</span>
+                                ₹499 <span>/ month</span>
                             </div>
                         </div>
                         <ul class="pricing-features-list">
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon">✓</span>
-                                <div>Unlimited Directory Searches</div>
+                                <div>Unlocked phone numbers and websites</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon">✓</span>
-                                <div>Spot Targets Missing Websites</div>
+                                <div>Interactive spatial coordinates maps</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon">✓</span>
-                                <div>Filter by 10 Suburbs & 11 Categories</div>
+                                <div>Export up to 100 CSV leads per month</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon">✓</span>
-                                <div>Read Verified Opening Hours</div>
+                                <div>Track 5 Smart Lists with 50 leads each</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon">✓</span>
-                                <div>Search Up to 4,700+ Verified Listings</div>
+                                <div>Add custom notes and generate QR codes</div>
                             </li>
                         </ul>
-                        <button class="brand-btn pricing-btn" onclick="localStorage.setItem('selected_nearpro_tier', 'starter'); window.State.locked = false; window.State.session_started = null; window.State.setAuthModal(true);">
-                            Select Starter
+                        <button class="brand-btn pricing-btn" onclick="window.State.selectPlan('scout');">
+                            Select Scout
                         </button>
                     </div>
 
-                    <!-- Connect Plan -->
+                    <!-- Hunter Plan -->
                     <div class="pricing-card popular">
-                        <div class="pricing-badge">Popular</div>
+                        <div class="pricing-badge">Best Value</div>
                         <div class="pricing-header">
-                            <h3 class="pricing-title" style="color: var(--accent-gold);">Connect Plan</h3>
+                            <h3 class="pricing-title" style="color: var(--accent-gold);">Hunter Plan</h3>
                             <div class="pricing-price">
-                                ₹59 <span>/ month</span>
+                                ₹999 <span>/ month</span>
                             </div>
                         </div>
                         <ul class="pricing-features-list">
                             <li class="pricing-feature-item highlight">
                                 <span class="pricing-feature-icon">✓</span>
-                                <div>All Starter Features Included</div>
+                                <div>All Scout features included</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon">✓</span>
-                                <div>Direct Phone Numbers Unmasked</div>
+                                <div>Run Business Health Check website audits</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon">✓</span>
-                                <div>Direct Verified Website Links Unlocked</div>
+                                <div>Lead Intelligence Scores and details unlocked</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon">✓</span>
-                                <div>Interactive Spatial Coordinates Map Pins</div>
+                                <div>AI Outreach Studio with Hinglish templates</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon">✓</span>
-                                <div>Distance Estimator & Route Mapping</div>
+                                <div>Unlimited CSV downloads and exports</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon">✓</span>
-                                <div>Save & Export Favorites List</div>
+                                <div>Pipeline status tracking and CRM reminders</div>
                             </li>
                         </ul>
-                        <button class="brand-btn pricing-btn" onclick="localStorage.setItem('selected_nearpro_tier', 'connect'); window.State.locked = false; window.State.session_started = null; window.State.setAuthModal(true);">
-                            Select Connect
+                        <button class="brand-btn pricing-btn" onclick="window.State.selectPlan('hunter');">
+                            Select Hunter
                         </button>
                     </div>
 
-                    <!-- Elite Pro Plan -->
+                    <!-- Agency Plan -->
                     <div class="pricing-card">
                         <div class="pricing-header">
-                            <h3 class="pricing-title" style="color: var(--accent-pink);">Elite Pro Plan</h3>
+                            <h3 class="pricing-title" style="color: var(--accent-pink);">Agency Plan</h3>
                             <div class="pricing-price">
-                                ₹99 <span>/ month</span>
+                                ₹2,499 <span>/ month</span>
                             </div>
                         </div>
                         <ul class="pricing-features-list">
                             <li class="pricing-feature-item highlight">
                                 <span class="pricing-feature-icon" style="color: var(--accent-pink);">✓</span>
-                                <div>All Connect Features Included</div>
+                                <div>All Hunter features included</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon" style="color: var(--accent-pink);">✓</span>
-                                <div>Bulk CRM-Ready CSV Leads Downloader</div>
+                                <div>Lovable and Bolt website prompt builders</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon" style="color: var(--accent-pink);">✓</span>
-                                <div>Underserved Suburb Market Gaps Table</div>
+                                <div>Lead CRM Kanban pipeline dashboard view</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon" style="color: var(--accent-pink);">✓</span>
-                                <div>Density Breakdown Distribution Charts</div>
+                                <div>n8n connection hub webhook integration</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon" style="color: var(--accent-pink);">✓</span>
-                                <div>Filter by Google Maps Review Counts</div>
+                                <div>Google Sheets sync push integrations</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon" style="color: var(--accent-pink);">✓</span>
-                                <div>Target High ratings vs Low completeness Gaps</div>
+                                <div>3 team seats and white label client reports</div>
                             </li>
                         </ul>
-                        <button class="brand-btn pricing-btn" style="background: linear-gradient(135deg, var(--accent-pink), #a855f7);" onclick="localStorage.setItem('selected_nearpro_tier', 'pro'); window.State.locked = false; window.State.session_started = null; window.State.setAuthModal(true);">
-                            Select Elite Pro
+                        <button class="brand-btn pricing-btn" style="background: linear-gradient(135deg, var(--accent-pink), #a855f7);" onclick="window.State.selectPlan('agency');">
+                            Select Agency
                         </button>
                     </div>
                 </div>

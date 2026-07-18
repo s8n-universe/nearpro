@@ -1,0 +1,808 @@
+/* NearPro v3 Dashboard Shell & Workspace Layouts */
+
+.dashboard-shell {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    background: var(--bg-base);
+    color: white;
+}
+
+.dashboard-sidebar {
+    width: 260px;
+    background: var(--bg-surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.sidebar-header {
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.sidebar-logo {
+    height: 28px;
+    width: auto;
+    object-fit: contain;
+}
+
+.sidebar-brand {
+    font-size: 15px;
+    font-weight: 600;
+    font-family: var(--font-heading);
+    color: white;
+}
+
+.sidebar-nav {
+    padding: 20px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.dashboard-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 13.5px;
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.dashboard-nav-item:hover {
+    background: rgba(255, 255, 255, 0.03);
+    color: white;
+}
+
+.dashboard-nav-item.active {
+    background: rgba(255, 160, 0, 0.08);
+    color: var(--accent-gold);
+    font-weight: 500;
+}
+
+.dashboard-nav-item.locked {
+    opacity: 0.6;
+}
+
+.nav-lock {
+    margin-left: auto;
+    font-size: 11px;
+}
+
+.sidebar-footer {
+    padding: 20px;
+    border-top: 1px solid var(--border);
+}
+
+.upgrade-cta {
+    width: 100%;
+    padding: 12px;
+    font-size: 13px;
+    text-align: center;
+}
+
+.dashboard-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.dashboard-topbar {
+    height: 70px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    background: var(--bg-surface);
+    flex-shrink: 0;
+}
+
+.dashboard-page-title {
+    font-size: 18px;
+    margin: 0;
+    font-family: var(--font-heading);
+}
+
+.user-profile-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-avatar-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--accent-gold);
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.user-meta-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-email {
+    font-size: 13px;
+    font-weight: 500;
+    color: white;
+}
+
+.tier-tag {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    color: var(--accent-gold);
+}
+
+.dashboard-content-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px;
+    position: relative;
+}
+
+.dashboard-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--text-muted);
+}
+
+/* My Leads / CRM Kanban Styles */
+.crm-workspace {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    height: 100%;
+    position: relative;
+}
+
+.crm-stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.crm-stat-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.crm-stat-value {
+    font-size: 24px;
+    font-weight: 600;
+    color: white;
+    font-family: var(--font-heading);
+}
+
+.crm-stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.due-today-section {
+    background: rgba(234, 179, 8, 0.03);
+    border: 1px solid rgba(234, 179, 8, 0.15);
+    border-radius: var(--radius-md);
+    padding: 16px 20px;
+}
+
+.due-today-title {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    color: #eab308;
+    font-family: var(--font-heading);
+}
+
+.due-items-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.due-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+}
+
+.due-badge {
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+}
+
+.due-badge.today {
+    background: rgba(234, 179, 8, 0.15);
+    color: #eab308;
+}
+
+.due-badge.overdue {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+}
+
+.crm-kanban-board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    flex: 1;
+    overflow-x: auto;
+    align-items: start;
+    min-height: 450px;
+}
+
+.crm-column {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+}
+
+.crm-column-header {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.column-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+}
+
+.column-count {
+    font-size: 11px;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-muted);
+    padding: 2px 6px;
+    border-radius: 20px;
+    font-family: var(--font-mono);
+}
+
+.crm-column-cards {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    min-height: 150px;
+}
+
+.crm-column.dragover {
+    background: rgba(255, 160, 0, 0.02);
+    border-color: var(--accent-gold);
+}
+
+.crm-lead-card {
+    background: var(--bg-base);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+}
+
+.crm-lead-card:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.crm-lead-card.dragging {
+    opacity: 0.4;
+}
+
+.card-drag-handle {
+    font-size: 10px;
+    color: var(--text-muted);
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    cursor: grab;
+}
+
+.card-name {
+    font-size: 13.5px;
+    margin: 0 0 4px 0;
+    color: white;
+    padding-right: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-meta {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin: 0 0 8px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-rating-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    margin-bottom: 12px;
+}
+
+.card-stars {
+    color: var(--accent-gold);
+}
+
+.card-rating-num {
+    color: var(--text-secondary);
+}
+
+.card-footer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+}
+
+.crm-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    margin-right: 3px;
+}
+
+.crm-dot.filled {
+    background: var(--accent-pink);
+}
+
+.card-followup {
+    font-size: 10px;
+    padding: 1px 4px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
+}
+
+.card-followup.overdue {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+/* Sliding CRM Details Drawer Panel */
+.crm-detail-panel {
+    position: fixed;
+    top: 0;
+    right: -380px;
+    width: 380px;
+    height: 100vh;
+    background: var(--bg-surface);
+    border-left: 1px solid var(--border);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
+    transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 10005;
+    display: flex;
+    flex-direction: column;
+}
+
+.crm-detail-panel.open {
+    right: 0;
+}
+
+.panel-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.panel-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-family: var(--font-heading);
+}
+
+.close-panel-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.panel-body {
+    padding: 24px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.detail-section {
+    margin-bottom: 20px;
+}
+
+.detail-label {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+.channel-toggle-btn {
+    padding: 6px 12px;
+    font-size: 12.5px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.02);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.channel-toggle-btn.active {
+    background: rgba(255, 160, 0, 0.08);
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
+}
+
+.detail-input {
+    padding: 10px;
+    background: var(--bg-base);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: white;
+    outline: none;
+}
+
+/* Smart Lists styles */
+.lists-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.list-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    min-height: 160px;
+}
+
+.list-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.list-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    gap: 12px;
+}
+
+.list-card-title {
+    margin: 0;
+    font-size: 15px;
+    font-family: var(--font-heading);
+    color: white;
+}
+
+.list-color-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 4px;
+}
+
+.list-card-desc {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.5;
+    flex: 1;
+}
+
+.list-card-footer {
+    margin-top: 16px;
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+/* Website Audit Workspace CSS Styles */
+
+.audit-lead-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.audit-lead-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.audit-lead-item.active {
+    background: rgba(255, 160, 0, 0.08);
+    border-color: var(--accent-gold);
+}
+
+.audit-empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+}
+
+.audit-results-dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.audit-metrics-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 24px;
+    align-items: center;
+}
+
+.metric-radial-box {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.radial-progress-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: conic-gradient(var(--score-color) var(--score-pct), rgba(255,255,255,0.06) 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.radial-progress-circle::after {
+    content: "";
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--bg-surface);
+}
+
+.radial-score-value {
+    position: relative;
+    z-index: 2;
+    font-size: 26px;
+    font-weight: bold;
+    font-family: var(--font-heading);
+    color: white;
+}
+
+.audit-checks-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.check-box {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.check-icon {
+    font-size: 18px;
+}
+
+.check-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.check-label {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.check-status {
+    font-size: 13px;
+    font-weight: 500;
+    color: white;
+}
+
+.lost-revenue-box {
+    background: rgba(239, 68, 68, 0.04);
+    border: 1px solid rgba(239, 68, 68, 0.15);
+    border-radius: var(--radius-md);
+    padding: 16px 20px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.audit-section-panel {
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 20px;
+}
+
+.panel-section-title {
+    margin: 0 0 12px 0;
+    font-size: 13.5px;
+    color: white;
+    font-family: var(--font-heading);
+}
+
+.audit-gaps-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.audit-gap-item {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+/* Outreach Workspace CSS Styles */
+
+.outreach-lead-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.outreach-lead-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.outreach-lead-item.active {
+    background: rgba(255, 160, 0, 0.08);
+    border-color: var(--accent-gold);
+}
+
+.outreach-empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+}
+
+/* Prompt Generator Workspace CSS Styles */
+
+.prompt-lead-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.prompt-lead-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.prompt-lead-item.active {
+    background: rgba(255, 160, 0, 0.08);
+    border-color: var(--accent-gold);
+}
+
+.platform-btn {
+    padding: 6px 12px;
+    font-size: 12.5px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.02);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.platform-btn.active {
+    background: rgba(255, 160, 0, 0.08);
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
+}
+
+/* Connection Hub and Team Workspace Styles */
+
+.sidebar-tab-btn {
+    transition: var(--transition);
+}
+
+.sidebar-tab-btn:hover {
+    background: rgba(255,255,255,0.03) !important;
+    color: white !important;
+}
+
+.sidebar-tab-btn.active {
+    background: rgba(255, 160, 0, 0.06) !important;
+    color: var(--accent-gold) !important;
+}
+
+
+
+

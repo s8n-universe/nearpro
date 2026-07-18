@@ -16,6 +16,7 @@ export const State = {
     survey_modal_open: false,
     auth_modal_open: false,
     selected_tier: null,
+    billing_cycle: 'monthly',
     
     // Filters state
     filters: {
@@ -145,5 +146,35 @@ export const State = {
     setSurveyModal(isOpen) {
         this.survey_modal_open = isOpen;
         this.notify();
+    },
+
+    async selectPlan(planId, interval = 'monthly') {
+        if (planId === 'free') {
+            localStorage.setItem('selected_nearpro_tier', 'free');
+            this.locked = false;
+            this.session_started = null;
+            this.setPricingModal(false);
+            this.setAuthModal(true);
+            return;
+        }
+
+        if (!this.user) {
+            localStorage.setItem('selected_nearpro_tier', planId);
+            localStorage.setItem('selected_nearpro_interval', interval);
+            this.locked = false;
+            this.session_started = null;
+            this.setPricingModal(false);
+            this.setAuthModal(true);
+            return;
+        }
+
+        this.setPricingModal(false);
+        try {
+            const { Api } = await import('./api.js');
+            await Api.checkoutSubscription(planId, interval);
+        } catch (err) {
+            console.error("Subscription checkout failed: ", err);
+            alert("Subscription creation failed. Please try again.");
+        }
     }
 };

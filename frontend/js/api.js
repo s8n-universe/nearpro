@@ -337,7 +337,10 @@ export const Api = {
     },
 
     async updateProfileTier(userId, tier) {
-        const { data, error } = await supabase.from('profiles').update({ tier: tier }).eq('id', userId).select().single();
+        const { data, error } = await supabase.from('profiles').update({ 
+            tier: tier,
+            subscription_tier: tier 
+        }).eq('id', userId).select().single();
         if (error) throw error;
         return data;
     },
@@ -368,5 +371,212 @@ export const Api = {
         });
         if (error) throw error;
         return data;
+    },
+
+    // --- v3 Dashboard & CRM API Methods ---
+
+    async getDashboardStats(userId) {
+        const { data, error } = await supabase.rpc('get_dashboard_stats', { p_user_id: userId });
+        if (error) throw error;
+        return data;
+    },
+
+    async getCRMPipeline(userId) {
+        const { data, error } = await supabase.rpc('get_crm_pipeline', { p_user_id: userId });
+        if (error) throw error;
+        return data || [];
+    },
+
+    async getLeadLists() {
+        const { data, error } = await supabase
+            .from('lead_lists')
+            .select('*')
+            .order('created_at', { ascending: false });
+        if (error) throw error;
+        return data || [];
+    },
+
+    async createLeadList(name, description = '', color = '#ffa000') {
+        const { data: userSession } = await supabase.auth.getSession();
+        const userId = userSession?.session?.user?.id;
+        if (!userId) throw new Error("User session not found");
+
+        const { data, error } = await supabase
+            .from('lead_lists')
+            .insert([{ 
+                user_id: userId,
+                name: name,
+                description: description,
+                color: color
+            }])
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    },
+
+    async saveLead(listId, professionalId) {
+        const { data: userSession } = await supabase.auth.getSession();
+        const userId = userSession?.session?.user?.id;
+        if (!userId) throw new Error("User session not found");
+
+        const { data, error } = await supabase
+            .from('saved_leads')
+            .insert([{ 
+                user_id: userId,
+                list_id: listId || null,
+                professional_id: professionalId,
+                status: 'new'
+            }])
+            .select()
+            .single();
+        if (error) throw error;
+
+        try {
+            import('./components/ConnectionHub.js').then(m => {
+                m.triggerN8nWebhook('lead_tracked', {
+                    lead_id: professionalId,
+                    list_id: listId,
+                    status: 'new'
+                });
+            });
+        } catch (e) {
+            console.warn("Webhook dispatch failed: ", e);
+        }
+
+        return data;
+    },
+
+    async updateLeadStatus(savedLeadId, status) {
+        const { data, error } = await supabase
+            .from('saved_leads')
+            .update({ status: status, updated_at: new Date().toISOString() })
+            .eq('id', savedLeadId)
+            .select()
+            .single();
+        if (error) throw error;
+
+        try {
+            import('./components/ConnectionHub.js').then(m => {
+                m.triggerN8nWebhook('crm_status_changed', {
+                    saved_lead_id: savedLeadId,
+                    status: status
+                });
+            });
+        } catch (e) {
+            console.warn("Webhook dispatch failed: ", e);
+        }
+
+        return data;
+    },
+
+    async updateLeadNotes(savedLeadId, notes) {
+        const { data, error } = await supabase
+            .from('saved_leads')
+            .update({ notes: notes, updated_at: new Date().toISOString() })
+            .eq('id', savedLeadId)
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    },
+
+    async updateLeadFollowUp(savedLeadId, followUpDueAt) {
+        const { data, error } = await supabase
+            .from('saved_leads')
+            .update({ follow_up_due_at: followUpDueAt, updated_at: new Date().toISOString() })
+            .eq('id', savedLeadId)
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    },
+
+    async deleteSavedLead(savedLeadId) {
+        const { error } = await supabase
+            .from('saved_leads')
+            .delete()
+            .eq('id', savedLeadId);
+        if (error) throw error;
+        return true;
+    },
+
+    async getSavedLeads(listId) {
+        let query = supabase
+            .from('saved_leads')
+            .select('*, professionals(*)');
+        
+        if (listId) {
+            query = query.eq('list_id', listId);
+        }
+        
+        const { data, error } = await query.order('created_at', { ascending: false });
+        if (error) throw error;
+        return data || [];
+    },
+
+    async checkoutSubscription(planId, interval = 'monthly') {
+        const { data: userSession } = await supabase.auth.getSession();
+        const userId = userSession?.session?.user?.id;
+        if (!userId) throw new Error("User session not found");
+
+        const { data, error } = await supabase.functions.invoke('create-razorpay-subscription', {
+            body: { plan_id: planId, interval: interval }
+        });
+
+        if (error) throw error;
+
+        if (data.mock) {
+            const updated = await this.getProfile(userId);
+            window.State.profile = updated;
+            window.State.notify();
+            alert(`Test Mode Checkout: ${planId.toUpperCase()} subscription activated successfully.`);
+            return true;
+        }
+
+        if (!window.Razorpay) {
+            await new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = "https://checkout.razorpay.com/v1/checkout.js";
+                script.onload = resolve;
+                script.onerror = reject;
+                document.body.appendChild(script);
+            });
+        }
+
+        return new Promise((resolve, reject) => {
+            const options = {
+                key: data.key_id,
+                subscription_id: data.subscription_id,
+                name: data.name,
+                description: data.description,
+                handler: async function (response) {
+                    try {
+                        const updated = await supabase.from('profiles').update({
+                            tier: planId,
+                            subscription_tier: planId,
+                            subscription_status: 'active',
+                            razorpay_subscription_id: data.subscription_id
+                        }).eq('id', userId).select().single();
+                        
+                        if (updated.error) throw updated.error;
+
+                        window.State.profile = updated.data;
+                        window.State.notify();
+                        alert("Subscription activated successfully!");
+                        resolve(true);
+                    } catch (err) {
+                        reject(err);
+                    }
+                },
+                prefill: data.prefill,
+                theme: {
+                    color: "#ffa000"
+                }
+            };
+            const rzp = new window.Razorpay(options);
+            rzp.open();
+        });
     }
 };
+

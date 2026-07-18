@@ -191,30 +191,32 @@ export function bindAuthModalEvents() {
                 if (currentTab === 'signin') {
                     const result = await Api.signIn(email, password);
                     const queuedTier = localStorage.getItem('selected_nearpro_tier');
-                    if (queuedTier && result.user) {
+                    const queuedInterval = localStorage.getItem('selected_nearpro_interval') || 'monthly';
+                    State.setAuthModal(false);
+                    if (queuedTier && queuedTier !== 'free' && result.user) {
                         try {
-                            const updated = await Api.updateProfileTier(result.user.id, queuedTier);
-                            State.profile = updated;
                             localStorage.removeItem('selected_nearpro_tier');
+                            localStorage.removeItem('selected_nearpro_interval');
+                            await Api.checkoutSubscription(queuedTier, queuedInterval);
                         } catch (err) {
-                            console.error("Auto tier upgrade failed: ", err);
+                            console.error("Auto tier checkout failed: ", err);
                         }
                     }
-                    State.setAuthModal(false);
                 } else {
                     const result = await Api.signUp(email, password);
                     const queuedTier = localStorage.getItem('selected_nearpro_tier');
-                    if (queuedTier && result.user) {
+                    const queuedInterval = localStorage.getItem('selected_nearpro_interval') || 'monthly';
+                    State.setAuthModal(false);
+                    if (queuedTier && queuedTier !== 'free' && result.user) {
                         try {
-                            const updated = await Api.updateProfileTier(result.user.id, queuedTier);
-                            State.profile = updated;
                             localStorage.removeItem('selected_nearpro_tier');
+                            localStorage.removeItem('selected_nearpro_interval');
+                            await Api.checkoutSubscription(queuedTier, queuedInterval);
                         } catch (err) {
-                            console.error("Auto tier upgrade failed: ", err);
+                            console.error("Auto tier checkout failed: ", err);
                         }
                     }
                     alert("Registration successful. Please check your inbox for verification links.");
-                    State.setAuthModal(false);
                 }
             } catch (err) {
                 console.error("Authentication failed: ", err);

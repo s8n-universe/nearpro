@@ -1,5 +1,8 @@
 import { isOpenNow } from '../api.js';
 import { State } from '../state.js';
+import { showTrackLeadModal } from './TrackLeadModal.js';
+import { currentUserHasAccess } from '../auth.js';
+
 
 // Approx latitude and longitude coordinates for Mumbai neighborhood centers
 const suburbCoordinates = {
@@ -117,10 +120,35 @@ export function renderProfessionalCard(lead) {
         }
     }
 
+    const isTracked = State.saved_lead_ids && State.saved_lead_ids.includes(lead.id);
+
+    const hasScoreAccess = currentUserHasAccess('hunter');
+    let scoreBadgeHTML = '';
+    if (hasScoreAccess && lead.conversion_score !== undefined && lead.conversion_score !== null) {
+        const scoreVal = lead.conversion_score;
+        let badgeLabel = 'Moderate';
+        let badgeColor = '#6b7280';
+        let emoji = '📊';
+        if (scoreVal >= 80) {
+            badgeLabel = 'High';
+            badgeColor = '#22c55e';
+            emoji = '🔥';
+        } else if (scoreVal >= 60) {
+            badgeLabel = 'Good';
+            badgeColor = '#eab308';
+            emoji = '⚡';
+        }
+        scoreBadgeHTML = `<span class="score-badge" style="background: rgba(255,255,255,0.03); border: 1px solid ${badgeColor}; color: ${badgeColor}; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 100px; margin-left: 6px; font-family: var(--font-mono); text-transform: uppercase;">${emoji} ${badgeLabel} (${scoreVal})</span>`;
+    }
+
     return `
         <div class="prof-card" data-id="${lead.id}">
             ${freshnessTag}
             
+            <button class="track-card-btn ${isTracked ? 'tracked' : ''}" data-id="${lead.id}" onclick="event.stopPropagation();" style="position: absolute; top: 16px; right: 100px; display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: ${isTracked ? 'var(--accent-gold)' : 'var(--text-secondary)'}; background: ${isTracked ? 'rgba(255, 160, 0, 0.08)' : 'rgba(255, 255, 255, 0.05)'}; border: 1px solid ${isTracked ? 'var(--accent-gold)' : 'rgba(255, 255, 255, 0.1)'}; padding: 4px 10px; border-radius: 50px; cursor: pointer; transition: all 0.2s ease;">
+                📁 ${isTracked ? 'Tracked' : 'Track'}
+            </button>
+
             <label class="compare-checkbox-label ${isSelected ? 'active' : ''}" onclick="event.stopPropagation();">
                 <input type="checkbox" class="compare-checkbox" data-id="${lead.id}" ${isSelected ? 'checked' : ''} style="display: none;">
                 <span class="compare-pill-dot"></span>
@@ -129,8 +157,11 @@ export function renderProfessionalCard(lead) {
             
             <div class="card-top">
                 <div class="avatar-wrap" style="--brand-gradient: linear-gradient(135deg, ${avatarColor}, #ffffff);">${initials}</div>
-                <div class="card-title-wrap">
-                    <span class="category-badge">${lead.category || parentCat}</span>
+                <div class="card-title-wrap" style="padding-right: 175px !important;">
+                    <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin-bottom: 6px;">
+                        <span class="category-badge" style="margin-bottom: 0;">${lead.category || parentCat}</span>
+                        ${scoreBadgeHTML}
+                    </div>
                     <h3>${lead.name}</h3>
                     <div class="completeness-dots" title="Data completeness score: ${score}/5">
                         ${dotsHTML}
@@ -152,7 +183,7 @@ export function renderProfessionalCard(lead) {
             <p class="card-desc">${lead.address || "Address details not verified."}</p>
             
             <div class="card-actions" onclick="event.stopPropagation();">
-                ${!(State.profile && (State.profile.tier === 'connect' || State.profile.tier === 'pro')) ? `
+                ${!currentUserHasAccess('scout') ? `
                     <button class="secondary-btn" onclick="window.State.setPricingModal(true);" style="padding: 8px 12px; font-size: 13px; text-align: center; justify-content: center;">
                         🔒 Phone Locked
                     </button>
@@ -192,6 +223,16 @@ export function bindProfessionalCardEvents(onCardClick) {
             if (onCardClick) onCardClick(id);
         });
         
+        // Handle track lead triggers
+        const trackBtn = card.querySelector('.track-card-btn');
+        if (trackBtn) {
+            trackBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const id = trackBtn.getAttribute('data-id');
+                showTrackLeadModal(id);
+            });
+        }
+
         // Handle compare checkbox triggers
         const cb = card.querySelector('.compare-checkbox');
         if (cb) {

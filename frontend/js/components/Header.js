@@ -31,6 +31,7 @@ export function renderHeader() {
                     <a href="#/" class="nav-link ${isHomeActive ? 'active' : ''}">Home</a>
                     <a href="#/browse" class="nav-link ${isBrowseActive ? 'active' : ''}">Browse Directory</a>
                     <a href="#/insights" class="nav-link ${isInsightsActive ? 'active' : ''}">Insights</a>
+                    ${State.user ? `<a href="#/dashboard" class="nav-link ${window.location.hash.startsWith('#/dashboard') ? 'active' : ''}">Dashboard</a>` : ''}
                 </nav>
                 
                 <div class="header-actions" style="display: flex; align-items: center; gap: 12px;">

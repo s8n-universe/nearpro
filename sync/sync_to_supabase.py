@@ -105,6 +105,50 @@ def compute_completeness_score(lead: dict) -> int:
         
     return score
 
+HIGH_FIT_NICHES = [
+    "dentist", "salon", "clinic", "spa", "gym", "restaurant",
+    "cafe", "lawyer", "doctor", "coaching", "ca", "architect", "interior"
+]
+
+def compute_conversion_score(lead: dict) -> tuple:
+    """Computes a score from 0-100 based on website presence, reviews, rating, and category."""
+    # Factor 1: No website or bad website (max 25 pts)
+    no_or_bad_site = 25 if not lead.get("website") else 0
+    
+    # Factor 2: Review volume (max 20 pts)
+    reviews = lead.get("review_count") or 0
+    review_volume = min(20, round(reviews / 5))
+    
+    # Factor 3: Rating quality (max 15 pts)
+    rating_val = lead.get("rating") or 0
+    rating = 15 if rating_val >= 4 else (8 if rating_val >= 3.5 else 0)
+    
+    # Factor 4: Recency / active business signal (max 10 pts)
+    recency = 10 if reviews > 20 else (5 if reviews > 5 else 0)
+    
+    # Factor 5: Reachability (max 15 pts)
+    reachable = (5 if lead.get("phone") else 0) + \
+                (5 if lead.get("website") else 0) + \
+                (5 if lead.get("email") else 0)
+                
+    # Factor 6: Industry/niche fit (max 15 pts)
+    category_lower = (lead.get("category") or "").lower()
+    industry_fit = 15 if any(n in category_lower for n in HIGH_FIT_NICHES) else 8
+    
+    total = no_or_bad_site + review_volume + rating + recency + reachable + industry_fit
+    score = min(100, total)
+    
+    breakdown = {
+        "noOrBadSite": no_or_bad_site,
+        "reviewVolume": review_volume,
+        "rating": rating,
+        "recency": recency,
+        "reachable": reachable,
+        "industryFit": industry_fit
+    }
+    return score, breakdown
+
+
 def parse_db_hours(hours_raw) -> dict:
     """Safely converts DuckDB hours (string or JSON) to a Python dict."""
     if not hours_raw:
@@ -256,6 +300,12 @@ def sync():
         
         # Compute completeness score
         prepared_lead["completeness_score"] = compute_completeness_score(prepared_lead)
+        
+        # Compute conversion score
+        score_val, breakdown_dict = compute_conversion_score(prepared_lead)
+        prepared_lead["conversion_score"] = score_val
+        prepared_lead["conversion_score_breakdown"] = breakdown_dict
+
         
         prepared_leads.append(prepared_lead)
 

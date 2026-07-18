@@ -1,8 +1,13 @@
 import { isOpenNow } from '../api.js';
 import L from 'leaflet';
 import { State } from '../state.js';
+import { currentUserHasAccess } from '../auth.js';
+import { showTrackLeadModal } from './TrackLeadModal.js';
+
 
 export function renderProfessionalModal(lead) {
+    const isTracked = State.saved_lead_ids && State.saved_lead_ids.includes(lead.id);
+
     // Initial avatar extract
     const initials = lead.name
         .split(' ')
@@ -51,18 +56,18 @@ export function renderProfessionalModal(lead) {
         `;
     }
 
-    const hasConnectAccess = State.profile && (State.profile.is_premium === true || State.profile.tier === 'connect' || State.profile.tier === 'pro');
+    const hasConnectAccess = currentUserHasAccess('scout') || (!State.locked && !State.user);
 
     const phoneDisplay = !hasConnectAccess 
-        ? `<span onclick="window.State.setPricingModal(true);" style="color: var(--accent-gold); cursor: pointer; text-decoration: underline; font-size: 13px;">🔒 Locked (Upgrade to Connect)</span>`
+        ? `<span onclick="window.State.setPricingModal(true);" style="color: var(--accent-gold); cursor: pointer; text-decoration: underline; font-size: 13px;">🔒 Locked (Upgrade to Scout Plan)</span>`
         : (lead.phone || '<span style="color: var(--text-muted);">Not available</span>');
 
     const emailDisplay = !hasConnectAccess
-        ? `<span onclick="window.State.setPricingModal(true);" style="color: var(--accent-gold); cursor: pointer; text-decoration: underline; font-size: 13px;">🔒 Locked (Upgrade to Connect)</span>`
+        ? `<span onclick="window.State.setPricingModal(true);" style="color: var(--accent-gold); cursor: pointer; text-decoration: underline; font-size: 13px;">🔒 Locked (Upgrade to Scout Plan)</span>`
         : (lead.email || '<span style="color: var(--text-muted);">Not available</span>');
 
     const websiteDisplay = !hasConnectAccess
-        ? `<span onclick="window.State.setPricingModal(true);" style="color: var(--accent-gold); cursor: pointer; text-decoration: underline; font-size: 13px;">🔒 Locked (Upgrade to Connect)</span>`
+        ? `<span onclick="window.State.setPricingModal(true);" style="color: var(--accent-gold); cursor: pointer; text-decoration: underline; font-size: 13px;">🔒 Locked (Upgrade to Scout Plan)</span>`
         : (lead.website ? `<a href="${lead.website}" target="_blank" style="color: var(--accent-gold); text-decoration: underline;">Visit Site</a>` : '<span style="color: var(--text-muted);">Not available</span>');
 
     const mapHTML = lead.latitude && lead.longitude
@@ -76,7 +81,7 @@ export function renderProfessionalModal(lead) {
                 <div class="modal-map" style="display: flex; align-items: center; justify-content: center; background: rgba(9, 9, 11, 0.4); border: 1px dashed var(--border); height: 180px; border-radius: var(--radius-md); flex-direction: column;">
                     <div style="font-size: 24px; margin-bottom: 8px;">🔒</div>
                     <span style="font-size: 12px; color: var(--text-muted); text-align: center; max-width: 240px; line-height: 1.4;">
-                        Location maps are locked. Upgrade to Connect to view professional map locations.
+                        Location maps are locked. Upgrade to Scout Plan to view professional map locations.
                     </span>
                     <button class="brand-btn" style="padding: 6px 12px; font-size: 11px; margin-top: 12px;" onclick="window.State.setPricingModal(true);">Upgrade Plan</button>
                 </div>
@@ -197,14 +202,17 @@ export function renderProfessionalModal(lead) {
                 <div class="modal-ctas">
                     ${bottomCtaHTML}
                     
-                    <div style="display: flex; gap: 12px; width: 100%;">
+                    <div style="display: flex; gap: 12px; width: 100%; margin-bottom: 12px;">
+                        <button id="modalTrackLeadBtn" class="secondary-btn ${isTracked ? 'active' : ''}" style="flex: 1; border-color: ${isTracked ? 'var(--accent-gold)' : ''}; color: ${isTracked ? 'var(--accent-gold)' : ''};">
+                            📁 ${isTracked ? 'Tracked' : 'Track This Lead'}
+                        </button>
                         <button id="shareQRBtn" class="secondary-btn" style="flex: 1;">Share via QR Code</button>
-                        ${lead.source_url && hasConnectAccess ? `
-                            <a href="${lead.source_url}" target="_blank" class="secondary-btn" style="flex: 1; text-align: center; justify-content: center;">
-                                View on Google Maps
-                            </a>
-                        ` : ''}
                     </div>
+                    ${lead.source_url && hasConnectAccess ? `
+                        <a href="${lead.source_url}" target="_blank" class="secondary-btn" style="width: 100%; text-align: center; justify-content: center; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+                            View on Google Maps
+                        </a>
+                    ` : ''}
                 </div>
                 
                 <!-- Inner QR Modal placeholder -->
@@ -223,7 +231,22 @@ export function bindProfessionalModalEvents(lead, onClose) {
         });
     }
 
-    const hasConnectAccess = State.profile && (State.profile.is_premium === true || State.profile.tier === 'connect' || State.profile.tier === 'pro');
+    // Handle track lead button
+    const trackBtn = document.getElementById('modalTrackLeadBtn');
+    if (trackBtn) {
+        trackBtn.addEventListener('click', () => {
+            showTrackLeadModal(lead.id, () => {
+                // Re-render modal to show 'Tracked' status
+                const container = document.getElementById('detailModalOverlay');
+                if (container) {
+                    container.innerHTML = renderProfessionalModal(lead);
+                    bindProfessionalModalEvents(lead, onClose);
+                }
+            });
+        });
+    }
+
+    const hasConnectAccess = currentUserHasAccess('scout') || (!State.locked && !State.user);
 
     // Initialize Leaflet Mini-Map if coordinates are available and user has connect access
     if (lead.latitude && lead.longitude && hasConnectAccess) {

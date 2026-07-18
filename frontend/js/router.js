@@ -14,7 +14,8 @@ export const Router = {
     },
     
     handleRouting() {
-        const hash = window.location.hash || '#/';
+        const fullHash = window.location.hash || '#/';
+        const hash = fullHash.split('?')[0];
         
         // Match specific dynamic routes first (e.g. #/category/parent/sub or #/category/parent)
         let matched = false;
