@@ -111,7 +111,7 @@ export function renderPricingModal() {
                             </p>
                             <span style="font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase;">For large teams & custom scraping</span>
                         </div>
-                        <a href="mailto:hello@s8n.in?subject=NearPro%20Enterprise%20Plan%20Inquiry" class="brand-btn" style="padding: 8px 14px; font-size: 11.5px; flex-shrink: 0; background: var(--bg-surface); color: white; border: 1px solid var(--border); text-decoration: none; text-align: center; display: inline-block;">
+                        <a href="mailto:s8nservice@gmail.com?subject=NearPro%20Enterprise%20Plan%20Inquiry" class="brand-btn" style="padding: 8px 14px; font-size: 11.5px; flex-shrink: 0; background: var(--bg-surface); color: white; border: 1px solid var(--border); text-decoration: none; text-align: center; display: inline-block;">
                             Contact Us
                         </a>
                     </div>

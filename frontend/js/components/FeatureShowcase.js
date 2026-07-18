@@ -180,7 +180,7 @@ export function renderFeatureShowcase() {
                                 <div>Dedicated account manager & SLA</div>
                             </li>
                         </ul>
-                        <a href="mailto:hello@s8n.in?subject=NearPro%20Enterprise%20Plan%20Inquiry" class="brand-btn pricing-btn" style="background: var(--bg-surface); color: white; border: 1px solid var(--border); text-decoration: none; text-align: center; display: inline-flex; align-items: center; justify-content: center;">
+                        <a href="mailto:s8nservice@gmail.com?subject=NearPro%20Enterprise%20Plan%20Inquiry" class="brand-btn pricing-btn" style="background: var(--bg-surface); color: white; border: 1px solid var(--border); text-decoration: none; text-align: center; display: inline-flex; align-items: center; justify-content: center;">
                             Contact Us
                         </a>
                     </div>
