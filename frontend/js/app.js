@@ -1047,6 +1047,35 @@ async function runGuidedDemo(niche) {
 
 /* --- Dashboard Rendering Controller --- */
 
+function setupCategorySidebarHover() {
+    const directoryLink = document.querySelector('.dashboard-nav-item[data-id="directory"]');
+    const catSidebar = document.getElementById('sidebarElement');
+    
+    if (directoryLink && catSidebar) {
+        if (directoryLink._hoverBound) return;
+        directoryLink._hoverBound = true;
+        
+        let hoverTimeout = null;
+
+        const showSidebar = () => {
+            if (hoverTimeout) clearTimeout(hoverTimeout);
+            catSidebar.classList.add('visible');
+        };
+
+        const hideSidebar = () => {
+            if (hoverTimeout) clearTimeout(hoverTimeout);
+            hoverTimeout = setTimeout(() => {
+                catSidebar.classList.remove('visible');
+            }, 200);
+        };
+
+        directoryLink.addEventListener('mouseenter', showSidebar);
+        directoryLink.addEventListener('mouseleave', hideSidebar);
+        catSidebar.addEventListener('mouseenter', showSidebar);
+        catSidebar.addEventListener('mouseleave', hideSidebar);
+    }
+}
+
 async function renderDashboardLayout(tab) {
     if (!State.user) {
         State.setAuthModal(true);
@@ -1151,6 +1180,7 @@ async function renderDashboardLayout(tab) {
                 if (sidebar) {
                     sidebar.innerHTML = renderCategorySidebar();
                     bindCategorySidebarEvents();
+                    setupCategorySidebarHover();
                 }
 
                 // Draw search inputs
@@ -1165,6 +1195,7 @@ async function renderDashboardLayout(tab) {
                 if (sidebar) {
                     sidebar.innerHTML = renderCategorySidebar();
                     bindCategorySidebarEvents();
+                    setupCategorySidebarHover();
                 }
             }
 

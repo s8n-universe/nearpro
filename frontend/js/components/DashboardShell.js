@@ -40,6 +40,7 @@ export function renderDashboardShell(activeTab = 'crm') {
         const isActive = activeTab === item.id;
         const activeClass = isActive ? 'active' : '';
         const lockIcon = isUnlocked ? '' : '<i data-lucide="lock" class="nav-lock" style="width:11px; height:11px; margin-left:auto; stroke-width:2.5px; opacity:0.6;"></i>';
+        const arrowIcon = item.id === 'directory' ? '<i data-lucide="chevron-right" class="nav-arrow" style="width:14px; height:14px; margin-left:auto; stroke-width:2.5px; opacity:0.7;"></i>' : '';
         
         // Navigation targets
         const href = `#/dashboard/${item.id}`;
@@ -51,7 +52,7 @@ export function renderDashboardShell(activeTab = 'crm') {
                data-required="${item.requiredTier}">
                 <i data-lucide="${item.icon}" class="nav-icon" style="width:18px; height:18px; stroke-width:2px; flex-shrink:0;"></i>
                 <span class="nav-label">${item.label}</span>
-                ${lockIcon}
+                ${arrowIcon || lockIcon}
             </a>
         `;
     }).join('');

@@ -65,6 +65,29 @@ export function renderCategorySidebar() {
         <div class="categories-tree">
             ${groupHTML}
         </div>
+
+        <style>
+            /* Hover drawer panel transition styling */
+            .dashboard-category-sidebar {
+                width: 0 !important;
+                min-width: 0 !important;
+                max-width: 0 !important;
+                opacity: 0 !important;
+                padding: 0 !important;
+                border-right: none !important;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                overflow-x: hidden !important;
+                white-space: nowrap !important;
+            }
+            .dashboard-category-sidebar.visible {
+                width: 240px !important;
+                min-width: 240px !important;
+                max-width: 240px !important;
+                opacity: 1 !important;
+                padding: 20px 14px !important;
+                border-right: 1px solid var(--border) !important;
+            }
+        </style>
     `;
 }
 
