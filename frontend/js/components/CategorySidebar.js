@@ -11,21 +11,15 @@ export function renderCategorySidebar() {
     }
 
     const currentParent = State.filters.parentCategory;
-    const currentSub = State.filters.category;
 
-    const groupHTML = State.category_groups.map(group => {
-        const isOpen = currentParent === group.name;
-        const subListHTML = group.subcategories.map(sub => {
-            const isActive = currentSub === sub.name;
-            return `
-                <a href="#/category/${encodeURIComponent(group.name)}/${encodeURIComponent(sub.name)}" 
-                   class="sub-list-link ${isActive ? 'active' : ''}">
-                    <span>${sub.name}</span>
-                    <span class="cat-count">${sub.count}</span>
-                </a>
-            `;
-        }).join('');
+    // Sort category groups: alphabetical by name, but keep "Other" at the very bottom
+    const sortedGroups = [...State.category_groups].sort((a, b) => {
+        if (a.name === 'Other') return 1;
+        if (b.name === 'Other') return -1;
+        return a.name.localeCompare(b.name);
+    });
 
+    const groupHTML = sortedGroups.map(group => {
         // Icon lookup or fallback
         const iconMap = {
             "Healthcare": "activity",
@@ -41,30 +35,18 @@ export function renderCategorySidebar() {
             "Other": "tag"
         };
         const icon = iconMap[group.name] || "tag";
+        const isActive = currentParent === group.name;
 
         return `
-            <div class="cat-block ${isOpen ? 'open' : ''}" data-category-group="${group.name}">
-                <div class="cat-header">
-                    <div class="cat-header-wrap" style="display:flex; align-items:center; gap:8px;">
-                        <i data-lucide="${icon}" class="cat-icon" style="width: 14px; height: 14px; stroke-width: 2px; color: var(--text-secondary); flex-shrink: 0;"></i>
-                        <span>${group.name}</span>
-                    </div>
-                    <div class="cat-header-wrap" style="display:flex; align-items:center; gap:6px;">
-                        <span class="cat-count">${group.total}</span>
-                        <span class="cat-toggle-icon" style="display:flex; align-items:center;">
-                            <i data-lucide="chevron-right" class="toggle-chevron" style="width: 12px; height: 12px; stroke-width: 2.5px;"></i>
-                        </span>
-                    </div>
+            <a href="#/category/${encodeURIComponent(group.name)}" 
+               class="sub-list-link ${isActive ? 'active' : ''}" 
+               style="margin-bottom: 4px; padding: 10px 12px; font-weight: 550; font-size: 13.5px; display: flex; align-items: center; justify-content: space-between; border-radius: var(--radius-sm); text-decoration: none;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <i data-lucide="${icon}" class="cat-icon" style="width: 15px; height: 15px; stroke-width: 2.2px; flex-shrink: 0;"></i>
+                    <span>${group.name}</span>
                 </div>
-                <div class="sub-list">
-                    <a href="#/category/${encodeURIComponent(group.name)}" 
-                       class="sub-list-link ${currentParent === group.name && !currentSub ? 'active' : ''}">
-                        <span>All ${group.name}</span>
-                        <span class="cat-count">${group.total}</span>
-                    </a>
-                    ${subListHTML}
-                </div>
-            </div>
+                <span class="cat-count" style="font-size: 11px; font-family: var(--font-mono); font-weight: 600;">${group.total}</span>
+            </a>
         `;
     }).join('');
 
@@ -91,21 +73,6 @@ export function bindCategorySidebarEvents() {
     if (window.lucide) {
         window.lucide.createIcons();
     }
-
-    document.querySelectorAll('.cat-header').forEach(header => {
-        header.addEventListener('click', (e) => {
-            const isCollapsed = document.querySelector('.dashboard-category-sidebar')?.classList.contains('collapsed') 
-                || document.querySelector('.app-sidebar')?.classList.contains('collapsed');
-            
-            if (isCollapsed) {
-                const toggleBtn = document.getElementById('toggleCatSidebarBtn');
-                if (toggleBtn) toggleBtn.click();
-            }
-
-            const block = header.closest('.cat-block');
-            block.classList.toggle('open');
-        });
-    });
 
     const toggleBtn = document.getElementById('toggleCatSidebarBtn');
     if (toggleBtn) {
