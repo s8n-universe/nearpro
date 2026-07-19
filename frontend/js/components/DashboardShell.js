@@ -6,6 +6,20 @@ export function renderDashboardShell(activeTab = 'crm') {
     const tierName = TIER_NAMES[userTier] || 'Explorer';
     const userEmail = State.user?.email || 'user@nearpro.in';
 
+    // Extract user's display name (Profile full_name -> Google user_metadata full_name -> Email)
+    const displayName = State.profile?.full_name?.trim() || State.user?.user_metadata?.full_name?.trim() || userEmail;
+    const initials = displayName ? displayName[0].toUpperCase() : 'U';
+
+    // Tier color logic
+    let tierColor = '#71717a'; // Zinc / Free
+    if (userTier === 'scout') {
+        tierColor = '#ffa000'; // Gold
+    } else if (userTier === 'hunter') {
+        tierColor = '#f59e0b'; // Amber
+    } else if (userTier === 'agency') {
+        tierColor = '#ec4899'; // Pink
+    }
+
     // Sidebar items configuration
     // Sidebar items configuration
     const sidebarItems = [
@@ -79,13 +93,37 @@ export function renderDashboardShell(activeTab = 'crm') {
                         <h2 class="dashboard-page-title" id="dashboardPageTitle" style="margin: 0;">Dashboard</h2>
                     </div>
                     <div class="topbar-right">
-                        <div class="user-profile-badge">
-                            <span class="user-avatar-circle">${userEmail[0].toUpperCase()}</span>
-                            <div class="user-meta-info">
-                                <span class="user-email">${userEmail}</span>
-                                <span class="tier-tag ${userTier}">${tierName} Plan</span>
+                        <div class="user-profile-dropdown-container" style="position: relative; display: inline-block;">
+                            <div class="user-profile-badge" style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
+                                <span class="user-avatar-circle" style="width: 32px; height: 32px; border-radius: 50%; background: ${tierColor}; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; text-transform: uppercase; font-family: var(--font-mono);">${initials}</span>
+                                <div class="user-meta-info" style="display: flex; flex-direction: column; align-items: flex-start;">
+                                    <span class="user-email" style="font-size: 13.5px; font-weight: 600; color: #ffffff; display: flex; align-items: center; gap: 4px;">
+                                        ${displayName}
+                                        <i data-lucide="chevron-down" style="width:14px; height:14px; opacity:0.7;"></i>
+                                    </span>
+                                    <span class="tier-tag ${userTier}" style="font-size: 11px; font-family: var(--font-mono); font-weight: 700; color: ${tierColor};">${tierName} Plan</span>
+                                </div>
+                            </div>
+                            <!-- Dropdown Menu -->
+                            <div class="dashboard-profile-dropdown" style="position: absolute; right: 0; top: 46px; width: 220px; background: #0f172a; border: 1px solid #334155; border-radius: var(--radius-md, 8px); padding: 14px; display: none; flex-direction: column; gap: 10px; z-index: 99999; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5), 0 8px 10px -6px rgba(0,0,0,0.5); text-align: left;">
+                                <div style="display: flex; flex-direction: column; gap: 2px;">
+                                    <span style="font-size: 11px; font-family: var(--font-mono); color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Account</span>
+                                    <span style="font-size: 13px; color: #f8fafc; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${userEmail}">${userEmail}</span>
+                                </div>
+                                <hr style="border: none; border-top: 1px solid #334155; margin: 4px 0;">
+                                <a href="#/dashboard/settings" style="font-size: 13px; color: #cbd5e1; text-decoration: none; display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 4px; transition: all 0.2s;" onmouseover="this.style.background='#1e293b'; this.style.color='#ffffff'" onmouseout="this.style.background='transparent'; this.style.color='#cbd5e1'">
+                                    ⚙️ Settings Profile
+                                </a>
+                                <button id="dashboardSignOutBtn" class="secondary-btn" style="width: 100%; padding: 8px; font-size: 12.5px; border-radius: var(--radius-sm); border-color: rgba(239, 68, 68, 0.3); color: #f87171; background: rgba(239, 68, 68, 0.08); text-align: center; justify-content: center; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='rgba(239, 68, 68, 0.15)'" onmouseout="this.style.background='rgba(239, 68, 68, 0.08)'">
+                                    🚪 Sign Out
+                                </button>
                             </div>
                         </div>
+                        <style>
+                            .user-profile-dropdown-container:hover .dashboard-profile-dropdown {
+                                display: flex !important;
+                            }
+                        </style>
                     </div>
                 </header>
                 
@@ -131,6 +169,20 @@ export function bindDashboardShellEvents() {
             });
         });
     });
+
+    const signOutBtn = document.getElementById('dashboardSignOutBtn');
+    if (signOutBtn) {
+        signOutBtn.addEventListener('click', async () => {
+            try {
+                window._isSigningOut = true;
+                const { Api } = await import('../api.js');
+                await Api.signOut();
+            } catch (err) {
+                console.error("Dashboard sign out failed: ", err);
+                window._isSigningOut = false;
+            }
+        });
+    }
 
     const toggleBtn = document.getElementById('toggleMainSidebarBtn');
     if (toggleBtn) {

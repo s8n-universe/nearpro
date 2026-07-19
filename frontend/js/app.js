@@ -220,7 +220,10 @@ function initRoutes() {
 
     Router.on('#/dashboard', () => {
         if (!State.user) {
-            State.setAuthModal(true);
+            if (!window._isSigningOut) {
+                State.setAuthModal(true);
+            }
+            window._isSigningOut = false;
             Router.navigate('#/');
         } else {
             Router.navigate('#/dashboard/directory');
@@ -229,7 +232,10 @@ function initRoutes() {
 
     Router.on('#/dashboard/:tab', (tab) => {
         if (!State.user) {
-            State.setAuthModal(true);
+            if (!window._isSigningOut) {
+                State.setAuthModal(true);
+            }
+            window._isSigningOut = false;
             Router.navigate('#/');
         } else {
             // Synchronize parameters for directory filter state if routed to dashboard directory

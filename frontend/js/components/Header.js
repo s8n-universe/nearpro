@@ -130,10 +130,12 @@ export function bindHeaderEvents() {
     if (signOutBtn) {
         signOutBtn.addEventListener('click', async () => {
             try {
+                window._isSigningOut = true;
                 const { Api } = await import('../api.js');
                 await Api.signOut();
             } catch (err) {
                 console.error("Sign out failed: ", err);
+                window._isSigningOut = false;
             }
         });
     }
