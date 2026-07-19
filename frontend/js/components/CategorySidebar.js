@@ -28,30 +28,32 @@ export function renderCategorySidebar() {
 
         // Icon lookup or fallback
         const iconMap = {
-            "Healthcare": "🏥",
-            "Beauty & Wellness": "💄",
-            "Real Estate": "🏗️",
-            "Education": "📚",
-            "Food & Dining": "🍽️",
-            "Finance & Legal": "⚖️",
-            "Technology": "💻",
-            "Daily Services": "🔧",
-            "Retail & Shopping": "🛍️",
-            "Events & Entertainment": "🎉",
-            "Other": "📌"
+            "Healthcare": "activity",
+            "Beauty & Wellness": "sparkles",
+            "Real Estate": "building",
+            "Education": "book-open",
+            "Food & Dining": "utensils",
+            "Finance & Legal": "scale",
+            "Technology": "laptop",
+            "Daily Services": "wrench",
+            "Retail & Shopping": "shopping-bag",
+            "Events & Entertainment": "ticket",
+            "Other": "tag"
         };
-        const icon = iconMap[group.name] || "📌";
+        const icon = iconMap[group.name] || "tag";
 
         return `
             <div class="cat-block ${isOpen ? 'open' : ''}" data-category-group="${group.name}">
                 <div class="cat-header">
-                    <div class="cat-header-wrap">
-                        <span>${icon}</span>
+                    <div class="cat-header-wrap" style="display:flex; align-items:center; gap:8px;">
+                        <i data-lucide="${icon}" class="cat-icon" style="width: 14px; height: 14px; stroke-width: 2px; color: var(--text-secondary); flex-shrink: 0;"></i>
                         <span>${group.name}</span>
                     </div>
-                    <div class="cat-header-wrap">
+                    <div class="cat-header-wrap" style="display:flex; align-items:center; gap:6px;">
                         <span class="cat-count">${group.total}</span>
-                        <span class="cat-toggle-icon">▶</span>
+                        <span class="cat-toggle-icon" style="display:flex; align-items:center;">
+                            <i data-lucide="chevron-right" class="toggle-chevron" style="width: 12px; height: 12px; stroke-width: 2.5px;"></i>
+                        </span>
                     </div>
                 </div>
                 <div class="sub-list">
@@ -66,8 +68,18 @@ export function renderCategorySidebar() {
         `;
     }).join('');
 
+    const isCollapsed = State.category_sidebar_collapsed;
+    const toggleButtonHTML = `
+        <button id="toggleCatSidebarBtn" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 14px; padding: 4px; display: flex; align-items: center; justify-content: center; outline: none; transition: transform 0.2s;" title="${isCollapsed ? 'Expand Categories' : 'Collapse Categories'}">
+            ${isCollapsed ? '<i data-lucide="chevron-right" style="width:16px; height:16px;"></i>' : '<i data-lucide="chevron-left" style="width:16px; height:16px;"></i>'}
+        </button>
+    `;
+
     return `
-        <div class="sidebar-title">Categories</div>
+        <div class="sidebar-header-row" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; width: 100%;">
+            <div class="sidebar-title" style="margin: 0; font-family: var(--font-heading); font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);">Categories</div>
+            ${toggleButtonHTML}
+        </div>
         <div class="categories-tree">
             ${groupHTML}
         </div>
@@ -75,13 +87,53 @@ export function renderCategorySidebar() {
 }
 
 export function bindCategorySidebarEvents() {
+    // Process Lucide Icons
+    if (window.lucide) {
+        window.lucide.createIcons();
+    }
+
     document.querySelectorAll('.cat-header').forEach(header => {
         header.addEventListener('click', (e) => {
-            const block = header.closest('.cat-block');
-            const groupName = block.getAttribute('data-category-group');
+            const isCollapsed = document.querySelector('.dashboard-category-sidebar')?.classList.contains('collapsed') 
+                || document.querySelector('.app-sidebar')?.classList.contains('collapsed');
             
-            // Toggle open class on click
+            if (isCollapsed) {
+                const toggleBtn = document.getElementById('toggleCatSidebarBtn');
+                if (toggleBtn) toggleBtn.click();
+            }
+
+            const block = header.closest('.cat-block');
             block.classList.toggle('open');
         });
     });
+
+    const toggleBtn = document.getElementById('toggleCatSidebarBtn');
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+            const sidebars = [
+                document.querySelector('.dashboard-category-sidebar'),
+                document.querySelector('.app-sidebar')
+            ].filter(Boolean);
+
+            sidebars.forEach(sidebar => {
+                const willCollapse = !sidebar.classList.contains('collapsed');
+                if (willCollapse) {
+                    sidebar.classList.add('collapsed');
+                    toggleBtn.innerHTML = '<i data-lucide="chevron-right" style="width:16px; height:16px;"></i>';
+                    toggleBtn.title = 'Expand Categories';
+                    State.category_sidebar_collapsed = true;
+                    localStorage.setItem('nearpro_cat_sidebar_collapsed', 'true');
+                } else {
+                    sidebar.classList.remove('collapsed');
+                    toggleBtn.innerHTML = '<i data-lucide="chevron-left" style="width:16px; height:16px;"></i>';
+                    toggleBtn.title = 'Collapse Categories';
+                    State.category_sidebar_collapsed = false;
+                    localStorage.setItem('nearpro_cat_sidebar_collapsed', 'false');
+                }
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            });
+        });
+    }
 }

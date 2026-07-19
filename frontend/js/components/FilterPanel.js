@@ -14,6 +14,8 @@ export function renderFilterPanel() {
         <option value="${a}" ${State.filters.area === a ? 'selected' : ''}>${a}</option>
     `).join('');
 
+    const allVisibleSelected = State.professionals.length > 0 && State.professionals.every(p => State.selected_ids.includes(p.id));
+
     return `
         <div class="filter-wrap" style="margin-bottom: 24px; padding: 12px 24px; gap: 20px; flex-wrap: wrap;">
             <div style="display: flex; align-items: center; gap: 8px;">
@@ -76,6 +78,22 @@ export function renderFilterPanel() {
                     </div>
                     <span>Has Phone</span>
                 </label>
+
+                <label class="toggle-switch">
+                    <input type="checkbox" id="hasWebsiteFilterToggle" ${State.filters.has_website ? 'checked' : ''}>
+                    <div class="toggle-switch-track">
+                        <div class="toggle-switch-thumb"></div>
+                    </div>
+                    <span>Has Website</span>
+                </label>
+
+                <label class="toggle-switch">
+                    <input type="checkbox" id="selectAllFilterToggle" ${allVisibleSelected ? 'checked' : ''}>
+                    <div class="toggle-switch-track">
+                        <div class="toggle-switch-thumb"></div>
+                    </div>
+                    <span style="color: var(--accent-gold); font-weight: 600;">Select All</span>
+                </label>
             </div>
 
             <button id="surveySettingsBtn" class="secondary-btn" style="padding: 6px 12px; font-size: 12.5px; display: flex; align-items: center; gap: 6px; border-radius: var(--radius-sm); border: 1px solid ${State.user_survey ? 'rgba(255, 160, 0, 0.4)' : 'rgba(255,255,255,0.1)'}; background: ${State.user_survey ? 'rgba(255, 160, 0, 0.05)' : 'rgba(255,255,255,0.02)'}; color: ${State.user_survey ? 'var(--accent-gold)' : 'var(--text-secondary)'}; cursor: pointer; margin-left: auto;">
@@ -134,6 +152,24 @@ export function bindFilterPanelEvents() {
     if (hasPhoneFilter) {
         hasPhoneFilter.addEventListener('change', (e) => {
             State.updateFilters({ has_phone: e.target.checked });
+        });
+    }
+
+    const hasWebsiteFilterToggle = document.getElementById('hasWebsiteFilterToggle');
+    if (hasWebsiteFilterToggle) {
+        hasWebsiteFilterToggle.addEventListener('change', (e) => {
+            State.updateFilters({ has_website: e.target.checked });
+        });
+    }
+
+    const selectAllFilterToggle = document.getElementById('selectAllFilterToggle');
+    if (selectAllFilterToggle) {
+        selectAllFilterToggle.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                State.selectAll();
+            } else {
+                State.deselectAll();
+            }
         });
     }
 

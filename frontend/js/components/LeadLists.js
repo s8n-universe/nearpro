@@ -36,7 +36,9 @@ export function renderLeadLists(listsData, activeListId = null, listLeads = []) 
 
     const emptyStateHTML = listsData.length === 0 ? `
         <div style="grid-column: 1 / -1; padding: 60px; text-align: center; border: 1px dashed var(--border); border-radius: var(--radius-lg);">
-            <div style="font-size: 32px; margin-bottom: 12px;">📂</div>
+            <div style="margin-bottom: 12px; display: flex; justify-content: center;">
+                <i data-lucide="folder" style="width: 36px; height: 36px; color: var(--text-muted); stroke-width: 1.5px;"></i>
+            </div>
             <h4 style="color: white; margin-bottom: 6px;">No Smart Lists Found</h4>
             <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px;">Smart Lists allow you to group verified business contacts by campaign or niche.</p>
             <button class="brand-btn" id="createListBtnEmpty" style="padding: 8px 16px; font-size: 13px;">Create New List</button>
@@ -45,7 +47,7 @@ export function renderLeadLists(listsData, activeListId = null, listLeads = []) 
 
     return `
         <div class="lists-workspace">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                 <div>
                     <h3 style="margin: 0; font-size: 18px; color: white;">Smart Lists</h3>
                     <p style="margin: 4px 0 0 0; font-size: 12px; color: var(--text-secondary);">Manage your segments and database selections</p>
@@ -53,6 +55,12 @@ export function renderLeadLists(listsData, activeListId = null, listLeads = []) 
                 <button class="brand-btn" id="openCreateListModalBtn" style="padding: 10px 16px; font-size: 13px;">
                     Create New List
                 </button>
+            </div>
+            
+            <!-- Usability Banner -->
+            <div class="usability-banner" style="background: rgba(255, 160, 0, 0.02); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px 18px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 4px; border-left: 3px solid var(--accent-gold);">
+                <div style="font-size: 12.5px; color: white; line-height: 1.4;"><span style="color: var(--accent-gold); font-weight: 600;">What it is:</span> Segment and group your business leads into distinct target lists.</div>
+                <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.4;"><span style="color: var(--accent-gold); font-weight: 600;">How to leverage:</span> Export segments to CSV files or sheet webhooks to feed external cold email campaigns.</div>
             </div>
             
             <div class="lists-grid">
@@ -129,7 +137,9 @@ function renderListDetailView(listId, listsData, listLeads) {
     const emptyStateHTML = listLeads.length === 0 ? `
         <tr>
             <td colspan="7" style="padding: 60px; text-align: center; color: var(--text-muted);">
-                <div style="font-size: 24px; margin-bottom: 8px;">📂</div>
+                <div style="margin-bottom: 8px; display: flex; justify-content: center;">
+                    <i data-lucide="folder" style="width: 24px; height: 24px; color: var(--text-muted); stroke-width: 1.5px;"></i>
+                </div>
                 This list is empty. Go to the Browse Directory page to find leads and save them here.
             </td>
         </tr>
@@ -185,6 +195,10 @@ function renderListDetailView(listId, listsData, listLeads) {
 }
 
 export function bindLeadListsEvents(onUpdateCallback, listsCount = 0) {
+    if (window.lucide) {
+        window.lucide.createIcons();
+    }
+
     const listCards = document.querySelectorAll('.list-card');
     const openModalBtn = document.getElementById('openCreateListModalBtn');
     const createListEmptyBtn = document.getElementById('createListBtnEmpty');
@@ -247,6 +261,10 @@ export function bindLeadListsEvents(onUpdateCallback, listsCount = 0) {
 }
 
 export function bindListDetailEvents(listId, listLeads, onUpdateCallback) {
+    if (window.lucide) {
+        window.lucide.createIcons();
+    }
+
     const selectAllCheckbox = document.getElementById('selectAllLeadsCheckbox');
     const rowCheckboxes = document.querySelectorAll('.lead-select-checkbox');
     const bulkExportBtn = document.getElementById('bulkExportCSVBtn');

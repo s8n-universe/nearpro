@@ -69,30 +69,83 @@
 }
 
 /* --- Professional Card --- */
+/* ===== Professional Card (Browse Directory) ===== */
 .prof-card {
-    background: var(--glass-bg);
+    background: rgba(14, 14, 18, 0.85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--glass-border);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: var(--radius-lg);
-    padding: 24px;
+    padding: 20px 20px 16px 22px;
     display: flex;
     flex-direction: column;
     position: relative;
     transition: var(--transition);
+    gap: 10px;
 }
 .prof-card:hover {
-    transform: translateY(-6px);
-    border-color: var(--accent-gold);
-    box-shadow: 0 12px 30px var(--shadow-gold), 0 0 1px rgba(255, 255, 255, 0.1) inset;
-}
-.card-top {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 16px;
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
 }
 
-/* Initials Avatar generator */
+/* Toolbar: Track + Compare in a row at top */
+.card-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-bottom: 2px;
+}
+
+/* Card head: category badge + name */
+.card-head {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.card-head-top {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.card-head h3 {
+    font-size: 17px;
+    font-family: var(--font-heading);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--text-primary);
+    margin: 0;
+    line-height: 1.3;
+}
+
+/* Inline info row: stars · reviews · divider · location · distance */
+.card-info-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    flex-wrap: wrap;
+}
+.card-info-row .review-count {
+    color: var(--text-muted);
+    font-size: 12px;
+}
+.card-info-row .area-label {
+    color: var(--text-secondary);
+    font-size: 12.5px;
+}
+.card-divider {
+    width: 1px;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.12);
+    flex-shrink: 0;
+}
+
+/* Avatar wrap — only used in modal now */
 .avatar-wrap {
     width: 60px;
     height: 60px;
@@ -126,7 +179,6 @@
     flex-direction: column;
     justify-content: center;
     min-width: 0;
-    padding-right: 85px; /* Reserve space for Compare button */
 }
 .card-title-wrap h3 {
     font-size: 16px;
@@ -138,14 +190,13 @@
 }
 .category-badge {
     align-self: flex-start;
-    font-size: 10.5px;
+    font-size: 10px;
     font-weight: 600;
-    background: rgba(255, 160, 0, 0.08);
-    border: 1px solid rgba(255, 160, 0, 0.15);
-    color: var(--accent-gold);
-    padding: 3px 10px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text-secondary);
+    padding: 2px 10px;
     border-radius: 100px;
-    margin-bottom: 6px;
     font-family: var(--font-mono);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -154,62 +205,34 @@
 /* Data completeness rating score (1-5 dots) */
 .completeness-dots {
     display: flex;
-    gap: 5px;
-    margin-top: 6px;
+    gap: 4px;
+    margin-top: 2px;
 }
 .complete-dot {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08);
     transition: var(--transition);
 }
 .complete-dot.filled {
-    background: var(--accent-pink);
-    box-shadow: 0 0 8px var(--accent-pink);
+    background: #6366f1;
+    box-shadow: 0 0 6px rgba(99, 102, 241, 0.5);
 }
 
-.rating-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13.5px;
-    margin-bottom: 12px;
-}
 .star-rating {
     display: flex;
     color: var(--accent-gold);
     text-shadow: 0 0 8px rgba(255, 160, 0, 0.3);
+    font-size: 13px;
 }
 .review-count {
     color: var(--text-muted);
 }
-.card-meta-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
-}
-.card-meta-row svg {
-    flex-shrink: 0;
-    color: var(--text-muted);
-}
-.card-desc {
-    font-size: 13px;
-    color: var(--text-secondary);
-    margin-bottom: 16px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    height: 38px;
-}
 
 /* Open Now / Closed Status */
 .status-tag {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     padding: 2px 6px;
     border-radius: 4px;
@@ -226,32 +249,117 @@
 
 .freshness-tag {
     position: absolute;
-    top: 16px;
+    top: 52px;
     right: 16px;
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 600;
-    color: #ffa000;
-    background: rgba(255, 160, 0, 0.1);
+    color: #34d399;
+    background: rgba(52, 211, 153, 0.08);
     padding: 2px 6px;
     border-radius: 4px;
     text-transform: uppercase;
     font-family: var(--font-mono);
 }
 
+/* Card action buttons */
 .card-actions {
     margin-top: auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
     gap: 8px;
-    border-top: 1px solid var(--border);
-    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    padding-top: 14px;
+}
+
+/* Call button — teal */
+.card-btn-call {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition);
+    background: rgba(20, 184, 166, 0.1);
+    border: 1px solid rgba(20, 184, 166, 0.25);
+    color: #2dd4bf;
+    text-decoration: none;
+}
+.card-btn-call:hover {
+    background: rgba(20, 184, 166, 0.18);
+    border-color: #2dd4bf;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(20, 184, 166, 0.15);
+}
+
+/* Website button — subtle outline */
+.card-btn-site {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition);
+    background: rgba(99, 102, 241, 0.08);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    color: #a5b4fc;
+    text-decoration: none;
+}
+.card-btn-site:hover {
+    background: rgba(99, 102, 241, 0.15);
+    border-color: #818cf8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.12);
+}
+
+/* Unlock button — gold gradient */
+.card-btn-unlock {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition);
+    background: linear-gradient(135deg, rgba(255, 160, 0, 0.15), rgba(236, 72, 153, 0.1));
+    border: 1px solid rgba(255, 160, 0, 0.2);
+    color: var(--accent-gold);
+}
+.card-btn-unlock:hover {
+    background: linear-gradient(135deg, rgba(255, 160, 0, 0.25), rgba(236, 72, 153, 0.18));
+    border-color: var(--accent-gold);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px var(--shadow-gold);
+}
+
+/* Empty state */
+.card-btn-empty {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed rgba(255, 255, 255, 0.06);
 }
 
 /* Compare checkbox label button */
 .compare-checkbox-label {
-    position: absolute;
-    top: 16px;
-    right: 16px;
     display: flex;
     align-items: center;
     gap: 6px;
@@ -288,6 +396,48 @@
 .compare-checkbox-label.active .compare-pill-dot {
     background: var(--accent-gold);
     box-shadow: 0 0 8px var(--accent-gold);
+}
+
+/* Track lead button on card */
+.track-card-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 4px 10px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: var(--font-mono);
+}
+.track-card-btn:hover {
+    background: rgba(20, 184, 166, 0.08);
+    border-color: #2dd4bf;
+    color: #2dd4bf;
+}
+.track-card-btn.tracked {
+    color: #2dd4bf;
+    background: rgba(20, 184, 166, 0.08);
+    border-color: rgba(20, 184, 166, 0.25);
+}
+
+/* Distance pill */
+.distance-pill {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: #2dd4bf;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: rgba(20, 184, 166, 0.06);
+    border: 1px solid rgba(20, 184, 166, 0.15);
+    margin-left: 4px;
 }
 
 /* --- Filter & Search bar --- */
@@ -465,6 +615,28 @@
     background: rgba(255, 160, 0, 0.05);
     color: var(--accent-gold);
     font-weight: 600;
+}
+
+/* Contact info icon grid in modal */
+.contact-icon-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 8px;
+}
+.contact-icon-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    line-height: 1.3;
+}
+.contact-icon-row span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .modal-ctas {
@@ -776,35 +948,34 @@
 /* Phone */
 @media (max-width: 640px) {
     .prof-card {
-        padding: 18px 16px;
+        padding: 14px 14px 12px 16px;
     }
-    .prof-card h3 {
-        font-size: 16px;
+    .prof-card h3,
+    .card-head h3 {
+        font-size: 15px;
     }
-    .card-top {
-        gap: 10px;
+    .card-toolbar {
+        gap: 6px;
     }
-    .avatar-wrap {
-        width: 40px;
-        height: 40px;
-        font-size: 14px;
+    .card-info-row {
+        font-size: 11.5px;
     }
     .category-badge {
-        font-size: 10px;
+        font-size: 9px;
         padding: 2px 8px;
     }
     .card-actions {
         flex-direction: column;
         gap: 8px;
     }
-    .card-actions .brand-btn,
-    .card-actions .secondary-btn {
+    .card-btn-call,
+    .card-btn-site,
+    .card-btn-unlock,
+    .card-btn-empty {
         width: 100%;
         justify-content: center;
     }
     .compare-checkbox-label {
-        top: 8px;
-        right: 8px;
         font-size: 10px;
         padding: 3px 8px;
     }

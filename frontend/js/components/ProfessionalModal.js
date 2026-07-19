@@ -8,6 +8,10 @@ import { showTrackLeadModal } from './TrackLeadModal.js';
 export function renderProfessionalModal(lead) {
     const isTracked = State.saved_lead_ids && State.saved_lead_ids.includes(lead.id);
 
+    // Sanitize category — detect if scraped data accidentally contains an address
+    const rawCat = lead.category || '';
+    const looksLikeAddress = /\d/.test(rawCat) && (/,/.test(rawCat) || /\b(rd|road|st|street|lane|nagar|marg|path|opp|nr|near)\b/i.test(rawCat));
+    const displayCategory = (!rawCat || looksLikeAddress || rawCat.length > 40) ? (lead.parent_category || 'Other') : rawCat;
     // Initial avatar extract
     const initials = lead.name
         .split(' ')
@@ -60,15 +64,15 @@ export function renderProfessionalModal(lead) {
     const hasConnectAccess = currentUserHasAccess('scout');
 
     const phoneDisplay = !hasConnectAccess 
-        ? `<span onclick="window.State.setPricingModal(true);" style="color: var(--accent-gold); cursor: pointer; text-decoration: underline; font-size: 13px;">🔒 Locked (Upgrade to Scout Plan)</span>`
+        ? `<span onclick="window.State.setPricingModal(true);" style="color: var(--accent-gold); cursor: pointer; text-decoration: underline; font-size: 13px;"><i data-lucide="lock" style="width:11px; height:11px;"></i> Locked</span>`
         : (lead.phone || '<span style="color: var(--text-muted);">Not available</span>');
 
     const emailDisplay = !hasConnectAccess
-        ? `<span onclick="window.State.setPricingModal(true);" style="color: var(--accent-gold); cursor: pointer; text-decoration: underline; font-size: 13px;">🔒 Locked (Upgrade to Scout Plan)</span>`
+        ? `<span onclick="window.State.setPricingModal(true);" style="color: var(--accent-gold); cursor: pointer; text-decoration: underline; font-size: 13px;"><i data-lucide="lock" style="width:11px; height:11px;"></i> Locked</span>`
         : (lead.email || '<span style="color: var(--text-muted);">Not available</span>');
 
     const websiteDisplay = !hasConnectAccess
-        ? `<span onclick="window.State.setPricingModal(true);" style="color: var(--accent-gold); cursor: pointer; text-decoration: underline; font-size: 13px;">🔒 Locked (Upgrade to Scout Plan)</span>`
+        ? `<span onclick="window.State.setPricingModal(true);" style="color: var(--accent-gold); cursor: pointer; text-decoration: underline; font-size: 13px;"><i data-lucide="lock" style="width:11px; height:11px;"></i> Locked</span>`
         : (lead.website ? `<a href="${lead.website}" target="_blank" style="color: var(--accent-gold); text-decoration: underline;">Visit Site</a>` : '<span style="color: var(--text-muted);">Not available</span>');
 
     const mapHTML = lead.latitude && lead.longitude
@@ -80,7 +84,7 @@ export function renderProfessionalModal(lead) {
             : `
                 <div class="sidebar-title">Location Map</div>
                 <div class="modal-map" style="display: flex; align-items: center; justify-content: center; background: rgba(9, 9, 11, 0.4); border: 1px dashed var(--border); height: 180px; border-radius: var(--radius-md); flex-direction: column;">
-                    <div style="font-size: 24px; margin-bottom: 8px;">🔒</div>
+                    <div style="margin-bottom: 8px; color: var(--text-muted);"><i data-lucide="lock" style="width:24px; height:24px;"></i></div>
                     <span style="font-size: 12px; color: var(--text-muted); text-align: center; max-width: 240px; line-height: 1.4;">
                         Location maps are locked. Upgrade to Scout Plan to view professional map locations.
                     </span>
@@ -93,17 +97,10 @@ export function renderProfessionalModal(lead) {
     const bottomCtaHTML = !hasConnectAccess
         ? `
             <button class="brand-btn" style="width: 100%;" onclick="window.State.setPricingModal(true);">
-                🔒 Unlock Phone & Contact Details
+                <i data-lucide="lock" style="width:14px; height:14px;"></i> Unlock Contact Details
             </button>
           `
-        : (lead.phone 
-            ? `
-                <a href="tel:${lead.phone}" class="brand-btn" style="width: 100%;">
-                    Call Now (${lead.phone})
-                </a>
-              `
-            : ''
-          );
+        : '';
 
     return `
         <div class="modal-card">
@@ -112,11 +109,12 @@ export function renderProfessionalModal(lead) {
                 <div class="modal-header-section">
                     <div class="avatar-wrap">${initials}</div>
                     <div class="card-title-wrap">
-                        <span class="category-badge">${lead.category || lead.parent_category}</span>
+                        <span class="category-badge">${displayCategory}</span>
                         <h2 style="font-size: 22px; margin-bottom: 6px;">${lead.name}</h2>
-                        <div style="display: flex; align-items: center; gap: 8px;">
+                        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                             <span class="star-rating" style="color: var(--accent-gold);">${starsHTML}</span>
                             <span style="font-size: 13px; color: var(--text-muted);">(${reviewCount} reviews)</span>
+                            <div class="completeness-dots" title="Data completeness: ${score}/5" style="margin-top: 0;">${dotsHTML}</div>
                         </div>
                     </div>
                 </div>
@@ -124,21 +122,23 @@ export function renderProfessionalModal(lead) {
                 <div class="modal-meta-grid">
                     <div>
                         <div class="sidebar-title">Contact Info</div>
-                        <div style="margin-bottom: 12px; font-size: 14px;">
-                            <strong>Phone:</strong> ${phoneDisplay}
-                        </div>
-                        <div style="margin-bottom: 12px; font-size: 14px;">
-                            <strong>Email:</strong> ${emailDisplay}
-                        </div>
-                        <div style="margin-bottom: 12px; font-size: 14px;">
-                            <strong>Website:</strong> ${websiteDisplay}
-                        </div>
-                        <div style="margin-bottom: 12px; font-size: 14px;">
-                            <strong>Area:</strong> ${lead.area || "Mumbai"}
-                        </div>
-                        <div style="margin-bottom: 12px; font-size: 14px; display: flex; align-items: center; gap: 8px;">
-                            <strong>Completeness:</strong> 
-                            <div class="completeness-dots">${dotsHTML}</div>
+                        <div class="contact-icon-grid">
+                            <div class="contact-icon-row">
+                                <i data-lucide="phone" style="width:14px; height:14px; color: var(--text-muted); flex-shrink:0;"></i>
+                                <span>${phoneDisplay}</span>
+                            </div>
+                            <div class="contact-icon-row">
+                                <i data-lucide="mail" style="width:14px; height:14px; color: var(--text-muted); flex-shrink:0;"></i>
+                                <span>${emailDisplay}</span>
+                            </div>
+                            <div class="contact-icon-row">
+                                <i data-lucide="globe" style="width:14px; height:14px; color: var(--text-muted); flex-shrink:0;"></i>
+                                <span>${websiteDisplay}</span>
+                            </div>
+                            <div class="contact-icon-row">
+                                <i data-lucide="map-pin" style="width:14px; height:14px; color: var(--text-muted); flex-shrink:0;"></i>
+                                <span>${lead.area || "Mumbai"}</span>
+                            </div>
                         </div>
                     </div>
                     
@@ -162,24 +162,24 @@ export function renderProfessionalModal(lead) {
                     let strategyTitle = '';
 
                     if (survey.role === 'web_developer') {
-                        strategyTitle = '💻 Website Creation Proposal';
+                        strategyTitle = 'Website Creation Proposal';
                         pitchText = `Hi ${lead.name} team,\n\nI was browsing local businesses in ${lead.area || 'Mumbai'} and noticed your profile has a great rating of ${rating}★ from ${reviewCount} customers. However, you don't have a website link configured.\n\nI build high-converting websites for local ${lead.category || 'professionals'} to automate bookings and capture leads directly. I put together a quick website draft for your brand. Do you have 2 minutes for a brief call?\n\nBest,\n${senderName}`;
                     } else if (survey.role === 'seo_marketer') {
-                        strategyTitle = '📈 Local Google SEO / Review Boosting';
+                        strategyTitle = 'Local Google SEO / Review Boosting';
                         if (rating < 4.0) {
-                            strategyTitle = '⚠️ Negative Ratings Mitigation';
+                            strategyTitle = 'Negative Ratings Mitigation';
                             pitchText = `Hi ${lead.name} team,\n\nI'm local in Mumbai and noticed your profile in ${lead.area || 'Mumbai'} has over ${reviewCount} customer reviews but holds a ${rating}★ rating. Many prospective clients check ratings before buying, and having it below 4 stars could be turning leads away.\n\nI run a localized review boosting system that filters out negative spam and secures verified 5-star customer ratings. Can I share a quick audit for you?\n\nBest,\n${senderName}`;
                         } else {
                             pitchText = `Hi ${lead.name} team,\n\nI noticed you have a top-tier rating of ${rating}★ in ${lead.area || 'Mumbai'}. However, you're missing some essential details on your Google maps listing (like website links/hours) which is hurting your local search ranking.\n\nI optimize Google profiles to double review visibility and rank you above competitors. Do you have time for a short call?\n\nBest,\n${senderName}`;
                         }
                     } else if (survey.role === 'finance_ca') {
-                        strategyTitle = '⚖️ Financial Audit & Tax Support Proposal';
+                        strategyTitle = 'Financial Audit & Tax Support Proposal';
                         pitchText = `Hi ${lead.name} team,\n\nI support growing ${lead.category || 'businesses'} in ${lead.area || 'Mumbai'} with accounting, legal compliance, and tax planning.\n\nSince you are actively scaling with a strong ${rating}★ track record, I would love to offer a free 15-minute consultation to review your current tax structure and identify compliance savings.\n\nBest,\n${senderName}`;
                     } else if (survey.role === 'real_estate') {
-                        strategyTitle = '🏢 Commercial Space / Office Relocation Matching';
+                        strategyTitle = 'Commercial Space / Office Relocation Matching';
                         pitchText = `Hi ${lead.name} team,\n\nI specialize in office search, commercial acquisition, and corporate relocation in the ${lead.area || 'Mumbai'} sector.\n\nI'm currently mapping commercial spaces in ${lead.area || 'Mumbai'} and have 3 prime off-market offices that match the profile of top-tier ${lead.category || 'companies'} like yours. Would you be open to a quick relocation catalog?\n\nBest,\n${senderName}`;
                     } else {
-                        strategyTitle = '💼 B2B Collaboration Pitch';
+                        strategyTitle = 'B2B Collaboration Pitch';
                         pitchText = `Hi ${lead.name} team,\n\nI noticed your established local business in ${lead.area || 'Mumbai'}. I run a B2B service agency in Mumbai and work with high-quality ${lead.category || 'providers'} to cross-promote and supply qualified B2B clients.\n\nWould you be open to a quick call this week to explore a referral partnership?\n\nBest,\n${senderName}`;
                     }
 
@@ -207,12 +207,12 @@ export function renderProfessionalModal(lead) {
                     
                     <div style="display: flex; gap: 12px; width: 100%; margin-bottom: 12px;">
                         <button id="modalTrackLeadBtn" class="secondary-btn ${isTracked ? 'active' : ''}" style="flex: 1; border-color: ${isTracked ? 'var(--accent-gold)' : ''}; color: ${isTracked ? 'var(--accent-gold)' : ''};">
-                            📁 ${isTracked ? 'Tracked' : 'Track This Lead'}
+                            <i data-lucide="${isTracked ? 'bookmark-check' : 'bookmark'}" style="width:13px; height:13px;"></i> ${isTracked ? 'Tracked' : 'Track This Lead'}
                         </button>
                         ${currentUserHasAccess('scout') ? `
                             <button id="shareQRBtn" class="secondary-btn" style="flex: 1;">Share via QR Code</button>
                         ` : `
-                            <button class="secondary-btn" style="flex: 1; opacity: 0.5; cursor: not-allowed;" disabled>🔒 QR Code (Scout+)</button>
+                            <button class="secondary-btn" style="flex: 1; opacity: 0.5; cursor: not-allowed;" disabled><i data-lucide="lock" style="width:11px; height:11px;"></i> QR Code (Scout+)</button>
                         `}
                     </div>
                     ${lead.source_url && hasConnectAccess ? `

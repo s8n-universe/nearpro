@@ -58,8 +58,8 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
                         </div>
                     </div>
                     
-                    <button class="brand-btn" id="copyPromptTextBtn" style="padding:10px 16px; font-size:13px;">
-                        📋 Copy Prompt Code
+                    <button class="brand-btn" id="copyPromptTextBtn" style="padding:10px 16px; font-size:13px; display:flex; align-items:center; gap:6px;">
+                        <i data-lucide="copy" style="width:14px; height:14px;"></i> Copy Prompt Code
                     </button>
                 </div>
 
@@ -69,14 +69,16 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
                 </div>
                 
                 <div style="background:rgba(255,160,0,0.03); border:1px solid rgba(255,160,0,0.15); border-radius:var(--radius-md); padding:16px; font-size:12.5px; color:var(--text-secondary); line-height:1.5;">
-                    💡 <strong>Instructions:</strong> Copy this prompt code and paste it directly into Lovable or Bolt to generate a complete, high converting local website draft for this business in 60 seconds.
+                    <strong style="color:var(--accent-gold);">Instructions:</strong> Copy this prompt code and paste it directly into Lovable or Bolt to generate a complete, high converting local website draft for this business in 60 seconds.
                 </div>
             </div>
         `;
     } else {
         workspaceHTML = `
             <div class="prompt-empty-state" style="text-align:center; padding:80px 20px; color:var(--text-muted); display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1;">
-                <div style="font-size:40px; margin-bottom:12px;">⚡</div>
+                <div style="margin-bottom:12px; display:flex; justify-content:center;">
+                    <i data-lucide="zap" style="width:40px; height:40px; color:var(--accent-gold); stroke-width:1.5px;"></i>
+                </div>
                 <h4 style="margin:0 0 6px 0; color:white;">Website Prompt Engine</h4>
                 <p style="color:var(--text-muted); font-size:13px; max-width:280px;">Select a saved pipeline lead from the left list to generate a production ready website builder prompt.</p>
             </div>
@@ -95,7 +97,12 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
             </div>
 
             <!-- Workspace Panel -->
-            <div class="prompt-workspace-body" style="background:rgba(255,255,255,0.01); border:1px solid var(--border); border-radius:var(--radius-md); padding:28px; display:flex; min-height:400px; max-height:calc(100vh - 160px); overflow-y:auto;">
+            <div class="prompt-workspace-body" style="background:rgba(255,255,255,0.01); border:1px solid var(--border); border-radius:var(--radius-md); padding:28px; display:flex; flex-direction:column; min-height:400px; max-height:calc(100vh - 160px); overflow-y:auto; justify-content: flex-start;">
+                <!-- Usability Banner -->
+                <div class="usability-banner" style="background: rgba(255, 160, 0, 0.02); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px 18px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 4px; border-left: 3px solid var(--accent-gold); flex-shrink: 0; width: 100%; text-align: left;">
+                    <div style="font-size: 12.5px; color: white; line-height: 1.4;"><span style="color: var(--accent-gold); font-weight: 600;">What it is:</span> Generate customized layout prompts for Lovable, Bolt.new, or v0.dev.</div>
+                    <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.4;"><span style="color: var(--accent-gold); font-weight: 600;">How to leverage:</span> Copy generated prompts to quickly build functional demo sites and wow prospects before scheduling pitches.</div>
+                </div>
                 ${workspaceHTML}
             </div>
         </div>
@@ -103,6 +110,11 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
 }
 
 export function bindPromptGeneratorEvents(onLeadSelectCallback, onPlatformSelectCallback) {
+    // Process Lucide Icons
+    if (window.lucide) {
+        window.lucide.createIcons();
+    }
+
     const leadItems = document.querySelectorAll('.prompt-lead-item');
     leadItems.forEach(item => {
         item.addEventListener('click', () => {

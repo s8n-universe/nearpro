@@ -3,6 +3,13 @@ import { Api, generateBrowserFingerprint } from './api.js';
 import { Router } from './router.js';
 import { currentUserHasAccess } from './auth.js';
 
+export function refreshLucideIcons() {
+    if (window.lucide) {
+        window.lucide.createIcons();
+    }
+}
+window.refreshLucideIcons = refreshLucideIcons;
+
 // Import UI Renderers
 import { renderHeader, bindHeaderEvents } from './components/Header.js';
 import { renderCategorySidebar, bindCategorySidebarEvents } from './components/CategorySidebar.js';
@@ -27,7 +34,9 @@ import { renderWebsiteAudit, bindWebsiteAuditEvents } from './components/Website
 import { renderOutreachStudio, bindOutreachStudioEvents, buildOutreach } from './components/OutreachStudio.js';
 import { renderPromptGenerator, bindPromptGeneratorEvents, buildPrompt } from './components/PromptGenerator.js';
 import { renderConnectionHub, bindConnectionHubEvents } from './components/ConnectionHub.js';
+import { renderDocumentsLibrary, bindDocumentsLibraryEvents } from './components/DocumentsLibrary.js';
 import { renderTeamWorkspace, bindTeamWorkspaceEvents, loadDataRequests, createDataRequest } from './components/TeamWorkspace.js';
+import { renderDocumentViewerLayout } from './components/DocumentViewer.js';
 
 // Main Application shell reference
 const appShell = document.getElementById('app');
@@ -154,11 +163,16 @@ State.subscribe(async (currentState) => {
         upgradePlaceholder.innerHTML = renderUpgradeModal();
         bindUpgradeModalEvents();
     }
+    refreshLucideIcons();
 });
 
 // Initialize Routing bindings
 function initRoutes() {
     Router.on('#/', async () => {
+        if (State.user) {
+            Router.navigate('#/dashboard/directory');
+            return;
+        }
         State.resetFilters();
         renderMarketingLayout();
         if (!State.stats) {
@@ -178,15 +192,27 @@ function initRoutes() {
     });
 
     Router.on('#/browse', () => {
+        if (State.user) {
+            Router.navigate('#/dashboard/directory');
+            return;
+        }
         State.updateFilters({ parentCategory: null, category: null });
     });
 
     Router.on('#/category/:parent', (parent) => {
+        if (State.user) {
+            Router.navigate(`#/dashboard/directory?parent=${parent}`);
+            return;
+        }
         const decodedParent = decodeURIComponent(parent);
         State.updateFilters({ parentCategory: decodedParent, category: null });
     });
 
     Router.on('#/category/:parent/:sub', (parent, sub) => {
+        if (State.user) {
+            Router.navigate(`#/dashboard/directory?parent=${parent}&sub=${sub}`);
+            return;
+        }
         const decodedParent = decodeURIComponent(parent);
         const decodedSub = decodeURIComponent(sub);
         State.updateFilters({ parentCategory: decodedParent, category: decodedSub });
@@ -197,7 +223,7 @@ function initRoutes() {
             State.setAuthModal(true);
             Router.navigate('#/');
         } else {
-            Router.navigate('#/dashboard/crm');
+            Router.navigate('#/dashboard/directory');
         }
     });
 
@@ -206,6 +232,16 @@ function initRoutes() {
             State.setAuthModal(true);
             Router.navigate('#/');
         } else {
+            // Synchronize parameters for directory filter state if routed to dashboard directory
+            if (tab === 'directory') {
+                const searchParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+                const parent = searchParams.get('parent');
+                const sub = searchParams.get('sub');
+                if (parent) {
+                    State.filters.parentCategory = decodeURIComponent(parent);
+                    State.filters.category = sub ? decodeURIComponent(sub) : null;
+                }
+            }
             renderDashboardLayout(tab);
         }
     });
@@ -218,6 +254,10 @@ function initRoutes() {
     Router.on('#/terms', () => {
         appShell.innerHTML = renderTermsOfServicePage();
         bindHeaderEvents();
+    });
+
+    Router.on('#/d/:id', async (id) => {
+        renderDocumentViewerLayout(id);
     });
 
     Router.on('*', () => {
@@ -252,6 +292,7 @@ function renderMarketingLayout() {
         </div>
     `;
     bindHeaderEvents();
+    refreshLucideIcons();
 }
 
 // Layer 2: Deployed Directory layout shell
@@ -1012,6 +1053,7 @@ async function renderDashboardLayout(tab) {
 
     // Required tiers for each sub tab
     const requiredTiers = {
+        directory: 'free',
         crm: 'scout',
         lists: 'scout',
         audit: 'hunter',
@@ -1052,23 +1094,173 @@ async function renderDashboardLayout(tab) {
     const titleEl = document.getElementById('dashboardPageTitle');
     const content = document.getElementById('dashboardContent');
 
-    if (tab === 'crm') {
+    // Preload user documents list globally for synchronous view render access
+    if (State.user && !window._userDocuments) {
+        Api.getDocuments(State.user.id).then(docs => {
+            window._userDocuments = docs;
+            if (!window._selectedBrochureUrl && docs.length > 0) {
+                window._selectedBrochureUrl = docs[0].file_url;
+            }
+        }).catch(err => console.warn("Failed to prefetch documents list on shell load:", err));
+    }
+
+    // Toggle full-bleed active workspace layout style
+    const mainContentArea = document.querySelector('.dashboard-content-area');
+    if (mainContentArea) {
+        if (tab === 'crm' || tab === 'directory') {
+            mainContentArea.classList.add('crm-active');
+        } else {
+            mainContentArea.classList.remove('crm-active');
+        }
+    }
+
+    if (tab === 'directory') {
+        if (titleEl) titleEl.innerText = 'Browse Directory';
+        if (content) {
+            // Render basic layout structure if not already drawn
+            const isDrawn = document.querySelector('.dashboard-directory-layout');
+            if (!isDrawn) {
+                const sidebarClass = State.category_sidebar_collapsed ? 'collapsed' : '';
+                content.innerHTML = `
+                    <div class="dashboard-directory-layout" style="display: flex; width: 100%; height: calc(100vh - 70px); overflow: hidden;">
+                        <aside class="dashboard-category-sidebar ${sidebarClass}" id="sidebarElement" style="width: 240px; border-right: 1px solid var(--border); background: rgba(0,0,0,0.05); overflow-y: auto; padding: 20px 14px; flex-shrink: 0;"></aside>
+                        <section class="app-content" style="flex: 1; padding: 24px; display: flex; flex-direction: column; overflow-y: auto; position: relative;">
+                            <!-- Usability Banner -->
+                            <div class="usability-banner" style="background: rgba(255, 160, 0, 0.02); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px 18px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 4px; border-left: 3px solid var(--accent-gold); flex-shrink: 0;">
+                                <div style="font-size: 12.5px; color: white; line-height: 1.4;"><span style="color: var(--accent-gold); font-weight: 600;">What it is:</span> Search for verified local business leads across India, filtered by niche and geographic area.</div>
+                                <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.4;"><span style="color: var(--accent-gold); font-weight: 600;">How to leverage:</span> Find leads with missing websites or low ratings and save them to pitch optimization services.</div>
+                            </div>
+                            <div id="searchBarElement"></div>
+                            <div id="filterPanelElement"></div>
+                            <div class="view-container" id="feedElement"></div>
+                            <div id="comparePanelPlaceholder"></div>
+                        </section>
+                    </div>
+                    <div class="modal-overlay" id="detailModalOverlay"></div>
+                    <div class="modal-overlay" id="compareModalOverlay"></div>
+                `;
+
+                // Draw category sidebar
+                const sidebar = document.getElementById('sidebarElement');
+                if (sidebar) {
+                    sidebar.innerHTML = renderCategorySidebar();
+                    bindCategorySidebarEvents();
+                }
+
+                // Draw search inputs
+                document.getElementById('searchBarElement').innerHTML = renderSearchBar();
+                bindSearchBarEvents();
+
+                document.getElementById('filterPanelElement').innerHTML = renderFilterPanel();
+                bindFilterPanelEvents();
+            } else {
+                // Just update sidebar selector focus state
+                const sidebar = document.getElementById('sidebarElement');
+                if (sidebar) {
+                    sidebar.innerHTML = renderCategorySidebar();
+                    bindCategorySidebarEvents();
+                }
+            }
+
+            // Draw compare panel
+            const comparePlaceholder = document.getElementById('comparePanelPlaceholder');
+            if (comparePlaceholder) {
+                comparePlaceholder.innerHTML = renderComparePanel();
+                bindComparePanelEvents(showCompareModal);
+            }
+
+            // Run database query
+            await queryProfessionals(false);
+        }
+    } else if (tab === 'crm') {
         if (titleEl) titleEl.innerText = 'Outreach Pipeline';
         try {
+            // Preload user documents list
+            const userDocs = await Api.getDocuments(State.user.id);
+            window._userDocuments = userDocs;
+            if (!window._selectedBrochureUrl && userDocs.length > 0) {
+                window._selectedBrochureUrl = userDocs[0].file_url;
+            }
+
             const pipeline = await Api.getCRMPipeline(State.user.id);
             const stats = await Api.getDashboardStats(State.user.id);
+
+            // Preload audit cache for active lead if website exists
+            const allLeads = [];
+            pipeline.forEach(row => {
+                (row.leads || []).forEach(lead => {
+                    allLeads.push(lead);
+                });
+            });
+            const searchParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+            const activeLeadId = searchParams.get('lead_id');
+            let activeLead = null;
+            if (activeLeadId) {
+                activeLead = allLeads.find(l => String(l.saved_lead_id) === String(activeLeadId) || String(l.id) === String(activeLeadId));
+            }
+            if (!activeLead && allLeads.length > 0) {
+                activeLead = allLeads[0];
+            }
+            if (activeLead && activeLead.website) {
+                try {
+                    const { data: cached } = await Api.supabase
+                        .from('audit_cache')
+                        .select('*')
+                        .eq('url', activeLead.website.trim().toLowerCase())
+                        .maybeSingle();
+                    window._currentAuditResult = cached;
+                } catch (e) {
+                    console.warn("Failed to preload audit cache", e);
+                }
+            } else {
+                window._currentAuditResult = null;
+            }
+
             if (content) {
                 content.innerHTML = renderLeadCRM(pipeline, stats);
-                bindCRMWorkspaceEvents(async () => {
+                
+                async function handleCRMUpdate() {
                     // Update state tracking
                     const updated = await Api.getCRMPipeline(State.user.id);
                     const updatedStats = await Api.getDashboardStats(State.user.id);
                     const container = document.getElementById('dashboardContent');
                     if (container) {
+                        // Preload audit cache again in update callback
+                        const updatedLeads = [];
+                        updated.forEach(row => {
+                            (row.leads || []).forEach(lead => {
+                                updatedLeads.push(lead);
+                            });
+                        });
+                        const updatedLeadId = new URLSearchParams(window.location.hash.split('?')[1] || '').get('lead_id');
+                        let updatedActiveLead = null;
+                        if (updatedLeadId) {
+                            updatedActiveLead = updatedLeads.find(l => String(l.saved_lead_id) === String(updatedLeadId) || String(l.id) === String(updatedLeadId));
+                        }
+                        if (!updatedActiveLead && updatedLeads.length > 0) {
+                            updatedActiveLead = updatedLeads[0];
+                        }
+                        if (updatedActiveLead && updatedActiveLead.website) {
+                            try {
+                                const { data: cached } = await Api.supabase
+                                    .from('audit_cache')
+                                    .select('*')
+                                    .eq('url', updatedActiveLead.website.trim().toLowerCase())
+                                    .maybeSingle();
+                                window._currentAuditResult = cached;
+                            } catch (e) {
+                                console.warn("Failed to preload audit cache in update", e);
+                            }
+                        } else {
+                            window._currentAuditResult = null;
+                        }
+
                         container.innerHTML = renderLeadCRM(updated, updatedStats);
-                        bindCRMWorkspaceEvents(arguments.callee);
+                        bindCRMWorkspaceEvents(handleCRMUpdate);
                     }
-                });
+                }
+
+                bindCRMWorkspaceEvents(handleCRMUpdate);
             }
         } catch (err) {
             console.error("Failed to load CRM pipeline: ", err);
@@ -1087,14 +1279,17 @@ async function renderDashboardLayout(tab) {
                 if (titleEl && listDetail) titleEl.innerText = `Smart Lists — ${listDetail.name}`;
                 if (content) {
                     content.innerHTML = renderLeadLists(lists, listId, leads);
-                    bindListDetailEvents(listId, leads, async () => {
+                    
+                    async function handleListDetailUpdate() {
                         const updatedLeads = await Api.getSavedLeads(listId);
                         const container = document.getElementById('dashboardContent');
                         if (container) {
                             container.innerHTML = renderLeadLists(lists, listId, updatedLeads);
-                            bindListDetailEvents(listId, updatedLeads, arguments.callee);
+                            bindListDetailEvents(listId, updatedLeads, handleListDetailUpdate);
                         }
-                    });
+                    }
+
+                    bindListDetailEvents(listId, leads, handleListDetailUpdate);
                 }
             } else {
                 if (content) {
@@ -1144,8 +1339,8 @@ async function renderDashboardLayout(tab) {
             }
 
             if (content) {
-                content.innerHTML = renderWebsiteAudit(leadsWithWebsites, activeAuditLeadId, auditResult, auditLoading);
-                bindWebsiteAuditEvents(async (id, url) => {
+                // Define named callback instead of arguments.callee to prevent ES6 strict mode errors
+                async function handleAuditRequest(id, url) {
                     auditLoading = true;
                     if (content) {
                         content.innerHTML = renderWebsiteAudit(leadsWithWebsites, id, null, true);
@@ -1159,11 +1354,10 @@ async function renderDashboardLayout(tab) {
                         const container = document.getElementById('dashboardContent');
                         if (container) {
                             container.innerHTML = renderWebsiteAudit(leadsWithWebsites, id, data, false);
-                            bindWebsiteAuditEvents(arguments.callee);
+                            bindWebsiteAuditEvents(handleAuditRequest);
                         }
                     } catch (err) {
-                        console.error("Health check audit failed: ", err);
-                        alert("Health check failed. Using fallback client side check.");
+                        console.warn("Health check audit failed, running fallback client side check:", err);
                         
                         const mockResult = {
                             url: url,
@@ -1186,10 +1380,13 @@ async function renderDashboardLayout(tab) {
                         const container = document.getElementById('dashboardContent');
                         if (container) {
                             container.innerHTML = renderWebsiteAudit(leadsWithWebsites, id, mockResult, false);
-                            bindWebsiteAuditEvents(arguments.callee);
+                            bindWebsiteAuditEvents(handleAuditRequest);
                         }
                     }
-                });
+                }
+
+                content.innerHTML = renderWebsiteAudit(leadsWithWebsites, activeAuditLeadId, auditResult, auditLoading);
+                bindWebsiteAuditEvents(handleAuditRequest);
             }
         } catch (err) {
             console.error("Failed to load Website Audit panel: ", err);
@@ -1198,6 +1395,13 @@ async function renderDashboardLayout(tab) {
     } else if (tab === 'outreach') {
         if (titleEl) titleEl.innerText = 'AI Outreach Studio';
         try {
+            // Preload user documents list
+            const userDocs = await Api.getDocuments(State.user.id);
+            window._userDocuments = userDocs;
+            if (!window._selectedBrochureUrl && userDocs.length > 0) {
+                window._selectedBrochureUrl = userDocs[0].file_url;
+            }
+
             const savedLeads = await Api.getSavedLeads();
             const { data: templates } = await Api.supabase
                 .from('outreach_templates')
@@ -1228,8 +1432,53 @@ async function renderDashboardLayout(tab) {
 
                     const template = templatesList.find(t => t.id === activeTemplateId) || templatesList[0];
                     if (template) {
+                        const selectedDoc = (window._userDocuments || []).find(doc => doc.id === window._selectedBrochureId) 
+                            || (window._userDocuments || [])[0];
+                        const defaultDocName = selectedDoc ? selectedDoc.name.replace(/\.[^/.]+$/, "").replace(/_/g, " ") : "Business Portfolio";
+
                         composedMessage = buildOutreach(template.template_text, lead, audit);
+                        if (window._attachBrochureEnabled && window._includeBrochureLink && window._selectedBrochureId) {
+                            const label = window._brochureLinkLabel || defaultDocName;
+                            const shortUrl = `${window.location.origin}${window.location.pathname}#/d/${window._selectedBrochureId}`;
+                            composedMessage += `\n\n📄 ${label}:\n${shortUrl}`;
+                        }
                         composedFollowUp = buildOutreach(template.follow_up_text || '', lead, audit);
+
+                        // Initialize multi-message sequence cache only if missing or context changed
+                        const currentLeadId = window._sequenceLeadId;
+                        const currentTemplateId = window._sequenceTemplateId;
+                        const isAiMode = currentTemplateId === 'ai';
+                        const leadChanged = currentLeadId !== activeLeadId;
+                        const templateChanged = currentTemplateId !== activeTemplateId;
+
+                        if (leadChanged && isAiMode) {
+                            // Clear AI mode if switching to a new lead
+                            window._sequenceTemplateId = activeTemplateId;
+                        }
+                        
+                        if (!window._generatedSequence || leadChanged || (templateChanged && !isAiMode)) {
+                            window._generatedSequence = {
+                                hook_type: 'STANDARD',
+                                day1: {
+                                    subject_a: `Website optimization for ${lead.name}`,
+                                    subject_b: `Quick question about ${lead.name} profile`,
+                                    subject_c: `Local maps rating gap`,
+                                    message: composedMessage
+                                },
+                                day3: {
+                                    subject: `Re: Website optimization for ${lead.name}`,
+                                    message: composedFollowUp
+                                },
+                                day7: {
+                                    subject: `Re: Website optimization for ${lead.name}`,
+                                    message: `Hi team, just leaving this here. If you ever want to check how we could improve your digital ranking, feel free to reach out. Low pressure. Best, ${State.profile?.full_name || 'Shri'}`
+                                }
+                            };
+                            window._sequenceLeadId = activeLeadId;
+                            if (!isAiMode) {
+                                window._sequenceTemplateId = activeTemplateId;
+                            }
+                        }
                     }
                 }
             }
@@ -1248,6 +1497,47 @@ async function renderDashboardLayout(tab) {
         } catch (err) {
             console.error("Failed to load Outreach Studio: ", err);
             if (content) content.innerHTML = `<p style="color: var(--accent-pink);">Error loading AI Outreach Studio.</p>`;
+        }
+    } else if (tab === 'documents') {
+        if (titleEl) titleEl.innerText = 'Documents Library';
+        try {
+            const docs = await Api.getDocuments(State.user.id);
+            window._userDocuments = docs;
+            if (!window._selectedBrochureUrl && docs.length > 0) {
+                window._selectedBrochureUrl = docs[0].file_url;
+            }
+
+            if (content) {
+                content.innerHTML = renderDocumentsLibrary(docs);
+                
+                async function refreshLibrary() {
+                    const updatedDocs = await Api.getDocuments(State.user.id);
+                    window._userDocuments = updatedDocs;
+                    const container = document.getElementById('dashboardContent');
+                    if (container) {
+                        container.innerHTML = renderDocumentsLibrary(updatedDocs);
+                        bindEvents();
+                    }
+                }
+
+                function bindEvents() {
+                    bindDocumentsLibraryEvents(
+                        () => {}, // onUploadStart
+                        (newDoc) => {
+                            refreshLibrary();
+                        }, // onUploadSuccess
+                        (err) => {}, // onUploadError
+                        (deletedId) => {
+                            refreshLibrary();
+                        } // onDeleteSuccess
+                    );
+                }
+
+                bindEvents();
+            }
+        } catch (err) {
+            console.error("Failed to load Documents Library:", err);
+            if (content) content.innerHTML = `<p style="color: var(--accent-pink);">Error loading Documents Library.</p>`;
         }
     } else if (tab === 'prompts') {
         if (titleEl) titleEl.innerText = 'Website Prompt Engine';
@@ -1299,12 +1589,14 @@ async function renderDashboardLayout(tab) {
             const lists = await Api.getLeadLists();
             const n8nUrl = State.profile?.n8n_webhook_url || '';
             const sheetsUrl = State.profile?.google_sheets_webhook_url || '';
+            const hubspotToken = State.profile?.hubspot_access_token || '';
+            const zohoToken = State.profile?.zoho_access_token || '';
             
             const searchParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
             const activeSubTab = searchParams.get('sub') || 'n8n';
 
             if (content) {
-                content.innerHTML = renderConnectionHub(lists, n8nUrl, sheetsUrl, activeSubTab);
+                content.innerHTML = renderConnectionHub(lists, n8nUrl, sheetsUrl, hubspotToken, zohoToken, activeSubTab);
                 bindConnectionHubEvents(lists, activeSubTab, (newSub) => {
                     window.location.hash = `#/dashboard/integrations?sub=${newSub}`;
                 });
@@ -1364,6 +1656,7 @@ async function renderDashboardLayout(tab) {
             const company = State.profile?.company_name || '';
             const portfolio = State.profile?.portfolio_url || '';
             const booking = State.profile?.booking_url || '';
+            const serviceBlurb = State.profile?.sender_service_blurb || '';
 
             content.innerHTML = `
                 <div class="settings-wrap" style="max-width: 500px; background: rgba(255,255,255,0.01); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 28px; display:flex; flex-direction:column; gap:20px;">
@@ -1392,6 +1685,21 @@ async function renderDashboardLayout(tab) {
                     </div>
 
                     <div>
+                        <label style="display: block; font-size: 11px; font-family: var(--font-mono); color: var(--text-secondary); text-transform: uppercase; margin-bottom: 8px;">My Primary Service Blurb</label>
+                        <select id="settingsServiceSelect" style="width: 100%; padding: 10px; background: var(--bg-base); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13px; margin-bottom: 8px;">
+                            <option value="I build websites for local businesses" ${serviceBlurb === 'I build websites for local businesses' ? 'selected' : ''}>💻 Web Design ("I build websites for local businesses")</option>
+                            <option value="I help businesses improve their Google ranking" ${serviceBlurb === 'I help businesses improve their Google ranking' ? 'selected' : ''}>📈 SEO ("I help businesses improve their Google ranking")</option>
+                            <option value="I offer tax and accounting services to businesses" ${serviceBlurb === 'I offer tax and accounting services to businesses' ? 'selected' : ''}>⚖️ CA/Finance ("I offer tax and accounting services to businesses")</option>
+                            <option value="I help businesses get more customers through digital marketing" ${serviceBlurb === 'I help businesses get more customers through digital marketing' ? 'selected' : ''}>🎯 Marketing ("I help businesses get more customers through digital marketing")</option>
+                            <option value="I'm a commercial real estate consultant" ${serviceBlurb === "I'm a commercial real estate consultant" ? 'selected' : ''}>🏢 Real Estate ("I'm a commercial real estate consultant")</option>
+                            <option value="custom" ${!['I build websites for local businesses', 'I help businesses improve their Google ranking', 'I offer tax and accounting services to businesses', 'I help businesses get more customers through digital marketing', "I'm a commercial real estate consultant"].includes(serviceBlurb) && serviceBlurb ? 'selected' : ''}>💼 Custom Service...</option>
+                        </select>
+                        <div id="settingsCustomServiceContainer" style="display: ${!['I build websites for local businesses', 'I help businesses improve their Google ranking', 'I offer tax and accounting services to businesses', 'I help businesses get more customers through digital marketing', "I'm a commercial real estate consultant"].includes(serviceBlurb) && serviceBlurb ? 'block' : 'none'};">
+                            <input type="text" id="settingsCustomService" value="${!['I build websites for local businesses', 'I help businesses improve their Google ranking', 'I offer tax and accounting services to businesses', 'I help businesses get more customers through digital marketing', "I'm a commercial real estate consultant"].includes(serviceBlurb) ? serviceBlurb : ''}" placeholder="Describe your service in one sentence..." style="width: 100%; padding: 10px; background: var(--bg-base); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13px;" />
+                        </div>
+                    </div>
+
+                    <div>
                         <label style="display: block; font-size: 11px; font-family: var(--font-mono); color: var(--text-secondary); text-transform: uppercase; margin-bottom: 8px;">Custom Portfolio URL</label>
                         <input type="url" id="settingsPortfolioUrl" value="${portfolio}" placeholder="e.g. https://myagency.com" style="width: 100%; padding: 10px; background: var(--bg-base); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13px;" />
                     </div>
@@ -1413,6 +1721,14 @@ async function renderDashboardLayout(tab) {
                 </div>
             `;
 
+            const serviceSelect = document.getElementById('settingsServiceSelect');
+            const customServiceContainer = document.getElementById('settingsCustomServiceContainer');
+            if (serviceSelect && customServiceContainer) {
+                serviceSelect.addEventListener('change', () => {
+                    customServiceContainer.style.display = serviceSelect.value === 'custom' ? 'block' : 'none';
+                });
+            }
+
             document.getElementById('changeBillingPlanBtn').addEventListener('click', () => {
                 State.setPricingModal(true);
             });
@@ -1423,6 +1739,9 @@ async function renderDashboardLayout(tab) {
                 const newCompany = document.getElementById('settingsCompanyName').value.trim();
                 const newPortfolio = document.getElementById('settingsPortfolioUrl').value.trim();
                 const newBooking = document.getElementById('settingsBookingUrl').value.trim();
+                const selectedService = document.getElementById('settingsServiceSelect').value;
+                const customService = document.getElementById('settingsCustomService').value.trim();
+                const newServiceBlurb = selectedService === 'custom' ? customService : selectedService;
 
                 try {
                     const { data, error } = await Api.supabase
@@ -1433,6 +1752,7 @@ async function renderDashboardLayout(tab) {
                             company_name: newCompany,
                             portfolio_url: newPortfolio,
                             booking_url: newBooking,
+                            sender_service_blurb: newServiceBlurb,
                             updated_at: new Date().toISOString() 
                         })
                         .eq('id', State.user.id)
@@ -1459,6 +1779,9 @@ async function renderDashboardLayout(tab) {
             `;
         }
     }
+    
+    // Refresh all Lucide SVG icons rendered in the content panel
+    refreshLucideIcons();
 }
 
 /* --- Startup --- */

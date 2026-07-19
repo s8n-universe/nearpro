@@ -197,7 +197,7 @@ export const Api = {
                 min_rat: filters.min_rating ? parseFloat(filters.min_rating) : null,
                 has_em: !!filters.has_email,
                 has_ph: !!filters.has_phone,
-                has_web: filters.website_filter === 'has_website',
+                has_web: filters.website_filter === 'has_website' || !!filters.has_website,
                 search_term: filters.search && filters.search.trim() ? filters.search.trim() : null,
                 sort_col: filters.sort_by || 'rating_desc',
                 offset_val: offset,
@@ -257,7 +257,7 @@ export const Api = {
             if (filters.has_email) fallbackQuery = fallbackQuery.not('email', 'is', null).neq('email', '');
             if (filters.has_phone) fallbackQuery = fallbackQuery.not('phone', 'is', null).neq('phone', '');
             
-            if (filters.website_filter === 'has_website') {
+            if (filters.website_filter === 'has_website' || filters.has_website) {
                 fallbackQuery = fallbackQuery.not('website', 'is', null).neq('website', '');
             } else if (filters.website_filter === 'no_website') {
                 fallbackQuery = fallbackQuery.or('website.is.null,website.eq.');
@@ -576,6 +576,7 @@ export const Api = {
                         
                         // Show personalization settings modal immediately after subscription purchase
                         window.State.setPersonalizationModal(true);
+                        window.location.hash = '#/dashboard/directory';
                         resolve(true);
                     } catch (err) {
                         console.error("Profile refresh failed:", err);
@@ -619,6 +620,7 @@ export const Api = {
 
                             // Show personalization settings modal immediately after subscription purchase
                             window.State.setPersonalizationModal(true);
+                            window.location.hash = '#/dashboard/directory';
                             resolve(true);
                         });
                     } catch (err) {
@@ -635,17 +637,94 @@ export const Api = {
         });
     },
 
-    async generateAIOutreach(professionalId, channel, language, tone) {
+    async generateAIOutreach(professionalId, channel, language, tone, regenerateDay = null, existingDay1 = null, existingDay3 = null, existingDay7 = null) {
         const { data, error } = await supabase.functions.invoke('generate-ai-outreach', {
             body: { 
                 professional_id: professionalId, 
                 channel: channel, 
                 language: language, 
-                tone: tone 
+                tone: tone,
+                regenerate_day: regenerateDay,
+                existing_day1: existingDay1,
+                existing_day3: existingDay3,
+                existing_day7: existingDay7
             }
         });
         if (error) throw error;
         return data;
+    },
+
+    async getDocuments(userId) {
+        const { data, error } = await supabase
+            .from('documents')
+            .select('*')
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false });
+        if (error) throw error;
+        return data || [];
+    },
+
+    async uploadDocument(file, name) {
+        const { data: sessionData } = await supabase.auth.getSession();
+        const userId = sessionData?.session?.user?.id;
+        if (!userId) throw new Error("User session not found");
+
+        const fileExt = file.name.split('.').pop();
+        const cleanName = file.name.replace(/[^a-zA-Z0-9]/g, '_') + '_' + Date.now() + '.' + fileExt;
+        const filePath = `${userId}/${cleanName}`;
+
+        const { data: uploadData, error: uploadError } = await supabase.storage
+            .from('documents')
+            .upload(filePath, file, {
+                cacheControl: '3600',
+                upsert: false
+            });
+        if (uploadError) throw uploadError;
+
+        const { data: urlData } = supabase.storage
+            .from('documents')
+            .getPublicUrl(filePath);
+        
+        const fileUrl = urlData.publicUrl;
+
+        // Generate a random 6-character alphanumeric slug
+        const shortSlug = Math.random().toString(36).substring(2, 8);
+
+        const { data, error } = await supabase
+            .from('documents')
+            .insert([{
+                user_id: userId,
+                name: name || file.name,
+                file_path: filePath,
+                file_url: fileUrl,
+                file_size: file.size,
+                slug: shortSlug
+            }])
+            .select()
+            .single();
+        if (error) {
+            await supabase.storage.from('documents').remove([filePath]);
+            throw error;
+        }
+
+        return data;
+    },
+
+    async deleteDocument(documentId, filePath) {
+        const { error: dbError } = await supabase
+            .from('documents')
+            .delete()
+            .eq('id', documentId);
+        if (dbError) throw dbError;
+
+        const { error: storageError } = await supabase.storage
+            .from('documents')
+            .remove([filePath]);
+        if (storageError) {
+            console.warn("Deleted DB record, but failed to remove physical storage object:", storageError);
+        }
+
+        return true;
     }
 };
 

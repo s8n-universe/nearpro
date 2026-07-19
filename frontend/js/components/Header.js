@@ -86,9 +86,12 @@ export function renderHeader() {
                 </a>
                 
                 <nav class="header-nav">
-                    <a href="#/" class="nav-link ${isHomeActive ? 'active' : ''}">Home</a>
-                    <a href="#/browse" class="nav-link ${isBrowseActive ? 'active' : ''}">Browse Directory</a>
-                    ${State.user ? `<a href="#/dashboard" class="nav-link ${isDashboardActive ? 'active' : ''}">Dashboard</a>` : ''}
+                    ${State.user ? `
+                        <a href="#/dashboard/directory" class="nav-link">Go to Workspace</a>
+                    ` : `
+                        <a href="#/" class="nav-link ${isHomeActive ? 'active' : ''}">Home</a>
+                        <a href="#/browse" class="nav-link ${isBrowseActive ? 'active' : ''}">Browse Directory</a>
+                    `}
                 </nav>
                 
                 <div class="header-actions" style="display: flex; align-items: center; gap: 12px;">

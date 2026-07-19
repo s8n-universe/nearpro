@@ -4,10 +4,24 @@ import { Api } from '../api.js';
 export function renderPersonalizationModal() {
     if (!State.personalization_modal_open) return '';
 
-    const name = State.profile?.full_name || '';
-    const company = State.profile?.company_name || '';
-    const portfolio = State.profile?.portfolio_url || '';
-    const booking = State.profile?.booking_url || '';
+    // Initialize localStorage drafts with profile data if not already set
+    if (localStorage.getItem('draft_personalize_name') === null) {
+        localStorage.setItem('draft_personalize_name', State.profile?.full_name || '');
+    }
+    if (localStorage.getItem('draft_personalize_company') === null) {
+        localStorage.setItem('draft_personalize_company', State.profile?.company_name || '');
+    }
+    if (localStorage.getItem('draft_personalize_portfolio') === null) {
+        localStorage.setItem('draft_personalize_portfolio', State.profile?.portfolio_url || '');
+    }
+    if (localStorage.getItem('draft_personalize_booking') === null) {
+        localStorage.setItem('draft_personalize_booking', State.profile?.booking_url || '');
+    }
+
+    const name = localStorage.getItem('draft_personalize_name');
+    const company = localStorage.getItem('draft_personalize_company');
+    const portfolio = localStorage.getItem('draft_personalize_portfolio');
+    const booking = localStorage.getItem('draft_personalize_booking');
 
     return `
         <div class="modal-overlay open" id="personalizationModalOverlay" style="z-index: 11000; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px);">
@@ -55,9 +69,44 @@ export function renderPersonalizationModal() {
 }
 
 export function bindPersonalizationModalEvents() {
+    const nameInput = document.getElementById('personalizeName');
+    const companyInput = document.getElementById('personalizeCompany');
+    const portfolioInput = document.getElementById('personalizePortfolio');
+    const bookingInput = document.getElementById('personalizeBooking');
+
+    // Helper to clear drafts
+    function clearDrafts() {
+        localStorage.removeItem('draft_personalize_name');
+        localStorage.removeItem('draft_personalize_company');
+        localStorage.removeItem('draft_personalize_portfolio');
+        localStorage.removeItem('draft_personalize_booking');
+    }
+
+    if (nameInput) {
+        nameInput.addEventListener('input', () => {
+            localStorage.setItem('draft_personalize_name', nameInput.value);
+        });
+    }
+    if (companyInput) {
+        companyInput.addEventListener('input', () => {
+            localStorage.setItem('draft_personalize_company', companyInput.value);
+        });
+    }
+    if (portfolioInput) {
+        portfolioInput.addEventListener('input', () => {
+            localStorage.setItem('draft_personalize_portfolio', portfolioInput.value);
+        });
+    }
+    if (bookingInput) {
+        bookingInput.addEventListener('input', () => {
+            localStorage.setItem('draft_personalize_booking', bookingInput.value);
+        });
+    }
+
     const closeBtn = document.getElementById('closePersonalizationModalBtn');
     if (closeBtn) {
         closeBtn.addEventListener('click', () => {
+            clearDrafts();
             State.setPersonalizationModal(false);
         });
     }
@@ -67,10 +116,10 @@ export function bindPersonalizationModalEvents() {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const name = document.getElementById('personalizeName').value.strip ? document.getElementById('personalizeName').value.strip() : document.getElementById('personalizeName').value.trim();
-            const company = document.getElementById('personalizeCompany').value.strip ? document.getElementById('personalizeCompany').value.strip() : document.getElementById('personalizeCompany').value.trim();
-            const portfolio = document.getElementById('personalizePortfolio').value.trim();
-            const booking = document.getElementById('personalizeBooking').value.trim();
+            const name = nameInput.value.trim();
+            const company = companyInput.value.trim();
+            const portfolio = portfolioInput.value.trim();
+            const booking = bookingInput.value.trim();
 
             try {
                 // Persist personalization details to profiles table
@@ -91,6 +140,7 @@ export function bindPersonalizationModalEvents() {
                     State.profile.booking_url = booking;
                 }
 
+                clearDrafts();
                 State.setPersonalizationModal(false);
                 
                 // Show confirmation to user

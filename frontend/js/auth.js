@@ -13,7 +13,8 @@ export const TIER_LEVELS = {
     free: 0,
     scout: 1,
     hunter: 2,
-    agency: 3
+    agency: 3,
+    enterprise: 4
 };
 
 /**
@@ -23,7 +24,8 @@ export const TIER_NAMES = {
     free: "Explorer",
     scout: "Scout",
     hunter: "Hunter",
-    agency: "Agency"
+    agency: "Agency",
+    enterprise: "Enterprise"
 };
 
 /**
@@ -33,7 +35,8 @@ export const TIER_PRICING = {
     free: { monthly: 0, annual: 0, label: "Free Forever" },
     scout: { monthly: 499, annual: 4999, label: "₹499/mo" },
     hunter: { monthly: 999, annual: 9999, label: "₹999/mo" },
-    agency: { monthly: 2499, annual: 24999, label: "₹2,499/mo" }
+    agency: { monthly: 2499, annual: 24999, label: "₹2,499/mo" },
+    enterprise: { monthly: "Custom", annual: "Custom", label: "Enterprise Plan" }
 };
 
 /**

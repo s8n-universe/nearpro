@@ -7,17 +7,17 @@ export function renderMapView() {
 
 // Icon emoji map per parent category
 const categoryIcons = {
-    "Healthcare": "🏥",
-    "Beauty & Wellness": "💄",
-    "Real Estate": "🏗️",
-    "Education": "📚",
-    "Food & Dining": "🍽️",
-    "Finance & Legal": "⚖️",
-    "Technology": "💻",
-    "Daily Services": "🔧",
-    "Retail & Shopping": "🛍️",
-    "Events & Entertainment": "🎉",
-    "Other": "📌"
+    "Healthcare": "activity",
+    "Beauty & Wellness": "sparkles",
+    "Real Estate": "building",
+    "Education": "book-open",
+    "Food & Dining": "utensils",
+    "Finance & Legal": "scale",
+    "Technology": "laptop",
+    "Daily Services": "wrench",
+    "Retail & Shopping": "shopping-bag",
+    "Events & Entertainment": "ticket",
+    "Other": "tag"
 };
 
 // CSS class lookup per parent category
@@ -59,12 +59,12 @@ export function initFullMap(professionals, onPinClick) {
             if (!p.latitude || !p.longitude) return;
             
             const parentCat = p.parent_category || "Other";
-            const emoji = categoryIcons[parentCat] || "📌";
+            const iconName = categoryIcons[parentCat] || "tag";
             const pinClass = categoryPinClasses[parentCat] || "pin-other";
             
             // Create custom HTML icon matching map.css spec
             const icon = L.divIcon({
-                html: `<div class="custom-pin ${pinClass}"><div class="custom-pin-inner">${emoji}</div></div>`,
+                html: `<div class="custom-pin ${pinClass}"><div class="custom-pin-inner" style="display:flex; align-items:center; justify-content:center;"><i data-lucide="${iconName}" style="width:14px; height:14px; stroke-width:2.5px;"></i></div></div>`,
                 className: 'custom-div-icon',
                 iconSize: [30, 30],
                 iconAnchor: [15, 30],
@@ -79,7 +79,7 @@ export function initFullMap(professionals, onPinClick) {
                     <h4>${p.name}</h4>
                     <p style="margin-bottom: 2px;"><strong>${p.category || parentCat}</strong></p>
                     <p style="margin-bottom: 6px; font-family: var(--font-mono); color: var(--text-muted);">${p.area || "Mumbai"}</p>
-                    <a href="javascript:void(0);" class="popup-btn" data-id="${p.id}">View Full Details →</a>
+                    <a href="javascript:void(0);" class="popup-btn" data-id="${p.id}">View Full Details &rarr;</a>
                 </div>
             `;
             
@@ -100,6 +100,12 @@ export function initFullMap(professionals, onPinClick) {
         });
         
         map.addLayer(markers);
+
+        // Process Lucide Icons for map pin elements
+        if (window.lucide) {
+            window.lucide.createIcons();
+        }
+
         return map;
     } catch (e) {
         console.error("Failed to initialize Leaflet cluster map: ", e);

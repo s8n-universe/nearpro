@@ -18,6 +18,8 @@ export const State = {
     auth_modal_open: false,
     selected_tier: null,
     billing_cycle: 'monthly',
+    category_sidebar_collapsed: localStorage.getItem('nearpro_cat_sidebar_collapsed') !== 'false',
+    dashboard_sidebar_collapsed: localStorage.getItem('nearpro_dashboard_sidebar_collapsed') === 'true',
     
     // Filters state
     filters: {
@@ -27,6 +29,7 @@ export const State = {
         min_rating: null,
         has_email: false,
         has_phone: false,
+        has_website: false,
         website_filter: "all", // "all" | "has_website" | "no_website"
         open_now: false,
         search: "",          // Raw search text
@@ -71,6 +74,7 @@ export const State = {
             min_rating: null,
             has_email: false,
             has_phone: false,
+            has_website: false,
             website_filter: "all",
             open_now: false,
             search: "",
@@ -106,6 +110,25 @@ export const State = {
             this.selected_ids.push(id);
             this.notify();
         }
+    },
+
+    selectAll() {
+        const tier = (this.profile?.subscription_tier || this.profile?.tier || 'free').toLowerCase();
+        const maxCompare = (tier === 'scout') ? 2 : (tier === 'free' ? 0 : 4);
+        const ids = this.professionals.map(p => p.id).filter(id => !this.selected_ids.includes(id));
+        const canAdd = maxCompare - this.selected_ids.length;
+        if (canAdd <= 0) {
+            alert(`Compare limit reached for the ${tier.toUpperCase()} plan.`);
+            this.setPricingModal(true);
+            return;
+        }
+        this.selected_ids = [...this.selected_ids, ...ids.slice(0, canAdd)];
+        this.notify();
+    },
+
+    deselectAll() {
+        this.selected_ids = [];
+        this.notify();
     },
     
     clearSelection() {

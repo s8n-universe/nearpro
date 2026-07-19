@@ -66,7 +66,12 @@ const categoryColors = {
 export function renderProfessionalCard(lead) {
     const parentCat = lead.parent_category || "Other";
     const avatarColor = categoryColors[parentCat] || "#52525b";
-    
+
+    // Sanitize category — detect if scraped data accidentally contains an address
+    const rawCat = lead.category || '';
+    const looksLikeAddress = /\d/.test(rawCat) && (/,/.test(rawCat) || /\b(rd|road|st|street|lane|nagar|marg|path|opp|nr|near)\b/i.test(rawCat));
+    const displayCategory = (!rawCat || looksLikeAddress || rawCat.length > 40) ? parentCat : rawCat;
+
     // Initials extraction for avatar
     const initials = lead.name
         .split(' ')
@@ -116,7 +121,7 @@ export function renderProfessionalCard(lead) {
         const baseCoords = suburbCoordinates[State.user_survey.base_suburb];
         if (baseCoords) {
             const dist = calculateDistance(baseCoords.lat, baseCoords.lng, lead.latitude, lead.longitude);
-            distanceHTML = `<span class="distance-pill" style="font-family: var(--font-mono); font-size: 10px; color: var(--accent-gold); display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 20px; background: rgba(255, 160, 0, 0.08); border: 1px solid rgba(255, 160, 0, 0.15); margin-left: 8px;">📍 ${dist.toFixed(1)} km</span>`;
+            distanceHTML = `<span class="distance-pill"><i data-lucide="map-pin" style="width:11px; height:11px;"></i> ${dist.toFixed(1)} km</span>`;
         }
     }
 
@@ -128,95 +133,81 @@ export function renderProfessionalCard(lead) {
         const scoreVal = lead.conversion_score;
         let badgeLabel = 'Moderate';
         let badgeColor = '#6b7280';
-        let emoji = '📊';
+        let iconName = 'bar-chart-2';
         if (scoreVal >= 80) {
             badgeLabel = 'High';
             badgeColor = '#22c55e';
-            emoji = '🔥';
+            iconName = 'trending-up';
         } else if (scoreVal >= 60) {
             badgeLabel = 'Good';
             badgeColor = '#eab308';
-            emoji = '⚡';
+            iconName = 'zap';
         }
-        scoreBadgeHTML = `<span class="score-badge" style="background: rgba(255,255,255,0.03); border: 1px solid ${badgeColor}; color: ${badgeColor}; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 100px; margin-left: 6px; font-family: var(--font-mono); text-transform: uppercase;">${emoji} ${badgeLabel} (${scoreVal})</span>`;
+        scoreBadgeHTML = `<span class="score-badge" style="background: rgba(255,255,255,0.03); border: 1px solid ${badgeColor}; color: ${badgeColor}; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 100px; margin-left: 6px; font-family: var(--font-mono); text-transform: uppercase;"><i data-lucide="${iconName}" style="width:10px; height:10px;"></i> ${badgeLabel} (${scoreVal})</span>`;
     }
 
     return `
-        <div class="prof-card" data-id="${lead.id}">
+        <div class="prof-card" data-id="${lead.id}" style="border-left: 3px solid ${avatarColor};">
+            <div class="card-toolbar" onclick="event.stopPropagation();">
+                <button class="track-card-btn ${isTracked ? 'tracked' : ''}" data-id="${lead.id}">
+                    <i data-lucide="${isTracked ? 'bookmark-check' : 'bookmark'}" style="width:12px; height:12px;"></i> ${isTracked ? 'Tracked' : 'Track'}
+                </button>
+                ${currentUserHasAccess('scout') ? `
+                    <label class="compare-checkbox-label ${isSelected ? 'active' : ''}">
+                        <input type="checkbox" class="compare-checkbox" data-id="${lead.id}" ${isSelected ? 'checked' : ''} style="display: none;">
+                        <span class="compare-pill-dot"></span>
+                        Compare
+                    </label>
+                ` : `
+                    <span class="compare-checkbox-label" style="opacity: 0.4; cursor: not-allowed;">
+                        <span class="compare-pill-dot"></span>
+                        <i data-lucide="lock" style="width:11px; height:11px;"></i>
+                    </span>
+                `}
+            </div>
+
             ${freshnessTag}
             
-            <button class="track-card-btn ${isTracked ? 'tracked' : ''}" data-id="${lead.id}" onclick="event.stopPropagation();" style="position: absolute; top: 16px; right: 100px; display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: ${isTracked ? 'var(--accent-gold)' : 'var(--text-secondary)'}; background: ${isTracked ? 'rgba(255, 160, 0, 0.08)' : 'rgba(255, 255, 255, 0.05)'}; border: 1px solid ${isTracked ? 'var(--accent-gold)' : 'rgba(255, 255, 255, 0.1)'}; padding: 4px 10px; border-radius: 50px; cursor: pointer; transition: all 0.2s ease;">
-                📁 ${isTracked ? 'Tracked' : 'Track'}
-            </button>
-
-            ${currentUserHasAccess('scout') ? `
-                <label class="compare-checkbox-label ${isSelected ? 'active' : ''}" onclick="event.stopPropagation();">
-                    <input type="checkbox" class="compare-checkbox" data-id="${lead.id}" ${isSelected ? 'checked' : ''} style="display: none;">
-                    <span class="compare-pill-dot"></span>
-                    Compare
-                </label>
-            ` : `
-                <span class="compare-checkbox-label" style="opacity: 0.4; cursor: not-allowed;" onclick="event.stopPropagation();">
-                    <span class="compare-pill-dot"></span>
-                    🔒
-                </span>
-            `}
-            
-            <div class="card-top">
-                <div class="avatar-wrap" style="--brand-gradient: linear-gradient(135deg, ${avatarColor}, #ffffff);">${initials}</div>
-                <div class="card-title-wrap" style="padding-right: 175px !important;">
-                    <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin-bottom: 6px;">
-                        <span class="category-badge" style="margin-bottom: 0;">${lead.category || parentCat}</span>
-                        ${scoreBadgeHTML}
-                    </div>
-                    <h3>${lead.name}</h3>
-                    <div class="completeness-dots" title="Data completeness score: ${score}/5">
-                        ${dotsHTML}
-                    </div>
+            <div class="card-head">
+                <div class="card-head-top">
+                    <span class="category-badge">${displayCategory}</span>
+                    ${scoreBadgeHTML}
                 </div>
+                <h3>${lead.name}</h3>
             </div>
-            
-            <div class="rating-row">
+
+            <div class="card-info-row">
                 <span class="star-rating">${starsHTML}</span>
-                <span class="review-count">(${reviewCount} reviews)</span>
-            </div>
-            
-            <div class="card-meta-row" style="display: flex; align-items: center; flex-wrap: wrap;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                <span>${lead.area || "Mumbai"}</span>
+                <span class="review-count">(${reviewCount})</span>
+                <span class="card-divider"></span>
+                <i data-lucide="map-pin" style="width:12px; height:12px; color: var(--text-muted); flex-shrink:0;"></i>
+                <span class="area-label">${lead.area || "Mumbai"}</span>
                 ${distanceHTML}
             </div>
-            
-            <p class="card-desc">${lead.address || "Address details not verified."}</p>
-            
+
+            <div class="completeness-dots" title="Data completeness: ${score}/5">
+                ${dotsHTML}
+            </div>
+
             <div class="card-actions" onclick="event.stopPropagation();">
                 ${!currentUserHasAccess('scout') ? `
-                    <button class="secondary-btn" onclick="window.State.setPricingModal(true);" style="padding: 8px 12px; font-size: 13px; text-align: center; justify-content: center;">
-                        🔒 Phone Locked
-                    </button>
-                    <button class="brand-btn" onclick="window.State.setPricingModal(true);" style="padding: 8px 12px; font-size: 13px; text-align: center; justify-content: center;">
-                        🔒 Site Locked
+                    <button class="card-btn-unlock" onclick="window.State.setPricingModal(true);">
+                        <i data-lucide="lock" style="width:13px; height:13px;"></i> Unlock Details
                     </button>
                 ` : `
                     ${lead.phone ? `
-                        <a href="tel:${lead.phone}" class="secondary-btn" style="padding: 8px 12px; font-size: 13px; text-align: center; justify-content: center;">
-                            Call Now
+                        <a href="tel:${lead.phone}" class="card-btn-call">
+                            <i data-lucide="phone" style="width:13px; height:13px;"></i> Call
                         </a>
-                    ` : `
-                        <button class="secondary-btn" disabled style="padding: 8px 12px; font-size: 13px; text-align: center; justify-content: center; opacity: 0.5;">
-                            No Phone
-                        </button>
-                    `}
-                    
+                    ` : ''}
                     ${lead.website ? `
-                        <a href="${lead.website}" target="_blank" class="brand-btn" style="padding: 8px 12px; font-size: 13px; text-align: center; justify-content: center;">
-                            Website
+                        <a href="${lead.website}" target="_blank" class="card-btn-site">
+                            <i data-lucide="globe" style="width:13px; height:13px;"></i> Website
                         </a>
-                    ` : `
-                        <button class="brand-btn" disabled style="padding: 8px 12px; font-size: 13px; text-align: center; justify-content: center; opacity: 0.5;">
-                            No Site
-                        </button>
-                    `}
+                    ` : ''}
+                    ${!lead.phone && !lead.website ? `
+                        <span class="card-btn-empty">No contact info</span>
+                    ` : ''}
                 `}
             </div>
         </div>

@@ -5,6 +5,7 @@ from pathlib import Path
 # Add tests path
 sys.path.append(str(Path(__file__).parent))
 import test_sync
+import test_outreach_redesign
 
 def main():
     print("Running sync tests manually...")
@@ -17,6 +18,10 @@ def main():
         
         test_sync.test_conversion_score()
         print("[OK] test_conversion_score passed")
+
+        test_outreach_redesign.test_hook_selection_matrix()
+        test_outreach_redesign.test_forbidden_outreach_rules()
+        print("[OK] test_outreach_redesign checks passed")
         
         print("\nAll tests completed successfully!")
     except AssertionError as e:

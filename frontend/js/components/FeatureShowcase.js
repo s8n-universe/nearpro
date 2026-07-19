@@ -8,39 +8,51 @@ export function renderFeatureShowcase() {
                 </div>
                 <div class="features-grid">
                     <div class="feature-panel">
-                        <div class="feature-icon-wrap">📍</div>
+                        <div class="feature-icon-wrap"><i data-lucide="map-pin" style="width:20px; height:20px;"></i></div>
                         <h3>Smart Pipelines & Mapping</h3>
                         <p>Locate target leads visually on <span style="color: var(--accent-gold); font-weight: 600;">coordinate maps</span>. Segment your results into <span style="color: var(--accent-gold); font-weight: 600;">client campaigns</span>, save leads, and track progress using the <span style="color: var(--accent-gold); font-weight: 600;">Lead CRM kanban board</span>.</p>
                     </div>
                     
                     <div class="feature-panel">
-                        <div class="feature-icon-wrap">⚡</div>
+                        <div class="feature-icon-wrap"><i data-lucide="zap" style="width:20px; height:20px;"></i></div>
                         <h3>Instant Website Audits</h3>
                         <p>Run <span style="color: var(--accent-gold); font-weight: 600;">10-second automated checks</span> on PageSpeed, mobile layouts, and SSL status. Estimate <span style="color: var(--accent-gold); font-weight: 600;">lost monthly revenue</span> for target prospects instantly to back up your pitch.</p>
                     </div>
                     
                     <div class="feature-panel">
-                        <div class="feature-icon-wrap">📊</div>
+                        <div class="feature-icon-wrap"><i data-lucide="message-square" style="width:20px; height:20px;"></i></div>
                         <h3>AI Outreach & Personalization</h3>
                         <p>Evaluate prospects with <span style="color: var(--accent-gold); font-weight: 600;">Conversion Scores</span>. Automatically generate customized cold pitches for <span style="color: var(--accent-gold); font-weight: 600;">WhatsApp, email, or Instagram DM</span> in Hinglish and English.</p>
                     </div>
 
                     <div class="feature-panel">
-                        <div class="feature-icon-wrap">🔗</div>
+                        <div class="feature-icon-wrap"><i data-lucide="link" style="width:20px; height:20px;"></i></div>
                         <h3>Integration Connection Hub</h3>
                         <p>Push tracked leads directly to your <span style="color: var(--accent-gold); font-weight: 600;">Google Sheets</span> or connect customized <span style="color: var(--accent-gold); font-weight: 600;">n8n webhooks</span> to automate your slack or email outreach workflows instantly.</p>
                     </div>
                     
                     <div class="feature-panel">
-                        <div class="feature-icon-wrap">👥</div>
+                        <div class="feature-icon-wrap"><i data-lucide="users" style="width:20px; height:20px;"></i></div>
                         <h3>Collaborative Team Workspace</h3>
                         <p>Invite colleagues to collaborate in <span style="color: var(--accent-gold); font-weight: 600;">shared team workspaces</span>. Assign seats, share <span style="color: var(--accent-gold); font-weight: 600;">smart lists</span>, and compile <span style="color: var(--accent-gold); font-weight: 600;">white-label client reports</span> together.</p>
                     </div>
                     
                     <div class="feature-panel">
-                        <div class="feature-icon-wrap">🛠️</div>
+                        <div class="feature-icon-wrap"><i data-lucide="code" style="width:20px; height:20px;"></i></div>
                         <h3>Website Builder Prompts</h3>
                         <p>Generate precise, copy-paste prompts tailored for <span style="color: var(--accent-gold); font-weight: 600;">Bolt.new and Lovable</span> to rebuild outdated prospect websites with <span style="color: var(--accent-gold); font-weight: 600;">one click</span> from your audit results.</p>
+                    </div>
+
+                    <div class="feature-panel">
+                        <div class="feature-icon-wrap"><i data-lucide="refresh-cw" style="width:20px; height:20px;"></i></div>
+                        <h3>Zoho & HubSpot CRM Sync</h3>
+                        <p>Sync qualified leads directly into <span style="color: var(--accent-gold); font-weight: 600;">Zoho CRM and HubSpot CRM</span>. Update pipeline deal stages and track sync history logs from one dashboard.</p>
+                    </div>
+
+                    <div class="feature-panel">
+                        <div class="feature-icon-wrap"><i data-lucide="folder-open" style="width:20px; height:20px;"></i></div>
+                        <h3>Outreach Document Vault</h3>
+                        <p>Store and manage brochures, pitch decks, and catalogs. <span style="color: var(--accent-gold); font-weight: 600;">Attach files dynamically</span> when sending campaigns via WhatsApp or email.</p>
                     </div>
                 </div>
             </div>
@@ -61,7 +73,7 @@ export function renderFeatureShowcase() {
                             <div style="font-size: 32px; font-weight: 700; color: var(--text-primary); margin-top: 4px;">54.8%</div>
                             <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Leads missing verified websites</div>
                         </div>
-                        <div style="font-size: 28px; opacity: 0.8;">🌐</div>
+                        <div style="color: var(--accent-gold); opacity: 0.8; display: flex; align-items: center;"><i data-lucide="globe" style="width:28px; height:28px;"></i></div>
                     </div>
                     <div class="feature-panel" style="padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid var(--accent-pink); text-align: left; background: var(--glass-bg); border-top: 1px solid rgba(255,255,255,0.03); border-right: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03);">
                         <div style="text-align: left;">
@@ -69,7 +81,7 @@ export function renderFeatureShowcase() {
                             <div style="font-size: 28px; font-weight: 700; color: var(--accent-pink); margin-top: 4px;">Bandra</div>
                             <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Highest review velocity area</div>
                         </div>
-                        <div style="font-size: 28px; opacity: 0.8;">🔥</div>
+                        <div style="color: var(--accent-pink); opacity: 0.8; display: flex; align-items: center;"><i data-lucide="flame" style="width:28px; height:28px;"></i></div>
                     </div>
                     <div class="feature-panel" style="padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid #3b82f6; text-align: left; background: var(--glass-bg); border-top: 1px solid rgba(255,255,255,0.03); border-right: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03);">
                         <div style="text-align: left;">
@@ -77,7 +89,7 @@ export function renderFeatureShowcase() {
                             <div style="font-size: 28px; font-weight: 700; color: var(--text-primary); margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 170px;">Interior Designer</div>
                             <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Lowest listings concentration</div>
                         </div>
-                        <div style="font-size: 28px; opacity: 0.8;">🛠️</div>
+                        <div style="color: #3b82f6; opacity: 0.8; display: flex; align-items: center;"><i data-lucide="wrench" style="width:28px; height:28px;"></i></div>
                     </div>
                     <div class="feature-panel" style="padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid #10b981; text-align: left; background: var(--glass-bg); border-top: 1px solid rgba(255,255,255,0.03); border-right: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03);">
                         <div style="text-align: left;">
@@ -85,7 +97,7 @@ export function renderFeatureShowcase() {
                             <div style="font-size: 28px; font-weight: 700; color: var(--text-primary); margin-top: 4px;">Colaba</div>
                             <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Lowest avg ratings (needs SEO)</div>
                         </div>
-                        <div style="font-size: 28px; opacity: 0.8;">📈</div>
+                        <div style="color: #10b981; opacity: 0.8; display: flex; align-items: center;"><i data-lucide="trending-up" style="width:28px; height:28px;"></i></div>
                     </div>
                 </div>
             </div>

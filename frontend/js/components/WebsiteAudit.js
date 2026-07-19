@@ -98,7 +98,7 @@ export function renderWebsiteAudit(leadsWithWebsites, activeAuditLeadId = null, 
 
                 <!-- Lost Revenue Block -->
                 <div class="lost-revenue-box">
-                    <div style="font-size:24px;">💸</div>
+                    <div style="flex-shrink:0; display:flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:50%; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.2); font-weight:700; color:#ef4444; font-size:18px; font-family:var(--font-heading);">₹</div>
                     <div>
                         <h5 style="margin:0 0 4px 0; color:#ef4444; font-size:14px; font-family:var(--font-heading);">Estimated Monthly Revenue Leakage</h5>
                         <p style="margin:0; font-size:12px; color:var(--text-secondary); line-height:1.4;">
@@ -127,7 +127,9 @@ export function renderWebsiteAudit(leadsWithWebsites, activeAuditLeadId = null, 
         const lead = leadsWithWebsites.find(l => l.id === activeAuditLeadId);
         workspaceHTML = `
             <div class="audit-empty-state">
-                <div style="font-size:40px; margin-bottom:12px;">📈</div>
+                <div style="margin-bottom:12px; display:flex; justify-content:center;">
+                    <i data-lucide="trending-up" style="width:40px; height:40px; color:var(--text-secondary); stroke-width:1.5px;"></i>
+                </div>
                 <h4 style="margin:0 0 6px 0; color:white;">Ready to inspect ${lead.name}</h4>
                 <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px;">We will check PageSpeed metrics, mobile compliance, and SSL status.</p>
                 <button class="brand-btn" id="runHealthCheckBtn" data-id="${lead.id}" data-url="${lead.website}" style="padding:10px 20px;">
@@ -138,7 +140,9 @@ export function renderWebsiteAudit(leadsWithWebsites, activeAuditLeadId = null, 
     } else {
         workspaceHTML = `
             <div class="audit-empty-state">
-                <div style="font-size:40px; margin-bottom:12px;">🩺</div>
+                <div style="margin-bottom:12px; display:flex; justify-content:center;">
+                    <i data-lucide="shield-check" style="width:40px; height:40px; color:var(--text-secondary); stroke-width:1.5px;"></i>
+                </div>
                 <h4 style="margin:0 0 6px 0; color:white;">Business Health Checker</h4>
                 <p style="color:var(--text-muted); font-size:13px; max-width:280px;">Select a verified business lead from the left list to run a website performance audit.</p>
             </div>
@@ -157,7 +161,12 @@ export function renderWebsiteAudit(leadsWithWebsites, activeAuditLeadId = null, 
             </div>
 
             <!-- Right Workspace -->
-            <div class="audit-workspace-body" style="background:rgba(255,255,255,0.01); border:1px solid var(--border); border-radius:var(--radius-md); padding:28px; display:flex; flex-direction:column; justify-content:center; min-height:400px; max-height:calc(100vh - 160px); overflow-y:auto;">
+            <div class="audit-workspace-body" style="background:rgba(255,255,255,0.01); border:1px solid var(--border); border-radius:var(--radius-md); padding:28px; display:flex; flex-direction:column; min-height:400px; max-height:calc(100vh - 160px); overflow-y:auto; justify-content: flex-start;">
+                <!-- Usability Banner -->
+                <div class="usability-banner" style="background: rgba(255, 160, 0, 0.02); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px 18px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 4px; border-left: 3px solid var(--accent-gold); flex-shrink: 0; width: 100%; text-align: left;">
+                    <div style="font-size: 12.5px; color: white; line-height: 1.4;"><span style="color: var(--accent-gold); font-weight: 600;">What it is:</span> Audit website speed metrics, SSL status, and structured schema compliance.</div>
+                    <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.4;"><span style="color: var(--accent-gold); font-weight: 600;">How to leverage:</span> Use calculated monthly revenue leakage figures as hook indicators to secure client pitches.</div>
+                </div>
                 ${workspaceHTML}
             </div>
         </div>
@@ -165,6 +174,11 @@ export function renderWebsiteAudit(leadsWithWebsites, activeAuditLeadId = null, 
 }
 
 export function bindWebsiteAuditEvents(onAuditRequestCallback) {
+    // Process Lucide Icons
+    if (window.lucide) {
+        window.lucide.createIcons();
+    }
+
     const leadItems = document.querySelectorAll('.audit-lead-item');
     leadItems.forEach(item => {
         item.addEventListener('click', () => {

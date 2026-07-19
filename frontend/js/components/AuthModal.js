@@ -195,6 +195,7 @@ export function bindAuthModalEvents() {
                     localStorage.removeItem('selected_nearpro_tier');
                     localStorage.removeItem('selected_nearpro_interval');
                     State.setAuthModal(false);
+                    window.location.hash = '#/dashboard/directory';
 
                     // Fetch user profile and redirect to pricing modal if they are on free tier
                     if (result?.user) {
@@ -213,6 +214,7 @@ export function bindAuthModalEvents() {
                     localStorage.removeItem('selected_nearpro_tier');
                     localStorage.removeItem('selected_nearpro_interval');
                     State.setAuthModal(false);
+                    window.location.hash = '#/dashboard/directory';
                     // Since it's a new signup, they are Explorer (free) by default. Show pricing modal.
                     State.setPricingModal(true);
                     alert("Registration successful. Please check your inbox for verification links.");
