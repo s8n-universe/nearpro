@@ -103,25 +103,15 @@ export function parseNaturalLanguageQuery(queryText) {
 }
 
 export function renderSearchBar() {
-    const isAiMode = State.filters.ai_query !== null;
-    const placeholder = isAiMode 
-        ? 'Try: "dentists in Bandra open now with 4+ stars"'
-        : 'Search by name, category, or keyword...';
-
     return `
         <div class="filter-wrap">
-            <div class="search-input-wrap" style="flex: 2;">
+            <div class="search-input-wrap" style="flex: 1;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                <input type="text" id="searchInput" placeholder="${placeholder}" value="${isAiMode ? State.filters.ai_query : State.filters.search}">
+                <input type="text" id="searchInput" placeholder="Search by name, category, area, or keywords (e.g. dentists in Bandra)..." value="${State.filters.search || ''}">
             </div>
             
-            <button id="aiToggleBtn" class="secondary-btn ${isAiMode ? 'brand-btn' : ''}" style="display: flex; align-items: center; gap: 6px; padding: 10px 16px;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275Z"/></svg>
-                <span>AI Search</span>
-            </button>
-            
-            <button id="resetSearchBtn" class="secondary-btn" style="padding: 10px 16px; color: var(--text-muted);">
-                Reset Filters
+            <button id="resetSearchBtn" class="secondary-btn" style="padding: 10px 18px; color: var(--text-muted); font-weight: 600;">
+                Reset Filters ✕
             </button>
         </div>
     `;
@@ -129,7 +119,6 @@ export function renderSearchBar() {
 
 export function bindSearchBarEvents() {
     const input = document.getElementById('searchInput');
-    const aiToggleBtn = document.getElementById('aiToggleBtn');
     const resetBtn = document.getElementById('resetSearchBtn');
     
     if (!input) return;
@@ -141,11 +130,11 @@ export function bindSearchBarEvents() {
         clearTimeout(timer);
         
         timer = setTimeout(() => {
-            if (State.filters.ai_query !== null) {
-                // In AI mode, parse query string
-                const parsed = parseNaturalLanguageQuery(val);
+            // Check if input contains natural language patterns (area, ratings, etc.)
+            const parsed = parseNaturalLanguageQuery(val);
+            if (Object.keys(parsed).length > 0 && (parsed.area || parsed.open_now || parsed.min_rating || parsed.parentCategory)) {
                 State.updateFilters({
-                    ai_query: val,
+                    search: val,
                     ...parsed
                 });
             } else {
@@ -153,19 +142,6 @@ export function bindSearchBarEvents() {
             }
         }, 300);
     });
-
-    if (aiToggleBtn) {
-        aiToggleBtn.addEventListener('click', () => {
-            const currentAi = State.filters.ai_query;
-            if (currentAi === null) {
-                // Enter AI mode
-                State.updateFilters({ ai_query: "", search: "" });
-            } else {
-                // Exit AI mode, reset to normal search
-                State.updateFilters({ ai_query: null, search: "" });
-            }
-        });
-    }
 
     if (resetBtn) {
         resetBtn.addEventListener('click', () => {
