@@ -259,7 +259,7 @@ export function renderFeatureShowcase() {
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon" style="color: white;">✓</span>
-                                <div>Custom city database scraper runs</div>
+                                <div>Custom city database discovery runs</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon" style="color: white;">✓</span>

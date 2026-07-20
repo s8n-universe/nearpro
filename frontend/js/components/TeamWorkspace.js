@@ -57,7 +57,7 @@ export function renderTeamWorkspace(members = [], dataRequests = [], activeTab =
 
     const emptyRequestsHTML = dataRequests.length === 0 ? `
         <div style="padding:40px 12px; text-align:center; color:var(--text-muted); font-size:13px;">
-            No custom scrape requests registered yet.
+            No custom extraction requests registered yet.
         </div>
     ` : '';
 
@@ -92,12 +92,12 @@ export function renderTeamWorkspace(members = [], dataRequests = [], activeTab =
             <div style="display:flex; flex-direction:column; gap:20px;">
                 <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:16px;">
                     <div>
-                        <h4 style="margin:0 0 4px 0; color:white; font-size:15px; font-family:var(--font-heading);">Custom Scrape Requests</h4>
+                        <h4 style="margin:0 0 4px 0; color:white; font-size:15px; font-family:var(--font-heading);">Custom Data Extraction Requests</h4>
                         <p style="margin:0; font-size:12px; color:var(--text-muted);">Request verification data for new suburbs or categories.</p>
                     </div>
                 </div>
 
-                <!-- Scraping Form -->
+                <!-- Extraction Form -->
                 <div style="background:rgba(255,255,255,0.01); border:1px solid var(--border); border-radius:var(--radius-md); padding:24px; display:flex; flex-direction:column; gap:16px;">
                     <h5 style="margin:0; font-size:13px; color:white; font-family:var(--font-heading);">Submit New Data Request</h5>
                     
@@ -113,18 +113,18 @@ export function renderTeamWorkspace(members = [], dataRequests = [], activeTab =
                     </div>
 
                     <div>
-                        <label style="display:block; font-size:11px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px;">Scrape Request Instructions</label>
+                        <label style="display:block; font-size:11px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px;">Data Extraction Instructions</label>
                         <textarea id="requestNotesInput" placeholder="Specify any additional parameters or notes here..." style="width:100%; height:70px; background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px; color:white; font-size:13px; line-height:1.4; resize:none; outline:none; font-family:sans-serif;"></textarea>
                     </div>
 
                     <button class="brand-btn" id="submitScrapeRequestBtn" style="padding:10px; width:fit-content; font-size:13px; align-self:flex-end;">
-                        Submit Scrape Request
+                        Submit Data Request
                     </button>
                 </div>
 
                 <!-- Requests lists -->
                 <div style="margin-top:12px;">
-                    <h5 style="margin:0 0 12px 0; font-size:12px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase;">Scrape Logs</h5>
+                    <h5 style="margin:0 0 12px 0; font-size:12px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase;">Extraction Logs</h5>
                     ${requestsHTML}
                     ${emptyRequestsHTML}
                 </div>
@@ -141,7 +141,7 @@ export function renderTeamWorkspace(members = [], dataRequests = [], activeTab =
                     👥 Team Seats
                 </button>
                 <button class="sidebar-tab-btn ${activeTab === 'requests' ? 'active' : ''}" id="tabRequestsBtn" style="text-align:left; background:none; border:none; padding:10px 14px; border-radius:var(--radius-sm); font-size:13.5px; color:${activeTab === 'requests' ? 'var(--accent-gold)' : 'var(--text-secondary)'}; cursor:pointer; font-weight:500; display:flex; align-items:center; gap:8px;">
-                    📈 Scrape Requests
+                    📈 Data Extraction
                 </button>
             </div>
 

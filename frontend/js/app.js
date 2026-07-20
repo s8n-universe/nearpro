@@ -1686,10 +1686,10 @@ async function renderDashboardLayout(tab) {
                     async (niche, city, notes) => {
                         try {
                             await createDataRequest(niche, city, notes);
-                            alert("Scrape request submitted successfully!");
+                            alert("Data extraction request submitted successfully!");
                             renderDashboardLayout('team');
                         } catch (err) {
-                            console.error("Scrape request failed: ", err);
+                            console.error("Extraction request failed: ", err);
                             alert("Failed to submit request.");
                         }
                     }

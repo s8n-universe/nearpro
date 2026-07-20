@@ -339,7 +339,7 @@ export const Api = {
             }
         }
         
-        const headers = ["Name", "Category", "Parent Category", "Address", "Area", "Phone", "Website", "Email", "Rating", "Reviews", "Completeness", "Latitude", "Longitude", "Scraped At"];
+        const headers = ["Name", "Category", "Parent Category", "Address", "Area", "Phone", "Website", "Email", "Rating", "Reviews", "Completeness", "Latitude", "Longitude", "Indexed At"];
         const rows = leads.map(l => [
             l.name,
             l.category || "",
