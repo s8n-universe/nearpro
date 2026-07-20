@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffa000" />
+      <stop offset="100%" stop-color="#ff6d00" />
+    </linearGradient>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#bgGrad)" stroke="#334155" stroke-width="2"/>
+  <!-- Rocket icon -->
+  <path d="M42.5 13.5C42.5 13.5 35.5 14 28.5 21C24 25.5 21.5 31.5 20.5 36.5L14.5 40.5L20 46L25.5 51.5L29.5 45.5C34.5 44.5 40.5 42 45 37.5C52 30.5 52.5 23.5 52.5 23.5C52.5 23.5 46.5 23 42.5 13.5Z" fill="none" stroke="url(#grad)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="37" cy="27" r="3.5" fill="#ffa000"/>
+  <path d="M17.5 48.5L13 53" stroke="url(#grad)" stroke-width="3.5" stroke-linecap="round"/>
+</svg>
