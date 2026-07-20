@@ -1859,7 +1859,7 @@ async function renderDashboardLayout(tab) {
                                 <label style="display: block; font-size: 12px; font-weight: 600; color: #e2e8f0; font-family: var(--font-heading); margin-bottom: 6px;">Billing Information</label>
                                 <div style="padding: 14px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; color: var(--text-secondary); display: flex; justify-content: space-between; align-items: center;">
                                     <div>Current Tier: <strong style="color: var(--accent-gold); text-transform: uppercase;">${userTier} Plan</strong></div>
-                                    <button class="secondary-btn" id="changeBillingPlanBtn" style="padding: 6px 14px; font-size: 11.5px; cursor: pointer;">Change Plan</button>
+                                    <button class="brand-btn" id="changeBillingPlanBtn" style="padding: 6px 14px; font-size: 11.5px; cursor: pointer;">Upgrade Subscription</button>
                                 </div>
                             </div>
                             
