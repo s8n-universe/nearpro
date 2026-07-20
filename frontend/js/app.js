@@ -129,7 +129,9 @@ State.subscribe(async (currentState) => {
     } else if (isBrowse) {
         await updateDirectoryView();
     } else {
-        renderMarketingLayout();
+        if (!document.querySelector('.marketing-hero')) {
+            renderMarketingLayout();
+        }
     }
 
     // Dynamically render/update Auth Modal
@@ -214,16 +216,19 @@ function initRoutes() {
             return;
         }
         State.resetFilters();
-        renderMarketingLayout();
+        if (!document.querySelector('.marketing-hero')) {
+            renderMarketingLayout();
+        }
         if (!State.stats) {
             try {
                 State.stats = await Api.getStats();
-                const mainEl = document.querySelector('.main-layout');
-                if (mainEl) {
-                    mainEl.innerHTML = `
-                        ${renderMarketingHero(State.stats)}
-                        ${renderFeatureShowcase()}
-                    `;
+                if (State.stats) {
+                    const leadsEl = document.getElementById('heroTotalLeads');
+                    const catEl = document.getElementById('heroTotalCategories');
+                    const ratingEl = document.getElementById('heroAvgRating');
+                    if (leadsEl && State.stats.total_professionals) leadsEl.innerText = `${State.stats.total_professionals.toLocaleString('en-IN')}+ Verified Leads`;
+                    if (catEl && State.stats.total_categories) catEl.innerText = `${State.stats.total_categories}+ Sub Categories`;
+                    if (ratingEl && State.stats.average_rating) ratingEl.innerText = `${State.stats.average_rating}★ Average Rating`;
                 }
             } catch (e) {
                 console.warn("Failed to load home page dynamic stats: ", e);

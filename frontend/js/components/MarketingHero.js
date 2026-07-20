@@ -28,9 +28,9 @@ export function renderMarketingHero(stats = null) {
                     </button>
                 </div>
                 <div class="hero-bullets">
-                    <span>${totalLeads} Verified Leads</span>
-                    <span>${totalCategories} Sub Categories</span>
-                    <span>${avgRating} Average Rating</span>
+                    <span id="heroTotalLeads">${totalLeads} Verified Leads</span>
+                    <span id="heroTotalCategories">${totalCategories} Sub Categories</span>
+                    <span id="heroAvgRating">${avgRating} Average Rating</span>
                     <span>India Focussed</span>
                 </div>
             </div>
