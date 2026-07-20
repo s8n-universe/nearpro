@@ -172,8 +172,10 @@ export const Api = {
         if (filters.has_phone) {
             countQuery = countQuery.not('phone', 'is', null).neq('phone', '');
         }
-        if (filters.has_website) {
+        if (filters.has_website || filters.website_filter === 'has_website') {
             countQuery = countQuery.not('website', 'is', null).neq('website', '');
+        } else if (filters.no_website || filters.website_filter === 'no_website') {
+            countQuery = countQuery.or('website.is.null,website.eq.');
         }
         if (filters.search && filters.search.trim()) {
             const s = filters.search.trim();
@@ -197,21 +199,21 @@ export const Api = {
                 min_rat: filters.min_rating ? parseFloat(filters.min_rating) : null,
                 has_em: !!filters.has_email,
                 has_ph: !!filters.has_phone,
-                has_web: filters.website_filter === 'has_website' || !!filters.has_website,
+                has_web: filters.has_website || filters.website_filter === 'has_website',
                 search_term: filters.search && filters.search.trim() ? filters.search.trim() : null,
                 sort_col: filters.sort_by || 'rating_desc',
                 offset_val: offset,
                 limit_val: limit
             };
             
-            if (filters.website_filter === 'no_website') {
+            if (filters.no_website || filters.website_filter === 'no_website') {
                 rpcParams.has_no_web = true;
             }
             
             let { data, error } = await supabase.rpc('get_professionals_v2', rpcParams);
             
             if (error) {
-                if (error.code === '42883' && filters.website_filter === 'no_website') {
+                if (error.code === '42883' && (filters.no_website || filters.website_filter === 'no_website')) {
                     console.warn("⚠️ get_professionals_v2 signature mismatch for has_no_web. Retrying without has_no_web and filtering client-side.");
                     clientSideFilterNoWeb = true;
                     delete rpcParams.has_no_web;
@@ -234,8 +236,8 @@ export const Api = {
             
             if (!errorOccurred) {
                 items = data || [];
-                if (clientSideFilterNoWeb) {
-                    items = items.filter(p => !p.website || p.website === '');
+                if (clientSideFilterNoWeb || filters.no_website || filters.website_filter === 'no_website') {
+                    items = items.filter(p => !p.website || p.website.trim() === '');
                 }
             }
         } catch (e) {
@@ -257,9 +259,9 @@ export const Api = {
             if (filters.has_email) fallbackQuery = fallbackQuery.not('email', 'is', null).neq('email', '');
             if (filters.has_phone) fallbackQuery = fallbackQuery.not('phone', 'is', null).neq('phone', '');
             
-            if (filters.website_filter === 'has_website' || filters.has_website) {
+            if (filters.has_website || filters.website_filter === 'has_website') {
                 fallbackQuery = fallbackQuery.not('website', 'is', null).neq('website', '');
-            } else if (filters.website_filter === 'no_website') {
+            } else if (filters.no_website || filters.website_filter === 'no_website') {
                 fallbackQuery = fallbackQuery.or('website.is.null,website.eq.');
             }
             
@@ -286,13 +288,6 @@ export const Api = {
 
         if (filters.open_now) {
             items = items.filter(p => isOpenNow(p.hours) === true);
-        }
-
-        // Smart fallback: If zero items were found for a specific suburb, retry across all Mumbai suburbs
-        if (items.length === 0 && filters.area && offset === 0) {
-            console.warn(`No exact matches in suburb '${filters.area}'. Fetching broader leads for sector '${filters.parentCategory || 'all'}' across Mumbai...`);
-            const relaxedFilters = { ...filters, area: null };
-            return this.getProfessionals(relaxedFilters, offset, limit, fingerprint);
         }
 
         return {

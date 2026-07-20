@@ -30,6 +30,7 @@ export const State = {
         has_email: false,
         has_phone: false,
         has_website: false,
+        no_website: false,
         website_filter: "all", // "all" | "has_website" | "no_website"
         open_now: false,
         search: "",          // Raw search text
@@ -75,6 +76,7 @@ export const State = {
             has_email: false,
             has_phone: false,
             has_website: false,
+            no_website: false,
             website_filter: "all",
             open_now: false,
             search: "",

@@ -560,15 +560,26 @@ function renderFeedContent(hasMore) {
             </div>
         ` : '';
 
+        const allVisibleSelected = displayedLeads.length > 0 && displayedLeads.every(p => State.selected_ids.includes(p.id));
+
         feed.innerHTML = `
-            <div class="feed-header" style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 24px;">
+            <div class="feed-header" style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 20px; flex-wrap: wrap;">
                 <div class="feed-title-wrap">
-                    <h2>Directory Search Results</h2>
-                    <span class="feed-subtitle">${State.total} verified professional listing${State.total !== 1 ? 's' : ''} found</span>
+                    <h2 style="font-size: 20px; color: white; font-family: var(--font-heading); margin-bottom: 2px;">Verified Business Leads</h2>
+                    <span class="feed-subtitle" style="font-size: 13px; color: var(--text-muted);">${State.total} verified listing${State.total !== 1 ? 's' : ''} found ${State.filters.area ? `in <strong>${State.filters.area}</strong>` : 'across Mumbai'}</span>
                 </div>
-                <button id="restartDemoBtn" class="secondary-btn" style="padding: 6px 12px; font-size: 12px; border-radius: var(--radius-sm);">
-                    Restart Tour
-                </button>
+                <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+                    <label class="toggle-switch" style="font-size: 12.5px; background: rgba(255,160,0,0.05); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(255,160,0,0.2);">
+                        <input type="checkbox" id="selectAllVisibleLeadsCheckbox" ${allVisibleSelected ? 'checked' : ''}>
+                        <div class="toggle-switch-track">
+                            <div class="toggle-switch-thumb"></div>
+                        </div>
+                        <span style="color: var(--accent-gold); font-weight: 600;">Select Visible for Compare (${State.selected_ids.length})</span>
+                    </label>
+                    <button id="restartDemoBtn" class="secondary-btn" style="padding: 6px 12px; font-size: 12px; border-radius: var(--radius-sm);">
+                        Restart Tour
+                    </button>
+                </div>
             </div>
             <div class="prof-grid">
                 ${cardsHTML}
@@ -581,6 +592,17 @@ function renderFeedContent(hasMore) {
         `;
         
         bindProfessionalCardEvents(showDetailModal);
+
+        const selectAllVisibleCb = document.getElementById('selectAllVisibleLeadsCheckbox');
+        if (selectAllVisibleCb) {
+            selectAllVisibleCb.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    State.selectAll();
+                } else {
+                    State.deselectAll();
+                }
+            });
+        }
 
         const restartBtn = document.getElementById('restartDemoBtn');
         if (restartBtn) {
