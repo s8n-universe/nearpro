@@ -2093,9 +2093,42 @@ async function renderDashboardLayout(tab) {
 
 /* --- Startup --- */
 
+function showOAuthAuthLoader() {
+    if (document.getElementById('oauthAuthLoaderOverlay')) return;
+    const loader = document.createElement('div');
+    loader.id = 'oauthAuthLoaderOverlay';
+    loader.style.cssText = 'position:fixed; inset:0; background:#09090b; z-index:99999; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; color:white; font-family:var(--font-sans, "Inter", sans-serif); text-align:center; padding:24px;';
+    loader.innerHTML = `
+        <div style="position:relative; width:64px; height:64px;">
+            <div style="position:absolute; inset:0; border:4px solid rgba(255,160,0,0.15); border-radius:50%;"></div>
+            <div style="position:absolute; inset:0; border:4px solid transparent; border-top-color:var(--accent-gold, #ffa000); border-radius:50%; animation:spin 0.8s linear infinite;"></div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:6px;">
+            <div style="font-size:20px; font-weight:700; font-family:var(--font-heading, inherit);">Authenticating Session</div>
+            <div style="font-size:13.5px; color:var(--text-secondary, #a1a1aa);">Fetching your personalized lead intelligence workspace...</div>
+        </div>
+        <style>@keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}</style>
+    `;
+    document.body.appendChild(loader);
+}
+
+function hideOAuthAuthLoader() {
+    const loader = document.getElementById('oauthAuthLoaderOverlay');
+    if (loader) {
+        loader.style.opacity = '0';
+        loader.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => loader.remove(), 300);
+    }
+}
+
 async function initApp() {
     window.State = State; // Expose globally for inline Paywall triggers
     
+    // Check if handling OAuth callback hash
+    if (window.location.hash.includes('access_token=') || window.location.hash.includes('refresh_token=')) {
+        showOAuthAuthLoader();
+    }
+
     // 1. Initial Router and state setup
     initRoutes();
     
@@ -2117,22 +2150,23 @@ async function initApp() {
         const { supabase } = await import('./supabase.js');
         
         // Initial session fetch
-        // Initial session fetch
         supabase.auth.getSession().then(async ({ data: { session } }) => {
             if (session) {
                 State.user = session.user;
                 State.profile = await Api.getProfile(session.user.id);
-                State.notify();
+                
+                hideOAuthAuthLoader();
 
-                if (window.location.hash.includes('access_token=') || window.location.hash === '#/' || !window.location.hash) {
-                    const queuedTier = localStorage.getItem('selected_nearpro_tier');
-                    const queuedInterval = localStorage.getItem('selected_nearpro_interval') || 'monthly';
-                    if (queuedTier && queuedTier !== 'free') {
-                        window.location.hash = `#/checkout?plan=${queuedTier}&cycle=${queuedInterval}`;
-                    } else {
-                        window.location.hash = '#/dashboard/directory';
-                    }
+                const queuedTier = localStorage.getItem('selected_nearpro_tier');
+                const queuedInterval = localStorage.getItem('selected_nearpro_interval') || 'monthly';
+                if (queuedTier && queuedTier !== 'free') {
+                    window.location.hash = `#/checkout?plan=${queuedTier}&cycle=${queuedInterval}`;
+                } else {
+                    window.location.hash = '#/dashboard/directory';
                 }
+                State.notify();
+            } else {
+                hideOAuthAuthLoader();
             }
         });
 
@@ -2142,7 +2176,9 @@ async function initApp() {
                 State.user = session.user;
                 State.profile = await Api.getProfile(session.user.id);
 
-                if (event === 'SIGNED_IN' || window.location.hash.includes('access_token=') || window.location.hash === '#/' || !window.location.hash) {
+                hideOAuthAuthLoader();
+
+                if (event === 'SIGNED_IN' || window.location.hash.includes('access_token=')) {
                     const queuedTier = localStorage.getItem('selected_nearpro_tier');
                     const queuedInterval = localStorage.getItem('selected_nearpro_interval') || 'monthly';
                     if (queuedTier && queuedTier !== 'free') {
@@ -2154,11 +2190,13 @@ async function initApp() {
             } else {
                 State.user = null;
                 State.profile = null;
+                hideOAuthAuthLoader();
             }
             State.notify();
         });
     } catch (err) {
         console.error("Auth listener initialization failed: ", err);
+        hideOAuthAuthLoader();
     }
 }
 
