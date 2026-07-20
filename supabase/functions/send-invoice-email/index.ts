@@ -103,7 +103,7 @@ serve(async (req) => {
           <tbody>
             <tr>
               <td>
-                <strong>NearPro ${tierName} Plan</strong><br>
+                <strong>NearPro ${tierUpper} Plan</strong><br>
                 <span style="font-size: 11px; color: #a1a1aa;">1 Month Unlimited Business Intelligence & Lead Access</span>
               </td>
               <td style="text-align: right;">₹${baseAmount}</td>
@@ -151,7 +151,7 @@ serve(async (req) => {
         body: JSON.stringify({
           from: "NearPro Billing <billing@s8n.in>",
           to: [user_email],
-          subject: `Tax Invoice ${invoiceNumber} — NearPro ${tierName} Plan Purchase`,
+          subject: `Tax Invoice ${invoiceNumber} — NearPro ${tierUpper} Plan Purchase`,
           html: emailHTML
         })
       });

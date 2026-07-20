@@ -31,7 +31,7 @@ export function renderMarketingHero(stats = null) {
                     <span id="heroTotalLeads">${totalLeads} Verified Leads</span>
                     <span id="heroTotalCategories">${totalCategories} Sub Categories</span>
                     <span id="heroAvgRating">${avgRating} Average Rating</span>
-                    <span>India Focussed</span>
+                    <span>India Focused</span>
                 </div>
             </div>
         </section>

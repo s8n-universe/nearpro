@@ -1,4 +1,5 @@
 import { supabase } from './supabase.js';
+import { State } from './state.js';
 
 export function generateBrowserFingerprint() {
     try {
@@ -278,7 +279,7 @@ export const Api = {
                 fallbackQuery = fallbackQuery.order('rating', { ascending: false }).order('review_count', { ascending: false });
             } else if (filters.sort_by === 'reviews_desc') {
                 fallbackQuery = fallbackQuery.order('review_count', { ascending: false });
-            } else if (filters.sort_by === 'scraped_desc') {
+            } else if (filters.sort_by === 'scraped_desc' || filters.sort_by === 'indexed_desc') {
                 fallbackQuery = fallbackQuery.order('scraped_at', { ascending: false });
             } else if (filters.sort_by === 'completeness_desc') {
                 fallbackQuery = fallbackQuery.order('completeness_score', { ascending: false });
@@ -313,7 +314,6 @@ export const Api = {
         if (!leads || leads.length === 0) return;
 
         // Tier-based export enforcement
-        const { State } = window;
         const profile = State?.profile;
         const tier = (profile?.subscription_tier || profile?.tier || 'free').toLowerCase();
 
@@ -352,7 +352,7 @@ export const Api = {
             l.completeness_score || 0,
             l.latitude || "",
             l.longitude || "",
-            l.scraped_at || ""
+            l.indexed_at || l.scraped_at || ""
         ]);
         
         const csvContent = "data:text/csv;charset=utf-8," 
@@ -581,6 +581,12 @@ export const Api = {
         }
 
         if (!data || data.mock) {
+            const isProd = import.meta.env.VITE_NEARPRO_ENV === 'production';
+            if (isProd) {
+                alert("Payment gateway configuration issue. Please try again or contact support.");
+                throw new Error("Razorpay subscription mock mode is disabled in production environments.");
+            }
+
             const startDate = new Date();
             const days = interval === 'yearly' ? 365 : 30;
             const endDate = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
@@ -609,14 +615,14 @@ export const Api = {
             return new Promise((resolve) => {
                 showPreparationLoader(async () => {
                     try {
-                        window.State.profile = updatedProfile || (await this.getProfile(userId));
-                        window.State.upgrade_success_data = {
+                        State.profile = updatedProfile || (await this.getProfile(userId));
+                        State.upgrade_success_data = {
                             tier: planId,
                             netPaid: interval === 'yearly' ? (planId === 'scout' ? '4,999' : planId === 'hunter' ? '9,999' : '24,999') : (planId === 'scout' ? '499' : planId === 'hunter' ? '999' : '2,499'),
                             paymentId: `pay_mock_${Math.random().toString(36).slice(2, 8)}`
                         };
-                        window.State.upgrade_success_modal_open = true;
-                        window.State.notify();
+                        State.upgrade_success_modal_open = true;
+                        State.notify();
                         resolve(true);
                     } catch (err) {
                         console.error("Profile refresh failed:", err);
@@ -664,8 +670,8 @@ export const Api = {
 
                         const { showPreparationLoader } = await import('./components/PreparationLoader.js');
                         showPreparationLoader(upgradeData, () => {
-                            window.State.profile = updated.data;
-                            window.State.notify();
+                            State.profile = updated.data;
+                            State.notify();
                             resolve(true);
                         });
                     } catch (err) {

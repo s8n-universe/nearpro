@@ -251,7 +251,17 @@ function initRoutes() {
     });
 
     Router.on('*', () => {
-        Router.navigate('#/');
+        appShell.innerHTML = `
+            <div class="app-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; text-align: center; font-family: var(--font-body); padding: 24px;">
+                <div style="font-size: 80px; font-family: var(--font-heading); font-weight: 700; color: var(--accent-gold); line-height: 1; margin-bottom: 20px;">404</div>
+                <h2 style="font-family: var(--font-heading); color: white; margin-bottom: 12px;">Route Not Found</h2>
+                <p style="color: var(--text-secondary); max-width: 480px; line-height: 1.6; margin-bottom: 30px;">
+                    The page you are trying to access does not exist or has been relocated in our directory.
+                </p>
+                <a href="#/" class="brand-btn" style="padding: 12px 28px; font-size: 13px; text-decoration: none; border-radius: var(--radius-sm);">Return to Safety</a>
+            </div>
+        `;
+        refreshLucideIcons();
     });
 
     Router.init();
@@ -2147,6 +2157,106 @@ function hideOAuthAuthLoader() {
         setTimeout(() => loader.remove(), 300);
     }
 }
+
+// Telemetry Handler (Fix M9)
+window.trackEvent = function(eventName, eventDetails = {}) {
+    console.log(`[Telemetry Event] ${eventName}:`, eventDetails);
+    // In production, this can send payloads to standard tools like PostHog or GA4
+};
+
+// Global Error Boundary (Fix H6)
+window.addEventListener('error', (event) => {
+    console.error("Unhandled runtime error: ", event.error || event.message);
+    showErrorOverlay(event.error || new Error(event.message));
+});
+window.addEventListener('unhandledrejection', (event) => {
+    console.error("Unhandled promise rejection: ", event.reason);
+    showErrorOverlay(event.reason || new Error("Promise rejected without reason"));
+});
+
+function showErrorOverlay(error) {
+    const existing = document.getElementById('errorBoundaryOverlay');
+    if (existing) return;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'errorBoundaryOverlay';
+    overlay.style.cssText = 'position:fixed; inset:0; background:rgba(9,9,11,0.96); backdrop-filter:blur(8px); z-index:999999; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; color:white; font-family:var(--font-sans, "Inter", sans-serif); text-align:center; padding:24px;';
+    overlay.innerHTML = `
+        <div style="font-size:48px;">⚠️</div>
+        <div style="display:flex; flex-direction:column; gap:8px; max-width:440px;">
+            <h3 style="font-size:20px; font-weight:700; font-family:var(--font-heading, inherit); margin:0; color:white;">Application Error Occurred</h3>
+            <p style="font-size:13.5px; color:var(--text-secondary, #a1a1aa); margin:0; line-height:1.5;">NearPro encountered an unexpected problem. We have logged the trace for our team to resolve.</p>
+            <div style="background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.15); border-radius:6px; padding:12px; font-family:var(--font-mono, monospace); font-size:11.5px; color:#f87171; text-align:left; overflow:auto; max-height:120px; margin:12px 0; word-break:break-all;">
+                ${error?.stack || error?.message || String(error)}
+            </div>
+            <button onclick="window.location.reload();" class="brand-btn" style="padding:10px 24px; font-size:13px; font-weight:600; width:fit-content; align-self:center; cursor:pointer;">Refresh Workspace 🚀</button>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+}
+
+// Custom Toast Notification System (Fix M8)
+window.showToast = function(message, type = 'info') {
+    const container = document.getElementById('toastNotificationContainer') || (() => {
+        const c = document.createElement('div');
+        c.id = 'toastNotificationContainer';
+        c.style.cssText = 'position:fixed; bottom:24px; right:24px; display:flex; flex-direction:column; gap:10px; z-index:999999;';
+        document.body.appendChild(c);
+        return c;
+    })();
+
+    const toast = document.createElement('div');
+    const accentColor = type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#ffa000';
+    const bgGlow = type === 'success' ? 'rgba(16, 185, 129, 0.1)' : type === 'error' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(255, 160, 0, 0.1)';
+
+    toast.style.cssText = `
+        padding: 12px 20px;
+        background: #09090b;
+        border: 1px solid ${accentColor};
+        border-left: 4px solid ${accentColor};
+        box-shadow: 0 10px 25px rgba(0,0,0,0.5), 0 0 10px ${bgGlow};
+        color: white;
+        font-family: var(--font-body), sans-serif;
+        font-size: 13.5px;
+        font-weight: 500;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 280px;
+        max-width: 380px;
+        transform: translateY(20px);
+        opacity: 0;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    `;
+
+    const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : '⚡';
+    toast.innerHTML = `<span>${icon}</span><span style="flex:1;">${message}</span>`;
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.transform = 'translateY(0)';
+        toast.style.opacity = '1';
+    }, 10);
+
+    setTimeout(() => {
+        toast.style.transform = 'translateY(-20px)';
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 3500);
+};
+
+// Override native alert to use custom premium toast dynamically (Fix M8)
+window.alert = function(message) {
+    let type = 'info';
+    const lowerMsg = message.toLowerCase();
+    if (lowerMsg.includes('success') || lowerMsg.includes('saved') || lowerMsg.includes('complete') || lowerMsg.includes('unlocked')) {
+        type = 'success';
+    } else if (lowerMsg.includes('fail') || lowerMsg.includes('error') || lowerMsg.includes('limit reached') || lowerMsg.includes('please upgrade')) {
+        type = 'error';
+    }
+    window.showToast(message, type);
+};
 
 async function initApp() {
     window.State = State; // Expose globally for inline Paywall triggers

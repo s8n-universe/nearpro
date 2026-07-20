@@ -109,7 +109,6 @@ export const FEATURE_GATES = {
     lead_lists: 'scout',
     lead_crm: 'scout',
     lead_notes: 'scout',
-    qr_code: 'scout',
     compare_modal: 'scout',
 
     // Hunter+ features

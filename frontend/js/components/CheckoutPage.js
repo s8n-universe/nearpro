@@ -67,6 +67,32 @@ export function renderCheckoutPage(planId = 'hunter', cycle = 'monthly') {
     const userCompany = State.profile?.company_name || '';
 
     return `
+        <style>
+            .checkout-grid {
+                display: grid;
+                grid-template-columns: 1.15fr 0.85fr;
+                gap: 32px;
+                align-items: start;
+            }
+            .checkout-sub-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+            }
+            @media (max-width: 768px) {
+                .checkout-grid {
+                    grid-template-columns: 1fr !important;
+                    gap: 24px !important;
+                }
+                .checkout-sub-grid {
+                    grid-template-columns: 1fr !important;
+                    gap: 16px !important;
+                }
+                .checkout-page-wrapper {
+                    padding: 20px 10px !important;
+                }
+            }
+        </style>
         <div class="checkout-page-wrapper" style="min-height: 100vh; background: var(--bg-base); color: white; padding: 40px 20px;">
             <div style="max-width: 1000px; margin: 0 auto;">
                 
@@ -94,7 +120,7 @@ export function renderCheckoutPage(planId = 'hunter', cycle = 'monthly') {
                 </div>
 
                 <!-- 2-Column Checkout Grid -->
-                <div style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 32px; align-items: start;">
+                <div class="checkout-grid">
                     
                     <!-- Left Column: Billing Details & Payment Actions -->
                     <div style="display: flex; flex-direction: column; gap: 24px;">
@@ -106,7 +132,7 @@ export function renderCheckoutPage(planId = 'hunter', cycle = 'monthly') {
                             </h3>
 
                             <div style="display: flex; flex-direction: column; gap: 16px;">
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                                <div class="checkout-sub-grid">
                                     <div>
                                         <label style="display: block; font-size: 12px; font-weight: 600; color: #e2e8f0; margin-bottom: 6px; font-family: var(--font-heading);">Full Name</label>
                                         <input type="text" id="checkoutFullName" value="${userName}" placeholder="Shri Naik" style="width: 100%; padding: 10px 12px; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13.5px; outline: none;" />
@@ -117,7 +143,7 @@ export function renderCheckoutPage(planId = 'hunter', cycle = 'monthly') {
                                     </div>
                                 </div>
 
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                                <div class="checkout-sub-grid">
                                     <div>
                                         <label style="display: block; font-size: 12px; font-weight: 600; color: #e2e8f0; margin-bottom: 6px; font-family: var(--font-heading);">Phone Number (Optional)</label>
                                         <input type="tel" id="checkoutPhone" value="${userPhone}" placeholder="+91 98765 43210" style="width: 100%; padding: 10px 12px; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13.5px; outline: none;" />
@@ -138,7 +164,7 @@ export function renderCheckoutPage(planId = 'hunter', cycle = 'monthly') {
                         </div>
 
                         <!-- Card 2: Consumer Protection Guarantees -->
-                        <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px; backdrop-filter: blur(12px); display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div class="checkout-sub-grid" style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px; backdrop-filter: blur(12px);">
                             <div style="display: flex; gap: 10px; align-items: flex-start;">
                                 <div style="width: 32px; height: 32px; border-radius: 6px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #10b981; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>

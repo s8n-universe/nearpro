@@ -117,7 +117,7 @@ export function renderTeamWorkspace(members = [], dataRequests = [], activeTab =
                         <textarea id="requestNotesInput" placeholder="Specify any additional parameters or notes here..." style="width:100%; height:70px; background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px; color:white; font-size:13px; line-height:1.4; resize:none; outline:none; font-family:sans-serif;"></textarea>
                     </div>
 
-                    <button class="brand-btn" id="submitScrapeRequestBtn" style="padding:10px; width:fit-content; font-size:13px; align-self:flex-end;">
+                    <button class="brand-btn" id="submitExtractionRequestBtn" style="padding:10px; width:fit-content; font-size:13px; align-self:flex-end;">
                         Submit Data Request
                     </button>
                 </div>
@@ -189,7 +189,7 @@ export function bindTeamWorkspaceEvents(onTabChangeCallback, onInviteCallback, o
         });
     });
 
-    const submitRequest = document.getElementById('submitScrapeRequestBtn');
+    const submitRequest = document.getElementById('submitExtractionRequestBtn');
     if (submitRequest) {
         submitRequest.addEventListener('click', () => {
             const niche = document.getElementById('requestNicheInput').value.trim();

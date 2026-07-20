@@ -16,9 +16,9 @@ export function renderInsightsPage() {
     const s = State.stats;
     const isPro = currentUserHasAccess('agency');
     
-    // Convert UTC last scraped to local time
-    const lastScrapedStr = s.last_scraped 
-        ? new Date(s.last_scraped).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) 
+    // Convert UTC last sync to local time
+    const lastSyncStr = (s.last_sync || s.last_scraped) 
+        ? new Date(s.last_sync || s.last_scraped).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) 
         : 'Unavailable';
 
     return `
@@ -26,7 +26,7 @@ export function renderInsightsPage() {
             <div class="feed-header" style="margin-bottom: 40px;">
                 <div class="feed-title-wrap">
                     <h2>Mumbai Market Insights</h2>
-                    <p class="feed-subtitle">Realtime geospatial and categorical intelligence from Harvest Data Engine. Last sync: ${lastScrapedStr}</p>
+                    <p class="feed-subtitle">Realtime geospatial and categorical intelligence from Harvest Data Engine. Last sync: ${lastSyncStr}</p>
                     <div style="margin-top: 12px; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: var(--radius-sm); background: rgba(255, 160, 0, 0.1); border: 1px solid rgba(255, 160, 0, 0.2); font-size: 12px; color: var(--accent-gold); font-family: var(--font-mono);">
                         ⚡ Realtime verified data: directly pulled from Google Maps, not a stored static dataset
                     </div>

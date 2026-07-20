@@ -8,7 +8,7 @@ import { showTrackLeadModal } from './TrackLeadModal.js';
 export function renderProfessionalModal(lead) {
     const isTracked = State.saved_lead_ids && State.saved_lead_ids.includes(lead.id);
 
-    // Sanitize category — detect if scraped data accidentally contains an address
+    // Sanitize category — detect if raw category data accidentally contains an address
     const rawCat = lead.category || '';
     const looksLikeAddress = /\d/.test(rawCat) && (/,/.test(rawCat) || /\b(rd|road|st|street|lane|nagar|marg|path|opp|nr|near)\b/i.test(rawCat));
     const displayCategory = (!rawCat || looksLikeAddress || rawCat.length > 40) ? (lead.parent_category || 'Other') : rawCat;

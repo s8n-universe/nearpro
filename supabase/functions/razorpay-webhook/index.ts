@@ -1,13 +1,51 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.0"
 
+async function verifyRazorpaySignature(body: string, signature: string, secret: string): Promise<boolean> {
+  try {
+    const encoder = new TextEncoder();
+    const keyData = encoder.encode(secret);
+    const key = await crypto.subtle.importKey(
+      "raw",
+      keyData,
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["verify", "sign"]
+    );
+    const data = encoder.encode(body);
+    const signatureBytes = new Uint8Array(
+      signature.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16))
+    );
+    return await crypto.subtle.verify("HMAC", key, signatureBytes, data);
+  } catch (e) {
+    console.error("Signature verification error:", e);
+    return false;
+  }
+}
+
 serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? "";
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? "";
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    const payload = await req.json();
+    const signature = req.headers.get("X-Razorpay-Signature") || "";
+    const rawBody = await req.text();
+    const webhookSecret = Deno.env.get("RAZORPAY_WEBHOOK_SECRET") || "";
+
+    if (webhookSecret) {
+      if (!signature) {
+        console.warn("Unauthorized: Razorpay signature header missing");
+        return new Response("Unauthorized: Signature missing", { status: 401 });
+      }
+      const isVerified = await verifyRazorpaySignature(rawBody, signature, webhookSecret);
+      if (!isVerified) {
+        console.warn("Unauthorized: Razorpay signature verification failed");
+        return new Response("Unauthorized: Signature mismatch", { status: 401 });
+      }
+    }
+
+    const payload = JSON.parse(rawBody);
     const event = payload.event;
     const rzpSubscription = payload.payload?.subscription?.entity;
 

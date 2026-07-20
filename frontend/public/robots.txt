@@ -1,0 +1,15 @@
+# robots.txt for NearPro by S8N
+User-agent: *
+Allow: /
+Allow: /#/browse
+Allow: /#/pricing
+Allow: /#/opt-out
+Allow: /#/terms
+Allow: /#/privacy
+
+# Disallow admin dashboard and workspaces from crawlers
+Disallow: /#/dashboard/
+Disallow: /#/checkout
+Disallow: /checkout
+
+Sitemap: https://nearpro.s8n.in/sitemap.xml

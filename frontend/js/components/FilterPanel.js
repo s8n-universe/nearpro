@@ -61,7 +61,7 @@ export function renderFilterPanel() {
                         <option value="rating_desc" ${State.filters.sort_by === 'rating_desc' ? 'selected' : ''}>Highest Rated</option>
                         <option value="reviews_desc" ${State.filters.sort_by === 'reviews_desc' ? 'selected' : ''}>Most Reviewed</option>
                         <option value="completeness_desc" ${State.filters.sort_by === 'completeness_desc' ? 'selected' : ''}>Most Verified Info</option>
-                        <option value="scraped_desc" ${State.filters.sort_by === 'scraped_desc' ? 'selected' : ''}>Recently Added</option>
+                        <option value="indexed_desc" ${State.filters.sort_by === 'indexed_desc' ? 'selected' : ''}>Recently Added</option>
                     </select>
                 </div>
 

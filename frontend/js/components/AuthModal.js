@@ -201,6 +201,19 @@ export function bindAuthModalEvents() {
             const password = passwordInput.value;
 
             if (errorMsg) errorMsg.style.display = 'none';
+
+            if (currentTab === 'signup') {
+                const minLength = 8;
+                const hasNum = /\d/.test(password);
+                if (password.length < minLength || !hasNum) {
+                    if (errorMsg) {
+                        errorMsg.innerText = "Password must be at least 8 characters and contain at least one digit.";
+                        errorMsg.style.display = 'block';
+                    }
+                    return;
+                }
+            }
+
             submitBtn.innerText = currentTab === 'signin' ? 'Signing In...' : 'Registering...';
             submitBtn.disabled = true;
 

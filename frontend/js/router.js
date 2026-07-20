@@ -16,6 +16,11 @@ export const Router = {
     handleRouting() {
         const fullHash = window.location.hash || '#/';
         const hash = fullHash.split('?')[0];
+
+        // Telemetry Event (Fix M9)
+        if (typeof window.trackEvent === 'function') {
+            window.trackEvent('page_view', { path: hash, full_path: fullHash });
+        }
         
         // Match specific dynamic routes first (e.g. #/category/parent/sub or #/category/parent)
         let matched = false;

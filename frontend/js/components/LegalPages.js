@@ -372,6 +372,12 @@ export function bindOptOutFormEvents() {
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
+        const submitBtn = document.getElementById('optOutSubmitBtn');
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Submitting Request... 🚀';
+        }
+
         const businessName = document.getElementById('optOutBusinessName').value.trim();
         const phone = document.getElementById('optOutPhone').value.trim();
         const email = document.getElementById('optOutEmail').value.trim();
