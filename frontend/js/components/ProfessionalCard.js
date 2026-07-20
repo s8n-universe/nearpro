@@ -63,7 +63,7 @@ const categoryColors = {
     "Events & Entertainment": "#a855f7" // violet
 };
 
-export function renderProfessionalCard(lead) {
+export function renderProfessionalCard(lead, index = 0) {
     const parentCat = lead.parent_category || "Other";
     const avatarColor = categoryColors[parentCat] || "#52525b";
 
@@ -135,13 +135,19 @@ export function renderProfessionalCard(lead) {
         scoreBadgeHTML = `<span class="score-badge" style="background: rgba(255,255,255,0.03); border: 1px solid ${badgeColor}; color: ${badgeColor}; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 100px; margin-left: 6px; font-family: var(--font-mono); text-transform: uppercase;"><i data-lucide="${iconName}" style="width:10px; height:10px;"></i> ${badgeLabel} (${scoreVal})</span>`;
     }
 
+    const isPremium = currentUserHasAccess('scout');
+    // Step 1: Freemium Hook — Free users get first 2 phone numbers unlocked as a free trial sample!
+    const isFreemiumSampleUnlocked = !isPremium && index < 2;
+
+    const isSelected = State.selected_ids.includes(lead.id);
+
     return `
         <div class="prof-card" data-id="${lead.id}" style="border-left: 3px solid ${avatarColor};">
             <div class="card-toolbar" onclick="event.stopPropagation();">
                 <button class="track-card-btn ${isTracked ? 'tracked' : ''}" data-id="${lead.id}">
                     <i data-lucide="${isTracked ? 'bookmark-check' : 'bookmark'}" style="width:12px; height:12px;"></i> ${isTracked ? 'Tracked' : 'Track'}
                 </button>
-                ${currentUserHasAccess('scout') ? `
+                ${isPremium ? `
                     <label class="compare-checkbox-label ${isSelected ? 'active' : ''}">
                         <input type="checkbox" class="compare-checkbox" data-id="${lead.id}" ${isSelected ? 'checked' : ''} style="display: none;">
                         <span class="compare-pill-dot"></span>
@@ -178,14 +184,10 @@ export function renderProfessionalCard(lead) {
             </div>
 
             <div class="card-actions" onclick="event.stopPropagation();">
-                ${!currentUserHasAccess('scout') ? `
-                    <button class="card-btn-unlock" onclick="window.State.setPricingModal(true);">
-                        <i data-lucide="lock" style="width:13px; height:13px;"></i> Unlock Details
-                    </button>
-                ` : `
+                ${isPremium || isFreemiumSampleUnlocked ? `
                     ${lead.phone ? `
-                        <a href="tel:${lead.phone}" class="card-btn-call">
-                            <i data-lucide="phone" style="width:13px; height:13px;"></i> Call
+                        <a href="tel:${lead.phone}" class="card-btn-call" style="${isFreemiumSampleUnlocked ? 'background: rgba(34, 197, 94, 0.12); border: 1px solid rgba(34, 197, 94, 0.4); color: #4ade80;' : ''}">
+                            <i data-lucide="phone" style="width:13px; height:13px;"></i> ${lead.phone} ${isFreemiumSampleUnlocked ? '<span style="font-size:9.5px; opacity:0.85; margin-left:2px;">(Free Sample)</span>' : ''}
                         </a>
                     ` : ''}
                     ${lead.website ? `
@@ -196,6 +198,23 @@ export function renderProfessionalCard(lead) {
                     ${!lead.phone && !lead.website ? `
                         <span class="card-btn-empty">No contact info</span>
                     ` : ''}
+                ` : `
+                    <!-- Soft Blurred Phone Number for Freemium Hook (Cards 3-12) -->
+                    <div style="display: flex; gap: 8px; width: 100%; align-items: center;">
+                        <div onclick="window.State.setPricingModal(true);" style="flex: 1; display: flex; align-items: center; justify-content: space-between; background: rgba(255,160,0,0.04); border: 1px dashed rgba(255,160,0,0.3); padding: 6px 12px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s ease;">
+                            <span style="font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); filter: blur(3px); user-select: none;">
+                                +91 ${lead.phone ? lead.phone.slice(0, 5) : '98201'} XXXXX
+                            </span>
+                            <span style="font-size: 11px; font-weight: 600; color: var(--accent-gold); display: flex; align-items: center; gap: 4px;">
+                                <i data-lucide="lock" style="width:11px; height:11px;"></i> Unlock
+                            </span>
+                        </div>
+                        ${lead.website ? `
+                            <a href="${lead.website}" target="_blank" class="card-btn-site" style="padding: 6px 10px;">
+                                <i data-lucide="globe" style="width:13px; height:13px;"></i>
+                            </a>
+                        ` : ''}
+                    </div>
                 `}
             </div>
         </div>

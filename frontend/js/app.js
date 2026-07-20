@@ -584,8 +584,65 @@ function renderFeedContent(hasMore) {
         // Only show first 12 cards (spec: Explorer = 12 profiles per search) if not premium
         const isListExceeded = !isPremium && State.professionals.length > 12;
         const displayedLeads = isListExceeded ? State.professionals.slice(0, 12) : State.professionals;
-        const cardsHTML = displayedLeads.map(p => renderProfessionalCard(p)).join('');
+        // Step 1: Freemium Hook — pass card index so cards 0 and 1 get unlocked free sample phone numbers
+        const cardsHTML = displayedLeads.map((p, idx) => renderProfessionalCard(p, idx)).join('');
         
+        // Step 2: Audit Gap Trigger (Greed & Urgency Banner)
+        const noWebLeads = State.professionals.filter(p => !p.website || p.website.trim() === '');
+        const lowRatingLeads = State.professionals.filter(p => p.rating && p.rating < 4.0);
+        const categoryLabel = State.filters.category || State.filters.parentCategory || 'Business';
+        const areaLabel = State.filters.area || 'Mumbai';
+
+        let auditGapTriggerHTML = '';
+        if (noWebLeads.length > 0) {
+            const count = noWebLeads.length;
+            const potentialRevenue = (count * 30000).toLocaleString('en-IN');
+            auditGapTriggerHTML = `
+                <div class="audit-gap-trigger-card" style="margin-bottom: 24px; padding: 18px 24px; background: linear-gradient(135deg, rgba(255, 160, 0, 0.08) 0%, rgba(239, 68, 68, 0.06) 100%); border: 1px solid rgba(255, 160, 0, 0.3); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; box-shadow: 0 4px 20px rgba(0,0,0,0.3); border-left: 4px solid var(--accent-gold);">
+                    <div style="display: flex; align-items: flex-start; gap: 16px; flex: 1; min-width: 280px;">
+                        <div style="font-size: 26px; background: rgba(255, 160, 0, 0.15); width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(255,160,0,0.3);">⚠️</div>
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                                <span style="font-size: 10.5px; font-family: var(--font-mono); font-weight: 700; color: var(--accent-gold); letter-spacing: 0.8px; text-transform: uppercase; background: rgba(255,160,0,0.15); padding: 2px 8px; border-radius: 4px;">⚡ REVENUE OPPORTUNITY DETECTED</span>
+                            </div>
+                            <h3 style="font-size: 16.5px; font-family: var(--font-heading); color: white; margin-bottom: 4px;">
+                                ${count} ${categoryLabel} listing${count > 1 ? 's' : ''} in ${areaLabel} have NO Website!
+                            </h3>
+                            <p style="font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.5;">
+                                Pitching a ₹30,000 website package to these ${count} offices represents a <strong style="color: var(--accent-gold); font-weight: 600;">₹${potentialRevenue}+ revenue pipeline</strong> this week.
+                            </p>
+                        </div>
+                    </div>
+                    <button class="brand-btn" style="padding: 10px 18px; font-size: 12.5px; border-radius: var(--radius-md); font-weight: 600; white-space: nowrap;" onclick="window.State.updateFilters({ no_website: true });">
+                        Target ${count} Gap Leads 🎯
+                    </button>
+                </div>
+            `;
+        } else if (lowRatingLeads.length > 0) {
+            const count = lowRatingLeads.length;
+            auditGapTriggerHTML = `
+                <div class="audit-gap-trigger-card" style="margin-bottom: 24px; padding: 18px 24px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(139, 92, 246, 0.06) 100%); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; box-shadow: 0 4px 20px rgba(0,0,0,0.3); border-left: 4px solid #3b82f6;">
+                    <div style="display: flex; align-items: flex-start; gap: 16px; flex: 1; min-width: 280px;">
+                        <div style="font-size: 26px; background: rgba(59, 130, 246, 0.15); width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(59, 130, 246, 0.3);">⭐</div>
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                                <span style="font-size: 10.5px; font-family: var(--font-mono); font-weight: 700; color: #60a5fa; letter-spacing: 0.8px; text-transform: uppercase; background: rgba(59, 130, 246, 0.15); padding: 2px 8px; border-radius: 4px;">🎯 REPUTATION AUDIT OPPORTUNITY</span>
+                            </div>
+                            <h3 style="font-size: 16.5px; font-family: var(--font-heading); color: white; margin-bottom: 4px;">
+                                ${count} ${categoryLabel} business${count > 1 ? 'es' : ''} in ${areaLabel} hold low ratings (&lt; 4.0★)
+                            </h3>
+                            <p style="font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.5;">
+                                Pitch local review boosting and Google Business Profile optimization to secure ₹15,000/mo retainer clients.
+                            </p>
+                        </div>
+                    </div>
+                    <button class="brand-btn" style="padding: 10px 18px; font-size: 12.5px; border-radius: var(--radius-md); font-weight: 600; white-space: nowrap; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);" onclick="window.State.updateFilters({ min_rating: null });">
+                        Target ${count} Reputation Leads ⭐
+                    </button>
+                </div>
+            `;
+        }
+
         const remainingCount = State.total - 12;
         const paywallHTML = isListExceeded ? `
             <div class="row_lockup_banner">
@@ -621,6 +678,9 @@ function renderFeedContent(hasMore) {
                     </button>
                 </div>
             </div>
+
+            ${auditGapTriggerHTML}
+
             <div class="prof-grid">
                 ${cardsHTML}
             </div>
