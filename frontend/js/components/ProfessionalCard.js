@@ -114,17 +114,6 @@ export function renderProfessionalCard(lead) {
     const isRecent = lead.recently_verified;
     const freshnessTag = isRecent ? '<span class="freshness-tag">Recently Verified</span>' : '';
 
-    const isSelected = State.selected_ids.includes(lead.id);
-
-    let distanceHTML = '';
-    if (State.user_survey && State.user_survey.base_suburb && lead.latitude && lead.longitude) {
-        const baseCoords = suburbCoordinates[State.user_survey.base_suburb];
-        if (baseCoords) {
-            const dist = calculateDistance(baseCoords.lat, baseCoords.lng, lead.latitude, lead.longitude);
-            distanceHTML = `<span class="distance-pill"><i data-lucide="map-pin" style="width:11px; height:11px;"></i> ${dist.toFixed(1)} km</span>`;
-        }
-    }
-
     const isTracked = State.saved_lead_ids && State.saved_lead_ids.includes(lead.id);
 
     const hasScoreAccess = currentUserHasAccess('hunter');
@@ -182,7 +171,6 @@ export function renderProfessionalCard(lead) {
                 <span class="card-divider"></span>
                 <i data-lucide="map-pin" style="width:12px; height:12px; color: var(--text-muted); flex-shrink:0;"></i>
                 <span class="area-label">${lead.area || "Mumbai"}</span>
-                ${distanceHTML}
             </div>
 
             <div class="completeness-dots" title="Data completeness: ${score}/5">

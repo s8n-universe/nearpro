@@ -141,7 +141,7 @@ export function renderFeatureShowcase() {
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon">✓</span>
-                                <div>Add custom notes and generate QR codes</div>
+                                <div>Add custom notes & lead tags</div>
                             </li>
                             <li class="pricing-feature-item">
                                 <span class="pricing-feature-icon" style="color: var(--accent-gold);">✓</span>

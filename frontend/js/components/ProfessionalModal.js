@@ -209,11 +209,6 @@ export function renderProfessionalModal(lead) {
                         <button id="modalTrackLeadBtn" class="secondary-btn ${isTracked ? 'active' : ''}" style="flex: 1; border-color: ${isTracked ? 'var(--accent-gold)' : ''}; color: ${isTracked ? 'var(--accent-gold)' : ''};">
                             <i data-lucide="${isTracked ? 'bookmark-check' : 'bookmark'}" style="width:13px; height:13px;"></i> ${isTracked ? 'Tracked' : 'Track This Lead'}
                         </button>
-                        ${currentUserHasAccess('scout') ? `
-                            <button id="shareQRBtn" class="secondary-btn" style="flex: 1;">Share via QR Code</button>
-                        ` : `
-                            <button class="secondary-btn" style="flex: 1; opacity: 0.5; cursor: not-allowed;" disabled><i data-lucide="lock" style="width:11px; height:11px;"></i> QR Code (Scout+)</button>
-                        `}
                     </div>
                     ${lead.source_url && hasConnectAccess ? `
                         <a href="${lead.source_url}" target="_blank" class="secondary-btn" style="width: 100%; text-align: center; justify-content: center; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
@@ -221,9 +216,6 @@ export function renderProfessionalModal(lead) {
                         </a>
                     ` : ''}
                 </div>
-                
-                <!-- Inner QR Modal placeholder -->
-                <div id="qrPlaceholder" style="display: none;"></div>
             </div>
         </div>
     `;
@@ -284,35 +276,6 @@ export function bindProfessionalModalEvents(lead, onClose) {
         } catch (e) {
             console.error("Failed to render Leaflet mini-map in modal: ", e);
         }
-    }
-
-    // Share via QR Code listener
-    const shareQRBtn = document.getElementById('shareQRBtn');
-    if (shareQRBtn) {
-        shareQRBtn.addEventListener('click', async () => {
-            const qrPlaceholder = document.getElementById('qrPlaceholder');
-            if (qrPlaceholder.style.display === 'none') {
-                try {
-                    // Dynamically import the qrcode generator package
-                    const QRCode = (await import('qrcode')).default;
-                    const canvas = document.createElement('canvas');
-                    
-                    // Generate QR encoding for maps link or phone
-                    const qrData = lead.source_url || `tel:${lead.phone || ''}` || lead.name;
-                    await QRCode.toCanvas(canvas, qrData, { width: 180, margin: 2 });
-                    
-                    qrPlaceholder.innerHTML = '';
-                    qrPlaceholder.appendChild(canvas);
-                    qrPlaceholder.insertAdjacentHTML('beforeend', '<p style="font-size: 12px; margin-top: 8px; font-family: var(--font-mono); color: var(--text-muted);">Scan this QR to view listing details instantly</p>');
-                    qrPlaceholder.className = 'qr-container';
-                    qrPlaceholder.style.display = 'flex';
-                } catch (err) {
-                    console.error("Failed to generate QR Code: ", err);
-                }
-            } else {
-                qrPlaceholder.style.display = 'none';
-            }
-        });
     }
 
     // AI Outreach Pitch Copy listener

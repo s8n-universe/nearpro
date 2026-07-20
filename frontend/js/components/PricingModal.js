@@ -40,7 +40,7 @@ export function renderPricingModal() {
                 'Export 100 Verified Leads per month',
                 'Track 5 Custom Lead Lists (50 leads each)',
                 'Interactive Map Views & Suburb Radar',
-                'Notes, Status Tagging & QR Codes',
+                'Notes & Status Tagging',
                 'Rating & Completeness Score Filters'
             ]
         },
