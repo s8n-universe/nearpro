@@ -58,50 +58,7 @@ export function renderFeatureShowcase() {
             </div>
         </section>
 
-        <!-- Realtime Market Intelligence metrics grid -->
-        <section class="marketing-features" style="padding-top: 0; border-top: none; background: transparent;">
-            <div class="container">
-                <div class="features-title-wrap" style="margin-bottom: 40px;">
-                    <h2>Realtime Market Intelligence</h2>
-                    <p>Live categorical opportunity benchmarks and high-demand neighborhood indicators parsed from Mumbai directories.</p>
-                </div>
-                
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 48px;">
-                    <div class="feature-panel" style="padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid var(--accent-gold); text-align: left; background: var(--glass-bg); border-top: 1px solid rgba(255,255,255,0.03); border-right: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03);">
-                        <div style="text-align: left;">
-                            <div style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Outreach Opportunities</div>
-                            <div style="font-size: 32px; font-weight: 700; color: var(--text-primary); margin-top: 4px;">54.8%</div>
-                            <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Leads missing verified websites</div>
-                        </div>
-                        <div style="color: var(--accent-gold); opacity: 0.8; display: flex; align-items: center;"><i data-lucide="globe" style="width:28px; height:28px;"></i></div>
-                    </div>
-                    <div class="feature-panel" style="padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid var(--accent-pink); text-align: left; background: var(--glass-bg); border-top: 1px solid rgba(255,255,255,0.03); border-right: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03);">
-                        <div style="text-align: left;">
-                            <div style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">High-Demand Suburb</div>
-                            <div style="font-size: 28px; font-weight: 700; color: var(--accent-pink); margin-top: 4px;">Bandra</div>
-                            <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Highest review velocity area</div>
-                        </div>
-                        <div style="color: var(--accent-pink); opacity: 0.8; display: flex; align-items: center;"><i data-lucide="flame" style="width:28px; height:28px;"></i></div>
-                    </div>
-                    <div class="feature-panel" style="padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid #3b82f6; text-align: left; background: var(--glass-bg); border-top: 1px solid rgba(255,255,255,0.03); border-right: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03);">
-                        <div style="text-align: left;">
-                            <div style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Most Underserved Niche</div>
-                            <div style="font-size: 28px; font-weight: 700; color: var(--text-primary); margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 170px;">Interior Designer</div>
-                            <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Lowest listings concentration</div>
-                        </div>
-                        <div style="color: #3b82f6; opacity: 0.8; display: flex; align-items: center;"><i data-lucide="wrench" style="width:28px; height:28px;"></i></div>
-                    </div>
-                    <div class="feature-panel" style="padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid #10b981; text-align: left; background: var(--glass-bg); border-top: 1px solid rgba(255,255,255,0.03); border-right: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03);">
-                        <div style="text-align: left;">
-                            <div style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Review Boost Suburb</div>
-                            <div style="font-size: 28px; font-weight: 700; color: var(--text-primary); margin-top: 4px;">Colaba</div>
-                            <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Lowest avg ratings (needs SEO)</div>
-                        </div>
-                        <div style="color: #10b981; opacity: 0.8; display: flex; align-items: center;"><i data-lucide="trending-up" style="width:28px; height:28px;"></i></div>
-                    </div>
-                </div>
-            </div>
-        </section>
+
 
         <!-- Pricing Section -->
         <section class="pricing-section">
