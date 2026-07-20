@@ -188,6 +188,9 @@ export const State = {
         this.notify();
     },
 
+    checkout_consent_modal_open: false,
+    pending_checkout_plan: null,
+
     async selectPlan(planId, interval = 'monthly') {
         if (planId === 'free') {
             localStorage.setItem('selected_nearpro_tier', 'free');
@@ -195,13 +198,6 @@ export const State = {
             this.session_started = null;
             this.setPricingModal(false);
             this.setAuthModal(true);
-            return;
-        }
-
-        // Validate mandatory affirmative consent under Consumer Protection (E-Commerce) Rules 2020
-        const consentCb = document.getElementById('pricingBillingConsentCb');
-        if (consentCb && !consentCb.checked) {
-            alert("Mandatory Compliance Check:\n\nUnder the Consumer Protection (E-Commerce) Rules 2020, explicit affirmative consent is required before any purchase. Please check the agreement box to confirm Terms of Service, Privacy Policy, and subscription authorization.");
             return;
         }
 
@@ -215,19 +211,17 @@ export const State = {
             return;
         }
 
-        this.setPricingModal(false);
-        try {
-            const { hasAccess, getUserTier } = await import('./auth.js');
-            const currentTier = getUserTier();
-            if (hasAccess(currentTier, planId)) {
-                alert(`You already have the ${currentTier.toUpperCase()} plan which includes ${planId.toUpperCase()} features.`);
-                return;
-            }
-            const { Api } = await import('./api.js');
-            await Api.checkoutSubscription(planId, interval);
-        } catch (err) {
-            console.error("Subscription checkout failed: ", err);
-            alert("Subscription creation failed. Please try again.");
+        const { hasAccess, getUserTier } = await import('./auth.js');
+        const currentTier = getUserTier();
+        if (hasAccess(currentTier, planId)) {
+            alert(`You already have the ${currentTier.toUpperCase()} plan which includes ${planId.toUpperCase()} features.`);
+            return;
         }
+
+        // Open Order Review & Consumer Guarantee checkout modal
+        this.setPricingModal(false);
+        this.pending_checkout_plan = { planId, interval };
+        this.checkout_consent_modal_open = true;
+        this.notify();
     }
 };

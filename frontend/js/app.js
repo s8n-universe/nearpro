@@ -27,6 +27,7 @@ import { renderSurveyModal, bindSurveyModalEvents } from './components/SurveyMod
 import { renderPersonalizationModal, bindPersonalizationModalEvents } from './components/PersonalizationModal.js';
 import { renderPrivacyPolicyPage, renderTermsOfServicePage, renderOptOutPage, bindOptOutFormEvents } from './components/LegalPages.js';
 import { renderUpgradeModal, bindUpgradeModalEvents } from './components/UpgradeModal.js';
+import { renderCheckoutConsentModal, bindCheckoutConsentModalEvents } from './components/CheckoutConsentModal.js';
 import { renderDashboardShell, bindDashboardShellEvents } from './components/DashboardShell.js';
 import { renderLeadCRM, bindCRMWorkspaceEvents } from './components/LeadCRM.js';
 import { renderLeadLists, bindLeadListsEvents, bindListDetailEvents } from './components/LeadLists.js';
@@ -163,6 +164,13 @@ State.subscribe(async (currentState) => {
         upgradePlaceholder.innerHTML = renderUpgradeModal();
         bindUpgradeModalEvents();
     }
+
+    // Dynamically render/update Checkout Consent Modal
+    const checkoutConsentPlaceholder = document.getElementById('checkoutConsentModalPlaceholder');
+    if (checkoutConsentPlaceholder) {
+        checkoutConsentPlaceholder.innerHTML = renderCheckoutConsentModal();
+        bindCheckoutConsentModalEvents();
+    }
     refreshLucideIcons();
 });
 
@@ -293,6 +301,7 @@ function renderMarketingLayout() {
             <div id="pricingModalPlaceholder"></div>
             <div id="surveyModalPlaceholder"></div>
             <div id="upgradeModalPlaceholder"></div>
+            <div id="checkoutConsentModalPlaceholder"></div>
             <footer class="main-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid var(--border); font-size: 13px; color: var(--text-muted); flex-wrap: wrap; gap: 12px;">
                 <div>NearPro — Made with ❤️ by S8N</div>
                 <div style="display: flex; gap: 20px;">

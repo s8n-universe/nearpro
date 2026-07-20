@@ -52,12 +52,12 @@ export function renderAuthModal() {
                         <input type="password" id="authPasswordInput" required placeholder="••••••••" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-base); color: white; outline: none; font-size: 14px;">
                     </div>
 
-                    <!-- Mandatory Affirmative Registration Consent Checkbox (DPDP Act 2023 / Consumer Protection Rules) -->
+                    <!-- Registration Agreement Checkbox -->
                     <div id="signUpConsentWrapper" style="display: none; margin-bottom: 20px;">
                         <label style="display: flex; align-items: flex-start; gap: 8px; font-size: 11.5px; color: var(--text-secondary); line-height: 1.4; cursor: pointer;">
                             <input type="checkbox" id="authTermsConsentCb" style="margin-top: 2px; cursor: pointer;">
                             <span>
-                                I agree to NearPro's <a href="#/terms" target="_blank" style="color: var(--accent-gold); text-decoration: underline;">Terms of Service</a> & <a href="#/privacy" target="_blank" style="color: var(--accent-gold); text-decoration: underline;">Privacy Policy</a>, and provide explicit consent for account data processing under the DPDP Act 2023.
+                                I agree to NearPro's <a href="#/terms" target="_blank" style="color: var(--accent-gold); text-decoration: underline;">Terms of Service</a> & <a href="#/privacy" target="_blank" style="color: var(--accent-gold); text-decoration: underline;">Privacy Policy</a>.
                             </span>
                         </label>
                     </div>

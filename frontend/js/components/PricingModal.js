@@ -43,16 +43,6 @@ export function renderPricingModal() {
                     </button>
                 </div>
                 
-                <!-- Mandatory Billing Affirmative Consent Box (Consumer Protection E-Commerce Rules 2020) -->
-                <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); padding: 12px 16px; border-radius: var(--radius-md); margin-bottom: 20px; text-align: left;">
-                    <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer; font-size: 11.5px; color: var(--text-secondary); line-height: 1.4;">
-                        <input type="checkbox" id="pricingBillingConsentCb" style="margin-top: 2px; cursor: pointer;">
-                        <span>
-                            I agree to NearPro's <a href="#/terms" target="_blank" style="color: var(--accent-gold); text-decoration: underline;">Terms of Service</a> & <a href="#/privacy" target="_blank" style="color: var(--accent-gold); text-decoration: underline;">Privacy Policy</a>, and provide explicit authorization for subscription billing via Razorpay under Consumer Protection (E-Commerce) Rules 2020.
-                        </span>
-                    </label>
-                </div>
-                
                 <!-- Plan Options Stack -->
                 <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; text-align: left;">
                     
