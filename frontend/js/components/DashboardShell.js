@@ -57,13 +57,33 @@ export function renderDashboardShell(activeTab = 'crm') {
         `;
     }).join('');
 
-    // Render upgrade button if user can upgrade
-    const isAgencyOrEnterprise = hasAccess(userTier, 'agency');
-    const upgradeButtonHTML = !isAgencyOrEnterprise ? `
-        <button class="brand-btn upgrade-cta" onclick="window.State.setPricingModal(true)">
-            Upgrade Plan
-        </button>
-    ` : '';
+    // Render smart upgrade button or active badge based on current user tier
+    let upgradeButtonHTML = '';
+    if (userTier === 'free') {
+        upgradeButtonHTML = `
+            <button class="brand-btn upgrade-cta" onclick="window.State.selectPlan('scout')" style="width: 100%; padding: 10px; font-weight: 700; font-size: 13px;">
+                Upgrade to Scout (₹499)
+            </button>
+        `;
+    } else if (userTier === 'scout') {
+        upgradeButtonHTML = `
+            <button class="brand-btn upgrade-cta" onclick="window.State.selectPlan('hunter')" style="width: 100%; padding: 10px; font-weight: 700; font-size: 13px;">
+                Upgrade to Hunter (₹999)
+            </button>
+        `;
+    } else if (userTier === 'hunter') {
+        upgradeButtonHTML = `
+            <button class="brand-btn upgrade-cta" onclick="window.State.selectPlan('agency')" style="width: 100%; padding: 10px; font-weight: 700; font-size: 13px;">
+                Upgrade to Agency (₹2499)
+            </button>
+        `;
+    } else if (userTier === 'agency' || userTier === 'enterprise') {
+        upgradeButtonHTML = `
+            <div style="padding: 10px; background: rgba(236, 72, 153, 0.1); border: 1px solid rgba(236, 72, 153, 0.3); border-radius: var(--radius-sm); color: #ec4899; font-size: 12px; font-family: var(--font-mono); font-weight: 700; text-align: center; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                👑 AGENCY PLAN ACTIVE
+            </div>
+        `;
+    }
 
     const isMainCollapsed = State.dashboard_sidebar_collapsed;
     const sidebarCollapsedClass = isMainCollapsed ? 'collapsed' : '';
