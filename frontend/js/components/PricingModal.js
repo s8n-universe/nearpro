@@ -8,142 +8,195 @@ export function renderPricingModal() {
     const userTier = getUserTier();
     const userLevel = TIER_LEVELS[userTier] || 0;
 
-    // Helper for rendering tier action button
-    const renderTierBtn = (planId, btnStyle = '') => {
-        if (planId === userTier) {
-            return `<button class="secondary-btn" disabled style="padding: 8px 14px; font-size: 11.5px; flex-shrink: 0; opacity: 0.7; cursor: not-allowed; border-color: rgba(16, 185, 129, 0.4); color: #10b981; font-weight: 600;">Current Active Plan</button>`;
-        }
-        const targetLevel = TIER_LEVELS[planId] || 0;
-        const planName = planId.charAt(0).toUpperCase() + planId.slice(1);
-        if (targetLevel > userLevel) {
-            return `<button class="brand-btn" style="padding: 8px 14px; font-size: 11.5px; flex-shrink: 0; ${btnStyle}" onclick="window.State.selectPlan('${planId}', '${cycle}');">Upgrade to ${planName}</button>`;
-        } else {
-            return `<button class="secondary-btn" style="padding: 8px 14px; font-size: 11.5px; flex-shrink: 0;" onclick="window.State.selectPlan('${planId}', '${cycle}');">Switch to ${planName}</button>`;
+    // Detailed Plan Information mapping
+    const planDetails = {
+        free: {
+            id: 'free',
+            level: 0,
+            name: 'Explorer Plan',
+            tagline: 'Free Forever',
+            priceMonthly: '₹0',
+            priceYearly: '₹0',
+            subtext: 'Basic search & evaluation access',
+            badge: userTier === 'free' ? 'CURRENT ACTIVE PLAN' : null,
+            features: [
+                'Browse 12 verified leads per search',
+                'Masked contact phone & email details',
+                'Create 1 custom list (up to 5 leads)',
+                'Basic category & area filtering'
+            ]
+        },
+        scout: {
+            id: 'scout',
+            level: 1,
+            name: 'Scout Plan',
+            tagline: 'Lead Discovery Tier',
+            priceMonthly: '₹499',
+            priceYearly: '₹4,999',
+            subtext: cycle === 'monthly' ? 'Billed monthly' : 'Billed yearly (Save ₹989)',
+            badge: userTier === 'scout' ? 'CURRENT ACTIVE PLAN' : null,
+            features: [
+                'Unlocked Phone Numbers & Websites',
+                'Export 100 Verified Leads per month',
+                'Track 5 Custom Lead Lists (50 leads each)',
+                'Interactive Map Views & Suburb Radar',
+                'Notes, Status Tagging & QR Codes',
+                'Rating & Completeness Score Filters'
+            ]
+        },
+        hunter: {
+            id: 'hunter',
+            level: 2,
+            name: 'Hunter Plan',
+            tagline: 'Outreach & Growth Tier',
+            priceMonthly: '₹999',
+            priceYearly: '₹9,999',
+            subtext: cycle === 'monthly' ? 'Billed monthly' : 'Billed yearly (Save ₹1,989)',
+            badge: userTier === 'hunter' ? 'CURRENT ACTIVE PLAN' : 'BEST VALUE',
+            features: [
+                'Business Health Check & Lead Scores',
+                '500 WhatsApp AI Pitches (Hinglish/English)',
+                'Unlimited Lead CSV & Excel Exports',
+                '20 Custom Lead Lists & Pipeline Tracking',
+                'Geospatial Metrics & Opportunity Radar',
+                'All Scout Plan Features Included'
+            ]
+        },
+        agency: {
+            id: 'agency',
+            level: 3,
+            name: 'Agency Plan',
+            tagline: 'Scale & Automation Tier',
+            priceMonthly: '₹2,499',
+            priceYearly: '₹24,999',
+            subtext: cycle === 'monthly' ? 'Billed monthly' : 'Billed yearly (Save ₹4,989)',
+            badge: userTier === 'agency' ? 'CURRENT ACTIVE PLAN' : 'MAXIMUM POWER',
+            features: [
+                'Website Prompt Engine (AI Web Redesign)',
+                'Unlimited WhatsApp AI Pitch Generation',
+                'n8n Webhooks & Google Sheets Live Sync',
+                '3 Workspace Seats & Density Heatmaps',
+                'Niche Gap Analysis & Lead Scoring',
+                'All Hunter Plan Features Included'
+            ]
         }
     };
 
-    // Pricing details mapping
-    const pricing = {
-        scout: cycle === 'monthly' 
-            ? { price: '₹499', period: 'month', label: 'Billed monthly' } 
-            : { price: '₹4,999', period: 'year', label: 'Billed yearly (Save ₹989)' },
-        hunter: cycle === 'monthly' 
-            ? { price: '₹999', period: 'month', label: 'Billed monthly' } 
-            : { price: '₹9,999', period: 'year', label: 'Billed yearly (Save ₹1,989)' },
-        agency: cycle === 'monthly' 
-            ? { price: '₹2,499', period: 'month', label: 'Billed monthly' } 
-            : { price: '₹24,999', period: 'year', label: 'Billed yearly (Save ₹4,989)' }
-    };
+    // Filter out plans that are lower than the user's active tier
+    // (e.g. If user is on Scout, hide Explorer; if on Hunter, hide Explorer & Scout)
+    const availablePlanKeys = ['free', 'scout', 'hunter', 'agency'].filter(key => {
+        const lvl = planDetails[key].level;
+        if (userLevel === 0) return true; // Show all plans for free users
+        return lvl >= userLevel; // For paid users, show current active plan and higher upgrade plans
+    });
+
+    const plansToRender = availablePlanKeys.map(k => planDetails[k]);
 
     return `
         <div class="modal-overlay open" id="pricingModalOverlay" style="z-index: 10000;">
-            <div class="modal-card" style="max-width: 580px; padding: 32px; text-align: center; position: relative; max-height: 90vh; overflow-y: auto;">
-                <button class="modal-close-btn" id="closePricingModalBtn" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer;">&times;</button>
+            <div class="modal-card" style="max-width: 960px; width: 95%; padding: 36px; text-align: center; position: relative; max-height: 90vh; overflow-y: auto;">
+                <button class="modal-close-btn" id="closePricingModalBtn" style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">&times;</button>
                 
                 <div style="font-size: 40px; margin-bottom: 12px;">🚀</div>
                 
-                <h2 style="font-size: 22px; margin-bottom: 6px; font-family: var(--font-heading); color: white;">
+                <h2 style="font-size: 26px; margin-bottom: 6px; font-family: var(--font-heading); color: white; font-weight: 700;">
                     Choose Your Growth Tier
                 </h2>
                 
-                <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 20px; line-height: 1.5;">
-                    Access verified lead intelligence and outreach tools designed for India. Choose a tier to unlock your pipeline.
+                <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 24px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.5;">
+                    Access verified lead intelligence, AI outreach tools, and CRM pipelines designed for India.
                 </p>
 
                 <!-- Billing Switcher Segmented Control -->
-                <div style="display: inline-flex; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 50px; padding: 4px; margin-bottom: 24px; gap: 4px;">
-                    <button class="cycle-tab-btn ${cycle === 'monthly' ? 'active' : ''}" id="cycleMonthlyBtn" style="background:${cycle==='monthly'?'var(--accent-gold)':'none'}; color:${cycle==='monthly'?'black':'white'}; border:none; padding:6px 16px; border-radius:50px; font-size:11.5px; font-weight:600; cursor:pointer; transition:all 0.2s ease;">
+                <div style="display: inline-flex; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 50px; padding: 4px; margin-bottom: 32px; gap: 4px;">
+                    <button class="cycle-tab-btn ${cycle === 'monthly' ? 'active' : ''}" id="cycleMonthlyBtn" style="background:${cycle==='monthly'?'var(--accent-gold)':'none'}; color:${cycle==='monthly'?'black':'white'}; border:none; padding:8px 20px; border-radius:50px; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.2s ease;">
                         Monthly Billing
                     </button>
-                    <button class="cycle-tab-btn ${cycle === 'yearly' ? 'active' : ''}" id="cycleYearlyBtn" style="background:${cycle==='yearly'?'var(--accent-gold)':'none'}; color:${cycle==='yearly'?'black':'white'}; border:none; padding:6px 16px; border-radius:50px; font-size:11.5px; font-weight:600; cursor:pointer; transition:all 0.2s ease;">
+                    <button class="cycle-tab-btn ${cycle === 'yearly' ? 'active' : ''}" id="cycleYearlyBtn" style="background:${cycle==='yearly'?'var(--accent-gold)':'none'}; color:${cycle==='yearly'?'black':'white'}; border:none; padding:8px 20px; border-radius:50px; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.2s ease;">
                         Yearly Billing (Save 20%)
                     </button>
                 </div>
                 
-                <!-- Plan Options Stack -->
-                <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; text-align: left;">
-                    
-                    <!-- Explorer (Free) -->
-                    <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); padding: 18px 20px; border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; gap: 12px;">
-                        <div style="flex: 1;">
-                            <h4 style="font-size: 14px; color: white; margin: 0 0 4px 0; font-family: var(--font-heading); display: flex; align-items: center; gap: 6px;">
-                                Explorer — Free Forever
-                                ${userTier === 'free' ? `<span style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: #10b981; font-size: 9px; font-family: var(--font-mono); padding: 2px 6px; border-radius: 4px; font-weight: bold;">ACTIVE</span>` : ''}
-                            </h4>
-                            <p style="font-size: 11px; color: var(--text-secondary); margin: 0; line-height: 1.4;">
-                                Browse 12 profiles per search with masked contacts. Setup 1 list up to 5 leads. No exports or AI.
-                            </p>
-                        </div>
-                        ${userTier === 'free' 
-                            ? `<button class="secondary-btn" disabled style="padding: 8px 14px; font-size: 11.5px; flex-shrink: 0; opacity: 0.6; cursor: not-allowed; border-color: rgba(16, 185, 129, 0.4); color: #10b981;">Current Active Plan</button>`
-                            : `<button class="secondary-btn" style="padding: 8px 14px; font-size: 11.5px; flex-shrink: 0;" onclick="window.State.selectPlan('free');">Switch to Free</button>`
+                <!-- Grid of Plan Cards -->
+                <div style="display: grid; grid-template-columns: repeat(${Math.min(plansToRender.length, 3)}, 1fr); gap: 20px; margin-bottom: 28px; text-align: left; align-items: stretch;">
+                    ${plansToRender.map(plan => {
+                        const isCurrentActive = plan.id === userTier;
+                        const isHunter = plan.id === 'hunter';
+                        const price = cycle === 'yearly' ? plan.priceYearly : plan.priceMonthly;
+                        const period = cycle === 'yearly' ? '/year' : '/month';
+
+                        let borderColor = 'rgba(255, 255, 255, 0.1)';
+                        let bgGradient = 'rgba(15, 23, 42, 0.6)';
+
+                        if (isCurrentActive) {
+                            borderColor = 'rgba(16, 185, 129, 0.5)';
+                            bgGradient = 'rgba(16, 185, 129, 0.03)';
+                        } else if (isHunter) {
+                            borderColor = 'var(--accent-gold)';
+                            bgGradient = 'rgba(255, 160, 0, 0.04)';
+                        } else if (plan.id === 'agency') {
+                            borderColor = 'rgba(236, 72, 153, 0.3)';
+                            bgGradient = 'rgba(236, 72, 153, 0.03)';
                         }
-                    </div>
- 
-                    <!-- Scout -->
-                    <div style="background: rgba(255, 160, 0, 0.02); border: 1px solid ${userTier === 'scout' ? 'rgba(16,185,129,0.5)' : 'rgba(255, 160, 0, 0.12)'}; padding: 18px 20px; border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; gap: 12px;">
-                        <div style="flex: 1;">
-                            <h4 style="font-size: 14px; color: var(--accent-gold); margin: 0 0 4px 0; font-family: var(--font-heading); display: flex; align-items: center; gap: 6px;">
-                                Scout — ${pricing.scout.price}/${pricing.scout.period === 'month' ? 'mo' : 'yr'}
-                                ${userTier === 'scout' ? `<span style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: #10b981; font-size: 9px; font-family: var(--font-mono); padding: 2px 6px; border-radius: 4px; font-weight: bold;">ACTIVE PLAN</span>` : ''}
-                            </h4>
-                            <p style="font-size: 11px; color: var(--text-secondary); margin: 0; line-height: 1.4; margin-bottom:4px;">
-                                Unlocked phone numbers and websites. Map views active. Export 100 leads per month. Track 5 lists up to 50 leads each. Notes and QR codes active. **Includes basic rating & completeness stats**.
-                            </p>
-                            <span style="font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase;">${pricing.scout.label}</span>
-                        </div>
-                        ${renderTierBtn('scout')}
-                    </div>
- 
-                    <!-- Hunter -->
-                    <div style="background: rgba(255, 160, 0, 0.04); border: 1px solid ${userTier === 'hunter' ? 'rgba(16,185,129,0.5)' : 'var(--accent-gold)'}; padding: 18px 20px; border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; gap: 12px; position: relative; box-shadow: 0 4px 20px rgba(255, 160, 0, 0.05);">
-                        <div style="position: absolute; top: -10px; right: 12px; background: var(--accent-gold); color: black; font-size: 8px; font-family: var(--font-mono); padding: 2px 8px; border-radius: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Best Value</div>
-                        <div style="flex: 1;">
-                            <h4 style="font-size: 14px; color: var(--accent-gold); margin: 0 0 4px 0; font-family: var(--font-heading); display: flex; align-items: center; gap: 6px;">
-                                Hunter — ${pricing.hunter.price}/${pricing.hunter.period === 'month' ? 'mo' : 'yr'}
-                                ${userTier === 'hunter' ? `<span style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: #10b981; font-size: 9px; font-family: var(--font-mono); padding: 2px 6px; border-radius: 4px; font-weight: bold;">ACTIVE PLAN</span>` : ''}
-                            </h4>
-                            <p style="font-size: 11px; color: var(--text-secondary); margin: 0; line-height: 1.4; margin-bottom:4px;">
-                                Business Health Check active. Lead Intelligence Scores visible. **500 WhatsApp AI Pitches (Hinglish/English)**. Unlimited exports. 20 lists. Pipeline tracking. **Includes geospatial metrics & target opportunities**.
-                            </p>
-                            <span style="font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase;">${pricing.hunter.label}</span>
-                        </div>
-                        ${renderTierBtn('hunter')}
-                    </div>
- 
-                    <!-- Agency -->
-                    <div style="background: rgba(236, 72, 153, 0.02); border: 1px solid ${userTier === 'agency' ? 'rgba(16,185,129,0.5)' : 'rgba(236, 72, 153, 0.12)'}; padding: 18px 20px; border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; gap: 12px;">
-                        <div style="flex: 1;">
-                            <h4 style="font-size: 14px; color: var(--accent-pink); margin: 0 0 4px 0; font-family: var(--font-heading); display: flex; align-items: center; gap: 6px;">
-                                Agency — ${pricing.agency.price}/${pricing.agency.period === 'month' ? 'mo' : 'yr'}
-                                ${userTier === 'agency' ? `<span style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: #10b981; font-size: 9px; font-family: var(--font-mono); padding: 2px 6px; border-radius: 4px; font-weight: bold;">ACTIVE PLAN</span>` : ''}
-                            </h4>
-                            <p style="font-size: 11px; color: var(--text-secondary); margin: 0; line-height: 1.4; margin-bottom:4px;">
-                                Website Prompt Engine active. CRM Kanban pipeline view. **Unlimited WhatsApp AI Pitches**. n8n webhook/Google Sheets integration. 3 team seats. **Includes density heatmaps & niche gap analysis**.
-                            </p>
-                            <span style="font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase;">${pricing.agency.label}</span>
-                        </div>
-                        ${renderTierBtn('agency', 'background: linear-gradient(135deg, var(--accent-pink), #a855f7);')}
-                    </div>
 
-                    <!-- Enterprise -->
-                    <div style="background: rgba(255, 255, 255, 0.01); border: 1px dashed rgba(255, 255, 255, 0.15); padding: 18px 20px; border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; gap: 12px;">
-                        <div style="flex: 1;">
-                            <h4 style="font-size: 14px; color: white; margin: 0 0 4px 0; font-family: var(--font-heading);">Enterprise — Custom</h4>
-                            <p style="font-size: 11px; color: var(--text-secondary); margin: 0; line-height: 1.4; margin-bottom:4px;">
-                                Unlimited team seats, API access (PostgREST), multi-city data scraping on request, Salesforce/HubSpot integrations, and dedicated SLA support.
-                            </p>
-                            <span style="font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase;">For large teams & custom scraping</span>
-                        </div>
-                        <a href="mailto:s8nservice@gmail.com?subject=NearPro%20Enterprise%20Plan%20Inquiry" class="brand-btn" style="padding: 8px 14px; font-size: 11.5px; flex-shrink: 0; background: var(--bg-surface); color: white; border: 1px solid var(--border); text-decoration: none; text-align: center; display: inline-block;">
-                            Contact Us
-                        </a>
-                    </div>
+                        return `
+                            <div style="background: ${bgGradient}; border: 1.5px solid ${borderColor}; border-radius: var(--radius-md); padding: 24px; display: flex; flex-direction: column; justify-content: space-between; position: relative; backdrop-filter: blur(12px);">
+                                
+                                ${plan.badge ? `
+                                    <div style="position: absolute; top: -12px; right: 16px; background: ${isCurrentActive ? '#10b981' : (isHunter ? 'var(--accent-gold)' : 'var(--accent-pink)')}; color: black; font-size: 9px; font-family: var(--font-mono); padding: 3px 10px; border-radius: 50px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
+                                        ${plan.badge}
+                                    </div>
+                                ` : ''}
 
+                                <div>
+                                    <div style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; font-weight: bold;">
+                                        ${plan.tagline}
+                                    </div>
+
+                                    <h3 style="font-size: 18px; color: white; margin: 0 0 10px 0; font-family: var(--font-heading); font-weight: 700;">
+                                        ${plan.name}
+                                    </h3>
+
+                                    <div style="margin-bottom: 16px; display: flex; align-items: baseline; gap: 4px;">
+                                        <span style="font-size: 26px; font-weight: 800; color: white; font-family: var(--font-heading);">${price}</span>
+                                        <span style="font-size: 12px; color: var(--text-muted); font-family: var(--font-mono);">${period}</span>
+                                    </div>
+
+                                    <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 14px;">
+                                        ${plan.subtext}
+                                    </div>
+
+                                    <!-- Bullet Features Checklist -->
+                                    <ul style="list-style: none; padding: 0; margin: 0 0 24px 0; display: flex; flex-direction: column; gap: 10px;">
+                                        ${plan.features.map(f => `
+                                            <li style="display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--text-secondary); line-height: 1.4;">
+                                                <span style="color: #10b981; font-weight: bold; flex-shrink: 0; margin-top: 1px;">✓</span>
+                                                <span style="color: #e2e8f0;">${f}</span>
+                                            </li>
+                                        `).join('')}
+                                    </ul>
+                                </div>
+
+                                <!-- Action Button -->
+                                <div>
+                                    ${isCurrentActive ? `
+                                        <button class="secondary-btn" disabled style="width: 100%; padding: 11px; font-size: 12.5px; font-weight: 700; opacity: 0.7; cursor: not-allowed; border-color: rgba(16, 185, 129, 0.4); color: #10b981;">
+                                            Current Active Plan
+                                        </button>
+                                    ` : `
+                                        <button class="brand-btn" style="width: 100%; padding: 11px; font-size: 12.5px; font-weight: 700; ${plan.id === 'agency' ? 'background: linear-gradient(135deg, var(--accent-pink), #a855f7);' : ''}" onclick="window.State.selectPlan('${plan.id}', '${cycle}');">
+                                            ${plan.level > userLevel ? `Upgrade to ${plan.name.split(' ')[0]}` : `Switch to ${plan.name.split(' ')[0]}`}
+                                        </button>
+                                    `}
+                                </div>
+
+                            </div>
+                        `;
+                    }).join('')}
                 </div>
-                
-                <div style="font-size: 11px; color: var(--text-muted);">
-                    All plans are billed in INR. Cancel your subscription anytime.
+
+                <div style="font-size: 11.5px; color: var(--text-muted); font-family: var(--font-mono);">
+                    🔒 256-Bit Encrypted Razorpay Checkout • 7-Day Money-Back Guarantee • Cancel Anytime
                 </div>
             </div>
         </div>
