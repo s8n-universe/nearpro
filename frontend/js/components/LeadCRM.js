@@ -2,11 +2,23 @@ import { State } from '../state.js';
 import { Api } from '../api.js';
 import { buildOutreach } from './OutreachStudio.js';
 
-// Module level state for call/timer controls to survive view redraws
-let activeCallInterval = null;
-let activeCallSeconds = 0;
-let isCallConnected = false;
-let callTargetLeadName = '';
+// Helper: human-readable time-ago string
+function timeAgo(dateStr) {
+    if (!dateStr) return null;
+    const now = new Date();
+    const then = new Date(dateStr);
+    const diffMs = now - then;
+    if (diffMs < 0 || isNaN(diffMs)) return null;
+    const mins = Math.floor(diffMs / 60000);
+    if (mins < 1) return 'Just now';
+    if (mins < 60) return `${mins}m ago`;
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return `${hrs}h ago`;
+    const days = Math.floor(hrs / 24);
+    if (days === 1) return 'Yesterday';
+    if (days < 30) return `${days}d ago`;
+    return `${Math.floor(days / 30)}mo ago`;
+}
 
 export function renderLeadCRM(pipelineData, stats) {
     // 1. Flatten all leads
@@ -70,8 +82,8 @@ export function renderLeadCRM(pipelineData, stats) {
         
         let crmTag = '';
         if (lead.crm_status === 'new') crmTag = '🔵 New';
-        else if (lead.crm_status === 'contacted') crmTag = '🟡 Contacted';
-        else if (lead.crm_status === 'responded') crmTag = '🟢 Responded';
+        else if (lead.crm_status === 'contacted') crmTag = '📞 Contacted';
+        else if (lead.crm_status === 'responded') crmTag = '💬 Responded';
         else if (lead.crm_status === 'converted') crmTag = '🏆 Converted';
         else if (lead.crm_status === 'closed') crmTag = '⚫ Closed';
 
@@ -82,6 +94,21 @@ export function renderLeadCRM(pipelineData, stats) {
             if (i <= Math.floor(rating)) starsHTML += '★';
             else if (i - 0.5 <= rating) starsHTML += '½';
             else starsHTML += '☆';
+        }
+
+        // Last contacted timestamp
+        const lastContactedStr = timeAgo(lead.outreach_sent_at || lead.updated_at);
+        const lastContactedHTML = lastContactedStr
+            ? `<span class="lead-last-contacted">${lastContactedStr}</span>`
+            : `<span class="lead-last-contacted" style="color:var(--text-muted);">Not contacted</span>`;
+
+        // Follow-up reminder badge: contacted > 3 days ago, not yet responded/converted
+        let followUpBadge = '';
+        if (lead.crm_status === 'contacted' && lead.outreach_sent_at) {
+            const daysSince = Math.floor((Date.now() - new Date(lead.outreach_sent_at).getTime()) / 86400000);
+            if (daysSince >= 3) {
+                followUpBadge = `<span class="followup-badge">🔔 Follow-up</span>`;
+            }
         }
 
         return `
@@ -96,6 +123,10 @@ export function renderLeadCRM(pipelineData, stats) {
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px; font-size:10.5px;">
                     <span style="color:var(--text-muted); font-size: 10px;">${crmTag}</span>
                     <span style="color:var(--accent-gold); font-size: 10px;">${starsHTML}</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:2px;">
+                    ${lastContactedHTML}
+                    ${followUpBadge}
                 </div>
             </div>
         `;
@@ -190,6 +221,27 @@ export function renderLeadCRM(pipelineData, stats) {
             `;
         }
 
+        // Activity log from timestamps
+        const activityItems = [];
+        if (activeLead.outreach_sent_at) {
+            activityItems.push({ label: 'Outreach sent', time: activeLead.outreach_sent_at });
+        }
+        if (activeLead.updated_at) {
+            activityItems.push({ label: 'Record updated', time: activeLead.updated_at });
+        }
+        if (activeLead.created_at) {
+            activityItems.push({ label: 'Lead saved', time: activeLead.created_at });
+        }
+        // Sort by most recent first, show max 3
+        activityItems.sort((a, b) => new Date(b.time) - new Date(a.time));
+        const activityHTML = activityItems.slice(0, 3).map(item => `
+            <div class="activity-log-item">
+                <span class="activity-log-dot"></span>
+                <span class="activity-log-text">${item.label}</span>
+                <span class="activity-log-time">${timeAgo(item.time)}</span>
+            </div>
+        `).join('');
+
         col2HTML = `
             <div class="detail-card-panel">
                 <div style="border-bottom:1px solid var(--border); padding-bottom:12px; margin-bottom:8px;">
@@ -197,13 +249,12 @@ export function renderLeadCRM(pipelineData, stats) {
                     <p style="margin:0; font-size:12.5px; color:var(--text-muted);">${activeLead.category} &middot; ${activeLead.area}</p>
                 </div>
 
-                <div class="social-links-grid">
-                    <a href="https://linkedin.com/search/results/all/?keywords=${encodeURIComponent(activeLead.name)}" target="_blank" class="social-link-btn" style="display:flex; align-items:center; gap:6px; justify-content:center;">
-                        <i data-lucide="linkedin" style="width:13px; height:13px;"></i> LinkedIn &gt;
-                    </a>
-                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(activeLead.name + ' ' + activeLead.area)}" target="_blank" class="social-link-btn" style="display:flex; align-items:center; gap:6px; justify-content:center;">
-                        <i data-lucide="map" style="width:13px; height:13px;"></i> Maps Profile &gt;
-                    </a>
+                <!-- Quick Actions Row -->
+                <div class="quick-actions-row">
+                    ${leadPhone ? `<a href="tel:${leadPhone.replace(/[^0-9+]/g, '')}" class="quick-action-btn quick-action-call"><i data-lucide="phone" style="width:14px; height:14px;"></i> Call</a>` : ''}
+                    ${leadPhone ? `<button class="quick-action-btn quick-action-whatsapp" id="quickWhatsAppBtn" data-phone="${leadPhone}"><i data-lucide="message-circle" style="width:14px; height:14px;"></i> WhatsApp</button>` : ''}
+                    ${leadMail ? `<a href="mailto:${leadMail}" class="quick-action-btn quick-action-email"><i data-lucide="mail" style="width:14px; height:14px;"></i> Email</a>` : ''}
+                    ${leadPhone ? `<button class="quick-action-btn" id="copyPhoneBtn" data-phone="${leadPhone}"><i data-lucide="copy" style="width:14px; height:14px;"></i> Copy Phone</button>` : ''}
                 </div>
 
                 <div class="contact-detail-row">
@@ -211,30 +262,37 @@ export function renderLeadCRM(pipelineData, stats) {
                         <span style="color:var(--text-secondary); display:block; font-size:10px; font-family:var(--font-mono); text-transform:uppercase;">Phone</span>
                         <strong style="color:white; font-size:12.5px;">${leadPhone || 'No phone number'}</strong>
                     </div>
-                    ${leadPhone ? `<button class="call-control-btn" id="startCallBtn" data-phone="${leadPhone}" data-name="${activeLead.name}">Call</button>` : ''}
                 </div>
 
                 <div class="contact-detail-row">
                     <div>
-                        <span style="color:var(--text-secondary); display:block; font-size:10px; font-family:var(--font-mono); text-transform:uppercase;">Mail</span>
-                        <strong style="color:white; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:inline-block; max-width:160px;">${leadMail || 'No email address'}</strong>
+                        <span style="color:var(--text-secondary); display:block; font-size:10px; font-family:var(--font-mono); text-transform:uppercase;">Email</span>
+                        <strong style="color:white; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:inline-block; max-width:220px;">${leadMail || 'No email address'}</strong>
                     </div>
-                    ${leadMail ? `<button class="call-control-btn" id="copyMailBtn" data-email="${leadMail}">Copy</button>` : ''}
+                    ${leadMail ? `<button class="quick-action-btn" id="copyMailBtn" data-email="${leadMail}" style="padding:4px 10px; font-size:11px;"><i data-lucide="copy" style="width:12px; height:12px;"></i> Copy</button>` : ''}
                 </div>
 
                 <div style="display:flex; flex-direction:column; gap:4px; margin-top:8px;">
-                    <label class="detail-label" for="crmNotesInput" style="font-size:10.5px;">Add Call Note</label>
-                    <textarea id="crmNotesInput" class="detail-notes-area" placeholder="Write logs here... (e.g. loves Denali layout, busy until next Tuesday)">${leadNotes}</textarea>
+                    <label class="detail-label" for="crmNotesInput" style="font-size:10.5px;">Notes</label>
+                    <textarea id="crmNotesInput" class="detail-notes-area" placeholder="Add notes... (e.g. interested in website redesign, follow up next Tuesday)">${leadNotes}</textarea>
                     <button class="brand-btn" id="saveCrmNotesBtn" data-id="${activeLead.saved_lead_id}" style="padding:8px; font-size:11.5px; align-self:flex-end; margin-top:6px; min-width:90px;">Save Notes</button>
                 </div>
             </div>
+
+            <!-- Activity Log -->
+            ${activityItems.length > 0 ? `
+            <div class="activity-log-card">
+                <h5 style="margin:0 0 10px 0; font-size:11.5px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px;">Recent Activity</h5>
+                ${activityHTML}
+            </div>
+            ` : ''}
 
             <!-- Website Speed & Compliance Audit -->
             ${auditHTML}
         `;
     }
 
-    // 7. Generate Column 3 HTML (AI Outreach Pitch & Call Dispositions)
+    // 7. Generate Column 3 HTML (AI Outreach Pitch & Lead Stage)
     let col3HTML = '';
     if (!activeLead) {
         col3HTML = `
@@ -242,8 +300,8 @@ export function renderLeadCRM(pipelineData, stats) {
                 <div style="margin-bottom:12px;">
                     <i data-lucide="target" style="width:40px; height:40px; color:var(--text-secondary); stroke-width:1.5px;"></i>
                 </div>
-                <h4 style="color:white;">Campaign Center</h4>
-                <p style="color:var(--text-muted); font-size:13px;">Pitch campaigns and update lead stages dynamically.</p>
+                <h4 style="color:white;">Pipeline Actions</h4>
+                <p style="color:var(--text-muted); font-size:13px;">Select a lead to manage outreach and update stage.</p>
             </div>
         `;
     } else {
@@ -262,44 +320,31 @@ export function renderLeadCRM(pipelineData, stats) {
         const textVal = window._composedMainText || initialText;
 
         col3HTML = `
-            <!-- Call Disposition Selector -->
+            <!-- Lead Stage Selector -->
             <div class="disposition-card">
-                <h4 style="margin:0; font-size:13.5px; color:white; font-family:var(--font-heading);">Call Disposition</h4>
-                <p style="margin:0 0 10px 0; font-size:11.5px; color:var(--text-muted);">Record call outcome:</p>
+                <h4 style="margin:0; font-size:13.5px; color:white; font-family:var(--font-heading);">Lead Stage</h4>
+                <p style="margin:0 0 10px 0; font-size:11.5px; color:var(--text-muted);">Update pipeline stage:</p>
 
                 <div class="disposition-group">
-                    <span class="disposition-cat-title" style="color:#22c55e;">Answered</span>
                     <label class="disposition-option">
-                        <input type="radio" name="call_disp" value="converted" ${activeLead.crm_status === 'converted' ? 'checked' : ''}>
-                        <span>Meeting Set / Converted</span>
+                        <input type="radio" name="call_disp" value="new" ${activeLead.crm_status === 'new' ? 'checked' : ''}>
+                        <span>🔵 New Lead</span>
+                    </label>
+                    <label class="disposition-option">
+                        <input type="radio" name="call_disp" value="contacted" ${activeLead.crm_status === 'contacted' ? 'checked' : ''}>
+                        <span>📞 Contacted</span>
                     </label>
                     <label class="disposition-option">
                         <input type="radio" name="call_disp" value="responded" ${activeLead.crm_status === 'responded' ? 'checked' : ''}>
-                        <span>Email Info / Interested</span>
+                        <span>💬 Responded / Interested</span>
                     </label>
                     <label class="disposition-option">
-                        <input type="radio" name="call_disp" value="responded_not_interested" ${activeLead.crm_status === 'closed' ? 'checked' : ''}>
-                        <span>Not Interested</span>
-                    </label>
-
-                    <span class="disposition-cat-title" style="color:#eab308;">Didn't Answer</span>
-                    <label class="disposition-option">
-                        <input type="radio" name="call_disp" value="contacted_busy">
-                        <span>Busy / Callback</span>
+                        <input type="radio" name="call_disp" value="converted" ${activeLead.crm_status === 'converted' ? 'checked' : ''}>
+                        <span>🏆 Converted / Meeting Set</span>
                     </label>
                     <label class="disposition-option">
-                        <input type="radio" name="call_disp" value="contacted_no_answer" ${activeLead.crm_status === 'contacted' ? 'checked' : ''}>
-                        <span>No Answer</span>
-                    </label>
-
-                    <span class="disposition-cat-title" style="color:var(--text-muted);">Other</span>
-                    <label class="disposition-option">
-                        <input type="radio" name="call_disp" value="contacted_voicemail">
-                        <span>Left VoiceMail</span>
-                    </label>
-                    <label class="disposition-option">
-                        <input type="radio" name="call_disp" value="closed_bad_number">
-                        <span>Bad Number</span>
+                        <input type="radio" name="call_disp" value="closed" ${activeLead.crm_status === 'closed' ? 'checked' : ''}>
+                        <span>⚫ Closed / Not Interested</span>
                     </label>
                 </div>
                 <div class="action-status-msg" id="dispSaveMsg"></div>
@@ -359,53 +404,50 @@ export function renderLeadCRM(pipelineData, stats) {
         `;
     }
 
-    // 8. Generate Call Context Bar at the top of CRM content
-    const formattedSeconds = () => {
-        const m = String(Math.floor(activeCallSeconds / 60)).padStart(2, '0');
-        const s = String(activeCallSeconds % 60).padStart(2, '0');
-        return `${m}:${s}`;
-    };
+    // 8. Generate Pipeline Stats Summary Bar
+    const newCount = allLeads.filter(l => l.crm_status === 'new').length;
+    const contactedCount = allLeads.filter(l => l.crm_status === 'contacted').length;
+    const respondedCount = allLeads.filter(l => l.crm_status === 'responded').length;
+    const convertedCount = allLeads.filter(l => l.crm_status === 'converted').length;
+    const closedCount = allLeads.filter(l => l.crm_status === 'closed').length;
 
-    let callBarHTML = '';
-    if (isCallConnected) {
-        callBarHTML = `
-            <div class="call-context-bar" style="background: linear-gradient(90deg, #166534, #15803d);">
-                <div style="display: flex; align-items: center; gap: 16px;">
-                    <i data-lucide="phone-call" style="width:16px; height:16px;"></i>
-                    <strong>Connected &mdash; <span id="callDurationTimer">${formattedSeconds()}</span></strong>
-                    <span style="opacity: 0.85; font-size: 12.5px;">Talking to ${callTargetLeadName}</span>
-                </div>
-                <div class="call-controls">
-                    <button class="call-control-btn" id="callMuteBtn" style="display:flex; align-items:center; gap:4px;"><i data-lucide="mic-off" style="width:12px; height:12px;"></i> Mute</button>
-                    <button class="call-control-btn" id="callKeyboardBtn" style="display:flex; align-items:center; gap:4px;"><i data-lucide="grid" style="width:12px; height:12px;"></i> Keypad</button>
-                    <button class="call-control-btn disconnect-btn" id="endCallContextBtn">Disconnect</button>
-                </div>
+    const pipelineStatsBar = `
+        <div class="pipeline-stats-bar">
+            <div class="pipeline-stat-item ${activeSubTab === 'all' ? 'active' : ''}" data-filter="all">
+                <span class="pipeline-stat-count">${allCount}</span>
+                <span class="pipeline-stat-label">Total</span>
             </div>
-        `;
-    } else {
-        callBarHTML = `
-            <div class="call-context-bar" style="background: var(--bg-surface); border-bottom: 1px solid var(--border); color: var(--text-secondary);">
-                <div style="display: flex; align-items: center; gap: 16px;">
-                    <i data-lucide="phone" style="width:16px; height:16px;"></i>
-                    <strong>Line Idle</strong>
-                    <span style="font-size:12px; color:var(--text-muted);">Click "Call" on any lead card to start phone/WhatsApp dialer context</span>
-                </div>
-                <div class="call-controls">
-                    <button class="call-control-btn end-session-btn" id="sessionLeaveBtn" style="font-size:11.5px;">End Session</button>
-                </div>
+            <div class="pipeline-stat-divider"></div>
+            <div class="pipeline-stat-item" data-filter="new">
+                <span class="pipeline-stat-count" style="color:#3b82f6;">${newCount}</span>
+                <span class="pipeline-stat-label">New</span>
             </div>
-        `;
-    }
+            <div class="pipeline-stat-divider"></div>
+            <div class="pipeline-stat-item" data-filter="contacted">
+                <span class="pipeline-stat-count" style="color:#eab308;">${contactedCount}</span>
+                <span class="pipeline-stat-label">Contacted</span>
+            </div>
+            <div class="pipeline-stat-divider"></div>
+            <div class="pipeline-stat-item" data-filter="responded">
+                <span class="pipeline-stat-count" style="color:#22c55e;">${respondedCount}</span>
+                <span class="pipeline-stat-label">Responded</span>
+            </div>
+            <div class="pipeline-stat-divider"></div>
+            <div class="pipeline-stat-item" data-filter="converted">
+                <span class="pipeline-stat-count" style="color:#f59e0b;">${convertedCount}</span>
+                <span class="pipeline-stat-label">Converted</span>
+            </div>
+            <div class="pipeline-stat-divider"></div>
+            <div class="pipeline-stat-item" data-filter="closed">
+                <span class="pipeline-stat-count" style="color:#6b7280;">${closedCount}</span>
+                <span class="pipeline-stat-label">Closed</span>
+            </div>
+        </div>
+    `;
 
     return `
-        <!-- Top status context bar -->
-        ${callBarHTML}
-
-        <!-- Usability Banner -->
-        <div class="usability-banner" style="background: rgba(255, 160, 0, 0.02); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px 18px; margin: 16px 24px 0 24px; display: flex; flex-direction: column; gap: 4px; border-left: 3px solid var(--accent-gold); flex-shrink: 0;">
-            <div style="font-size: 12.5px; color: white; line-height: 1.4; text-align: left;"><span style="color: var(--accent-gold); font-weight: 600;">What it is:</span> Manage your saved leads through a unified B2B sales pipeline.</div>
-            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.4; text-align: left;"><span style="color: var(--accent-gold); font-weight: 600;">How to leverage:</span> Update lead stages and save call logs to track deals from initial pitch to closed client.</div>
-        </div>
+        <!-- Pipeline Stats Summary Bar -->
+        ${pipelineStatsBar}
 
         <!-- 3-Column main workstation content grid -->
         <div class="dashboard-workspace-3col">
@@ -414,7 +456,7 @@ export function renderLeadCRM(pipelineData, stats) {
             <div class="workspace-3col-panel col-selector">
                 <div class="selector-tabs">
                     <button class="selector-tab-btn ${activeSubTab === 'all' ? 'active' : ''}" data-tab="all">All (${allCount})</button>
-                    <button class="selector-tab-btn ${activeSubTab === 'calls' ? 'active' : ''}" data-tab="calls">Calls (${callsCount})</button>
+                    <button class="selector-tab-btn ${activeSubTab === 'calls' ? 'active' : ''}" data-tab="calls">Active (${callsCount})</button>
                     <button class="selector-tab-btn ${activeSubTab === 'done' ? 'active' : ''}" data-tab="done">Done (${doneCount})</button>
                 </div>
                 <div class="selector-search-wrap">
@@ -494,56 +536,47 @@ export function bindCRMWorkspaceEvents(onUpdateCallback) {
         });
     }
 
-    // 4. Phone dialing events
-    const startCallBtn = document.getElementById('startCallBtn');
-    if (startCallBtn) {
-        startCallBtn.addEventListener('click', () => {
-            const phone = startCallBtn.getAttribute('data-phone');
-            const name = startCallBtn.getAttribute('data-name');
-            
-            isCallConnected = true;
-            activeCallSeconds = 0;
-            callTargetLeadName = name;
-
-            if (activeCallInterval) clearInterval(activeCallInterval);
-            activeCallInterval = setInterval(() => {
-                activeCallSeconds++;
-                const timerEl = document.getElementById('callDurationTimer');
-                if (timerEl) {
-                    const m = String(Math.floor(activeCallSeconds / 60)).padStart(2, '0');
-                    const s = String(activeCallSeconds % 60).padStart(2, '0');
-                    timerEl.innerText = `${m}:${s}`;
-                } else {
-                    clearInterval(activeCallInterval);
-                    activeCallInterval = null;
-                }
-            }, 1000);
-
-            if (onUpdateCallback) onUpdateCallback();
+    // 4. Quick WhatsApp button
+    const quickWhatsAppBtn = document.getElementById('quickWhatsAppBtn');
+    if (quickWhatsAppBtn) {
+        quickWhatsAppBtn.addEventListener('click', () => {
+            const phone = quickWhatsAppBtn.getAttribute('data-phone');
+            if (!phone) return;
+            const cleanPhone = phone.replace(/[^0-9]/g, '');
+            window.open(`https://wa.me/${cleanPhone}`, '_blank');
         });
     }
 
-    // 5. Disconnect call button
-    const endCallContextBtn = document.getElementById('endCallContextBtn');
-    if (endCallContextBtn) {
-        endCallContextBtn.addEventListener('click', () => {
-            isCallConnected = false;
-            if (activeCallInterval) {
-                clearInterval(activeCallInterval);
-                activeCallInterval = null;
+    // 5. Copy Phone button
+    const copyPhoneBtn = document.getElementById('copyPhoneBtn');
+    if (copyPhoneBtn) {
+        copyPhoneBtn.addEventListener('click', () => {
+            const phone = copyPhoneBtn.getAttribute('data-phone');
+            navigator.clipboard.writeText(phone);
+            copyPhoneBtn.innerHTML = '<i data-lucide="check" style="width:14px; height:14px;"></i> Copied!';
+            if (window.lucide) window.lucide.createIcons();
+            setTimeout(() => {
+                copyPhoneBtn.innerHTML = '<i data-lucide="copy" style="width:14px; height:14px;"></i> Copy Phone';
+                if (window.lucide) window.lucide.createIcons();
+            }, 2000);
+        });
+    }
+
+    // 6. Pipeline stats bar click filtering
+    const statItems = document.querySelectorAll('.pipeline-stat-item[data-filter]');
+    statItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const filter = item.getAttribute('data-filter');
+            const searchParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+            if (filter === 'all') {
+                searchParams.set('sub_tab', 'all');
+            } else {
+                // For specific stages, use 'all' tab but filter will be visual
+                searchParams.set('sub_tab', 'all');
             }
-            activeCallSeconds = 0;
-            if (onUpdateCallback) onUpdateCallback();
+            window.location.hash = `#/dashboard/crm?${searchParams.toString()}`;
         });
-    }
-
-    // 6. Session End navigation
-    const sessionLeaveBtn = document.getElementById('sessionLeaveBtn');
-    if (sessionLeaveBtn) {
-        sessionLeaveBtn.addEventListener('click', () => {
-            window.location.hash = '#/browse';
-        });
-    }
+    });
 
     // 7. Copy Mail
     const copyMailBtn = document.getElementById('copyMailBtn');
@@ -551,8 +584,12 @@ export function bindCRMWorkspaceEvents(onUpdateCallback) {
         copyMailBtn.addEventListener('click', () => {
             const email = copyMailBtn.getAttribute('data-email');
             navigator.clipboard.writeText(email);
-            copyMailBtn.innerText = 'Copied!';
-            setTimeout(() => { copyMailBtn.innerText = 'Copy'; }, 2000);
+            copyMailBtn.innerHTML = '<i data-lucide="check" style="width:12px; height:12px;"></i> Copied!';
+            if (window.lucide) window.lucide.createIcons();
+            setTimeout(() => {
+                copyMailBtn.innerHTML = '<i data-lucide="copy" style="width:12px; height:12px;"></i> Copy';
+                if (window.lucide) window.lucide.createIcons();
+            }, 2000);
         });
     }
 
@@ -626,26 +663,18 @@ export function bindCRMWorkspaceEvents(onUpdateCallback) {
         });
     }
 
-    // 10. Call Disposition Auto Save
+    // 10. Lead Stage Auto Save
     const dispRadios = document.querySelectorAll('input[name="call_disp"]');
     dispRadios.forEach(radio => {
         radio.addEventListener('change', async () => {
-            const selectedVal = radio.value;
+            const targetStatus = radio.value;
             const searchParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
             const leadId = searchParams.get('lead_id');
-            
-            // Map disposition status to CRM stages
-            let targetStatus = 'new';
-            if (selectedVal === 'converted') targetStatus = 'converted';
-            else if (selectedVal === 'responded' || selectedVal === 'responded_not_interested') targetStatus = 'responded';
-            else if (selectedVal.startsWith('contacted')) targetStatus = 'contacted';
-            else if (selectedVal === 'closed_bad_number') targetStatus = 'closed';
 
             const msgEl = document.getElementById('dispSaveMsg');
-            if (msgEl) msgEl.innerText = 'Syncing stage...';
+            if (msgEl) msgEl.innerText = 'Updating stage...';
 
             try {
-                // Fetch saved lead records to retrieve the primary ID matching the selection
                 const { data } = await Api.supabase
                     .from('saved_leads')
                     .select('id')
@@ -654,13 +683,13 @@ export function bindCRMWorkspaceEvents(onUpdateCallback) {
                 
                 if (data) {
                     await Api.updateLeadStatus(data.id, targetStatus);
-                    if (msgEl) msgEl.innerText = 'Call status saved!';
+                    if (msgEl) msgEl.innerText = 'Stage updated!';
                     setTimeout(() => { if (msgEl) msgEl.innerText = ''; }, 2000);
                     if (onUpdateCallback) onUpdateCallback();
                 }
             } catch (err) {
-                console.error("Disposition update failed", err);
-                if (msgEl) msgEl.innerText = 'Error syncing status';
+                console.error("Stage update failed", err);
+                if (msgEl) msgEl.innerText = 'Error updating stage';
             }
         });
     });
