@@ -44,78 +44,12 @@ import { renderDocumentViewerLayout } from './components/DocumentViewer.js';
 // Main Application shell reference
 const appShell = document.getElementById('app');
 
-let timerInterval = null;
-
-function startSessionTimer(durationSeconds, startDocked = false) {
-    if (timerInterval) clearInterval(timerInterval);
-    
-    let timerEl = document.getElementById('sessionTimer');
-    if (!timerEl) {
-        timerEl = document.createElement('div');
-        timerEl.id = 'sessionTimer';
-        document.body.appendChild(timerEl);
-    }
-    
-    timerEl.className = startDocked ? 'timer-docked' : 'timer-center';
-    
-    const updateDisplay = (secs) => {
-        const m = String(Math.floor(secs / 60)).padStart(2, '0');
-        const s = String(secs % 60).padStart(2, '0');
-        timerEl.innerHTML = `
-            <span>⏳</span>
-            <span>Premium Free Trial: ${m}:${s}</span>
-        `;
-    };
-    
-    let timeRemaining = durationSeconds;
-    updateDisplay(timeRemaining);
-    
-    if (!startDocked) {
-        setTimeout(() => {
-            const currentEl = document.getElementById('sessionTimer');
-            if (currentEl && currentEl.classList.contains('timer-center')) {
-                currentEl.className = 'timer-docked';
-            }
-        }, 3000);
-    }
-    
-    timerInterval = setInterval(() => {
-        timeRemaining--;
-        if (timeRemaining <= 0) {
-            clearInterval(timerInterval);
-            timerInterval = null;
-            if (timerEl) timerEl.remove();
-            
-            State.locked = true;
-            State.notify();
-            State.setPricingModal(true);
-        } else {
-            updateDisplay(timeRemaining);
-            if (timeRemaining <= 30) {
-                timerEl.classList.add('timer-urgent');
-            }
-        }
-    }, 1000);
-}
-
 // State Subscription - Centralized UI synchronization
 State.subscribe(async (currentState) => {
+    State.locked = false;
     const isPremium = currentUserHasAccess('scout');
-    if (isPremium) {
-        if (timerInterval) {
-            clearInterval(timerInterval);
-            timerInterval = null;
-        }
-        const timerEl = document.getElementById('sessionTimer');
-        if (timerEl) timerEl.remove();
-
-        // Ensure premium users are never locked or shown the pricing modal
-        if (State.locked) {
-            State.locked = false;
-        }
-        if (State.pricing_modal_open) {
-            State.pricing_modal_open = false;
-        }
+    if (isPremium && State.pricing_modal_open) {
+        State.pricing_modal_open = false;
     }
 
     // Check if we are on dashboard or browse routes
@@ -405,7 +339,7 @@ async function renderDirectoryLayout() {
         State.fingerprint = generateBrowserFingerprint();
     }
 
-    // Re-check premium status; profile may have been loaded asynchronously
+    State.locked = false;
     const isPremium = currentUserHasAccess('scout');
     let showWelcomeModal = false;
  
@@ -413,39 +347,13 @@ async function renderDirectoryLayout() {
         const demoCompleted = localStorage.getItem('nearpro_demo_completed') === 'true';
         if (!demoCompleted) {
             showWelcomeModal = true;
-            State.locked = false;
-        } else {
-            // Only run trial timer logic for anonymous/free users who have completed the demo
-            try {
-                const trial = await Api.checkTrial(State.fingerprint);
-                if (!trial) {
-                    showWelcomeModal = true;
-                } else {
-                    const elapsed = Math.floor((Date.now() - new Date(trial.started_at).getTime()) / 1000);
-                    if (elapsed >= 120) {
-                        State.locked = true;
-                    } else {
-                        const remaining = 120 - elapsed;
-                        startSessionTimer(remaining, true);
-                    }
-                }
-            } catch (err) {
-                console.error("Failed to check database trial status:", err);
-            }
-        }
-    } else if (isPremium) {
-        // Premium user: ensure clean state
-        State.locked = false;
-        if (timerInterval) {
-            clearInterval(timerInterval);
-            timerInterval = null;
         }
     }
 
     // Trigger initial content query load after lock status is determined
     await queryProfessionals(true);
 
-    if (showWelcomeModal && !State.demo_active && !State.locked) {
+    if (showWelcomeModal && !State.demo_active) {
         if (!document.getElementById('welcomeDemoModal')) {
             const popup = document.createElement('div');
             popup.id = 'welcomeDemoModal';
@@ -482,7 +390,6 @@ async function renderDirectoryLayout() {
             const buttons = popup.querySelectorAll('.industry-opt-btn');
             buttons.forEach(btn => {
                 btn.addEventListener('click', async () => {
-                    // Highlight selected button
                     buttons.forEach(b => {
                         b.style.borderColor = 'var(--border)';
                         b.style.background = 'var(--bg-base)';
@@ -493,7 +400,6 @@ async function renderDirectoryLayout() {
                     btn.style.color = 'var(--accent-gold)';
                     
                     DemoAudio.playClick();
-                    
                     const target_industry = btn.getAttribute('data-value');
                     
                     State.setSurvey({
@@ -502,15 +408,9 @@ async function renderDirectoryLayout() {
                         target_industry
                     });
                     
-                    try {
-                        await Api.startTrial(State.fingerprint);
-                    } catch (err) {
-                        console.warn("Trial registration failed, using local timer:", err);
-                    }
-                    
                     setTimeout(() => {
                         popup.remove();
-                        startSessionTimer(120, false);
+                        localStorage.setItem('nearpro_demo_completed', 'true');
                         runGuidedDemo(target_industry);
                     }, 400);
                 });
