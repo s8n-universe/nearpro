@@ -318,7 +318,6 @@ export const Api = {
         const tier = (profile?.subscription_tier || profile?.tier || 'free').toLowerCase();
 
         if (tier === 'free') {
-            alert("CSV export is not available on the Explorer plan. Upgrade to Scout (₹499/mo) to export leads.");
             State?.setPricingModal(true);
             return;
         }
@@ -329,7 +328,6 @@ export const Api = {
             const limit = profile?.monthly_export_rows_limit || 100;
             if (used + leads.length > limit) {
                 const remaining = Math.max(0, limit - used);
-                alert(`Export limit: You have ${remaining} of ${limit} rows remaining this month on the Scout plan. Upgrade to Hunter for unlimited exports.`);
                 if (remaining === 0) {
                     State?.setPricingModal(true);
                     return;

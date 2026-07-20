@@ -7,21 +7,20 @@ export function renderComparePanel() {
     
     return `
         <div class="compare-panel ${isVisible ? 'visible' : ''}">
-            <span style="font-size: 14px; font-weight: 500; color: var(--text-primary);">
-                ${count} professional${count > 1 ? 's' : ''} selected
+            <span style="font-size: 13.5px; font-weight: 600; color: var(--text-primary);">
+                ${count} verified business${count > 1 ? 'es' : ''} selected
             </span>
-            <div style="display: flex; gap: 8px;">
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <button id="triggerExportExcelBtn" class="brand-btn" style="padding: 8px 16px; font-size: 13px; border-radius: var(--radius-sm); background: linear-gradient(135deg, #10b981 0%, #059669 100%); display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
+                    <i data-lucide="file-spreadsheet" style="width:14px; height:14px;"></i> Export ${count} Verified Lead${count > 1 ? 's' : ''} to Excel
+                </button>
                 ${count >= 2 ? `
-                    <button id="triggerCompareBtn" class="brand-btn" style="padding: 8px 16px; font-size: 13px; border-radius: var(--radius-sm);">
+                    <button id="triggerCompareBtn" class="secondary-btn" style="padding: 8px 16px; font-size: 13px; border-radius: var(--radius-sm);">
                         Compare Selected
                     </button>
-                ` : `
-                    <button class="brand-btn" disabled style="padding: 8px 16px; font-size: 13px; border-radius: var(--radius-sm); opacity: 0.5;">
-                        Select min. 2
-                    </button>
-                `}
+                ` : ''}
                 <button id="clearCompareBtn" class="secondary-btn" style="padding: 8px 16px; font-size: 13px; border-radius: var(--radius-sm);">
-                    Clear
+                    Clear Selection
                 </button>
             </div>
         </div>
@@ -123,6 +122,16 @@ export function renderCompareModalContent(professionals) {
 export function bindComparePanelEvents(onTriggerCompare) {
     const triggerBtn = document.getElementById('triggerCompareBtn');
     const clearBtn = document.getElementById('clearCompareBtn');
+    const exportExcelBtn = document.getElementById('triggerExportExcelBtn');
+
+    if (exportExcelBtn) {
+        exportExcelBtn.addEventListener('click', () => {
+            const selectedLeads = State.professionals.filter(p => State.selected_ids.includes(p.id));
+            if (selectedLeads.length > 0) {
+                Api.exportToCSV(selectedLeads);
+            }
+        });
+    }
     
     if (triggerBtn) {
         triggerBtn.addEventListener('click', async () => {
