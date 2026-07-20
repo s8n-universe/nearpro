@@ -88,11 +88,29 @@ export function showPreparationLoader(callback) {
 
         if (elapsed >= duration) {
             clearInterval(progressTimer);
-            // Completed! Clean up overlay and invoke callback
-            setTimeout(() => {
+            overlay.innerHTML = `
+                <div style="max-width: 440px; width: 100%; text-align: center; font-family: var(--font-heading, inherit); display: flex; flex-direction: column; align-items: center; gap: 16px;">
+                    <div style="font-size: 48px; margin-bottom: 4px;">🎉</div>
+                    <h2 style="font-size: 24px; color: white; margin: 0; font-weight: 700;">Welcome to NearPro!</h2>
+                    <p style="color: var(--text-secondary, #a1a1aa); font-size: 14px; margin: 0 0 8px 0; line-height: 1.5;">
+                        Your personalized lead intelligence workspace is ready.
+                    </p>
+                    <button id="enterDashboardLoaderBtn" class="brand-btn" style="padding: 12px 28px; font-size: 14px; font-weight: 700; cursor: pointer;">
+                        Enter Workspace Dashboard
+                    </button>
+                </div>
+            `;
+
+            const finish = () => {
                 overlay.remove();
                 if (callback) callback();
-            }, 500);
+                window.location.hash = '#/dashboard/directory';
+            };
+
+            const btn = document.getElementById('enterDashboardLoaderBtn');
+            if (btn) btn.addEventListener('click', finish);
+
+            setTimeout(finish, 1500);
         }
     }, interval);
 }

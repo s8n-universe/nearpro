@@ -2117,11 +2117,22 @@ async function initApp() {
         const { supabase } = await import('./supabase.js');
         
         // Initial session fetch
+        // Initial session fetch
         supabase.auth.getSession().then(async ({ data: { session } }) => {
             if (session) {
                 State.user = session.user;
                 State.profile = await Api.getProfile(session.user.id);
                 State.notify();
+
+                if (window.location.hash.includes('access_token=') || window.location.hash === '#/' || !window.location.hash) {
+                    const queuedTier = localStorage.getItem('selected_nearpro_tier');
+                    const queuedInterval = localStorage.getItem('selected_nearpro_interval') || 'monthly';
+                    if (queuedTier && queuedTier !== 'free') {
+                        window.location.hash = `#/checkout?plan=${queuedTier}&cycle=${queuedInterval}`;
+                    } else {
+                        window.location.hash = '#/dashboard/directory';
+                    }
+                }
             }
         });
 
@@ -2130,6 +2141,16 @@ async function initApp() {
             if (session) {
                 State.user = session.user;
                 State.profile = await Api.getProfile(session.user.id);
+
+                if (event === 'SIGNED_IN' || window.location.hash.includes('access_token=') || window.location.hash === '#/' || !window.location.hash) {
+                    const queuedTier = localStorage.getItem('selected_nearpro_tier');
+                    const queuedInterval = localStorage.getItem('selected_nearpro_interval') || 'monthly';
+                    if (queuedTier && queuedTier !== 'free') {
+                        window.location.hash = `#/checkout?plan=${queuedTier}&cycle=${queuedInterval}`;
+                    } else {
+                        window.location.hash = '#/dashboard/directory';
+                    }
+                }
             } else {
                 State.user = null;
                 State.profile = null;
