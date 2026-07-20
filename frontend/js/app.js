@@ -28,6 +28,8 @@ import { renderPersonalizationModal, bindPersonalizationModalEvents } from './co
 import { renderPrivacyPolicyPage, renderTermsOfServicePage, renderOptOutPage, bindOptOutFormEvents } from './components/LegalPages.js';
 import { renderUpgradeModal, bindUpgradeModalEvents } from './components/UpgradeModal.js';
 import { renderCheckoutConsentModal, bindCheckoutConsentModalEvents } from './components/CheckoutConsentModal.js';
+import { renderCheckoutPage, bindCheckoutPageEvents } from './components/CheckoutPage.js';
+import { renderUpgradeSuccessModal, bindUpgradeSuccessModalEvents } from './components/UpgradeSuccessModal.js';
 import { renderDashboardShell, bindDashboardShellEvents } from './components/DashboardShell.js';
 import { renderLeadCRM, bindCRMWorkspaceEvents } from './components/LeadCRM.js';
 import { renderLeadLists, bindLeadListsEvents, bindListDetailEvents } from './components/LeadLists.js';
@@ -165,6 +167,13 @@ State.subscribe(async (currentState) => {
         bindUpgradeModalEvents();
     }
 
+    // Dynamically render/update Upgrade Success Modal
+    const upgradeSuccessPlaceholder = document.getElementById('upgradeSuccessModalPlaceholder');
+    if (upgradeSuccessPlaceholder) {
+        upgradeSuccessPlaceholder.innerHTML = renderUpgradeSuccessModal();
+        bindUpgradeSuccessModalEvents();
+    }
+
     // Dynamically render/update Checkout Consent Modal
     const checkoutConsentPlaceholder = document.getElementById('checkoutConsentModalPlaceholder');
     if (checkoutConsentPlaceholder) {
@@ -176,6 +185,29 @@ State.subscribe(async (currentState) => {
 
 // Initialize Routing bindings
 function initRoutes() {
+    Router.on('#/checkout', async () => {
+        const searchParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+        const plan = searchParams.get('plan') || 'hunter';
+        const cycle = searchParams.get('cycle') || 'monthly';
+
+        if (!State.user) {
+            localStorage.setItem('selected_nearpro_tier', plan);
+            localStorage.setItem('selected_nearpro_interval', cycle);
+            State.setAuthModal(true);
+            return;
+        }
+
+        appShell.innerHTML = `
+            <div class="app-container">
+                ${renderCheckoutPage(plan, cycle)}
+                <div id="authModalPlaceholder"></div>
+                <div id="pricingModalPlaceholder"></div>
+                <div id="upgradeSuccessModalPlaceholder"></div>
+            </div>
+        `;
+        bindCheckoutPageEvents(plan, cycle);
+        refreshLucideIcons();
+    });
     Router.on('#/', async () => {
         if (State.user) {
             Router.navigate('#/dashboard/directory');

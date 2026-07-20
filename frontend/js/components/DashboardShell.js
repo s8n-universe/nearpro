@@ -143,6 +143,7 @@ export function renderDashboardShell(activeTab = 'crm') {
             <div id="personalizationModalPlaceholder"></div>
             <div id="upgradeModalPlaceholder"></div>
             <div id="checkoutConsentModalPlaceholder"></div>
+            <div id="upgradeSuccessModalPlaceholder"></div>
         </div>
     `;
 }

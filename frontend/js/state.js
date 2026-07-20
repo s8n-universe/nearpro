@@ -190,6 +190,8 @@ export const State = {
 
     checkout_consent_modal_open: false,
     pending_checkout_plan: null,
+    upgrade_success_modal_open: false,
+    upgrade_success_data: null,
 
     async selectPlan(planId, interval = 'monthly') {
         if (planId === 'free') {
@@ -218,10 +220,8 @@ export const State = {
             return;
         }
 
-        // Open Order Review & Consumer Guarantee checkout modal
+        // Navigate to dedicated full-screen checkout page
         this.setPricingModal(false);
-        this.pending_checkout_plan = { planId, interval };
-        this.checkout_consent_modal_open = true;
-        this.notify();
+        window.location.hash = `#/checkout?plan=${planId}&cycle=${interval}`;
     }
 };

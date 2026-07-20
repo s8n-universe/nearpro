@@ -572,11 +572,13 @@ export const Api = {
                     try {
                         const updated = await this.getProfile(userId);
                         window.State.profile = updated;
+                        window.State.upgrade_success_data = {
+                            tier: planId,
+                            netPaid: interval === 'yearly' ? (planId === 'scout' ? '4,999' : planId === 'hunter' ? '9,999' : '24,999') : (planId === 'scout' ? '499' : planId === 'hunter' ? '999' : '2,499'),
+                            paymentId: `pay_mock_${Math.random().toString(36).slice(2, 8)}`
+                        };
+                        window.State.upgrade_success_modal_open = true;
                         window.State.notify();
-                        
-                        // Show personalization settings modal immediately after subscription purchase
-                        window.State.setPersonalizationModal(true);
-                        window.location.hash = '#/dashboard/directory';
                         resolve(true);
                     } catch (err) {
                         console.error("Profile refresh failed:", err);
@@ -616,11 +618,13 @@ export const Api = {
                         const { showPreparationLoader } = await import('./components/PreparationLoader.js');
                         showPreparationLoader(() => {
                             window.State.profile = updated.data;
+                            window.State.upgrade_success_data = {
+                                tier: planId,
+                                netPaid: data.amount ? Math.round(data.amount / 100) : (planId === 'scout' ? '499' : '999'),
+                                paymentId: response.razorpay_payment_id || `pay_${Math.random().toString(36).slice(2, 8)}`
+                            };
+                            window.State.upgrade_success_modal_open = true;
                             window.State.notify();
-
-                            // Show personalization settings modal immediately after subscription purchase
-                            window.State.setPersonalizationModal(true);
-                            window.location.hash = '#/dashboard/directory';
                             resolve(true);
                         });
                     } catch (err) {

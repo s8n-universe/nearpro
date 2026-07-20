@@ -205,25 +205,29 @@ export function bindAuthModalEvents() {
             submitBtn.disabled = true;
 
             try {
+                const queuedTier = localStorage.getItem('selected_nearpro_tier');
+                const queuedInterval = localStorage.getItem('selected_nearpro_interval') || 'monthly';
+
                 if (currentTab === 'signin') {
                     const result = await Api.signIn(email, password);
-                    // Clear any stale queued tier from localStorage to prevent
-                    // accidental Razorpay checkout triggers on future sign-ins
                     localStorage.removeItem('selected_nearpro_tier');
                     localStorage.removeItem('selected_nearpro_interval');
                     State.setAuthModal(false);
-                    window.location.hash = '#/dashboard/directory';
 
-                    // Fetch user profile and redirect to pricing modal if they are on free tier
-                    if (result?.user) {
-                        try {
-                            const profile = await Api.getProfile(result.user.id);
-                            const tier = (profile?.subscription_tier || profile?.tier || 'free').toLowerCase();
-                            if (tier === 'free') {
-                                State.setPricingModal(true);
+                    if (queuedTier && queuedTier !== 'free') {
+                        window.location.hash = `#/checkout?plan=${queuedTier}&cycle=${queuedInterval}`;
+                    } else {
+                        window.location.hash = '#/dashboard/directory';
+                        if (result?.user) {
+                            try {
+                                const profile = await Api.getProfile(result.user.id);
+                                const tier = (profile?.subscription_tier || profile?.tier || 'free').toLowerCase();
+                                if (tier === 'free') {
+                                    State.setPricingModal(true);
+                                }
+                            } catch (err) {
+                                console.error("Failed to check user tier on sign in:", err);
                             }
-                        } catch (err) {
-                            console.error("Failed to check user tier on sign in:", err);
                         }
                     }
                 } else {
@@ -231,9 +235,13 @@ export function bindAuthModalEvents() {
                     localStorage.removeItem('selected_nearpro_tier');
                     localStorage.removeItem('selected_nearpro_interval');
                     State.setAuthModal(false);
-                    window.location.hash = '#/dashboard/directory';
-                    // Since it's a new signup, they are Explorer (free) by default. Show pricing modal.
-                    State.setPricingModal(true);
+
+                    if (queuedTier && queuedTier !== 'free') {
+                        window.location.hash = `#/checkout?plan=${queuedTier}&cycle=${queuedInterval}`;
+                    } else {
+                        window.location.hash = '#/dashboard/directory';
+                        State.setPricingModal(true);
+                    }
                     alert("Registration successful. Please check your inbox for verification links.");
                 }
             } catch (err) {
