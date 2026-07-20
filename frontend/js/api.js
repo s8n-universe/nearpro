@@ -659,6 +659,9 @@ export const Api = {
                             paymentId: response.razorpay_payment_id || `pay_${Math.random().toString(36).slice(2, 8)}`
                         };
 
+                        // Trigger invoice email send asynchronously
+                        Api.sendInvoiceEmail(upgradeData);
+
                         const { showPreparationLoader } = await import('./components/PreparationLoader.js');
                         showPreparationLoader(upgradeData, () => {
                             window.State.profile = updated.data;
@@ -677,6 +680,30 @@ export const Api = {
             const rzp = new window.Razorpay(options);
             rzp.open();
         });
+    },
+
+    async sendInvoiceEmail(upgradeData) {
+        try {
+            const { State } = window;
+            const email = State.user?.email;
+            if (!email) return;
+
+            const name = State.profile?.full_name || email.split('@')[0];
+            const company = State.profile?.company_name || '';
+
+            await supabase.functions.invoke('send-invoice-email', {
+                body: {
+                    user_email: email,
+                    user_name: name,
+                    plan_id: upgradeData.tier,
+                    net_paid: upgradeData.netPaid,
+                    payment_id: upgradeData.paymentId,
+                    company_name: company
+                }
+            });
+        } catch (e) {
+            console.warn("Invoice email dispatch skipped:", e);
+        }
     },
 
     async generateAIOutreach(professionalId, channel, language, tone, regenerateDay = null, existingDay1 = null, existingDay3 = null, existingDay7 = null) {

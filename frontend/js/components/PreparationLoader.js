@@ -1,4 +1,5 @@
 import { State } from '../state.js';
+import { printTaxInvoice } from './InvoiceModal.js';
 
 export function showPreparationLoader(upgradeData, onCompleteCallback) {
     // Remove any existing loader
@@ -149,6 +150,10 @@ export function showPreparationLoader(upgradeData, onCompleteCallback) {
                         <span>Transaction Ref:</span>
                         <span style="font-family: var(--font-mono); color: var(--text-muted);">${paymentId}</span>
                     </div>
+
+                    <button id="printTaxInvoiceBtn" class="secondary-btn" style="width: 100%; margin-top: 12px; padding: 8px; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; border-color: rgba(255,160,0,0.3); color: var(--accent-gold);">
+                        🖨️ View / Print Tax Invoice PDF
+                    </button>
                 </div>
 
                 <button id="enterWorkspaceModalBtn" class="brand-btn" style="width: 100%; padding: 12px; font-weight: 700; font-size: 14px; border-radius: var(--radius-md); cursor: pointer;">
@@ -156,6 +161,13 @@ export function showPreparationLoader(upgradeData, onCompleteCallback) {
                 </button>
             </div>
         `;
+
+        const printBtn = document.getElementById('printTaxInvoiceBtn');
+        if (printBtn) {
+            printBtn.addEventListener('click', () => {
+                printTaxInvoice(upgradeData);
+            });
+        }
 
         const redirect = () => {
             if (isNavigated) return;
