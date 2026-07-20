@@ -653,15 +653,15 @@ export const Api = {
                         
                         if (updated.error) throw updated.error;
 
+                        const upgradeData = {
+                            tier: planId,
+                            netPaid: data.amount ? Math.round(data.amount / 100) : (planId === 'scout' ? '499' : (planId === 'hunter' ? '999' : '2,499')),
+                            paymentId: response.razorpay_payment_id || `pay_${Math.random().toString(36).slice(2, 8)}`
+                        };
+
                         const { showPreparationLoader } = await import('./components/PreparationLoader.js');
-                        showPreparationLoader(() => {
+                        showPreparationLoader(upgradeData, () => {
                             window.State.profile = updated.data;
-                            window.State.upgrade_success_data = {
-                                tier: planId,
-                                netPaid: data.amount ? Math.round(data.amount / 100) : (planId === 'scout' ? '499' : '999'),
-                                paymentId: response.razorpay_payment_id || `pay_${Math.random().toString(36).slice(2, 8)}`
-                            };
-                            window.State.upgrade_success_modal_open = true;
                             window.State.notify();
                             resolve(true);
                         });
