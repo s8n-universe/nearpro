@@ -161,8 +161,8 @@ function renderListDetailView(listId, listsData, listLeads) {
                     </div>
                     
                     <div style="display: flex; gap: 12px;">
-                        <button class="secondary-btn" id="bulkExportCSVBtn" style="padding: 10px 16px; font-size: 13px;">
-                            Export Selected to CSV
+                        <button class="brand-btn" id="bulkExportCSVBtn" style="padding: 10px 16px; font-size: 13px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
+                            <i data-lucide="file-spreadsheet" style="width:14px; height:14px;"></i> Export Verified Leads to Excel
                         </button>
                         <button class="brand-btn" id="deleteEntireListBtn" style="padding: 10px 16px; font-size: 13px; background: rgba(239, 68, 68, 0.2); border-color: #ef4444; color: #ef4444;">
                             Delete List
