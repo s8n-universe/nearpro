@@ -288,6 +288,13 @@ export const Api = {
             items = items.filter(p => isOpenNow(p.hours) === true);
         }
 
+        // Smart fallback: If zero items were found for a specific suburb, retry across all Mumbai suburbs
+        if (items.length === 0 && filters.area && offset === 0) {
+            console.warn(`No exact matches in suburb '${filters.area}'. Fetching broader leads for sector '${filters.parentCategory || 'all'}' across Mumbai...`);
+            const relaxedFilters = { ...filters, area: null };
+            return this.getProfessionals(relaxedFilters, offset, limit, fingerprint);
+        }
+
         return {
             items,
             total: count || 0,

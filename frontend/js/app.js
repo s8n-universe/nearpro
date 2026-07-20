@@ -498,7 +498,7 @@ async function renderDirectoryLayout() {
                     
                     State.setSurvey({
                         role: 'other',
-                        base_suburb: 'Bandra',
+                        base_suburb: '',
                         target_industry
                     });
                     
