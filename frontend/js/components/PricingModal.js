@@ -219,7 +219,7 @@ export function renderPricingModal() {
                 </div>
 
                 <div style="font-size: 11.5px; color: var(--text-muted); font-family: var(--font-mono);">
-                    🔒 256-Bit Encrypted Razorpay Checkout • 7-Day Money-Back Guarantee • Cancel Anytime
+                    🔒 Secure Encrypted Checkout • 7-Day Money-Back Guarantee • Cancel Anytime
                 </div>
             </div>
         </div>
