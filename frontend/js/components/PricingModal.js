@@ -94,7 +94,30 @@ export function renderPricingModal() {
 
     return `
         <div class="modal-overlay open" id="pricingModalOverlay" style="z-index: 10000;">
-            <div class="modal-card" style="max-width: 960px; width: 95%; padding: 36px; text-align: center; position: relative; max-height: 90vh; overflow-y: auto;">
+            <style>
+                .pricing-plans-grid {
+                    display: grid;
+                    grid-template-columns: repeat(${plansToRender.length}, 1fr);
+                    gap: 16px;
+                    margin-bottom: 28px;
+                    text-align: left;
+                    align-items: stretch;
+                }
+                @media (max-width: 1024px) {
+                    .pricing-plans-grid {
+                        grid-template-columns: repeat(2, 1fr) !important;
+                    }
+                }
+                @media (max-width: 600px) {
+                    .pricing-plans-grid {
+                        grid-template-columns: 1fr !important;
+                    }
+                    .pricing-modal-inner {
+                        padding: 24px 16px !important;
+                    }
+                }
+            </style>
+            <div class="modal-card pricing-modal-inner" style="max-width: 1200px; width: 95%; padding: 36px; text-align: center; position: relative; max-height: 90vh; overflow-y: auto;">
                 <button class="modal-close-btn" id="closePricingModalBtn" style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">&times;</button>
                 
                 <div style="font-size: 40px; margin-bottom: 12px;">🚀</div>
@@ -118,7 +141,7 @@ export function renderPricingModal() {
                 </div>
                 
                 <!-- Grid of Plan Cards -->
-                <div style="display: grid; grid-template-columns: repeat(${Math.min(plansToRender.length, 3)}, 1fr); gap: 20px; margin-bottom: 28px; text-align: left; align-items: stretch;">
+                <div class="pricing-plans-grid">
                     ${plansToRender.map(plan => {
                         const isCurrentActive = plan.id === userTier;
                         const isHunter = plan.id === 'hunter';
