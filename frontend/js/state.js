@@ -139,10 +139,18 @@ export const State = {
     setAuth(user, profile) {
         this.user = user;
         this.profile = profile;
+        if (user) {
+            this.auth_modal_open = false;
+        }
         this.notify();
     },
 
     setAuthModal(isOpen) {
+        if (isOpen && this.user) {
+            this.auth_modal_open = false;
+            this.notify();
+            return;
+        }
         this.auth_modal_open = isOpen;
         this.notify();
     },

@@ -2,7 +2,7 @@ import { State } from '../state.js';
 import { Api } from '../api.js';
 
 export function renderAuthModal() {
-    if (!State.auth_modal_open) return '';
+    if (!State.auth_modal_open || State.user) return '';
 
     return `
         <div class="modal-overlay open" id="authModalOverlay">

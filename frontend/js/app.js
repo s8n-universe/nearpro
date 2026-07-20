@@ -2059,6 +2059,7 @@ async function initApp() {
             if (session) {
                 State.user = session.user;
                 State.profile = await Api.getProfile(session.user.id);
+                State.auth_modal_open = false;
                 
                 hideOAuthAuthLoader();
 
@@ -2066,7 +2067,7 @@ async function initApp() {
                 const queuedInterval = localStorage.getItem('selected_nearpro_interval') || 'monthly';
                 if (queuedTier && queuedTier !== 'free') {
                     window.location.hash = `#/checkout?plan=${queuedTier}&cycle=${queuedInterval}`;
-                } else {
+                } else if (window.location.hash === '#/' || !window.location.hash) {
                     window.location.hash = '#/dashboard/directory';
                 }
                 State.notify();
@@ -2080,6 +2081,7 @@ async function initApp() {
             if (session) {
                 State.user = session.user;
                 State.profile = await Api.getProfile(session.user.id);
+                State.auth_modal_open = false;
 
                 hideOAuthAuthLoader();
 
