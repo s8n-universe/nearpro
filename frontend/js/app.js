@@ -431,14 +431,23 @@ async function updateDirectoryView() {
         return;
     }
     
-    // Update sidebar selections
-    const sidebar = document.getElementById('sidebarElement');
-    sidebar.innerHTML = renderCategorySidebar();
-    bindCategorySidebarEvents();
+    const isTyping = document.activeElement && document.activeElement.id === 'searchInput';
+
+    // Update sidebar selections if not actively typing
+    if (!isTyping) {
+        const sidebar = document.getElementById('sidebarElement');
+        if (sidebar) {
+            sidebar.innerHTML = renderCategorySidebar();
+            bindCategorySidebarEvents();
+        }
+    }
 
     // Update compare panel
-    document.getElementById('comparePanelPlaceholder').innerHTML = renderComparePanel();
-    bindComparePanelEvents(showCompareModal);
+    const comparePlaceholder = document.getElementById('comparePanelPlaceholder');
+    if (comparePlaceholder) {
+        comparePlaceholder.innerHTML = renderComparePanel();
+        bindComparePanelEvents(showCompareModal);
+    }
 
     // Update feed grid or maps view
     await queryProfessionals(false);
@@ -446,25 +455,42 @@ async function updateDirectoryView() {
 
 // Main query handler contacting Supabase API
 async function queryProfessionals(isInitialLoad = false) {
-    if (State.loading) return;
-    
-    State.loading = true;
     const feed = document.getElementById('feedElement');
+    const activeInput = document.activeElement;
+    const isTypingInSearch = activeInput && activeInput.id === 'searchInput';
     
-    // Render skeletons if this is the first page of query
-    if (State.offset === 0 && feed) {
+    // Save cursor position if user is typing
+    let selStart = 0, selEnd = 0;
+    if (isTypingInSearch) {
+        selStart = activeInput.selectionStart;
+        selEnd = activeInput.selectionEnd;
+    }
+    
+    // Render skeletons ONLY on initial load and when NOT typing
+    if (State.offset === 0 && feed && !isTypingInSearch && isInitialLoad) {
         feed.innerHTML = `
             <div class="prof-grid">
                 ${'<div class="prof-card shimmer" style="height: 250px;"></div>'.repeat(6)}
             </div>
         `;
     }
+
+    if (isTypingInSearch && feed) {
+        feed.style.opacity = '0.75';
+    }
+
     try {
         if (!State.fingerprint) {
             State.fingerprint = generateBrowserFingerprint();
         }
+        State.loading = true;
         const result = await Api.getProfessionals(State.filters, State.offset, State.limit, State.fingerprint);
         
+        // Discard stale out-of-order search responses
+        if (result && result.stale) {
+            return;
+        }
+
         // Append or replace dataset
         if (State.offset === 0) {
             State.professionals = result.items;
@@ -479,11 +505,25 @@ async function queryProfessionals(isInitialLoad = false) {
         
         // Render UI
         if (feed) {
+            feed.style.opacity = '1';
             renderFeedContent(result.has_more);
+        }
+        
+        // Restore focus and cursor range if user was typing
+        if (isTypingInSearch && activeInput && document.body.contains(activeInput)) {
+            activeInput.focus();
+            if (typeof activeInput.setSelectionRange === 'function') {
+                try {
+                    activeInput.setSelectionRange(selStart, selEnd);
+                } catch (e) {
+                    // Ignore range errors on non-text inputs
+                }
+            }
         }
     } catch (e) {
         console.error("API error loading professionals: ", e);
         if (feed) {
+            feed.style.opacity = '1';
             feed.innerHTML = `
                 <div style="padding: 40px; text-align: center; color: var(--accent-pink);">
                     <h4>Error loading directory details</h4>

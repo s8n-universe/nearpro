@@ -150,7 +150,11 @@ export const Api = {
         return data;
     },
 
+    _latestSearchRequestId: 0,
+
     async getProfessionals(filters, offset = 0, limit = 24, fingerprint = '') {
+        const requestId = ++this._latestSearchRequestId;
+
         // 1. Query the total count matching the filters securely (selecting only ID)
         let countQuery = supabase.from('professionals').select('id', { count: 'exact', head: true });
         
@@ -288,6 +292,11 @@ export const Api = {
 
         if (filters.open_now) {
             items = items.filter(p => isOpenNow(p.hours) === true);
+        }
+
+        if (requestId !== this._latestSearchRequestId) {
+            console.log(`ℹ️ Discarding stale search response #${requestId} (latest is #${this._latestSearchRequestId})`);
+            return { items: [], total: 0, offset, limit, has_more: false, stale: true };
         }
 
         return {
