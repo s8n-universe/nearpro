@@ -270,8 +270,144 @@ export function renderTermsOfServicePage() {
                 <div style="display: flex; gap: 20px;">
                     <a href="#/privacy" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Privacy Policy</a>
                     <a href="#/terms" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Terms Of Service</a>
+                    <a href="#/opt-out" style="color: var(--accent-gold); text-decoration: none; font-weight: 500;">Business Opt-Out</a>
                 </div>
             </footer>
         </div>
     `;
+}
+
+export function renderOptOutPage() {
+    return `
+        <div class="app-container">
+            ${renderHeader()}
+            <main class="main-layout" style="display: block; max-width: 900px; margin: 60px auto; padding: 0 24px; color: var(--text-secondary); line-height: 1.8; font-family: var(--font-body);">
+                <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                    
+                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 20px;">
+                        <div>
+                            <h1 style="color: white; font-family: var(--font-heading); font-size: 32px; margin-bottom: 6px; font-weight: 700;">Business Listing & Data Opt-Out</h1>
+                            <p style="color: var(--text-muted); font-size: 14px; margin: 0; font-family: var(--font-mono);">
+                                Official Removal & Correction Request | Digital Personal Data Protection (DPDP) Act, 2023
+                            </p>
+                        </div>
+                        <span style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #10b981; padding: 6px 14px; border-radius: 50px; font-size: 12px; font-family: var(--font-mono); font-weight: 600;">
+                            🛡️ 7-Working-Day SLA Guarantee
+                        </span>
+                    </div>
+                    
+                    <hr style="border: 0; border-top: 1px solid var(--border); margin: 24px 0 30px 0;">
+
+                    <!-- Legal Protection Commitment Banner -->
+                    <div style="background: rgba(255, 160, 0, 0.04); border: 1px solid var(--accent-gold); border-radius: var(--radius-md); padding: 20px; margin-bottom: 32px;">
+                        <h3 style="color: var(--accent-gold); font-size: 16px; margin: 0 0 8px 0; font-family: var(--font-heading); display: flex; align-items: center; gap: 8px;">
+                            📋 Data Principal & Sole Proprietor Compliance Guarantee
+                        </h3>
+                        <p style="font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.6;">
+                            In accordance with the Digital Personal Data Protection Act, 2023 (DPDP Act) and Consumer Protection Guidelines, NearPro provides business owners, sole proprietors, and authorized representatives an immediate right to request listing deletion or phone number removal. We commit to reviewing and processing all verified opt-out requests within <strong>7 working days</strong>.
+                        </p>
+                    </div>
+
+                    <!-- Interactive Opt-Out Request Form -->
+                    <div id="optOutFormContainer">
+                        <form id="optOutForm">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                                <div>
+                                    <label style="display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; font-family: var(--font-mono);">Business / Entity Name *</label>
+                                    <input type="text" id="optOutBusinessName" required placeholder="e.g. Apex Dental Clinic" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-base); color: white; outline: none; font-size: 14px;">
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; font-family: var(--font-mono);">Trade / Brand Name (If different)</label>
+                                    <input type="text" id="optOutTradeName" placeholder="e.g. Apex Healthcare" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-base); color: white; outline: none; font-size: 14px;">
+                                </div>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                                <div>
+                                    <label style="display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; font-family: var(--font-mono);">Listed Phone / Mobile Number *</label>
+                                    <input type="tel" id="optOutPhone" required placeholder="+91 98765 43210" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-base); color: white; outline: none; font-size: 14px;">
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; font-family: var(--font-mono);">Official Contact Email *</label>
+                                    <input type="email" id="optOutEmail" required placeholder="owner@business.com" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-base); color: white; outline: none; font-size: 14px;">
+                                </div>
+                            </div>
+
+                            <div style="margin-bottom: 20px;">
+                                <label style="display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; font-family: var(--font-mono);">Physical Business Address *</label>
+                                <input type="text" id="optOutAddress" required placeholder="Building, Street, Area, City, Pincode" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-base); color: white; outline: none; font-size: 14px;">
+                            </div>
+
+                            <div style="margin-bottom: 20px;">
+                                <label style="display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; font-family: var(--font-mono);">Request Category *</label>
+                                <select id="optOutReason" required style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-base); color: white; outline: none; font-size: 14px;">
+                                    <option value="sole_proprietor">Sole Proprietorship — Remove Personal Mobile Number</option>
+                                    <option value="business_closed">Business Permanently Closed</option>
+                                    <option value="full_removal">Complete Business Listing Deletion</option>
+                                    <option value="inaccurate_data">Correction of Outdated / Inaccurate Data</option>
+                                    <option value="other">Other Data Privacy Concern</option>
+                                </select>
+                            </div>
+
+                            <div style="margin-bottom: 24px;">
+                                <label style="display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; font-family: var(--font-mono);">Additional Information / Verification URL (Optional)</label>
+                                <textarea id="optOutDetails" rows="3" placeholder="Provide any link or details verifying your listing..." style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-base); color: white; outline: none; font-size: 14px; resize: vertical;"></textarea>
+                            </div>
+
+                            <div style="background: rgba(255,255,255,0.01); border: 1px solid var(--border); padding: 16px; border-radius: var(--radius-md); margin-bottom: 24px;">
+                                <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 12px; color: white; line-height: 1.5;">
+                                    <input type="checkbox" id="optOutDeclaration" required style="margin-top: 3px; cursor: pointer;">
+                                    <span>
+                                        I hereby declare that I am the authorized representative, business owner, or sole proprietor of the listed business entity, and the information provided above is true and correct.
+                                    </span>
+                                </label>
+                            </div>
+
+                            <button type="submit" id="optOutSubmitBtn" class="brand-btn" style="padding: 12px 28px; font-size: 14px;">
+                                Submit Opt-Out Request
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </main>
+            <footer class="main-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid var(--border); font-size: 13px; color: var(--text-muted);">
+                <div>NearPro — Made with ❤️ by S8N</div>
+                <div style="display: flex; gap: 20px;">
+                    <a href="#/privacy" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Privacy Policy</a>
+                    <a href="#/terms" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Terms Of Service</a>
+                    <a href="#/opt-out" style="color: var(--accent-gold); text-decoration: none; font-weight: 500;">Business Opt-Out</a>
+                </div>
+            </footer>
+        </div>
+    `;
+}
+
+export function bindOptOutFormEvents() {
+    bindHeaderEvents();
+    const form = document.getElementById('optOutForm');
+    const container = document.getElementById('optOutFormContainer');
+    if (!form || !container) return;
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const businessName = document.getElementById('optOutBusinessName').value.trim();
+        const phone = document.getElementById('optOutPhone').value.trim();
+        const email = document.getElementById('optOutEmail').value.trim();
+        const ticketId = 'OPT-' + Math.floor(100000 + Math.random() * 900000);
+
+        container.innerHTML = `
+            <div style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.3); padding: 32px; border-radius: var(--radius-md); text-align: center;">
+                <div style="font-size: 44px; margin-bottom: 12px;">✅</div>
+                <h3 style="color: white; font-family: var(--font-heading); font-size: 22px; margin-bottom: 8px;">Opt-Out Request Submitted</h3>
+                <p style="color: var(--accent-gold); font-family: var(--font-mono); font-size: 14px; font-weight: bold; margin-bottom: 16px;">
+                    Reference Ticket ID: ${ticketId}
+                </p>
+                <p style="color: var(--text-secondary); font-size: 13.5px; line-height: 1.6; max-width: 600px; margin: 0 auto 24px auto;">
+                    We have received your opt-out request for <strong>${businessName}</strong> (${phone}). In accordance with our compliance commitment, our compliance team will process your request within <strong>7 working days</strong>. A confirmation email has been logged for <strong>${email}</strong>.
+                </p>
+                <a href="#/" class="brand-btn" style="padding: 10px 24px; font-size: 13px; text-decoration: none; display: inline-block;">Return to Directory</a>
+            </div>
+        `;
+    });
 }

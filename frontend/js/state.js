@@ -198,6 +198,13 @@ export const State = {
             return;
         }
 
+        // Validate mandatory affirmative consent under Consumer Protection (E-Commerce) Rules 2020
+        const consentCb = document.getElementById('pricingBillingConsentCb');
+        if (consentCb && !consentCb.checked) {
+            alert("Mandatory Compliance Check:\n\nUnder the Consumer Protection (E-Commerce) Rules 2020, explicit affirmative consent is required before any purchase. Please check the agreement box to confirm Terms of Service, Privacy Policy, and subscription authorization.");
+            return;
+        }
+
         if (!this.user) {
             localStorage.setItem('selected_nearpro_tier', planId);
             localStorage.setItem('selected_nearpro_interval', interval);

@@ -25,7 +25,7 @@ import { renderAuthModal, bindAuthModalEvents } from './components/AuthModal.js'
 import { renderPricingModal, bindPricingModalEvents } from './components/PricingModal.js';
 import { renderSurveyModal, bindSurveyModalEvents } from './components/SurveyModal.js';
 import { renderPersonalizationModal, bindPersonalizationModalEvents } from './components/PersonalizationModal.js';
-import { renderPrivacyPolicyPage, renderTermsOfServicePage } from './components/LegalPages.js';
+import { renderPrivacyPolicyPage, renderTermsOfServicePage, renderOptOutPage, bindOptOutFormEvents } from './components/LegalPages.js';
 import { renderUpgradeModal, bindUpgradeModalEvents } from './components/UpgradeModal.js';
 import { renderDashboardShell, bindDashboardShellEvents } from './components/DashboardShell.js';
 import { renderLeadCRM, bindCRMWorkspaceEvents } from './components/LeadCRM.js';
@@ -262,6 +262,11 @@ function initRoutes() {
         bindHeaderEvents();
     });
 
+    Router.on('#/opt-out', () => {
+        appShell.innerHTML = renderOptOutPage();
+        bindOptOutFormEvents();
+    });
+
     Router.on('#/d/:id', async (id) => {
         renderDocumentViewerLayout(id);
     });
@@ -293,6 +298,7 @@ function renderMarketingLayout() {
                 <div style="display: flex; gap: 20px;">
                     <a href="#/privacy" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Privacy Policy</a>
                     <a href="#/terms" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Terms Of Service</a>
+                    <a href="#/opt-out" style="color: var(--accent-gold); text-decoration: none; font-weight: 500;">Business Opt-Out</a>
                 </div>
             </footer>
         </div>

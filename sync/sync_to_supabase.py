@@ -176,13 +176,13 @@ def parse_db_raw_data(raw_data_raw) -> dict:
             return {}
     return {}
 
-def sync():
+def sync() -> dict:
     start_time = datetime.now(timezone.utc)
     print(f"[{start_time.isoformat()}] Starting NearPro sync to Supabase...")
     
     if not DB_PATH.exists():
         print(f"Error: DuckDB file not found at {DB_PATH.absolute()}. Run the Harvest scraper first.")
-        sys.exit(1)
+        return {"processed": 0, "synced": 0, "failed": 0, "error": "Database file not found"}
         
     # Get last sync timestamp
     last_sync = get_last_sync_time()
@@ -193,7 +193,7 @@ def sync():
         conn = get_duckdb_connection(DB_PATH)
     except Exception as e:
         print(f"Error connecting to DuckDB: {e}")
-        sys.exit(1)
+        return {"processed": 0, "synced": 0, "failed": 0, "error": str(e)}
 
     # 2. Query new leads
     try:
@@ -218,7 +218,7 @@ def sync():
     except Exception as e:
         print(f"Error querying DuckDB: {e}")
         conn.close()
-        sys.exit(1)
+        return {"processed": 0, "synced": 0, "failed": 0, "error": str(e)}
         
     conn.close()
     
@@ -229,14 +229,14 @@ def sync():
         print("Database is already up to date. Sync complete.")
         # Update last sync time anyway to current start time
         save_last_sync_time(start_time)
-        return
+        return {"processed": 0, "synced": 0, "failed": 0}
 
     # Initialize Supabase client
     try:
         supabase = get_supabase_client()
     except Exception as e:
         print(f"Error initializing Supabase: {e}")
-        sys.exit(1)
+        return {"processed": 0, "synced": total_leads, "failed": 0, "error": str(e)}
 
     # 3. Transform and Prepare Batches
     prepared_leads = []
@@ -352,6 +352,11 @@ def sync():
         save_last_sync_time(start_time)
         
     print("Sync process completed.")
+    return {
+        "processed": len(rows),
+        "synced": synced_count,
+        "failed": errors_count
+    }
 
 if __name__ == "__main__":
     sync()

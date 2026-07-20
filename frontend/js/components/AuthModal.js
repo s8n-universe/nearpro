@@ -51,6 +51,16 @@ export function renderAuthModal() {
                         <label style="display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; font-family: var(--font-mono);">Password</label>
                         <input type="password" id="authPasswordInput" required placeholder="••••••••" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-base); color: white; outline: none; font-size: 14px;">
                     </div>
+
+                    <!-- Mandatory Affirmative Registration Consent Checkbox (DPDP Act 2023 / Consumer Protection Rules) -->
+                    <div id="signUpConsentWrapper" style="display: none; margin-bottom: 20px;">
+                        <label style="display: flex; align-items: flex-start; gap: 8px; font-size: 11.5px; color: var(--text-secondary); line-height: 1.4; cursor: pointer;">
+                            <input type="checkbox" id="authTermsConsentCb" style="margin-top: 2px; cursor: pointer;">
+                            <span>
+                                I agree to NearPro's <a href="#/terms" target="_blank" style="color: var(--accent-gold); text-decoration: underline;">Terms of Service</a> & <a href="#/privacy" target="_blank" style="color: var(--accent-gold); text-decoration: underline;">Privacy Policy</a>, and provide explicit consent for account data processing under the DPDP Act 2023.
+                            </span>
+                        </label>
+                    </div>
                     
                     <div id="authErrorMsg" style="color: var(--accent-pink); font-size: 12px; margin-bottom: 16px; display: none; line-height: 1.4;"></div>
                     
@@ -79,12 +89,38 @@ export function bindAuthModalEvents() {
     const form = document.getElementById('authForm');
     const emailInput = document.getElementById('authEmailInput');
     const passwordInput = document.getElementById('authPasswordInput');
+    const consentWrapper = document.getElementById('signUpConsentWrapper');
+    const termsConsentCb = document.getElementById('authTermsConsentCb');
     const errorMsg = document.getElementById('authErrorMsg');
     const submitBtn = document.getElementById('authSubmitBtn');
     const toggleLink = document.getElementById('authToggleLinkBtn');
     const toggleHint = document.getElementById('authToggleHintText');
 
     let currentTab = 'signin'; // 'signin' | 'signup'
+
+    const updateConsentState = () => {
+        if (currentTab === 'signup') {
+            if (consentWrapper) consentWrapper.style.display = 'block';
+            if (termsConsentCb && !termsConsentCb.checked) {
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.5';
+                submitBtn.style.cursor = 'not-allowed';
+            } else {
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+                submitBtn.style.cursor = 'pointer';
+            }
+        } else {
+            if (consentWrapper) consentWrapper.style.display = 'none';
+            submitBtn.disabled = false;
+            submitBtn.style.opacity = '1';
+            submitBtn.style.cursor = 'pointer';
+        }
+    };
+
+    if (termsConsentCb) {
+        termsConsentCb.addEventListener('change', updateConsentState);
+    }
 
     const setTab = (tab) => {
         if (tab === 'signin') {
@@ -98,8 +134,8 @@ export function bindAuthModalEvents() {
                 signUpTab.style.color = 'var(--text-muted)';
             }
             submitBtn.innerText = 'Sign In';
-            toggleHint.innerText = 'Already using NearPro?';
-            toggleLink.innerText = 'Sign In';
+            toggleHint.innerText = 'New to NearPro?';
+            toggleLink.innerText = 'Create an account';
             if (errorMsg) errorMsg.style.display = 'none';
         } else {
             currentTab = 'signup';
@@ -116,6 +152,7 @@ export function bindAuthModalEvents() {
             toggleLink.innerText = 'Sign In';
             if (errorMsg) errorMsg.style.display = 'none';
         }
+        updateConsentState();
     };
 
     // Close Modal
@@ -142,31 +179,11 @@ export function bindAuthModalEvents() {
 
     // Tab toggles
     if (signInTab) {
-        signInTab.addEventListener('click', () => {
-            currentTab = 'signin';
-            signInTab.style.borderBottomColor = 'var(--accent-gold)';
-            signInTab.style.color = 'white';
-            signUpTab.style.borderBottomColor = 'transparent';
-            signUpTab.style.color = 'var(--text-muted)';
-            submitBtn.innerText = 'Sign In';
-            toggleHint.innerText = 'New to NearPro?';
-            toggleLink.innerText = 'Create an account';
-            if (errorMsg) errorMsg.style.display = 'none';
-        });
+        signInTab.addEventListener('click', () => setTab('signin'));
     }
 
     if (signUpTab) {
-        signUpTab.addEventListener('click', () => {
-            currentTab = 'signup';
-            signUpTab.style.borderBottomColor = 'var(--accent-gold)';
-            signUpTab.style.color = 'white';
-            signInTab.style.borderBottomColor = 'transparent';
-            signInTab.style.color = 'var(--text-muted)';
-            submitBtn.innerText = 'Register';
-            toggleHint.innerText = 'Already using NearPro?';
-            toggleLink.innerText = 'Sign In';
-            if (errorMsg) errorMsg.style.display = 'none';
-        });
+        signUpTab.addEventListener('click', () => setTab('signup'));
     }
 
     if (toggleLink) {
