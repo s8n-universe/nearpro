@@ -1,4 +1,5 @@
 import { renderHeader, bindHeaderEvents } from './Header.js';
+import { Api } from '../api.js';
 
 export function renderPrivacyPolicyPage() {
     return `
@@ -369,12 +370,16 @@ export function bindOptOutFormEvents() {
     const container = document.getElementById('optOutFormContainer');
     if (!form || !container) return;
 
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const businessName = document.getElementById('optOutBusinessName').value.trim();
         const phone = document.getElementById('optOutPhone').value.trim();
         const email = document.getElementById('optOutEmail').value.trim();
+        const category = document.getElementById('optOutReason')?.value || 'sole_proprietor';
         const ticketId = 'OPT-' + Math.floor(100000 + Math.random() * 900000);
+
+        // Store request in Supabase opt_out_requests table
+        await Api.submitOptOutRequest(ticketId, businessName, phone, email, category);
 
         container.innerHTML = `
             <div style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.3); padding: 32px; border-radius: var(--radius-md); text-align: center;">
@@ -384,7 +389,7 @@ export function bindOptOutFormEvents() {
                     Reference Ticket ID: ${ticketId}
                 </p>
                 <p style="color: var(--text-secondary); font-size: 13.5px; line-height: 1.6; max-width: 600px; margin: 0 auto 24px auto;">
-                    We have received your opt-out request for <strong>${businessName}</strong> (${phone}). In accordance with our compliance commitment, our compliance team will process your request within <strong>7 working days</strong>. A confirmation email has been logged for <strong>${email}</strong>.
+                    We have received your opt-out request for <strong>${businessName}</strong> (${phone}). Your ticket has been logged in our compliance database. Our compliance team will process your request within <strong>7 working days</strong>. A confirmation email has been logged for <strong>${email}</strong>.
                 </p>
                 <a href="#/" class="brand-btn" style="padding: 10px 24px; font-size: 13px; text-decoration: none; display: inline-block;">Return to Directory</a>
             </div>

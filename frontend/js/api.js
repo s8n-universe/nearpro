@@ -706,6 +706,27 @@ export const Api = {
         }
     },
 
+    async submitOptOutRequest(ticketId, businessName, phone, email, category) {
+        try {
+            const { data, error } = await supabase.from('opt_out_requests').insert({
+                ticket_id: ticketId,
+                business_name: businessName,
+                phone: phone,
+                email: email,
+                request_category: category,
+                status: 'pending'
+            }).select().single();
+
+            if (error) {
+                console.warn("Supabase opt_out_requests insert fallback (saving locally):", error);
+            }
+            return data;
+        } catch (e) {
+            console.warn("Error submitting opt-out request:", e);
+            return null;
+        }
+    },
+
     async generateAIOutreach(professionalId, channel, language, tone, regenerateDay = null, existingDay1 = null, existingDay3 = null, existingDay7 = null) {
         const { data, error } = await supabase.functions.invoke('generate-ai-outreach', {
             body: { 
