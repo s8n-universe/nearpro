@@ -313,33 +313,33 @@ export function renderOptOutPage() {
                         <form id="optOutForm">
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                                 <div>
-                                    <label style="display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; font-family: var(--font-mono);">Business / Entity Name *</label>
+                                    <label style="display: block; font-size: 12.5px; color: white; font-weight: 600; margin-bottom: 6px; font-family: var(--font-mono);">Business / Entity Name <span style="color: var(--accent-gold);">*</span></label>
                                     <input type="text" id="optOutBusinessName" required placeholder="e.g. Apex Dental Clinic" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-base); color: white; outline: none; font-size: 14px;">
                                 </div>
                                 <div>
-                                    <label style="display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; font-family: var(--font-mono);">Trade / Brand Name (If different)</label>
+                                    <label style="display: block; font-size: 12.5px; color: white; font-weight: 600; margin-bottom: 6px; font-family: var(--font-mono);">Trade / Brand Name <span style="font-size: 11px; color: var(--text-muted); font-weight: normal;">(If different)</span></label>
                                     <input type="text" id="optOutTradeName" placeholder="e.g. Apex Healthcare" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-base); color: white; outline: none; font-size: 14px;">
                                 </div>
                             </div>
 
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                                 <div>
-                                    <label style="display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; font-family: var(--font-mono);">Listed Phone / Mobile Number *</label>
+                                    <label style="display: block; font-size: 12.5px; color: white; font-weight: 600; margin-bottom: 6px; font-family: var(--font-mono);">Listed Phone / Mobile Number <span style="color: var(--accent-gold);">*</span></label>
                                     <input type="tel" id="optOutPhone" required placeholder="+91 98765 43210" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-base); color: white; outline: none; font-size: 14px;">
                                 </div>
                                 <div>
-                                    <label style="display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; font-family: var(--font-mono);">Official Contact Email *</label>
+                                    <label style="display: block; font-size: 12.5px; color: white; font-weight: 600; margin-bottom: 6px; font-family: var(--font-mono);">Official Contact Email <span style="color: var(--accent-gold);">*</span></label>
                                     <input type="email" id="optOutEmail" required placeholder="owner@business.com" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-base); color: white; outline: none; font-size: 14px;">
                                 </div>
                             </div>
 
                             <div style="margin-bottom: 20px;">
-                                <label style="display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; font-family: var(--font-mono);">Physical Business Address *</label>
+                                <label style="display: block; font-size: 12.5px; color: white; font-weight: 600; margin-bottom: 6px; font-family: var(--font-mono);">Physical Business Address <span style="color: var(--accent-gold);">*</span></label>
                                 <input type="text" id="optOutAddress" required placeholder="Building, Street, Area, City, Pincode" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-base); color: white; outline: none; font-size: 14px;">
                             </div>
 
                             <div style="margin-bottom: 20px;">
-                                <label style="display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; font-family: var(--font-mono);">Request Category *</label>
+                                <label style="display: block; font-size: 12.5px; color: white; font-weight: 600; margin-bottom: 6px; font-family: var(--font-mono);">Request Category <span style="color: var(--accent-gold);">*</span></label>
                                 <select id="optOutReason" required style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-base); color: white; outline: none; font-size: 14px;">
                                     <option value="sole_proprietor">Sole Proprietorship — Remove Personal Mobile Number</option>
                                     <option value="business_closed">Business Permanently Closed</option>
@@ -350,7 +350,7 @@ export function renderOptOutPage() {
                             </div>
 
                             <div style="margin-bottom: 24px;">
-                                <label style="display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; font-family: var(--font-mono);">Additional Information / Verification URL (Optional)</label>
+                                <label style="display: block; font-size: 12.5px; color: white; font-weight: 600; margin-bottom: 6px; font-family: var(--font-mono);">Additional Information / Verification URL <span style="font-size: 11px; color: var(--text-muted); font-weight: normal;">(Optional)</span></label>
                                 <textarea id="optOutDetails" rows="3" placeholder="Provide any link or details verifying your listing..." style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-base); color: white; outline: none; font-size: 14px; resize: vertical;"></textarea>
                             </div>
 
