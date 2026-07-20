@@ -50,6 +50,20 @@ export function renderCheckoutConsentModal() {
     const details = planDetails[planId] || planDetails.hunter;
 
     return `
+        <style>
+            .consent-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+                margin-bottom: 24px;
+            }
+            @media (max-width: 600px) {
+                .consent-grid {
+                    grid-template-columns: 1fr !important;
+                    gap: 12px !important;
+                }
+            }
+        </style>
         <div class="modal-overlay open" id="checkoutConsentModalOverlay" style="z-index: 10030;">
             <div class="modal-card" style="max-width: 620px; padding: 32px; text-align: left; position: relative; max-height: 90vh; overflow-y: auto;">
                 <button class="modal-close-btn" id="closeCheckoutConsentModalBtn" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer;">&times;</button>
@@ -71,7 +85,7 @@ export function renderCheckoutConsentModal() {
                 </div>
 
                 <!-- 2-Box Column Grid -->
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+                <div class="consent-grid">
                     
                     <!-- Box 1: Plan Summary Card -->
                     <div style="background: rgba(255, 160, 0, 0.03); border: 1px solid var(--accent-gold); padding: 20px; border-radius: var(--radius-md); display: flex; flex-direction: column; justify-content: space-between;">

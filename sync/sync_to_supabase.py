@@ -176,7 +176,7 @@ def parse_db_raw_data(raw_data_raw) -> dict:
             return {}
     return {}
 
-def sync() -> dict:
+def sync(progress_callback=None) -> dict:
     start_time = datetime.now(timezone.utc)
     print(f"[{start_time.isoformat()}] Starting NearPro sync to Supabase...")
     
@@ -327,6 +327,11 @@ def sync() -> dict:
             
             synced_count += len(batch)
             print(f"Successfully synced batch {i // batch_size + 1} ({synced_count}/{len(prepared_leads)} leads).")
+            if progress_callback:
+                try:
+                    progress_callback(synced_count, len(prepared_leads))
+                except Exception:
+                    pass
         except Exception as e:
             print(f"Error syncing batch {i // batch_size + 1}: {e}")
             errors_count += len(batch)
