@@ -2034,8 +2034,48 @@ async function initApp() {
         showOAuthAuthLoader();
     }
 
-    // 1. Initial Router and state setup
-    initRoutes();
+    // 1. Initialize Supabase Auth session state FIRST before router evaluation
+    try {
+        const { supabase } = await import('./supabase.js');
+        
+        // Initial session fetch (await to ensure State.user is resolved before routes render)
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+            State.user = session.user;
+            State.profile = await Api.getProfile(session.user.id);
+            State.auth_modal_open = false;
+        }
+
+        // Listen for ongoing session state changes
+        supabase.auth.onAuthStateChange(async (event, session) => {
+            if (session) {
+                State.user = session.user;
+                State.profile = await Api.getProfile(session.user.id);
+                State.auth_modal_open = false;
+
+                hideOAuthAuthLoader();
+
+                if (event === 'SIGNED_IN' || window.location.hash.includes('access_token=')) {
+                    const queuedTier = localStorage.getItem('selected_nearpro_tier');
+                    const queuedInterval = localStorage.getItem('selected_nearpro_interval') || 'monthly';
+                    if (queuedTier && queuedTier !== 'free') {
+                        window.location.hash = `#/checkout?plan=${queuedTier}&cycle=${queuedInterval}`;
+                    } else if (window.location.hash === '#/' || !window.location.hash) {
+                        window.location.hash = '#/dashboard/directory';
+                    }
+                }
+            } else {
+                State.user = null;
+                State.profile = null;
+                hideOAuthAuthLoader();
+            }
+            State.notify();
+        });
+    } catch (err) {
+        console.error("Auth listener initialization failed: ", err);
+    } finally {
+        hideOAuthAuthLoader();
+    }
     
     // 2. Fetch category groups cache for the sidebar tree
     try {
@@ -2050,61 +2090,8 @@ async function initApp() {
         console.error("Initialization check failed. Database offline: ", e);
     }
 
-    // 3. Initialize Supabase Auth session state listener
-    try {
-        const { supabase } = await import('./supabase.js');
-        
-        // Initial session fetch
-        supabase.auth.getSession().then(async ({ data: { session } }) => {
-            if (session) {
-                State.user = session.user;
-                State.profile = await Api.getProfile(session.user.id);
-                State.auth_modal_open = false;
-                
-                hideOAuthAuthLoader();
-
-                const queuedTier = localStorage.getItem('selected_nearpro_tier');
-                const queuedInterval = localStorage.getItem('selected_nearpro_interval') || 'monthly';
-                if (queuedTier && queuedTier !== 'free') {
-                    window.location.hash = `#/checkout?plan=${queuedTier}&cycle=${queuedInterval}`;
-                } else if (window.location.hash === '#/' || !window.location.hash) {
-                    window.location.hash = '#/dashboard/directory';
-                }
-                State.notify();
-            } else {
-                hideOAuthAuthLoader();
-            }
-        });
-
-        // Listen for session state changes
-        supabase.auth.onAuthStateChange(async (event, session) => {
-            if (session) {
-                State.user = session.user;
-                State.profile = await Api.getProfile(session.user.id);
-                State.auth_modal_open = false;
-
-                hideOAuthAuthLoader();
-
-                if (event === 'SIGNED_IN' || window.location.hash.includes('access_token=')) {
-                    const queuedTier = localStorage.getItem('selected_nearpro_tier');
-                    const queuedInterval = localStorage.getItem('selected_nearpro_interval') || 'monthly';
-                    if (queuedTier && queuedTier !== 'free') {
-                        window.location.hash = `#/checkout?plan=${queuedTier}&cycle=${queuedInterval}`;
-                    } else {
-                        window.location.hash = '#/dashboard/directory';
-                    }
-                }
-            } else {
-                State.user = null;
-                State.profile = null;
-                hideOAuthAuthLoader();
-            }
-            State.notify();
-        });
-    } catch (err) {
-        console.error("Auth listener initialization failed: ", err);
-        hideOAuthAuthLoader();
-    }
+    // 3. Now initialize Router with active session ready!
+    initRoutes();
 }
 
 document.addEventListener('DOMContentLoaded', initApp);
