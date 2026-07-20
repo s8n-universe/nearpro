@@ -274,13 +274,16 @@ export function bindCheckoutPageEvents(planId = 'hunter', cycle = 'monthly') {
                     }).eq('id', State.user.id);
                 }
 
-                // Trigger subscription checkout
                 await Api.checkoutSubscription(planId, cycle);
             } catch (err) {
                 console.error("Checkout payment error:", err);
-                payBtn.innerText = `Pay via Razorpay`;
+                payBtn.innerText = `Pay ₹${netPayable.toLocaleString('en-IN')} via Razorpay`;
                 payBtn.disabled = false;
-                alert("Payment initiation failed. Please try again.");
+                const statusDiv = document.getElementById('checkoutErrorStatusDiv');
+                if (statusDiv) {
+                    statusDiv.innerText = err.message || "Payment processing failed. Please try again.";
+                    statusDiv.style.display = 'block';
+                }
             }
         });
     }
