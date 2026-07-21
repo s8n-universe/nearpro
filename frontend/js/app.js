@@ -1694,8 +1694,17 @@ async function renderDashboardLayout(tab) {
             const savedLeads = await Api.getSavedLeads();
             
             const searchParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
-            const activeLeadId = searchParams.get('lead_id');
+            let activeLeadId = searchParams.get('lead_id');
             const selectedPlatform = searchParams.get('platform') || 'lovable';
+
+            // Auto-select lead if generating in background or default to first saved lead
+            if (!activeLeadId) {
+                if (window._activeGeneratingLeadId) {
+                    activeLeadId = window._activeGeneratingLeadId;
+                } else if (savedLeads.length > 0 && savedLeads[0].professionals) {
+                    activeLeadId = savedLeads[0].professionals.id;
+                }
+            }
 
             // Initialize prompt cache
             window._promptCache = window._promptCache || {};
@@ -1728,6 +1737,7 @@ async function renderDashboardLayout(tab) {
                     }
 
                     window._promptGenerating = cacheKey;
+                    window._activeGeneratingLeadId = activeLeadId;
                     
                     // Re-render to show loading state
                     content.innerHTML = renderPromptGenerator(savedLeads, activeLeadId, selectedPlatform, 'Generating tailored prompt... Please wait.');
@@ -1738,7 +1748,7 @@ async function renderDashboardLayout(tab) {
                         "Extracting client reviews & ratings...",
                         "Formatting physical address & hours...",
                         "Applying conversion rate optimization...",
-                        "Drafting custom specifications for " + (selectedPlatform === 'v0' ? 'v0.dev' : selectedPlatform === 'cursor' ? 'Cursor IDE' : selectedPlatform === 'claude' ? 'Claude Code' : selectedPlatform === 'bolt' ? 'Bolt.new' : 'Lovable.dev') + "..."
+                        "Drafting custom specifications for " + (selectedPlatform === 'v0' ? 'v0.dev' : selectedPlatform === 'cursor' ? 'Cursor IDE' : selectedPlatform === 'claude' ? 'Claude Code' : selectedPlatform === 'emergent' ? 'Emergent AI' : selectedPlatform === 'bolt' ? 'Bolt.new' : 'Lovable.dev') + "..."
                     ];
                     const statusDescs = [
                         "Reviewing category tags and local target parameters",
@@ -1758,6 +1768,9 @@ async function renderDashboardLayout(tab) {
                             descEl.innerText = statusDescs[statusIdx];
                         }
                     }, 1800);
+
+                    const activeLeadObj = savedLeads.find(l => l.professionals?.id === activeLeadId);
+                    const leadName = activeLeadObj?.professionals?.name || 'Lead';
 
                     try {
                         const res = await Api.generateWebsitePrompt(activeLeadId, selectedPlatform);
@@ -1789,9 +1802,18 @@ async function renderDashboardLayout(tab) {
                     } finally {
                         clearInterval(statusInterval);
                         window._promptGenerating = null;
-                        // Final re-render with result or error
-                        content.innerHTML = renderPromptGenerator(savedLeads, activeLeadId, selectedPlatform, window._promptCache[cacheKey] || '');
-                        bindEvents();
+                        window._activeGeneratingLeadId = null;
+
+                        if (window.showToast) {
+                            window.showToast(`✨ Website Prompt ready for ${leadName}!`, 'success');
+                        }
+
+                        // Re-render if currently on prompts tab
+                        const currentHash = window.location.hash || '';
+                        if (currentHash.includes('/dashboard/prompts')) {
+                            content.innerHTML = renderPromptGenerator(savedLeads, activeLeadId, selectedPlatform, window._promptCache[cacheKey] || '');
+                            bindEvents();
+                        }
                     }
                 }
 
