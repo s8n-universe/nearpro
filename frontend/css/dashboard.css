@@ -819,8 +819,8 @@
 /* --- Premium 3-Column Workspace Layout --- */
 
 .dashboard-content-area.crm-active {
-    padding: 0 !important;
-    overflow: hidden !important;
+    padding: 28px 32px !important;
+    overflow-y: auto !important;
 }
 
 .dashboard-workspace-3col {
