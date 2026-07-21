@@ -48,7 +48,7 @@ export function renderSearchBar() {
                 <input type="text" id="searchInput" autocomplete="off" spellcheck="false" placeholder="Search by name, category, area, or keywords (e.g. dentists in Bandra)..." value="${State.filters.search || ''}">
             </div>
             
-            <button id="resetSearchBtn" class="secondary-btn" style="padding: 10px 18px; color: var(--text-muted); font-weight: 600;">
+            <button id="resetSearchBtn" class="secondary-btn" style="padding: 6px 12px; font-size: 12px; color: var(--text-muted); font-weight: 600;">
                 Reset Filters ✕
             </button>
         </div>

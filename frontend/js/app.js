@@ -1299,11 +1299,16 @@ async function renderDashboardLayout(tab) {
                 content.innerHTML = `
                     <div class="dashboard-directory-layout" style="display: flex; width: 100%; height: calc(100vh - 70px); overflow: hidden;">
                         <aside class="dashboard-category-sidebar ${sidebarClass}" id="sidebarElement" style="width: 240px; border-right: 1px solid var(--border); background: rgba(0,0,0,0.05); overflow-y: auto; padding: 20px 14px; flex-shrink: 0;"></aside>
-                        <section class="app-content" style="flex: 1; padding: 24px; display: flex; flex-direction: column; overflow-y: auto; position: relative;">
-                            <!-- Usability Banner -->
-                            <div class="usability-banner" style="background: rgba(255, 160, 0, 0.02); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px 18px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 4px; border-left: 3px solid var(--accent-gold); flex-shrink: 0;">
-                                <div style="font-size: 12.5px; color: white; line-height: 1.4;"><span style="color: var(--accent-gold); font-weight: 600;">What it is:</span> Search for verified local business leads across India, filtered by niche and geographic area.</div>
-                                <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.4;"><span style="color: var(--accent-gold); font-weight: 600;">How to leverage:</span> Find leads with missing websites or low ratings and save them to pitch optimization services.</div>
+                        <section class="app-content" style="flex: 1; padding: 16px 20px; display: flex; flex-direction: column; overflow-y: auto; position: relative;">
+                            <!-- Directory Header Stats Bar -->
+                            <div class="directory-stats-bar" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 12px; color: var(--text-muted); font-family: var(--font-mono);">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="color: var(--accent-gold); font-weight: 600;">⚡ Verified Intelligence Engine</span>
+                                    <span>•</span>
+                                    <span>${State.stats?.total_professionals ? State.stats.total_professionals.toLocaleString('en-IN') : '7,626'} Verified Listings</span>
+                                    <span>•</span>
+                                    <span>Mumbai Region</span>
+                                </div>
                             </div>
                             <div id="searchBarElement"></div>
                             <div id="filterPanelElement"></div>

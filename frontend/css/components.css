@@ -71,22 +71,35 @@
 /* --- Professional Card --- */
 /* ===== Professional Card (Browse Directory) ===== */
 .prof-card {
-    background: rgba(14, 14, 18, 0.85);
+    background: rgba(22, 22, 29, 0.95);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: var(--radius-lg);
-    padding: 20px 20px 16px 22px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: 4px solid var(--card-accent, var(--accent-gold));
+    border-radius: var(--radius-md);
+    padding: 16px;
     display: flex;
     flex-direction: column;
     position: relative;
-    transition: var(--transition);
-    gap: 10px;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+    gap: 8px;
+    animation: cardFadeIn 0.3s ease-out forwards;
 }
 .prof-card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(255, 255, 255, 0.12);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+    transform: translateY(-3px);
+    border-color: rgba(255, 255, 255, 0.18);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45), 0 0 16px var(--card-accent, rgba(255, 160, 0, 0.2));
+}
+
+@keyframes cardFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Toolbar: Track + Compare in a row at top */
@@ -98,11 +111,33 @@
     margin-bottom: 2px;
 }
 
+.track-card-btn, .compare-checkbox-label {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 100px;
+    padding: 3px 10px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+}
+
+.track-card-btn:hover, .compare-checkbox-label:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.track-card-btn.tracked {
+    background: rgba(34, 197, 94, 0.12);
+    border-color: rgba(34, 197, 94, 0.4);
+    color: #4ade80;
+}
+
 /* Card head: category badge + name */
 .card-head {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 5px;
 }
 .card-head-top {
     display: flex;
@@ -111,8 +146,9 @@
     gap: 6px;
 }
 .card-head h3 {
-    font-size: 17px;
+    font-size: 15.5px;
     font-family: var(--font-heading);
+    font-weight: 600;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -121,28 +157,58 @@
     line-height: 1.3;
 }
 
-/* Inline info row: stars · reviews · divider · location · distance */
+/* Inline info row: stars · reviews · divider · location */
 .card-info-row {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 12.5px;
+    font-size: 12px;
     color: var(--text-secondary);
     flex-wrap: wrap;
 }
+.card-info-row .star-rating {
+    display: inline-flex;
+    gap: 1px;
+    align-items: center;
+}
+.card-info-row .star-filled {
+    color: #fbbf24;
+}
+.card-info-row .star-half {
+    color: #fbbf24;
+    opacity: 0.7;
+}
+.card-info-row .star-empty {
+    color: rgba(255, 255, 255, 0.18);
+}
 .card-info-row .review-count {
     color: var(--text-muted);
-    font-size: 12px;
+    font-size: 11.5px;
 }
 .card-info-row .area-label {
     color: var(--text-secondary);
-    font-size: 12.5px;
+    font-size: 12px;
 }
 .card-divider {
     width: 1px;
     height: 12px;
     background: rgba(255, 255, 255, 0.12);
     flex-shrink: 0;
+}
+
+/* Completeness progress bar */
+.completeness-bar-container {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 2px 0 4px;
+}
+.completeness-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
 }
 
 /* Avatar wrap — only used in modal now */
@@ -443,23 +509,23 @@
 /* --- Industry-Grade Filter Panel & Search bar --- */
 .filter-wrap {
     display: flex;
-    gap: 16px;
+    gap: 10px;
     align-items: center;
     background: var(--bg-surface);
     border: 1px solid var(--border);
-    padding: 16px 24px;
-    border-radius: var(--radius-lg);
-    margin-bottom: 20px;
+    padding: 10px 16px;
+    border-radius: var(--radius-md);
+    margin-bottom: 8px;
     flex-wrap: wrap;
 }
 .search-input-wrap {
     flex: 1;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
     background: var(--bg-base);
     border: 1px solid var(--border);
-    padding: 8px 16px;
+    padding: 6px 12px;
     border-radius: var(--radius-md);
 }
 .search-input-wrap:focus-within {
@@ -467,13 +533,14 @@
 }
 .search-input-wrap input {
     width: 100%;
+    font-size: 13px;
 }
 .filter-select {
     background: var(--bg-base);
     border: 1px solid var(--border);
-    padding: 8px 14px;
+    padding: 6px 10px;
     border-radius: var(--radius-md);
-    font-size: 13px;
+    font-size: 12px;
     color: var(--text-primary);
     cursor: pointer;
     outline: none;
@@ -487,30 +554,30 @@
 .filter-panel-card {
     background: var(--bg-surface);
     border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 18px 24px;
-    margin-bottom: 24px;
+    border-radius: var(--radius-md);
+    padding: 10px 16px;
+    margin-bottom: 12px;
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    gap: 8px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .filter-toolbar-row {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 12px;
     flex-wrap: wrap;
 }
 
 .filter-control-group {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
 }
 
 .filter-label {
-    font-size: 11.5px;
+    font-size: 10.5px;
     font-weight: 700;
     color: var(--text-muted);
     font-family: var(--font-mono);
@@ -518,8 +585,8 @@
 }
 
 .profile-active-btn {
-    padding: 6px 14px;
-    font-size: 12.5px;
+    padding: 4px 10px;
+    font-size: 11.5px;
     display: flex;
     align-items: center;
     gap: 6px;
@@ -536,18 +603,18 @@
 .filter-chips-row {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 6px;
     flex-wrap: wrap;
-    padding-top: 4px;
+    padding-top: 2px;
 }
 
 .filter-chip {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 6px 14px;
+    gap: 4px;
+    padding: 4px 10px;
     border-radius: 50px;
-    font-size: 12.5px;
+    font-size: 11.5px;
     font-weight: 600;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--border);
@@ -571,7 +638,7 @@
 }
 
 .chip-icon {
-    font-size: 13px;
+    font-size: 12px;
 }
 
 /* Active Filters Summary Bar */
@@ -579,10 +646,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-top: 12px;
+    padding-top: 8px;
     border-top: 1px solid rgba(255, 255, 255, 0.06);
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 8px;
 }
 
 .active-tags-list {

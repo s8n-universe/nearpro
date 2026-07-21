@@ -18,7 +18,7 @@ export const State = {
     auth_modal_open: false,
     selected_tier: null,
     billing_cycle: 'monthly',
-    category_sidebar_collapsed: localStorage.getItem('nearpro_cat_sidebar_collapsed') !== 'false',
+    category_sidebar_collapsed: localStorage.getItem('nearpro_cat_sidebar_collapsed') === 'true',
     dashboard_sidebar_collapsed: localStorage.getItem('nearpro_dashboard_sidebar_collapsed') === 'true',
     
     // Filters state

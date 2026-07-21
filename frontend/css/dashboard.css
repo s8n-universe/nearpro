@@ -1314,6 +1314,19 @@
     font-size: 20px !important; /* Emphasize emojis */
 }
 
+.dashboard-category-sidebar.collapsed .sub-list-link span,
+.dashboard-category-sidebar.collapsed .sub-list-link .cat-count {
+    display: none !important;
+}
+
+.dashboard-category-sidebar.collapsed:hover .sub-list-link span {
+    display: inline !important;
+}
+
+.dashboard-category-sidebar.collapsed:hover .sub-list-link .cat-count {
+    display: inline-block !important;
+}
+
 /* Collapsible Main Dashboard Sidebar */
 .dashboard-sidebar {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;

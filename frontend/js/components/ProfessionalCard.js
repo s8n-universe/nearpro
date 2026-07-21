@@ -93,11 +93,11 @@ export function renderProfessionalCard(lead, index = 0) {
     let starsHTML = '';
     for (let i = 1; i <= 5; i++) {
         if (i <= Math.floor(rating)) {
-            starsHTML += '★';
+            starsHTML += '<span class="star-filled">★</span>';
         } else if (i - 0.5 <= rating) {
-            starsHTML += '½';
+            starsHTML += '<span class="star-half">★</span>';
         } else {
-            starsHTML += '☆';
+            starsHTML += '<span class="star-empty">☆</span>';
         }
     }
 
@@ -141,8 +141,12 @@ export function renderProfessionalCard(lead, index = 0) {
 
     const isSelected = State.selected_ids.includes(lead.id);
 
+    // Progress bar fill % and color based on completeness score (0-5)
+    const scorePct = Math.min(100, Math.max(10, (score / 5) * 100));
+    const scoreColor = score >= 4 ? '#10b981' : (score >= 2.5 ? '#f59e0b' : '#ef4444');
+
     return `
-        <div class="prof-card" data-id="${lead.id}" style="border-left: 3px solid ${avatarColor};">
+        <div class="prof-card" data-id="${lead.id}" style="--card-accent: ${avatarColor}; border-left: 4px solid ${avatarColor};">
             <div class="card-toolbar" onclick="event.stopPropagation();">
                 <button class="track-card-btn ${isTracked ? 'tracked' : ''}" data-id="${lead.id}">
                     <i data-lucide="${isTracked ? 'bookmark-check' : 'bookmark'}" style="width:12px; height:12px;"></i> ${isTracked ? 'Tracked' : 'Track'}
@@ -165,7 +169,7 @@ export function renderProfessionalCard(lead, index = 0) {
             
             <div class="card-head">
                 <div class="card-head-top">
-                    <span class="category-badge">${displayCategory}</span>
+                    <span class="category-badge" style="background: ${avatarColor}18; color: ${avatarColor}; border: 1px solid ${avatarColor}35;">${displayCategory}</span>
                     ${scoreBadgeHTML}
                 </div>
                 <h3>${lead.name}</h3>
@@ -179,8 +183,8 @@ export function renderProfessionalCard(lead, index = 0) {
                 <span class="area-label">${lead.area || "Mumbai"}</span>
             </div>
 
-            <div class="completeness-dots" title="Data completeness: ${score}/5">
-                ${dotsHTML}
+            <div class="completeness-bar-container" title="Data completeness: ${score}/5 (${scorePct}%)">
+                <div class="completeness-bar-fill" style="width: ${scorePct}%; background: ${scoreColor};"></div>
             </div>
 
             <div class="card-actions" onclick="event.stopPropagation();">
