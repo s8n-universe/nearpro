@@ -167,7 +167,13 @@ Business Hours: ${formattedHours}
 Target Platform: ${platform}
 JSON-LD Type: ${jsonLdType}`;
 
-    const modelsToTry = ['gemini-3.5-flash', 'gemini-flash-latest', 'gemini-2.0-flash'];
+    const modelsToTry = [
+      'gemini-3.5-flash',
+      'gemini-flash-latest',
+      'gemini-2.0-flash',
+      'gemini-3.1-flash-lite',
+      'gemini-pro-latest'
+    ];
     let response: Response | null = null;
     let lastError: Error | null = null;
 
