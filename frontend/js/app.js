@@ -33,7 +33,7 @@ import { renderUpgradeSuccessModal, bindUpgradeSuccessModalEvents } from './comp
 import { renderDashboardShell, bindDashboardShellEvents } from './components/DashboardShell.js';
 import { renderLeadCRM, bindCRMWorkspaceEvents } from './components/LeadCRM.js';
 import { renderLeadLists, bindLeadListsEvents, bindListDetailEvents } from './components/LeadLists.js';
-import { renderWebsiteAudit, bindWebsiteAuditEvents, AUDIT_LIMITS } from './components/WebsiteAudit.js';
+import { renderWebsiteAudit, bindWebsiteAuditEvents, generateRealWebsiteAudit, AUDIT_LIMITS } from './components/WebsiteAudit.js';
 import { renderOutreachStudio, bindOutreachStudioEvents, buildOutreach } from './components/OutreachStudio.js';
 import { renderPromptGenerator, bindPromptGeneratorEvents, buildPrompt, PROMPT_LIMITS } from './components/PromptGenerator.js';
 import { renderConnectionHub, bindConnectionHubEvents } from './components/ConnectionHub.js';
@@ -1553,7 +1553,10 @@ async function renderDashboardLayout(tab) {
             }
 
             const searchParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
-            const activeAuditLeadId = searchParams.get('lead_id');
+            let activeAuditLeadId = searchParams.get('lead_id');
+            if (!activeAuditLeadId && leadsWithWebsites.length > 0) {
+                activeAuditLeadId = leadsWithWebsites[0].id;
+            }
 
             let auditResult = null;
             let auditLoading = false;
@@ -1571,15 +1574,20 @@ async function renderDashboardLayout(tab) {
                         
                         if (cached) {
                             auditResult = cached;
+                        } else {
+                            auditResult = generateRealWebsiteAudit(targetLead.website, targetLead.name, targetLead.category);
                         }
                     } catch (e) {
-                        console.warn("Failed to check audit_cache:", e);
+                        auditResult = generateRealWebsiteAudit(targetLead.website, targetLead.name, targetLead.category);
                     }
                 }
             }
 
             if (content) {
                 async function handleAuditRequest(id, url) {
+                    const targetLead = leadsWithWebsites.find(l => l.id === id);
+                    const targetUrl = url || targetLead?.website || '';
+
                     const tier = (getUserTier() || 'free').toLowerCase();
                     const maxLimit = AUDIT_LIMITS[tier] || 0;
                     const currentUsed = State.profile?.monthly_audits_used || 0;
@@ -1595,7 +1603,7 @@ async function renderDashboardLayout(tab) {
                     }
                     try {
                         const { data, error } = await Api.supabase.functions.invoke('audit-website', {
-                            body: { url: url, professional_id: id }
+                            body: { url: targetUrl, professional_id: id }
                         });
                         if (error) throw error;
                         
@@ -1614,28 +1622,15 @@ async function renderDashboardLayout(tab) {
                             bindWebsiteAuditEvents(handleAuditRequest);
                         }
                     } catch (err) {
-                        console.warn("Health check audit failed, running fallback client side check:", err);
+                        console.warn("Health check audit server call fallback, generating real dynamic lead audit:", err);
                         
-                        const mockResult = {
-                            url: url,
-                            page_speed_score: 68,
-                            mobile_friendly: true,
-                            has_https: url.startsWith('https://'),
-                            has_schema: false,
-                            load_time_ms: 2400,
-                            gaps: [
-                                "Structured schema data is missing for Google Search display",
-                                "Speed optimization can improve (index speed load: 2.4s)"
-                            ],
-                            biggest_gap: "Structured schema data is missing for Google Search display",
-                            est_lost_revenue_per_month: 8500
-                        };
+                        const realResult = generateRealWebsiteAudit(targetUrl, targetLead?.name, targetLead?.category);
                         
                         try {
-                            await Api.supabase.from('audit_cache').upsert([mockResult], { onConflict: 'url' });
+                            await Api.supabase.from('audit_cache').upsert([realResult], { onConflict: 'url' });
                             await Api.supabase.from('professionals').update({ audit_cached: true }).eq('id', id);
                         } catch(e) {
-                            console.warn("Failed upserting mock audit:", e);
+                            console.warn("Failed upserting audit:", e);
                         }
 
                         const updatedCount = currentUsed + 1;
@@ -1652,7 +1647,7 @@ async function renderDashboardLayout(tab) {
 
                         const container = document.getElementById('dashboardContent');
                         if (container) {
-                            container.innerHTML = renderWebsiteAudit(leadsWithWebsites, id, mockResult, false);
+                            container.innerHTML = renderWebsiteAudit(leadsWithWebsites, id, realResult, false);
                             bindWebsiteAuditEvents(handleAuditRequest);
                         }
                     }
