@@ -8,9 +8,11 @@ export function renderTeamWorkspace(members = [], dataRequests = [], activeTab =
     else if (userTier === 'hunter') seatLimit = 5;
     else if (userTier === 'agency' || userTier === 'enterprise') seatLimit = 999999;
 
-    const currentSeats = members.length + 1; // including owner
+    const safeMembers = Array.isArray(members) ? members : [];
+    const safeRequests = Array.isArray(dataRequests) ? dataRequests : [];
+    const currentSeats = safeMembers.length + 1; // including owner
 
-    const membersHTML = members.map(m => {
+    const membersHTML = safeMembers.map(m => {
         return `
             <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; margin-bottom:8px;">
                 <div>
@@ -46,7 +48,7 @@ export function renderTeamWorkspace(members = [], dataRequests = [], activeTab =
         </div>
     `;
 
-    const requestsHTML = dataRequests.map(r => {
+    const requestsHTML = safeRequests.map(r => {
         const date = new Date(r.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
         const statusColor = r.status === 'fulfilled' ? '#059669' : '#d97706';
         return `
@@ -66,7 +68,7 @@ export function renderTeamWorkspace(members = [], dataRequests = [], activeTab =
         `;
     }).join('');
 
-    const emptyRequestsHTML = dataRequests.length === 0 ? `
+    const emptyRequestsHTML = safeRequests.length === 0 ? `
         <div style="padding:40px 12px; text-align:center; color:#64748b; font-size:13.5px; font-weight:600;">
             No custom extraction requests registered yet.
         </div>
@@ -149,15 +151,29 @@ export function renderTeamWorkspace(members = [], dataRequests = [], activeTab =
     `;
 }
 
-export function bindTeamWorkspaceEvents(members, dataRequests, activeTab, onTabChangeCallback) {
+export function bindTeamWorkspaceEvents(arg1, arg2, arg3, arg4) {
     if (window.refreshLucideIcons) window.refreshLucideIcons();
+
+    let onTabChangeCallback = null;
+    let onInviteCallback = null;
+    let onRemoveCallback = null;
+    let onRequestCallback = null;
+
+    if (typeof arg1 === 'function') {
+        onTabChangeCallback = arg1;
+        onInviteCallback = arg2;
+        onRemoveCallback = arg3;
+        onRequestCallback = arg4;
+    } else {
+        onTabChangeCallback = arg4;
+    }
 
     // Tab buttons
     const tabSeats = document.getElementById('tabSeatsBtn');
     const tabRequests = document.getElementById('tabRequestsBtn');
 
-    if (tabSeats) tabSeats.onclick = () => onTabChangeCallback('seats');
-    if (tabRequests) tabRequests.onclick = () => onTabChangeCallback('requests');
+    if (tabSeats) tabSeats.onclick = () => onTabChangeCallback && onTabChangeCallback('seats');
+    if (tabRequests) tabRequests.onclick = () => onTabChangeCallback && onTabChangeCallback('requests');
 
     // Submit invite
     const submitInviteBtn = document.getElementById('submitInviteBtn');
@@ -176,10 +192,14 @@ export function bindTeamWorkspaceEvents(members, dataRequests, activeTab, onTabC
 
             submitInviteBtn.disabled = true;
             try {
-                await Api.inviteTeamMember(email, role);
-                if (window.showToast) window.showToast(`✨ Invitation sent to ${email}`, "success");
-                inviteEmailInput.value = '';
-                if (onTabChangeCallback) onTabChangeCallback('seats');
+                if (onInviteCallback) {
+                    onInviteCallback(email, role);
+                } else {
+                    await Api.inviteTeamMember(email, role);
+                    if (window.showToast) window.showToast(`✨ Invitation sent to ${email}`, "success");
+                    inviteEmailInput.value = '';
+                    if (onTabChangeCallback) onTabChangeCallback('seats');
+                }
             } catch (err) {
                 if (window.showToast) window.showToast(`Invite failed: ${err.message}`, "error");
             } finally {
@@ -197,9 +217,13 @@ export function bindTeamWorkspaceEvents(members, dataRequests, activeTab, onTabC
 
             btn.disabled = true;
             try {
-                await Api.removeTeamMember(email);
-                if (window.showToast) window.showToast(`Removed ${email} from workspace`, "info");
-                if (onTabChangeCallback) onTabChangeCallback('seats');
+                if (onRemoveCallback) {
+                    onRemoveCallback(email);
+                } else {
+                    await Api.removeTeamMember(email);
+                    if (window.showToast) window.showToast(`Removed ${email} from workspace`, "info");
+                    if (onTabChangeCallback) onTabChangeCallback('seats');
+                }
             } catch (err) {
                 if (window.showToast) window.showToast(`Remove failed: ${err.message}`, "error");
             }
@@ -209,27 +233,42 @@ export function bindTeamWorkspaceEvents(members, dataRequests, activeTab, onTabC
     // New Data Request Modal Trigger
     const openReqBtn = document.getElementById('openDataRequestModalBtn');
     if (openReqBtn) {
-        openReqBtn.onclick = () => {
+        openReqBtn.onclick = async () => {
             const niche = prompt("Enter targeted niche (e.g. Dentists, Interior Designers, Coaching Centers):");
             if (!niche) return;
             const city = prompt("Enter targeted city/region (e.g. Mumbai, Pune, Delhi NCR):");
             if (!city) return;
             const notes = prompt("Any specific requirements or lead count needed?");
 
-            Api.requestCustomData(niche, city, notes || '').then(() => {
-                if (window.showToast) window.showToast("✨ Custom data request submitted!", "success");
-                if (onTabChangeCallback) onTabChangeCallback('requests');
-            }).catch(err => {
+            try {
+                if (onRequestCallback) {
+                    await onRequestCallback(niche, city, notes || '');
+                } else {
+                    await Api.requestCustomData(niche, city, notes || '');
+                    if (window.showToast) window.showToast("✨ Custom data request submitted!", "success");
+                    if (onTabChangeCallback) onTabChangeCallback('requests');
+                }
+            } catch (err) {
                 if (window.showToast) window.showToast(`Request failed: ${err.message}`, "error");
-            });
+            }
         };
     }
 }
 
 export async function loadDataRequests() {
-    return await Api.getDataRequests();
+    try {
+        const res = await Api.getDataRequests();
+        return Array.isArray(res) ? res : [];
+    } catch (err) {
+        console.warn("loadDataRequests fallback:", err);
+        return [];
+    }
 }
 
 export async function createDataRequest(niche, city, notes) {
-    return await Api.requestCustomData(niche, city, notes);
+    try {
+        return await Api.requestCustomData(niche, city, notes);
+    } catch (err) {
+        console.warn("createDataRequest fallback:", err);
+    }
 }
