@@ -1876,12 +1876,16 @@ async function renderDashboardLayout(tab) {
                             
                             <div>
                                 <label style="display: block; font-size: 12px; font-weight: 600; color: #e2e8f0; font-family: var(--font-heading); margin-bottom: 6px;">My Professional Role</label>
-                                <select id="settingsRole" style="width: 100%; padding: 12px; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13.5px; outline: none; transition: all 0.2s ease;">
+                                <select id="settingsRole" style="width: 100%; padding: 12px; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13.5px; outline: none; transition: all 0.2s ease; margin-bottom: 8px;">
                                     <option value="freelancer" ${role === 'freelancer' ? 'selected' : ''}>💻 Freelancer</option>
                                     <option value="agency" ${role === 'agency' ? 'selected' : ''}>🏢 Agency Owner</option>
                                     <option value="sales_team" ${role === 'sales_team' ? 'selected' : ''}>📈 Sales Representative</option>
                                     <option value="startup" ${role === 'startup' ? 'selected' : ''}>🚀 Startup Founder</option>
+                                    <option value="other" ${role && !['freelancer', 'agency', 'sales_team', 'startup'].includes(role) ? 'selected' : ''}>❓ Other...</option>
                                 </select>
+                                <div id="settingsCustomRoleContainer" style="display: ${role && !['freelancer', 'agency', 'sales_team', 'startup'].includes(role) ? 'block' : 'none'};">
+                                    <input type="text" id="settingsCustomRole" value="${role && !['freelancer', 'agency', 'sales_team', 'startup'].includes(role) ? role : ''}" placeholder="Enter your professional role..." style="width: 100%; padding: 12px; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13.5px; outline: none;" />
+                                </div>
                             </div>
 
                             <h4 style="margin: 10px 0 0 0; color: white; font-family: var(--font-heading); font-size: 16px; font-weight: 700; border-top: 1px solid var(--border); padding-top: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
@@ -1964,7 +1968,9 @@ async function renderDashboardLayout(tab) {
                 const c = document.getElementById('settingsCompanyName')?.value.trim() || '';
                 const p = document.getElementById('settingsPortfolioUrl')?.value.trim() || '';
                 const b = document.getElementById('settingsBookingUrl')?.value.trim() || '';
-                const r = document.getElementById('settingsRole')?.value || 'freelancer';
+                const rSel = document.getElementById('settingsRole')?.value || 'freelancer';
+                const custRole = document.getElementById('settingsCustomRole')?.value.trim() || '';
+                const r = rSel === 'other' ? custRole : rSel;
                 
                 const sel = document.getElementById('settingsServiceSelect')?.value;
                 const cust = document.getElementById('settingsCustomService')?.value.trim();
@@ -2003,7 +2009,12 @@ async function renderDashboardLayout(tab) {
                     const senderName = n || '[Your Name]';
                     const senderCompany = c || '[Your Company]';
                     const serviceDesc = s || 'I build websites for local businesses';
-                    const roleTitle = r === 'agency' ? 'founder of' : 'representing';
+                    let roleTitle = 'representing';
+                    if (r === 'agency') {
+                        roleTitle = 'founder of';
+                    } else if (r && !['freelancer', 'startup', 'sales_team'].includes(r)) {
+                        roleTitle = `${r} at`;
+                    }
 
                     let msg = `Namaste Dr. Mehta!\n\nI noticed your listing for Mehta Dental Clinic on Google Maps. I am ${senderName}, ${roleTitle} ${senderCompany}.\n\n${serviceDesc}. We help local clinics rank #1 in maps and convert inquiries into booked appointments.`;
                     
@@ -2019,7 +2030,7 @@ async function renderDashboardLayout(tab) {
             };
 
             // Bind real-time input event listeners
-            const inputsToTrack = ['settingsFullName', 'settingsCompanyName', 'settingsPortfolioUrl', 'settingsBookingUrl', 'settingsCustomService'];
+            const inputsToTrack = ['settingsFullName', 'settingsCompanyName', 'settingsPortfolioUrl', 'settingsBookingUrl', 'settingsCustomService', 'settingsCustomRole'];
             inputsToTrack.forEach(id => {
                 const el = document.getElementById(id);
                 if (el) {
@@ -2045,8 +2056,12 @@ async function renderDashboardLayout(tab) {
             }
 
             const roleSelect = document.getElementById('settingsRole');
-            if (roleSelect) {
-                roleSelect.addEventListener('change', updateLivePreviewAndProgress);
+            const customRoleContainer = document.getElementById('settingsCustomRoleContainer');
+            if (roleSelect && customRoleContainer) {
+                roleSelect.addEventListener('change', () => {
+                    customRoleContainer.style.display = roleSelect.value === 'other' ? 'block' : 'none';
+                    updateLivePreviewAndProgress();
+                });
             }
 
             // Timeline click-to-focus interactivity
@@ -2077,7 +2092,9 @@ async function renderDashboardLayout(tab) {
             });
 
             document.getElementById('saveSettingsBtn').addEventListener('click', async () => {
-                const newRole = document.getElementById('settingsRole').value;
+                const roleSel = document.getElementById('settingsRole').value;
+                const customRole = document.getElementById('settingsCustomRole')?.value.trim() || '';
+                const newRole = roleSel === 'other' ? customRole : roleSel;
                 const newName = document.getElementById('settingsFullName').value.trim();
                 const newCompany = document.getElementById('settingsCompanyName').value.trim();
                 const newPortfolio = document.getElementById('settingsPortfolioUrl').value.trim();
