@@ -14,477 +14,342 @@ export function renderProposalGeneratorLayout(selectedLeadId = null) {
     const isAtLimit = limit > 0 ? (used >= limit) : (userTier === 'free');
 
     return `
-        <div class="proposal-generator-container" style="display: flex; flex-direction: column; gap: 28px; padding: 32px; background: #f8fafc; color: #0f172a; border-radius: var(--radius-lg); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+        <div class="proposal-generator-container" style="display: flex; flex-direction: column; gap: 20px; padding: 28px; background: #f8fafc; color: #0f172a; border-radius: var(--radius-lg); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
             
-            <!-- Top Quota & Intro Header -->
-            <div style="background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%); border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px; display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05);">
-                <div style="flex: 1; min-width: 280px;">
-                    <div style="display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px; border-radius: 99px; background: #fef3c7; border: 1px solid #fde68a; color: #b45309; font-size: 11.5px; font-weight: 700; font-family: var(--font-mono); margin-bottom: 12px;">
-                        📄 1-CLICK CLIENT-READY PDF PROPOSAL GENERATOR
+            <!-- Compact Enterprise Header Bar -->
+            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                        <h2 style="font-size: 19px; font-weight: 800; margin: 0; color: #0f172a; font-family: var(--font-heading);">
+                            📄 1-Click Client Audit & PDF Proposal Engine
+                        </h2>
+                        <span style="background: #eff6ff; border: 1px solid #bfdbfe; color: #2563eb; padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 700;">
+                            CLIENT-READY 3-PAGE AUDIT
+                        </span>
                     </div>
-                    <h2 style="font-size: 22px; font-weight: 800; margin: 0 0 6px 0; font-family: var(--font-heading); color: #0f172a;">
-                        Generate 3-Page Client Audit & Growth Proposal
-                    </h2>
-                    <p style="color: #475569; font-size: 14px; margin: 0; max-width: 680px; line-height: 1.5;">
-                        Generate a beautifully formatted 3-page proposal for any local business lead you track. Includes Google Maps Audit, Competitor Review Gap, Estimated Revenue Leak, Custom Site Specifications, 3-Tier Packages, and your Consultation Booking CTA.
+                    <p style="color: #475569; font-size: 13.5px; margin: 0; line-height: 1.4;">
+                        Generates a 3-page audit & growth proposal featuring Google Maps review gap math, PageSpeed bottlenecks, 3-tier packages, and WhatsApp consultation booking.
                     </p>
                 </div>
                 
-                <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 16px 20px; text-align: right; flex-shrink: 0; min-width: 180px; box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
-                    <div style="font-size: 11px; color: #64748b; font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 4px;">Monthly Proposals Quota</div>
-                    <div style="font-size: 22px; font-weight: 800; color: #d97706; font-family: var(--font-mono);">
-                        ${used} / ${limit === 0 ? '0 (Free)' : limit === 999999 ? 'Unlimited' : limit}
-                    </div>
-                    <div style="font-size: 11.5px; color: #475569; margin-top: 2px;">
-                        Plan: <strong style="text-transform: capitalize; color: #0f172a;">${userTier}</strong>
-                    </div>
+                <div style="display: flex; align-items: center; gap: 12px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 14px;">
+                    <span style="font-size: 12px; color: #475569; font-weight: 600;">Monthly Proposals Quota:</span>
+                    <strong style="font-size: 14px; color: #2563eb;">${used} / ${limit === 0 ? '0 (Free)' : limit === 999999 ? 'Unlimited' : limit}</strong>
+                    <span style="font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 700; background: #e2e8f0; padding: 2px 6px; border-radius: 4px;">
+                        ${userTier}
+                    </span>
                 </div>
             </div>
 
-            <!-- KNOWLEDGE GUIDE: HOW TO USE THIS FEATURE -->
-            <details style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 20px 24px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);" open>
-                <summary style="font-weight: 700; color: #0f172a; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 14.5px; font-family: var(--font-heading);">
-                    <span style="display: flex; align-items: center; gap: 8px;">
-                        <i data-lucide="book-open" style="width: 16px; height: 16px; color: #d97706;"></i>
-                        📖 How to Use PDF Proposals to Close Agency Clients
-                    </span>
-                    <span style="font-size: 11.5px; color: #d97706; font-family: var(--font-mono); font-weight: 700;">Click to Expand / Collapse</span>
-                </summary>
-                
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 16px; border-top: 1px solid #f1f5f9; padding-top: 16px;">
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
-                        <div style="font-size: 11.5px; font-weight: 700; color: #d97706; font-family: var(--font-mono); margin-bottom: 4px;">STEP 1 • SELECT LEAD</div>
-                        <div style="font-size: 13px; color: #475569; line-height: 1.45;">Select a lead you are tracking in your CRM pipeline or from the directory below.</div>
-                    </div>
-                    
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
-                        <div style="font-size: 11.5px; font-weight: 700; color: #d97706; font-family: var(--font-mono); margin-bottom: 4px;">STEP 2 • GENERATE AUDIT</div>
-                        <div style="font-size: 13px; color: #475569; line-height: 1.45;">Click generate to calculate review gap, lost revenue leak, and custom 3-tier pricing packages.</div>
-                    </div>
-
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
-                        <div style="font-size: 11.5px; font-weight: 700; color: #d97706; font-family: var(--font-mono); margin-bottom: 4px;">STEP 3 • SHARE & CONVERT</div>
-                        <div style="font-size: 13px; color: #475569; line-height: 1.45;">Copy the 10-year signed link to dispatch via WhatsApp or download a printable 3-page PDF.</div>
-                    </div>
+            <!-- Compact 3-Step Process Strip -->
+            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.03); flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 12.5px;">
+                    <span style="background: #eff6ff; color: #2563eb; font-weight: 800; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px;">1</span>
+                    <strong style="color: #0f172a;">Select Prospect Lead</strong>
                 </div>
-            </details>
+                <span style="color: #cbd5e1;">➔</span>
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 12.5px;">
+                    <span style="background: #ecfdf5; color: #059669; font-weight: 800; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px;">2</span>
+                    <strong style="color: #0f172a;">Calculate Review & Audit Leak</strong>
+                </div>
+                <span style="color: #cbd5e1;">➔</span>
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 12.5px;">
+                    <span style="background: #f5f3ff; color: #7c3aed; font-weight: 800; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px;">3</span>
+                    <strong style="color: #0f172a;">Dispatch Branded PDF / Web Link</strong>
+                </div>
+            </div>
 
-            <!-- Lead Selection Form -->
-            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+            <!-- Lead Selection & Preset Form -->
+            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03); display: flex; flex-direction: column; gap: 18px;">
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                     <div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                            <label style="font-size: 12px; font-weight: 700; color: #334155; font-family: var(--font-mono);">
-                                SELECT TARGET BUSINESS LEAD:
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                            <label style="font-size: 12.5px; font-weight: 700; color: #0f172a;">
+                                TARGET BUSINESS LEAD:
                             </label>
-                            <a href="#/dashboard/crm" style="font-size: 11.5px; color: #2563eb; text-decoration: underline; font-family: var(--font-mono); font-weight: 600;">
-                                Manage Tracked Leads in CRM ↗
+                            <a href="#/dashboard/crm" style="font-size: 11.5px; color: #2563eb; text-decoration: underline; font-weight: 600;">
+                                View 360° Lead Workstation ↗
                             </a>
                         </div>
-                        <select id="proposalLeadSelect" data-selected-id="${selectedLeadId || ''}" style="width: 100%; padding: 12px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; color: #0f172a; font-size: 13.5px; outline: none;">
+                        <select id="proposalLeadSelect" data-selected-id="${selectedLeadId || ''}" style="width: 100%; padding: 10px 12px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; color: #0f172a; font-size: 13px; outline: none; font-weight: 600;">
                             <option value="">-- Loading your tracked leads & directory... --</option>
                         </select>
                     </div>
                     
                     <div>
-                        <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 8px; font-family: var(--font-mono);">
-                            ADDITIONAL AGENCY NOTES / HIGHLIGHTS (OPTIONAL):
+                        <label style="display: block; font-size: 12.5px; font-weight: 700; color: #0f172a; margin-bottom: 6px;">
+                            PROPOSAL PACKAGE HIGHLIGHT (OPTIONAL):
                         </label>
-                        <input type="text" id="proposalCustomNotes" placeholder="e.g. Focus on mobile speed, WhatsApp bookings, and Google review velocity" style="width: 100%; padding: 12px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; color: #0f172a; font-size: 13.5px; outline: none;">
+                        <input type="text" id="proposalCustomNotes" placeholder="e.g. Google Review Velocity & Mobile Speed Optimization" style="width: 100%; padding: 10px 12px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; color: #0f172a; font-size: 13px; outline: none;">
                     </div>
                 </div>
 
-                <div style="display: flex; justify-content: flex-end; align-items: center; gap: 16px;">
+                <!-- Package Preset Chips -->
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <span style="font-size: 11.5px; font-weight: 700; color: #64748b;">PRESET PACKAGES:</span>
+                    <button class="proposal-preset-chip" data-notes="Google Review Deficit & Local Map Pack Ranking Sprint" style="background: #eff6ff; border: 1px solid #bfdbfe; color: #2563eb; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">
+                        ⭐ Review Deficit Sprint
+                    </button>
+                    <button class="proposal-preset-chip" data-notes="PageSpeed & Mobile Responsiveness Modernization" style="background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">
+                        ⚡ PageSpeed Modernization
+                    </button>
+                    <button class="proposal-preset-chip" data-notes="Full 360 Client Acquisition & WhatsApp Booking Suite" style="background: #faf5ff; border: 1px solid #e9d5ff; color: #6b21a8; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">
+                        🚀 360° Acquisition Suite
+                    </button>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; align-items: center; gap: 16px; border-top: 1px solid #f1f5f9; padding-top: 16px;">
                     ${isAtLimit ? `
-                        <div style="color: #ef4444; font-size: 12.5px; font-family: var(--font-mono);">
+                        <div style="color: #ef4444; font-size: 12.5px; font-weight: 600;">
                             ⚠️ Monthly proposal limit reached. <a href="#/checkout" style="color: #2563eb; text-decoration: underline;">Upgrade plan ↗</a>
                         </div>
                     ` : ''}
-                    <button id="generateProposalBtn" style="background: #2563eb; color: white; border: none; padding: 12px 26px; font-size: 14px; font-weight: 700; border-radius: 8px; display: flex; align-items: center; gap: 8px; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);" ${isAtLimit ? 'disabled' : ''}>
-                        <i data-lucide="sparkles" style="width: 16px; height: 16px;"></i>
-                        Generate 3-Page Client Proposal
+                    
+                    <button class="brand-btn" id="generateProposalBtn" ${isAtLimit ? 'disabled' : ''} style="padding: 10px 24px; font-size: 13px; font-weight: 700; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);">
+                        ✨ Generate 3-Page Client Proposal
                     </button>
                 </div>
             </div>
 
-            <!-- Dynamic Animated Step Loader -->
-            <div id="proposalStepLoader" style="display: none; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 40px 24px; text-align: center; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
-                <div style="display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 50%; background: #fef3c7; border: 1px solid #fde68a; color: #d97706; margin-bottom: 20px;">
-                    <i data-lucide="loader-2" style="width: 28px; height: 28px; animation: spin 1s linear infinite;"></i>
-                </div>
-                <h3 id="loaderStepTitle" style="font-size: 18px; font-weight: 700; margin: 0 0 8px 0; font-family: var(--font-heading); color: #0f172a;">
-                    Analyzing business profile & Google Maps social proof...
-                </h3>
-                <p id="loaderStepSub" style="color: #64748b; font-size: 13.5px; margin: 0 0 24px 0;">
-                    Extracting rating, review volume, and local search visibility metrics...
-                </p>
-                <div style="max-width: 480px; margin: 0 auto; height: 6px; background: #f1f5f9; border-radius: 3px; overflow: hidden; border: 1px solid #e2e8f0;">
-                    <div id="loaderProgressBar" style="width: 25%; height: 100%; background: linear-gradient(90deg, #d97706, #fbbf24); transition: width 0.4s ease;"></div>
-                </div>
+            <!-- Generated Proposal Viewer Workspace -->
+            <div id="proposalResultContainer" style="display: none;">
+                <!-- Dynamically populated by bindProposalGeneratorEvents -->
             </div>
 
-            <!-- Output Proposal Display Area -->
-            <div id="proposalResultContainer" style="display: none; flex-direction: column; gap: 24px;"></div>
         </div>
     `;
-}
-
-export async function populateLeadDropdownOptions(selectEl, selectedLeadId = null) {
-    if (!selectEl) return;
-
-    let savedLeads = [];
-    try {
-        savedLeads = await Api.getSavedLeads();
-    } catch (e) {
-        console.warn("Failed to load saved leads:", e);
-    }
-
-    const trackedProfessionals = savedLeads
-        .map(sl => sl.professionals)
-        .filter(p => p && p.id);
-
-    const directoryLeads = State.professionals || [];
-
-    const trackedIds = new Set(trackedProfessionals.map(p => p.id));
-    const otherLeads = directoryLeads.filter(p => p.id && !trackedIds.has(p.id));
-
-    let optionsHTML = '';
-
-    if (trackedProfessionals.length > 0) {
-        optionsHTML += `<optgroup label="📍 YOUR TRACKED LEADS (CRM PIPELINE)">`;
-        optionsHTML += trackedProfessionals.map(p => `
-            <option value="${p.id}" ${p.id === selectedLeadId ? 'selected' : ''}>
-                ⭐ ${p.name} (${p.category || p.parent_category || 'Business'} - ${p.rating || 'N/A'}★, ${p.review_count || 0} reviews)
-            </option>
-        `).join('');
-        optionsHTML += `</optgroup>`;
-    }
-
-    if (otherLeads.length > 0) {
-        optionsHTML += `<optgroup label="🔍 UNLOCKED DIRECTORY LEADS">`;
-        optionsHTML += otherLeads.map(p => `
-            <option value="${p.id}" ${p.id === selectedLeadId ? 'selected' : ''}>
-                ${p.name} (${p.category || p.parent_category || 'Business'} - ${p.rating || 'N/A'}★)
-            </option>
-        `).join('');
-        optionsHTML += `</optgroup>`;
-    }
-
-    if (!optionsHTML) {
-        optionsHTML = `<option value="">-- No leads found. Please unlock leads in Browse Directory --</option>`;
-    }
-
-    selectEl.innerHTML = optionsHTML;
 }
 
 export function bindProposalGeneratorEvents() {
-    window._proposalCache = window._proposalCache || {};
-    window._activeProposalPromises = window._activeProposalPromises || {};
-
-    const btn = document.getElementById('generateProposalBtn');
-    const leadSelect = document.getElementById('proposalLeadSelect');
-    const loader = document.getElementById('proposalStepLoader');
-    const resultContainer = document.getElementById('proposalResultContainer');
-
-    const preSelectedId = leadSelect ? leadSelect.dataset.selectedId : null;
-
-    if (leadSelect) {
-        populateLeadDropdownOptions(leadSelect, preSelectedId);
-    }
-
-    const currentLeadId = leadSelect ? (leadSelect.value || preSelectedId) : null;
-
-    if (currentLeadId && window._proposalCache[currentLeadId] && resultContainer) {
-        const cached = window._proposalCache[currentLeadId];
-        renderProposalOutputCard(cached.proposal, cached.slug, cached.public_url);
-    }
-
-    if (currentLeadId && window._activeProposalPromises[currentLeadId] && loader) {
-        loader.style.display = 'block';
-        if (btn) btn.disabled = true;
-
-        window._activeProposalPromises[currentLeadId].then(res => {
-            if (loader) loader.style.display = 'none';
-            if (btn) btn.disabled = false;
-            if (res && res.proposal) {
-                renderProposalOutputCard(res.proposal, res.slug, res.public_url);
-            }
-        }).catch(err => {
-            if (loader) loader.style.display = 'none';
-            if (btn) btn.disabled = false;
-        });
-    }
-
-    if (!btn) return;
-
-    btn.addEventListener('click', async () => {
-        const notesInput = document.getElementById('proposalCustomNotes');
-        const leadId = leadSelect ? leadSelect.value : null;
-        if (!leadId) {
-            if (window.showToast) window.showToast("Please select a target lead from the dropdown", "error");
-            return;
-        }
-
-        const customNotes = notesInput ? notesInput.value.trim() : '';
-
-        btn.disabled = true;
-        if (resultContainer) resultContainer.style.display = 'none';
-        if (loader) loader.style.display = 'block';
-
-        const steps = [
-            { pct: '25%', title: '🔍 Step 1/4: Analyzing business profile & Google Maps social proof...', sub: 'Extracting rating, review volume, and local search visibility metrics...' },
-            { pct: '50%', title: '📊 Step 2/4: Benchmarking review gap vs top 3 local competitors...', sub: 'Calculating search ranking deficit and mobile visitor bounce penalties...' },
-            { pct: '75%', title: '💰 Step 3/4: Estimating monthly revenue leak & conversion metrics...', sub: 'Projecting lost monthly revenue from missed online leads...' },
-            { pct: '95%', title: '🎨 Step 4/4: Architecting 3-page custom proposal & packages...', sub: 'Formatting clean client proposal document and booking CTA...' }
-        ];
-
-        let stepIdx = 0;
-        const stepInterval = setInterval(() => {
-            stepIdx = (stepIdx + 1) % steps.length;
-            const currentTitle = document.getElementById('loaderStepTitle');
-            const currentSub = document.getElementById('loaderStepSub');
-            const currentBar = document.getElementById('loaderProgressBar');
-            if (currentTitle) currentTitle.innerText = steps[stepIdx].title;
-            if (currentSub) currentSub.innerText = steps[stepIdx].sub;
-            if (currentBar) currentBar.style.width = steps[stepIdx].pct;
-        }, 1200);
-
-        const promise = Api.generatePDFProposal(leadId, customNotes);
-        window._activeProposalPromises[leadId] = promise;
-
-        try {
-            const res = await promise;
-            clearInterval(stepInterval);
-            delete window._activeProposalPromises[leadId];
-
-            if (res && res.proposal) {
-                window._proposalCache[leadId] = res;
-                if (res.quota && State.profile) {
-                    State.profile.monthly_proposals_used = res.quota.used;
-                }
-
-                const currentLoader = document.getElementById('proposalStepLoader');
-                const currentBtn = document.getElementById('generateProposalBtn');
-                if (currentLoader) currentLoader.style.display = 'none';
-                if (currentBtn) currentBtn.disabled = false;
-
-                if (window.showToast) window.showToast("✨ 3-Page Client Proposal generated & saved to Documents!", "success");
-                renderProposalOutputCard(res.proposal, res.slug, res.public_url);
-            }
-        } catch (err) {
-            clearInterval(stepInterval);
-            delete window._activeProposalPromises[leadId];
-            const currentLoader = document.getElementById('proposalStepLoader');
-            const currentBtn = document.getElementById('generateProposalBtn');
-            if (currentLoader) currentLoader.style.display = 'none';
-            if (currentBtn) currentBtn.disabled = false;
-            console.error("Proposal generation failed:", err);
-            if (window.showToast) {
-                window.showToast(`Generation failed: ${err.message}`, "error");
-            } else {
-                alert(`Generation failed: ${err.message}`);
-            }
-        }
-    });
-}
-
-function renderProposalOutputCard(prop, slug, publicUrl) {
-    const container = document.getElementById('proposalResultContainer');
-    if (!container) return;
-
-    const audit = prop.audit_summary || {};
-    const gap = prop.competitor_gap || {};
-    const pricing = prop.pricing_packages || [];
-    const cta = prop.consultation_cta || {};
-
-    container.innerHTML = `
-        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px; display: flex; flex-direction: column; gap: 24px; box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);">
-            
-            <!-- Top Toolbar -->
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 18px; flex-wrap: wrap; gap: 16px;">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <span style="padding: 4px 10px; border-radius: 99px; background: #fef3c7; border: 1px solid #fde68a; color: #b45309; font-size: 11px; font-weight: 700; font-family: var(--font-mono);">
-                        ● 3-PAGE PROPOSAL GENERATED
-                    </span>
-                    <span style="color: #64748b; font-size: 12px; font-family: var(--font-mono);">Slug: #${slug}</span>
-                </div>
-                
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <a href="${publicUrl}" target="_blank" style="background: #2563eb; color: white; padding: 8px 16px; font-size: 12.5px; border-radius: 6px; text-decoration: none; display: flex; align-items: center; gap: 6px; font-weight: 600;">
-                        <i data-lucide="external-link" style="width: 14px; height: 14px;"></i> Open Public Viewer
-                    </a>
-
-                    <button id="copyProposalLinkBtn" style="background: #ffffff; border: 1px solid #cbd5e1; color: #0f172a; padding: 8px 14px; font-size: 12.5px; border-radius: 6px; display: flex; align-items: center; gap: 6px; cursor: pointer; font-weight: 600;">
-                        <i data-lucide="copy" style="width: 14px; height: 14px;"></i> Copy Public Link
-                    </button>
-
-                    <button id="printProposalBtn" style="background: #ffffff; border: 1px solid #cbd5e1; color: #0f172a; padding: 8px 14px; font-size: 12.5px; border-radius: 6px; display: flex; align-items: center; gap: 6px; cursor: pointer; font-weight: 600;">
-                        <i data-lucide="printer" style="width: 14px; height: 14px;"></i> Print / Download PDF
-                    </button>
-                </div>
-            </div>
-
-            <!-- Printable 3-Page Document View -->
-            <div id="printableProposalContainer" style="display: flex; flex-direction: column; gap: 32px; background: #ffffff; padding: 32px; border-radius: 12px; border: 1px solid #e2e8f0;">
-                
-                <!-- PAGE 1: EXECUTIVE AUDIT SUMMARY -->
-                <div style="border-bottom: 2px dashed #e2e8f0; padding-bottom: 32px;">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
-                        <div>
-                            <div style="font-size: 11px; color: #d97706; font-family: var(--font-mono); font-weight: 700; text-transform: uppercase;">
-                                PAGE 1 OF 3 • EXECUTIVE AUDIT SUMMARY
-                            </div>
-                            <h1 style="font-size: 24px; font-weight: 800; margin: 4px 0 2px 0; color: #0f172a; font-family: var(--font-heading);">
-                                ${prop.business_name || 'Client Audit & Growth Plan'}
-                            </h1>
-                            <p style="color: #64748b; font-size: 13px; margin: 0;">Prepared for: ${prop.business_name} | Location: ${audit.location || 'Local'}</p>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-size: 14px; font-weight: 700; color: #d97706; font-family: var(--font-heading);">${prop.agency_name || 'S8N Digital'}</div>
-                            <div style="font-size: 11px; color: #64748b;">${prop.agency_tagline || 'Local Digital Growth Partner'}</div>
-                        </div>
-                    </div>
-
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
-                        <div style="font-size: 13px; font-weight: 700; color: #0f172a; margin-bottom: 8px; font-family: var(--font-heading);">Executive Overview</div>
-                        <p style="font-size: 13.5px; color: #475569; line-height: 1.6; margin: 0;">
-                            ${audit.executive_summary || 'Detailed digital footprint audit conducted for ' + prop.business_name + '.'}
-                        </p>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
-                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; text-align: center;">
-                            <div style="font-size: 11px; color: #64748b; font-family: var(--font-mono);">GOOGLE RATING</div>
-                            <div style="font-size: 22px; font-weight: 800; color: #d97706; margin-top: 4px;">${audit.google_rating || '5.0'} ⭐</div>
-                        </div>
-                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; text-align: center;">
-                            <div style="font-size: 11px; color: #64748b; font-family: var(--font-mono);">REVIEW VOLUME</div>
-                            <div style="font-size: 22px; font-weight: 800; color: #0f172a; margin-top: 4px;">${audit.review_count || 0} reviews</div>
-                        </div>
-                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; text-align: center;">
-                            <div style="font-size: 11px; color: #64748b; font-family: var(--font-mono);">WEB FOOTPRINT</div>
-                            <div style="font-size: 16px; font-weight: 700; color: ${audit.website_status === 'Active' ? '#059669' : '#dc2626'}; margin-top: 8px;">
-                                ${audit.website_status || 'Needs Upgrade'}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- PAGE 2: COMPETITOR GAP & REVENUE LEAK ESTIMATE -->
-                <div style="border-bottom: 2px dashed #e2e8f0; padding-bottom: 32px;">
-                    <div style="font-size: 11px; color: #d97706; font-family: var(--font-mono); font-weight: 700; text-transform: uppercase; margin-bottom: 8px;">
-                        PAGE 2 OF 3 • LOCAL COMPETITOR GAP & REVENUE LOSS ANALYSIS
-                    </div>
-                    
-                    <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 20px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;">
-                        <div>
-                            <div style="font-size: 12px; color: #dc2626; font-weight: 700; font-family: var(--font-mono); text-transform: uppercase;">ESTIMATED MONTHLY REVENUE LEAK</div>
-                            <div style="font-size: 26px; font-weight: 800; color: #0f172a; font-family: var(--font-heading); margin-top: 2px;">
-                                ${gap.estimated_monthly_revenue_leak || '₹8,500 - ₹25,000 / mo'}
-                            </div>
-                        </div>
-                        <div style="font-size: 13px; color: #475569; max-width: 420px; line-height: 1.5;">
-                            Revenue leaked due to lower Google review count and unoptimized mobile conversion funnels compared to top local competitors in ${audit.location || 'your area'}.
-                        </div>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px;">
-                            <div style="font-size: 13px; font-weight: 700; color: #0f172a; margin-bottom: 10px; font-family: var(--font-heading);">
-                                Competitor Benchmark Gap
-                            </div>
-                            <div style="font-size: 13px; color: #475569; line-height: 1.6;">
-                                Top local competitors average <strong>${gap.top_competitor_review_avg || '85+'} reviews</strong> with direct 1-tap WhatsApp booking engines.
-                            </div>
-                        </div>
-
-                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px;">
-                            <div style="font-size: 13px; font-weight: 700; color: #0f172a; margin-bottom: 10px; font-family: var(--font-heading);">
-                                Core Growth Inhibitor
-                            </div>
-                            <div style="font-size: 13px; color: #475569; line-height: 1.6;">
-                                ${gap.growth_inhibitor || 'High customer rating diluted by missing automated review collection and slow mobile landing pages.'}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- PAGE 3: PROPOSED SOLUTION & PRICING PACKAGES -->
-                <div>
-                    <div style="font-size: 11px; color: #d97706; font-family: var(--font-mono); font-weight: 700; text-transform: uppercase; margin-bottom: 16px;">
-                        PAGE 3 OF 3 • SOLUTION ARCHITECTURE & 3-TIER PACKAGES
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
-                        ${pricing.map(p => `
-                            <div style="background: #f8fafc; border: 1px solid ${p.popular ? '#d97706' : '#e2e8f0'}; border-radius: 12px; padding: 20px; position: relative;">
-                                ${p.popular ? '<span style="position: absolute; top: -10px; right: 14px; background: #d97706; color: white; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 99px;">MOST POPULAR</span>' : ''}
-                                <div style="font-size: 16px; font-weight: 700; color: #0f172a; font-family: var(--font-heading);">${p.name}</div>
-                                <div style="font-size: 22px; font-weight: 800; color: #d97706; margin: 8px 0; font-family: var(--font-heading);">${p.price}</div>
-                                <ul style="margin: 0; padding-left: 16px; color: #475569; font-size: 12.5px; line-height: 1.6;">
-                                    ${(p.features || []).map(f => `<li>${f}</li>`).join('')}
-                                </ul>
-                            </div>
-                        `).join('')}
-                    </div>
-
-                    <!-- Consultation CTA Box -->
-                    <div style="background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 20px; text-align: center;">
-                        <h4 style="font-size: 16px; font-weight: 700; margin: 0 0 6px 0; color: #0f172a; font-family: var(--font-heading);">
-                            ${cta.heading || 'Book Your Complimentary 15-Minute Strategy Session'}
-                        </h4>
-                        <p style="color: #475569; font-size: 13px; margin: 0 0 14px 0;">
-                            ${cta.subheading || 'Discuss live concept prototype & unlock your local search growth roadmap.'}
-                        </p>
-                        <a href="${cta.booking_url || prop.booking_url || 'https://topmate.io/shriraj'}" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; font-size: 13px; font-weight: 700; border-radius: 6px; text-decoration: none; background: #2563eb; color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);">
-                            <i data-lucide="calendar" style="width: 15px; height: 15px;"></i> ${cta.button_text || 'Schedule Free Call ↗'}
-                        </a>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    `;
-
-    container.style.display = 'flex';
     if (window.refreshLucideIcons) window.refreshLucideIcons();
 
-    // Bind toolbar buttons
-    const copyBtn = document.getElementById('copyProposalLinkBtn');
-    if (copyBtn) {
-        copyBtn.addEventListener('click', () => {
-            navigator.clipboard.writeText(publicUrl).then(() => {
-                if (window.showToast) window.showToast("📋 Public Proposal Link copied to clipboard!", "success");
-            });
+    const select = document.getElementById('proposalLeadSelect');
+    const generateBtn = document.getElementById('generateProposalBtn');
+    const resultContainer = document.getElementById('proposalResultContainer');
+    const customNotesInput = document.getElementById('proposalCustomNotes');
+
+    // Bind preset chips
+    const presetChips = document.querySelectorAll('.proposal-preset-chip');
+    presetChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            if (customNotesInput) customNotesInput.value = chip.dataset.notes;
         });
+    });
+
+    // Populate dropdown with tracked leads and professionals
+    if (select) {
+        const selectedId = select.dataset.selectedId;
+        
+        async function loadLeads() {
+            try {
+                const savedLeads = await Api.getSavedLeads();
+                let optionsHTML = '';
+
+                if (savedLeads && savedLeads.length > 0) {
+                    optionsHTML += `<optgroup label="📋 Your Saved CRM Leads (${savedLeads.length})">`;
+                    savedLeads.forEach(s => {
+                        const prof = s.professionals;
+                        if (prof) {
+                            const isSelected = (selectedId && String(prof.id) === String(selectedId)) || false;
+                            optionsHTML += `<option value="${prof.id}" ${isSelected ? 'selected' : ''}>⭐ ${prof.name} (${prof.category || 'Business'} - ${prof.rating || 0}★, ${prof.review_count || 0} reviews)</option>`;
+                        }
+                    });
+                    optionsHTML += `</optgroup>`;
+                }
+
+                const directoryLeads = State.professionals || [];
+                if (directoryLeads.length > 0) {
+                    optionsHTML += `<optgroup label="🔍 Directory Leads (${directoryLeads.length})">`;
+                    directoryLeads.forEach(prof => {
+                        const isSelected = (selectedId && String(prof.id) === String(selectedId)) || false;
+                        optionsHTML += `<option value="${prof.id}" ${isSelected ? 'selected' : ''}>${prof.name} (${prof.area || 'Mumbai'} - ${prof.rating || 0}★)</option>`;
+                    });
+                    optionsHTML += `</optgroup>`;
+                }
+
+                if (!optionsHTML) {
+                    optionsHTML = `<option value="">No business leads found. Browse directory to add leads.</option>`;
+                }
+
+                select.innerHTML = optionsHTML;
+            } catch (err) {
+                console.error("Failed to load leads for proposal generator:", err);
+                select.innerHTML = `<option value="">Error loading leads list.</option>`;
+            }
+        }
+        loadLeads();
     }
 
-    const printBtn = document.getElementById('printProposalBtn');
-    if (printBtn) {
-        printBtn.addEventListener('click', () => {
-            const printContent = document.getElementById('printableProposalContainer');
-            if (!printContent) return;
-            const win = window.open('', '', 'width=900,height=1000');
-            win.document.write(`
-                <html>
-                    <head>
-                        <title>Proposal_${prop.business_name.replace(/\s+/g, '_')}</title>
-                        <style>
-                            body { font-family: Arial, sans-serif; background: #ffffff; color: #0f172a; padding: 30px; }
-                            @media print { body { background: white; color: black; } }
-                        </style>
-                    </head>
-                    <body>
-                        ${printContent.innerHTML}
-                    </body>
-                </html>
-            `);
-            win.document.close();
-            win.focus();
-            setTimeout(() => {
-                win.print();
-                win.close();
-            }, 500);
+    // Bind Generate Button
+    if (generateBtn && resultContainer) {
+        generateBtn.addEventListener('click', async () => {
+            const selectedProfId = select?.value;
+            if (!selectedProfId) {
+                if (window.showToast) window.showToast("Please select a target business lead", "error");
+                return;
+            }
+
+            generateBtn.disabled = true;
+            generateBtn.innerText = "⏳ Generating 3-Page Proposal...";
+
+            try {
+                // Find selected professional object
+                let leadObj = (State.professionals || []).find(p => String(p.id) === String(selectedProfId));
+                if (!leadObj) {
+                    const saved = await Api.getSavedLeads();
+                    const matched = saved.find(s => s.professionals && String(s.professionals.id) === String(selectedProfId));
+                    if (matched) leadObj = matched.professionals;
+                }
+
+                const agencyName = State.profile?.company_name || 'NearPro Agency';
+                const customNotes = customNotesInput?.value || '';
+
+                resultContainer.style.display = 'block';
+                resultContainer.innerHTML = `
+                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03); display: flex; flex-direction: column; gap: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 14px;">
+                            <div>
+                                <h3 style="margin: 0; font-size: 18px; font-weight: 800; color: #0f172a; font-family: var(--font-heading);">
+                                    Proposal Ready for ${leadObj?.name || 'Client'}
+                                </h3>
+                                <p style="margin: 4px 0 0 0; font-size: 13px; color: #475569;">
+                                    Prepared by ${agencyName} &middot; Generated via NearPro Engine
+                                </p>
+                            </div>
+
+                            <div style="display: flex; gap: 10px;">
+                                <button id="printProposalBtn" style="background: #2563eb; color: white; border: none; padding: 8px 16px; font-size: 12.5px; font-weight: 700; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                                    <i data-lucide="printer" style="width: 14px; height: 14px;"></i> Print / Save PDF
+                                </button>
+                                <a href="#/dashboard/crm?lead_id=${selectedProfId}&tab=proposals" style="background: #f1f5f9; border: 1px solid #cbd5e1; color: #0f172a; padding: 8px 14px; font-size: 12.5px; font-weight: 700; border-radius: 6px; text-decoration: none;">
+                                    View in 360° Workstation ➔
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- 3-Page Printable Proposal Document Box -->
+                        <div id="printableProposalDocument" style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 32px; color: #0f172a; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6;">
+                            
+                            <!-- PAGE 1: EXECUTIVE AUDIT & OVERVIEW -->
+                            <div style="border-bottom: 2px solid #2563eb; padding-bottom: 24px; margin-bottom: 24px;">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                    <div>
+                                        <h1 style="margin: 0 0 6px 0; font-size: 24px; font-weight: 800; color: #0f172a; font-family: var(--font-heading);">
+                                            BUSINESS AUDIT & GROWTH PROPOSAL
+                                        </h1>
+                                        <div style="font-size: 14px; color: #2563eb; font-weight: 700;">
+                                            PREPARED FOR: ${leadObj?.name || 'Target Client'}
+                                        </div>
+                                    </div>
+                                    <div style="text-align: right; font-size: 12px; color: #64748b;">
+                                        <strong>PREPARED BY:</strong> ${agencyName}<br>
+                                        <strong>DATE:</strong> ${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Executive Summary -->
+                            <div style="margin-bottom: 28px;">
+                                <h4 style="margin: 0 0 10px 0; font-size: 15px; font-weight: 700; color: #0f172a; font-family: var(--font-heading); text-transform: uppercase; letter-spacing: 0.5px;">
+                                    1. Executive Summary & Google Rating Audit
+                                </h4>
+                                <p style="font-size: 13.5px; color: #334155; margin: 0 0 14px 0;">
+                                    Based on our regional audit of <strong>${leadObj?.category || 'businesses'}</strong> in <strong>${leadObj?.area || 'Mumbai'}</strong>, ${leadObj?.name || 'your business'} currently holds <strong>⭐ ${leadObj?.rating || 0} stars across ${leadObj?.review_count || 0} Google reviews</strong>.
+                                </p>
+                                <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 13px;">
+                                    <div>
+                                        <strong style="color: #1e40af;">Rating Deficit Opportunity:</strong><br>
+                                        Top competitors in ${leadObj?.area || 'your area'} average 150+ reviews. Closing this gap can increase organic walk-in inquiries by up to 35%.
+                                    </div>
+                                    <div>
+                                        <strong style="color: #1e40af;">Website Optimization Status:</strong><br>
+                                        ${leadObj?.website ? 'Website detected. Mobile PageSpeed optimization recommended.' : 'No website detected. High-converting mobile site required to capture direct search leads.'}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- PAGE 2: 3-TIER PACKAGES -->
+                            <div style="margin-bottom: 28px;">
+                                <h4 style="margin: 0 0 14px 0; font-size: 15px; font-weight: 700; color: #0f172a; font-family: var(--font-heading); text-transform: uppercase; letter-spacing: 0.5px;">
+                                    2. Proposed Solutions & 3-Tier Packages
+                                </h4>
+                                
+                                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                                    
+                                    <!-- Tier 1 -->
+                                    <div style="border: 1px solid #cbd5e1; border-radius: 8px; padding: 18px; background: #ffffff;">
+                                        <div style="font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase;">STARTER</div>
+                                        <h5 style="margin: 4px 0 8px 0; font-size: 16px; font-weight: 800; color: #0f172a;">Review Engine</h5>
+                                        <div style="font-size: 20px; font-weight: 800; color: #2563eb; margin-bottom: 12px;">₹4,999 <small style="font-size: 11px; color: #64748b;">/mo</small></div>
+                                        <ul style="font-size: 12px; color: #475569; padding-left: 16px; margin: 0; line-height: 1.6;">
+                                            <li>Google Maps review QR setup</li>
+                                            <li>WhatsApp review request triggers</li>
+                                            <li>Negative feedback filter</li>
+                                        </ul>
+                                    </div>
+
+                                    <!-- Tier 2 (Featured) -->
+                                    <div style="border: 2px solid #2563eb; border-radius: 8px; padding: 18px; background: #eff6ff; position: relative;">
+                                        <span style="position: absolute; top: -10px; right: 12px; background: #2563eb; color: white; font-size: 9.5px; font-weight: 800; padding: 2px 8px; border-radius: 99px;">POPULAR</span>
+                                        <div style="font-size: 11px; font-weight: 800; color: #1e40af; text-transform: uppercase;">GROWTH</div>
+                                        <h5 style="margin: 4px 0 8px 0; font-size: 16px; font-weight: 800; color: #0f172a;">Review + Mobile Site</h5>
+                                        <div style="font-size: 20px; font-weight: 800; color: #2563eb; margin-bottom: 12px;">₹9,999 <small style="font-size: 11px; color: #64748b;">/mo</small></div>
+                                        <ul style="font-size: 12px; color: #334155; padding-left: 16px; margin: 0; line-height: 1.6;">
+                                            <li>Everything in Starter</li>
+                                            <li>High-converting 1-page mobile site</li>
+                                            <li>Direct WhatsApp booking button</li>
+                                            <li>Schema SEO markup</li>
+                                        </ul>
+                                    </div>
+
+                                    <!-- Tier 3 -->
+                                    <div style="border: 1px solid #cbd5e1; border-radius: 8px; padding: 18px; background: #ffffff;">
+                                        <div style="font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase;">DOMINANCE</div>
+                                        <h5 style="margin: 4px 0 8px 0; font-size: 16px; font-weight: 800; color: #0f172a;">Full Local SEO Suite</h5>
+                                        <div style="font-size: 20px; font-weight: 800; color: #2563eb; margin-bottom: 12px;">₹19,999 <small style="font-size: 11px; color: #64748b;">/mo</small></div>
+                                        <ul style="font-size: 12px; color: #475569; padding-left: 16px; margin: 0; line-height: 1.6;">
+                                            <li>Everything in Growth</li>
+                                            <li>Top 3 Local Map Pack ranking</li>
+                                            <li>Monthly SEO content updates</li>
+                                            <li>Dedicated Account Manager</li>
+                                        </ul>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- PAGE 3: ACCEPTANCE & CONTACT -->
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; text-align: center;">
+                                <h4 style="margin: 0 0 6px 0; font-size: 15px; font-weight: 700; color: #0f172a;">Ready to Upgrade Your Local Presence?</h4>
+                                <p style="font-size: 13px; color: #475569; margin: 0 0 14px 0;">
+                                    Contact <strong>${agencyName}</strong> to lock in your strategy consultation.
+                                </p>
+                                <a href="https://wa.me/?text=${encodeURIComponent(`Hi ${agencyName}, I reviewed your proposal for ${leadObj?.name} and would like to schedule a call.`)}" target="_blank" style="background: #059669; color: white; padding: 8px 20px; font-size: 12.5px; font-weight: 700; border-radius: 6px; text-decoration: none; display: inline-block;">
+                                    💬 Book Strategy Consultation on WhatsApp
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                `;
+
+                // Bind print button
+                const printBtn = document.getElementById('printProposalBtn');
+                if (printBtn) {
+                    printBtn.addEventListener('click', () => {
+                        window.print();
+                    });
+                }
+
+                if (window.showToast) window.showToast("✨ 3-Page Client Proposal generated successfully!", "success");
+            } catch (err) {
+                console.error("Proposal generation error:", err);
+                if (window.showToast) window.showToast(`Generation failed: ${err.message}`, "error");
+            } finally {
+                generateBtn.disabled = false;
+                generateBtn.innerText = "✨ Generate 3-Page Client Proposal";
+            }
         });
     }
 }
