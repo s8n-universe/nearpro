@@ -53,6 +53,13 @@ State.subscribe(async (currentState) => {
 
     // Check route types to prevent state subscribers from resetting standalone views
     const hash = window.location.hash || '';
+
+    // Redirect logged-in users away from homepage/marketing layout directly to Getting Started Overview
+    if (State.user && (!hash || hash === '#/' || hash === '#/browse')) {
+        window.location.hash = '#/dashboard/overview';
+        return;
+    }
+
     const isDashboard = hash.startsWith('#/dashboard');
     const isBrowse = hash.startsWith('#/browse') || hash.startsWith('#/category');
     const isDocumentViewer = hash.startsWith('#/d/') || hash.startsWith('#/preview/') || hash.startsWith('#/view/');

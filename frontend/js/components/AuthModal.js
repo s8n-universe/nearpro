@@ -230,18 +230,7 @@ export function bindAuthModalEvents() {
                     if (queuedTier && queuedTier !== 'free') {
                         window.location.hash = `#/checkout?plan=${queuedTier}&cycle=${queuedInterval}`;
                     } else {
-                        window.location.hash = '#/dashboard/directory';
-                        if (result?.user) {
-                            try {
-                                const profile = await Api.getProfile(result.user.id);
-                                const tier = (profile?.subscription_tier || profile?.tier || 'free').toLowerCase();
-                                if (tier === 'free') {
-                                    State.setPricingModal(true);
-                                }
-                            } catch (err) {
-                                console.error("Failed to check user tier on sign in:", err);
-                            }
-                        }
+                        window.location.hash = '#/dashboard/overview';
                     }
                 } else {
                     await Api.signUp(email, password);
@@ -252,10 +241,9 @@ export function bindAuthModalEvents() {
                     if (queuedTier && queuedTier !== 'free') {
                         window.location.hash = `#/checkout?plan=${queuedTier}&cycle=${queuedInterval}`;
                     } else {
-                        window.location.hash = '#/dashboard/directory';
-                        State.setPricingModal(true);
+                        window.location.hash = '#/dashboard/overview';
                     }
-                    alert("Registration successful. Please check your inbox for verification links.");
+                    alert("Registration successful. Welcome to NearPro!");
                 }
             } catch (err) {
                 console.error("Authentication failed: ", err);
