@@ -447,10 +447,20 @@ export function renderOutreachStudio(savedLeads, activeLeadId = null, templates 
 
                 <!-- Workspace Panel (White/Light Theme with Zoomed Layout) -->
                 <div class="outreach-workspace-body" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:32px; display:flex; flex-direction:column; min-height:400px; max-height:calc(100vh - 180px); overflow-y:auto; justify-content: flex-start; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03); color: #0f172a; position: relative;">
-                    <!-- Usability Banner -->
-                    <div class="usability-banner" style="background: #f8fafc; border: 1px solid #cbd5e1; border-left: 4px solid #b45309; border-radius: 8px; padding: 14px 20px; margin-bottom: 24px; display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; width: 100%; text-align: left;">
-                        <div style="font-size: 13.5px; color: #0f172a; line-height: 1.4; font-weight:700;"><span style="color: #b45309; font-weight: 800;">What it is:</span> Compose highly personalized client pitches and automated follow-ups using AI.</div>
-                        <div style="font-size: 13px; color: #475569; line-height: 1.4; font-weight:500;"><span style="color: #b45309; font-weight: 800;">How to leverage:</span> Generate scripts in Hinglish or Professional tones pre-filled with specific lead audit data.</div>
+                    <!-- Feature Showcase Banner -->
+                    <div class="usability-banner" style="background: #eff6ff; border: 1.5px solid #bfdbfe; border-left: 5px solid #2563eb; border-radius: 10px; padding: 16px 20px; margin-bottom: 24px; display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; width: 100%; text-align: left; box-shadow: 0 2px 8px rgba(37,99,235,0.04);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                            <div style="font-size: 14.5px; color: #0f172a; font-weight: 800; font-family: var(--font-heading); display: flex; align-items: center; gap: 8px;">
+                                <span>🪄 AI Outreach & Conversion Studio</span>
+                                <span style="font-size: 11px; background: #2563eb; color: #ffffff; padding: 3px 10px; border-radius: 50px; font-weight: 800; text-transform: uppercase;">PRO FEATURE</span>
+                            </div>
+                            <div style="font-size: 12px; color: #2563eb; font-weight: 700;">
+                                ⚡ Auto-Populated with Verified Lead Data
+                            </div>
+                        </div>
+                        <div style="font-size: 13px; color: #334155; line-height: 1.5; font-weight: 500;">
+                            Generate hyper-personalized Hinglish/English outreach pitches pre-filled with Google Maps audit scores, website status, and rating metrics. Toggle between 💬 WhatsApp, 📧 Email, and 📞 Phone Call scripts, or send 1-click WhatsApp messages directly to business decision-makers.
+                        </div>
                     </div>
                     ${workspaceHTML}
                 </div>

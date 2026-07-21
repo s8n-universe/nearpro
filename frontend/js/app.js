@@ -1682,7 +1682,10 @@ async function renderDashboardLayout(tab) {
 
             const templatesList = templates || [];
             const searchParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
-            const activeLeadId = searchParams.get('lead_id');
+            let activeLeadId = searchParams.get('lead_id');
+            if (!activeLeadId && savedLeads && savedLeads.length > 0 && savedLeads[0].professionals) {
+                activeLeadId = savedLeads[0].professionals.id;
+            }
             const activeTemplateId = searchParams.get('template_id') || (templatesList && templatesList[0]?.id);
 
             let composedMessage = '';
