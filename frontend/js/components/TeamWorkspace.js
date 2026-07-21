@@ -147,6 +147,49 @@ export function renderTeamWorkspace(members = [], dataRequests = [], activeTab =
                     ${tabContent}
                 </div>
             </div>
+
+            <!-- Enterprise Custom Data Request Modal -->
+            <div id="dataRequestModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15, 23, 42, 0.6); backdrop-filter:blur(8px); z-index:9999; justify-content:center; align-items:center; padding:20px;">
+                <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:16px; width:100%; max-width:540px; box-shadow:0 25px 50px -12px rgba(15,23,42,0.25); overflow:hidden;">
+                    
+                    <!-- Header -->
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:20px 24px; border-bottom:1px solid #e2e8f0; background:#f8fafc;">
+                        <div>
+                            <h3 style="margin:0 0 2px 0; font-size:17px; font-weight:800; color:#0f172a; font-family:var(--font-heading);">Request Custom Data Extraction 📊</h3>
+                            <p style="margin:0; font-size:12.5px; color:#475569;">Submit targeted niche parameters for dedicated regional directory scraping.</p>
+                        </div>
+                        <button type="button" id="closeDataReqModalBtn" style="background:none; border:none; font-size:20px; color:#64748b; cursor:pointer; padding:4px; line-height:1; border-radius:6px;">✕</button>
+                    </div>
+
+                    <!-- Form Body -->
+                    <form id="dataRequestForm" style="padding:24px; display:flex; flex-direction:column; gap:16px;">
+                        <div>
+                            <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Target Niche / Industry <span style="color:#dc2626;">*</span></label>
+                            <input type="text" id="reqNicheInput" placeholder="e.g. Dentists, Interior Designers, CA Firms..." required style="width:100%; padding:11px 14px; background:#ffffff; border:1.5px solid #cbd5e1; border-radius:8px; color:#0f172a; font-size:13.5px; font-weight:600; outline:none; box-sizing:border-box;">
+                        </div>
+
+                        <div>
+                            <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Target Region / City <span style="color:#dc2626;">*</span></label>
+                            <input type="text" id="reqCityInput" placeholder="e.g. Mumbai, Pune, Delhi NCR, Bangalore..." required style="width:100%; padding:11px 14px; background:#ffffff; border:1.5px solid #cbd5e1; border-radius:8px; color:#0f172a; font-size:13.5px; font-weight:600; outline:none; box-sizing:border-box;">
+                        </div>
+
+                        <div>
+                            <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Lead Volume & Custom Requirements</label>
+                            <textarea id="reqNotesInput" placeholder="Specify estimated volume (e.g. 500 verified leads), location radius, or required fields (WhatsApp phone, GST number, 4.0+ rating)..." rows="3" style="width:100%; padding:11px 14px; background:#ffffff; border:1.5px solid #cbd5e1; border-radius:8px; color:#0f172a; font-size:13px; font-weight:500; outline:none; box-sizing:border-box; resize:vertical;"></textarea>
+                        </div>
+
+                        <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:12px 14px; font-size:12px; color:#1e40af; line-height:1.4;">
+                            ⚡ <strong>Enterprise SLA:</strong> Custom extraction tasks are queued immediately and processed within 2 to 6 business hours. Results will automatically appear in your directory feed.
+                        </div>
+
+                        <!-- Footer Buttons -->
+                        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:8px;">
+                            <button type="button" id="cancelDataReqModalBtn" style="padding:10px 18px; font-size:13px; font-weight:700; color:#475569; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:8px; cursor:pointer;">Cancel</button>
+                            <button type="submit" id="submitDataReqFormBtn" style="padding:10px 22px; font-size:13px; font-weight:700; color:#ffffff; background:#2563eb; border:none; border-radius:8px; cursor:pointer; box-shadow:0 4px 12px rgba(37,99,235,0.25);">Submit Extraction Request 🚀</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     `;
 }
@@ -230,26 +273,74 @@ export function bindTeamWorkspaceEvents(arg1, arg2, arg3, arg4) {
         };
     });
 
-    // New Data Request Modal Trigger
+    // Custom Enterprise Data Request Modal Trigger & Form Handler
     const openReqBtn = document.getElementById('openDataRequestModalBtn');
-    if (openReqBtn) {
-        openReqBtn.onclick = async () => {
-            const niche = prompt("Enter targeted niche (e.g. Dentists, Interior Designers, Coaching Centers):");
-            if (!niche) return;
-            const city = prompt("Enter targeted city/region (e.g. Mumbai, Pune, Delhi NCR):");
-            if (!city) return;
-            const notes = prompt("Any specific requirements or lead count needed?");
+    const dataReqModal = document.getElementById('dataRequestModal');
+    const closeReqBtn = document.getElementById('closeDataReqModalBtn');
+    const cancelReqBtn = document.getElementById('cancelDataReqModalBtn');
+    const dataReqForm = document.getElementById('dataRequestForm');
+    const reqNicheInput = document.getElementById('reqNicheInput');
+    const reqCityInput = document.getElementById('reqCityInput');
+    const reqNotesInput = document.getElementById('reqNotesInput');
+    const submitReqBtn = document.getElementById('submitDataReqFormBtn');
+
+    const hideModal = () => {
+        if (dataReqModal) dataReqModal.style.display = 'none';
+    };
+
+    const showModal = () => {
+        if (dataReqModal) {
+            dataReqModal.style.display = 'flex';
+            if (reqNicheInput) reqNicheInput.focus();
+        }
+    };
+
+    if (openReqBtn) openReqBtn.onclick = showModal;
+    if (closeReqBtn) closeReqBtn.onclick = hideModal;
+    if (cancelReqBtn) cancelReqBtn.onclick = hideModal;
+
+    if (dataReqModal) {
+        dataReqModal.onclick = (e) => {
+            if (e.target === dataReqModal) hideModal();
+        };
+    }
+
+    if (dataReqForm) {
+        dataReqForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const niche = reqNicheInput?.value.trim() || '';
+            const city = reqCityInput?.value.trim() || '';
+            const notes = reqNotesInput?.value.trim() || '';
+
+            if (!niche || !city) {
+                if (window.showToast) window.showToast("Please enter both target niche and region/city.", "error");
+                return;
+            }
+
+            if (submitReqBtn) {
+                submitReqBtn.disabled = true;
+                submitReqBtn.innerText = "Submitting...";
+            }
 
             try {
                 if (onRequestCallback) {
-                    await onRequestCallback(niche, city, notes || '');
+                    await onRequestCallback(niche, city, notes);
                 } else {
-                    await Api.requestCustomData(niche, city, notes || '');
-                    if (window.showToast) window.showToast("✨ Custom data request submitted!", "success");
+                    await Api.requestCustomData(niche, city, notes);
+                    if (window.showToast) window.showToast("✨ Custom data extraction request submitted!", "success");
                     if (onTabChangeCallback) onTabChangeCallback('requests');
                 }
+                hideModal();
+                if (reqNicheInput) reqNicheInput.value = '';
+                if (reqCityInput) reqCityInput.value = '';
+                if (reqNotesInput) reqNotesInput.value = '';
             } catch (err) {
                 if (window.showToast) window.showToast(`Request failed: ${err.message}`, "error");
+            } finally {
+                if (submitReqBtn) {
+                    submitReqBtn.disabled = false;
+                    submitReqBtn.innerText = "Submit Extraction Request 🚀";
+                }
             }
         };
     }
