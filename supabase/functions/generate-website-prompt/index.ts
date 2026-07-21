@@ -185,8 +185,8 @@ JSON-LD Type: ${jsonLdType}`;
     });
 
     if (response.status === 503) {
-      console.warn("gemini-3.5-flash experienced high demand (503). Retrying with gemini-2.5-flash...");
-      modelName = 'gemini-2.5-flash';
+      console.warn("gemini-3.5-flash experienced high demand (503). Retrying with gemini-2.0-flash...");
+      modelName = 'gemini-2.0-flash';
       geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${geminiKey}`;
       response = await fetch(geminiUrl, {
         method: 'POST',
