@@ -12,49 +12,53 @@ export function renderTeamWorkspace(members = [], dataRequests = [], activeTab =
 
     const membersHTML = members.map(m => {
         return `
-            <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:8px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; margin-bottom:8px;">
                 <div>
-                    <h5 style="margin:0 0 2px 0; font-size:13px; color:white;">${m.email}</h5>
-                    <span style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted); text-transform:uppercase;">${m.role}</span>
+                    <h5 style="margin:0 0 2px 0; font-size:13.5px; font-weight:700; color:#0f172a;">${m.email}</h5>
+                    <span style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase;">${m.role}</span>
                 </div>
-                <button class="secondary-btn remove-member-btn" data-email="${m.email}" style="padding:4px 8px; font-size:11px; border-color:#ef4444; color:#ef4444;">Remove</button>
+                <button class="secondary-btn remove-member-btn" data-email="${m.email}" style="padding:6px 12px; font-size:12px; font-weight:700; border:1px solid #fca5a5; color:#dc2626; background:#fff1f2; border-radius:6px; cursor:pointer;">Remove</button>
             </div>
         `;
     }).join('');
 
     const inviteFormHTML = currentSeats < seatLimit ? `
-        <div style="background:rgba(255,255,255,0.01); border:1px solid var(--border); border-radius:var(--radius-md); padding:20px; display:flex; flex-direction:column; gap:12px;">
-            <h5 style="margin:0; font-size:13px; color:white; font-family:var(--font-heading);">Invite Workspace Member</h5>
-            <div style="display:flex; gap:12px;">
-                <input type="email" id="inviteMemberEmail" placeholder="colleague@domain.com" style="flex:1; padding:8px 12px; background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-sm); color:white; font-size:13px; outline:none;">
-                <select id="inviteMemberRole" style="padding:8px; background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-sm); color:white; font-size:13px;">
+        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:20px; display:flex; flex-direction:column; gap:14px; box-shadow:0 2px 8px -2px rgba(15,23,42,0.03);">
+            <h5 style="margin:0; font-size:14px; font-weight:800; color:#0f172a; font-family:var(--font-heading);">Invite Workspace Member</h5>
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                <input type="email" id="inviteMemberEmail" placeholder="colleague@domain.com" style="flex:1; min-width:240px; padding:10px 14px; background:#ffffff; border:1.5px solid #cbd5e1; border-radius:8px; color:#0f172a; font-size:13.5px; font-weight:600; outline:none;">
+                <select id="inviteMemberRole" style="padding:10px 14px; background:#ffffff; border:1.5px solid #cbd5e1; border-radius:8px; color:#0f172a; font-size:13.5px; font-weight:600; outline:none;">
                     <option value="sales">Sales Representative</option>
                     <option value="admin">Administrator</option>
                 </select>
-                <button class="brand-btn" id="submitInviteBtn" style="padding:8px 16px; font-size:13px;">Invite</button>
+                <button class="brand-btn" id="submitInviteBtn" style="padding:10px 20px; font-size:13px; font-weight:700; background:#2563eb; color:white; border:none; border-radius:6px; cursor:pointer; box-shadow:0 4px 12px rgba(37,99,235,0.25);">
+                    Invite Member ✉️
+                </button>
             </div>
         </div>
     ` : `
-        <div style="background:rgba(255,160,0,0.03); border:1px solid rgba(255,160,0,0.15); border-radius:var(--radius-md); padding:20px; font-size:13px; color:var(--text-secondary); line-height:1.5; border-left: 3px solid var(--accent-gold); display: flex; flex-direction: column; gap: 10px; width: 100%;">
-            <div style="font-weight: 700; color: white;">Work together with your team 🤝</div>
-            <div>Scout plan includes 3 team seats (1 admin + 2 view-only collaborator/client seats). Upgrade to Agency to invite up to 10 collaborators with full editing and management permissions.</div>
-            <button class="brand-btn" onclick="window.State.setPricingModal(true)" style="align-self: flex-start; padding: 6px 16px; font-size: 12px; margin-top: 4px;">Upgrade Workspace</button>
+        <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:20px; font-size:13.5px; color:#1e40af; line-height:1.5; display:flex; flex-direction:column; gap:10px; width:100%;">
+            <div style="font-weight:800; color:#0f172a; font-size:15px;">Work together with your team 🤝</div>
+            <div>Scout plan includes 3 team seats. Upgrade to Agency to invite up to 10 collaborators with full editing and management permissions.</div>
+            <button class="brand-btn" onclick="window.State.setPricingModal(true)" style="align-self:flex-start; padding:8px 18px; font-size:12.5px; font-weight:700; background:#2563eb; color:white; border:none; border-radius:6px; cursor:pointer;">
+                Upgrade Workspace Seats ↗
+            </button>
         </div>
     `;
 
     const requestsHTML = dataRequests.map(r => {
         const date = new Date(r.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-        const statusColor = r.status === 'fulfilled' ? '#10b981' : '#eab308';
+        const statusColor = r.status === 'fulfilled' ? '#059669' : '#d97706';
         return `
-            <div style="padding:16px; background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:var(--radius-md); margin-bottom:12px;">
+            <div style="padding:16px; background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; margin-bottom:12px;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                    <h5 style="margin:0; font-size:13.5px; color:white; font-family:var(--font-heading);">${r.requested_niche} in ${r.requested_city}</h5>
-                    <span style="font-size:11px; font-family:var(--font-mono); color:${statusColor}; text-transform:uppercase; font-weight:600;">${r.status}</span>
+                    <h5 style="margin:0; font-size:14px; font-weight:700; color:#0f172a; font-family:var(--font-heading);">${r.requested_niche} in ${r.requested_city}</h5>
+                    <span style="font-size:11px; font-weight:800; color:${statusColor}; text-transform:uppercase;">${r.status}</span>
                 </div>
-                <div style="font-size:12px; color:var(--text-secondary); line-height:1.4; margin-bottom:6px;">
+                <div style="font-size:13px; color:#475569; line-height:1.4; margin-bottom:6px;">
                     ${r.notes || 'No notes specified.'}
                 </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--text-muted);">
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:#64748b; font-weight:600;">
                     <span>Requested on ${date}</span>
                     <span>${r.records_added ? `Added ${r.records_added} leads` : ''}</span>
                 </div>
@@ -63,7 +67,7 @@ export function renderTeamWorkspace(members = [], dataRequests = [], activeTab =
     }).join('');
 
     const emptyRequestsHTML = dataRequests.length === 0 ? `
-        <div style="padding:40px 12px; text-align:center; color:var(--text-muted); font-size:13px;">
+        <div style="padding:40px 12px; text-align:center; color:#64748b; font-size:13.5px; font-weight:600;">
             No custom extraction requests registered yet.
         </div>
     ` : '';
@@ -71,21 +75,21 @@ export function renderTeamWorkspace(members = [], dataRequests = [], activeTab =
     let tabContent = '';
     if (activeTab === 'seats') {
         tabContent = `
-            <div style="display:flex; flex-direction:column; gap:20px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:16px;">
+            <div style="display:flex; flex-direction:column; gap:20px; text-align:left;">
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:16px;">
                     <div>
-                        <h4 style="margin:0 0 4px 0; color:white; font-size:15px; font-family:var(--font-heading);">Workspace Team Seats</h4>
-                        <p style="margin:0; font-size:12px; color:var(--text-muted);">Configure client accounts and seat logins.</p>
+                        <h4 style="margin:0 0 4px 0; color:#0f172a; font-size:16px; font-weight:800; font-family:var(--font-heading);">Workspace Team Seats</h4>
+                        <p style="margin:0; font-size:13px; color:#475569;">Configure client accounts and seat logins.</p>
                     </div>
-                    <span style="font-size:13px; color:white; font-weight:500; font-family:var(--font-mono);">${currentSeats} / ${seatLimit} Seats Active</span>
+                    <span style="font-size:13.5px; color:#2563eb; font-weight:700;">${currentSeats} / ${seatLimit === 999999 ? 'Unlimited' : seatLimit} Seats Active</span>
                 </div>
 
-                <div style="background:rgba(255,255,255,0.01); border:1px solid var(--border); border-radius:var(--radius-md); padding:20px; display:flex; flex-direction:column; gap:12px;">
-                    <h5 style="margin:0 0 4px 0; font-size:12px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase;">Active Members</h5>
-                    <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:rgba(255,160,0,0.03); border:1px solid rgba(255,160,0,0.15); border-radius:var(--radius-sm); margin-bottom:8px;">
+                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:20px; display:flex; flex-direction:column; gap:12px;">
+                    <h5 style="margin:0 0 4px 0; font-size:12px; font-weight:700; color:#64748b; text-transform:uppercase;">Active Members</h5>
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; margin-bottom:8px;">
                         <div>
-                            <h5 style="margin:0 0 2px 0; font-size:13px; color:white;">${State.user?.email} (You)</h5>
-                            <span style="font-size:11px; font-family:var(--font-mono); color:var(--accent-gold); text-transform:uppercase;">Owner</span>
+                            <h5 style="margin:0 0 2px 0; font-size:13.5px; font-weight:700; color:#0f172a;">${State.user?.email} (You)</h5>
+                            <span style="font-size:11px; font-weight:800; color:#2563eb; text-transform:uppercase;">Owner</span>
                         </div>
                     </div>
                     ${membersHTML}
@@ -96,65 +100,48 @@ export function renderTeamWorkspace(members = [], dataRequests = [], activeTab =
         `;
     } else if (activeTab === 'requests') {
         tabContent = `
-            <div style="display:flex; flex-direction:column; gap:20px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:16px;">
+            <div style="display:flex; flex-direction:column; gap:20px; text-align:left;">
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:16px;">
                     <div>
-                        <h4 style="margin:0 0 4px 0; color:white; font-size:15px; font-family:var(--font-heading);">Custom Data Extraction Requests</h4>
-                        <p style="margin:0; font-size:12px; color:var(--text-muted);">Request verification data for new suburbs or categories.</p>
+                        <h4 style="margin:0 0 4px 0; color:#0f172a; font-size:16px; font-weight:800; font-family:var(--font-heading);">Custom Niche Data Requests</h4>
+                        <p style="margin:0; font-size:13px; color:#475569;">Request custom regional directory extractions for targeted niches.</p>
                     </div>
-                </div>
-
-                <!-- Extraction Form -->
-                <div style="background:rgba(255,255,255,0.01); border:1px solid var(--border); border-radius:var(--radius-md); padding:24px; display:flex; flex-direction:column; gap:16px;">
-                    <h5 style="margin:0; font-size:13px; color:white; font-family:var(--font-heading);">Submit New Data Request</h5>
-                    
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
-                        <div>
-                            <label style="display:block; font-size:11px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px;">Target Niche / Category</label>
-                            <input type="text" id="requestNicheInput" placeholder="e.g. Gym or Salons" style="width:100%; padding:8px 12px; background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-sm); color:white; font-size:13px; outline:none;">
-                        </div>
-                        <div>
-                            <label style="display:block; font-size:11px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px;">Target City / Suburb</label>
-                            <input type="text" id="requestCityInput" placeholder="e.g. Pune or Bandra West" style="width:100%; padding:8px 12px; background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-sm); color:white; font-size:13px; outline:none;">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label style="display:block; font-size:11px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px;">Data Extraction Instructions</label>
-                        <textarea id="requestNotesInput" placeholder="Specify any additional parameters or notes here..." style="width:100%; height:70px; background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px; color:white; font-size:13px; line-height:1.4; resize:none; outline:none; font-family:sans-serif;"></textarea>
-                    </div>
-
-                    <button class="brand-btn" id="submitExtractionRequestBtn" style="padding:10px; width:fit-content; font-size:13px; align-self:flex-end;">
-                        Submit Data Request
+                    <button class="brand-btn" id="openDataRequestModalBtn" style="padding:8px 16px; font-size:12.5px; font-weight:700; background:#2563eb; color:white; border:none; border-radius:6px; cursor:pointer;">
+                        + New Data Request
                     </button>
                 </div>
 
-                <!-- Requests lists -->
-                <div style="margin-top:12px;">
-                    <h5 style="margin:0 0 12px 0; font-size:12px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase;">Extraction Logs</h5>
-                    ${requestsHTML}
-                    ${emptyRequestsHTML}
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                    ${requestsHTML || emptyRequestsHTML}
                 </div>
             </div>
         `;
     }
 
     return `
-        <div class="team-workspace-container" style="padding: 32px; background: #f8fafc; color: #0f172a; border-radius: var(--radius-lg); border: 1px solid #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+        <div class="team-workspace-container" style="display: flex; flex-direction: column; gap: 20px; width: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
             <div class="team-workspace" style="display:grid; grid-template-columns: 240px 1fr; gap:24px; width:100%;">
-                <!-- Left Sidebar -->
-                <div class="team-sidebar" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:18px; display:flex; flex-direction:column; gap:6px; height:fit-content; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
-                    <h4 style="margin:0 0 10px 0; font-size:12px; font-family:var(--font-mono); color:#64748b; text-transform:uppercase; font-weight: 700;">Team Workspace</h4>
-                    <button class="sidebar-tab-btn ${activeTab === 'seats' ? 'active' : ''}" id="tabSeatsBtn" style="text-align:left; background:${activeTab === 'seats' ? '#eff6ff' : 'transparent'}; border:1px solid ${activeTab === 'seats' ? '#bfdbfe' : 'transparent'}; padding:10px 14px; border-radius:6px; font-size:13.5px; color:${activeTab === 'seats' ? '#2563eb' : '#475569'}; cursor:pointer; font-weight:700; display:flex; align-items:center; gap:8px;">
-                        👥 Team Seats
+                
+                <!-- Left sidebar -->
+                <div class="team-sidebar" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:18px; display:flex; flex-direction:column; gap:6px; height:fit-content; box-shadow:0 4px 15px -3px rgba(15,23,42,0.03);">
+                    <h4 style="margin:0 0 10px 0; font-size:12px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.5px;">Team Management</h4>
+                    
+                    <button class="sidebar-tab-btn ${activeTab === 'seats' ? 'active' : ''}" id="tabSeatsBtn" style="text-align:left; background:${activeTab === 'seats' ? '#eff6ff' : '#ffffff'}; border:1px solid ${activeTab === 'seats' ? '#bfdbfe' : '#e2e8f0'}; padding:10px 14px; border-radius:6px; font-size:13px; color:${activeTab === 'seats' ? '#2563eb' : '#475569'}; cursor:pointer; font-weight:700; display:flex; align-items:center; gap:8px; transition: all 0.2s ease;">
+                        <i data-lucide="users" style="width:14px; height:14px;"></i> Workspace Seats
                     </button>
-                    <button class="sidebar-tab-btn ${activeTab === 'requests' ? 'active' : ''}" id="tabRequestsBtn" style="text-align:left; background:${activeTab === 'requests' ? '#eff6ff' : 'transparent'}; border:1px solid ${activeTab === 'requests' ? '#bfdbfe' : 'transparent'}; padding:10px 14px; border-radius:6px; font-size:13.5px; color:${activeTab === 'requests' ? '#2563eb' : '#475569'}; cursor:pointer; font-weight:700; display:flex; align-items:center; gap:8px;">
-                        📈 Data Extraction
+                    
+                    <button class="sidebar-tab-btn ${activeTab === 'requests' ? 'active' : ''}" id="tabRequestsBtn" style="text-align:left; background:${activeTab === 'requests' ? '#eff6ff' : '#ffffff'}; border:1px solid ${activeTab === 'requests' ? '#bfdbfe' : '#e2e8f0'}; padding:10px 14px; border-radius:6px; font-size:13px; color:${activeTab === 'requests' ? '#2563eb' : '#475569'}; cursor:pointer; font-weight:700; display:flex; align-items:center; gap:8px; transition: all 0.2s ease;">
+                        <i data-lucide="database" style="width:14px; height:14px;"></i> Data Requests
                     </button>
                 </div>
 
                 <!-- Right Workspace -->
-                <div class="team-workspace-body" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:28px; display:flex; flex-direction:column; min-height:360px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                <div class="team-workspace-body" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:28px; display:flex; flex-direction:column; min-height:360px; justify-content: flex-start; box-shadow:0 4px 15px -3px rgba(15,23,42,0.03);">
+                    <!-- Usability Banner -->
+                    <div class="usability-banner" style="background: #f8fafc; border: 1px solid #cbd5e1; border-left: 4px solid #2563eb; border-radius: 8px; padding: 12px 18px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; width: 100%; text-align: left;">
+                        <div style="font-size: 13px; color: #0f172a; line-height: 1.4; font-weight: 700;"><span style="color: #2563eb; font-weight: 800;">What it is:</span> Manage agency team seats, sub-accounts, and custom data requests.</div>
+                        <div style="font-size: 12.5px; color: #475569; line-height: 1.4;"><span style="color: #2563eb; font-weight: 800;">How to leverage:</span> Invite team members to collaborate on sales calls and track custom niche data extraction requests.</div>
+                    </div>
                     ${tabContent}
                 </div>
             </div>
@@ -162,82 +149,87 @@ export function renderTeamWorkspace(members = [], dataRequests = [], activeTab =
     `;
 }
 
-export function bindTeamWorkspaceEvents(onTabChangeCallback, onInviteCallback, onRemoveCallback, onRequestSubmitCallback) {
+export function bindTeamWorkspaceEvents(members, dataRequests, activeTab, onTabChangeCallback) {
+    if (window.refreshLucideIcons) window.refreshLucideIcons();
+
+    // Tab buttons
     const tabSeats = document.getElementById('tabSeatsBtn');
-    if (tabSeats) {
-        tabSeats.addEventListener('click', () => {
-            if (onTabChangeCallback) onTabChangeCallback('seats');
-        });
-    }
-
     const tabRequests = document.getElementById('tabRequestsBtn');
-    if (tabRequests) {
-        tabRequests.addEventListener('click', () => {
-            if (onTabChangeCallback) onTabChangeCallback('requests');
-        });
-    }
 
-    const submitInvite = document.getElementById('submitInviteBtn');
-    if (submitInvite) {
-        submitInvite.addEventListener('click', () => {
-            const email = document.getElementById('inviteMemberEmail').value.trim();
-            const role = document.getElementById('inviteMemberRole').value;
-            if (!email) {
-                alert("Please enter member email address");
+    if (tabSeats) tabSeats.onclick = () => onTabChangeCallback('seats');
+    if (tabRequests) tabRequests.onclick = () => onTabChangeCallback('requests');
+
+    // Submit invite
+    const submitInviteBtn = document.getElementById('submitInviteBtn');
+    const inviteEmailInput = document.getElementById('inviteMemberEmail');
+    const inviteRoleSelect = document.getElementById('inviteMemberRole');
+
+    if (submitInviteBtn && inviteEmailInput && inviteRoleSelect) {
+        submitInviteBtn.onclick = async () => {
+            const email = inviteEmailInput.value.trim();
+            const role = inviteRoleSelect.value;
+
+            if (!email || !email.includes('@')) {
+                if (window.showToast) window.showToast("Please enter a valid member email address", "error");
                 return;
             }
-            if (onInviteCallback) onInviteCallback(email, role);
-        });
+
+            submitInviteBtn.disabled = true;
+            try {
+                await Api.inviteTeamMember(email, role);
+                if (window.showToast) window.showToast(`✨ Invitation sent to ${email}`, "success");
+                inviteEmailInput.value = '';
+                if (onTabChangeCallback) onTabChangeCallback('seats');
+            } catch (err) {
+                if (window.showToast) window.showToast(`Invite failed: ${err.message}`, "error");
+            } finally {
+                submitInviteBtn.disabled = false;
+            }
+        };
     }
 
+    // Remove member buttons
     const removeBtns = document.querySelectorAll('.remove-member-btn');
     removeBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const email = btn.getAttribute('data-email');
-            if (onRemoveCallback) onRemoveCallback(email);
-        });
+        btn.onclick = async () => {
+            const email = btn.dataset.email;
+            if (!confirm(`Are you sure you want to remove ${email} from your workspace?`)) return;
+
+            btn.disabled = true;
+            try {
+                await Api.removeTeamMember(email);
+                if (window.showToast) window.showToast(`Removed ${email} from workspace`, "info");
+                if (onTabChangeCallback) onTabChangeCallback('seats');
+            } catch (err) {
+                if (window.showToast) window.showToast(`Remove failed: ${err.message}`, "error");
+            }
+        };
     });
 
-    const submitRequest = document.getElementById('submitExtractionRequestBtn');
-    if (submitRequest) {
-        submitRequest.addEventListener('click', () => {
-            const niche = document.getElementById('requestNicheInput').value.trim();
-            const city = document.getElementById('requestCityInput').value.trim();
-            const notes = document.getElementById('requestNotesInput').value.trim();
+    // New Data Request Modal Trigger
+    const openReqBtn = document.getElementById('openDataRequestModalBtn');
+    if (openReqBtn) {
+        openReqBtn.onclick = () => {
+            const niche = prompt("Enter targeted niche (e.g. Dentists, Interior Designers, Coaching Centers):");
+            if (!niche) return;
+            const city = prompt("Enter targeted city/region (e.g. Mumbai, Pune, Delhi NCR):");
+            if (!city) return;
+            const notes = prompt("Any specific requirements or lead count needed?");
 
-            if (!niche || !city) {
-                alert("Niche and City inputs are required");
-                return;
-            }
-            if (onRequestSubmitCallback) onRequestSubmitCallback(niche, city, notes);
-        });
+            Api.requestCustomData(niche, city, notes || '').then(() => {
+                if (window.showToast) window.showToast("✨ Custom data request submitted!", "success");
+                if (onTabChangeCallback) onTabChangeCallback('requests');
+            }).catch(err => {
+                if (window.showToast) window.showToast(`Request failed: ${err.message}`, "error");
+            });
+        };
     }
 }
-export async function loadDataRequests() {
-    const { data, error } = await Api.supabase
-        .from('data_requests')
-        .select('*')
-        .order('created_at', { ascending: false });
-    if (error) throw error;
-    return data || [];
-}
-export async function createDataRequest(niche, city, notes) {
-    const { data: userSession } = await Api.supabase.auth.getSession();
-    const userId = userSession?.session?.user?.id;
-    if (!userId) throw new Error("User session not found");
 
-    const { data, error } = await Api.supabase
-        .from('data_requests')
-        .insert([{
-            user_id: userId,
-            request_type: 'area',
-            requested_city: city,
-            requested_niche: niche,
-            notes: notes,
-            status: 'pending'
-        }])
-        .select()
-        .single();
-    if (error) throw error;
-    return data;
+export async function loadDataRequests() {
+    return await Api.getDataRequests();
+}
+
+export async function createDataRequest(niche, city, notes) {
+    return await Api.requestCustomData(niche, city, notes);
 }

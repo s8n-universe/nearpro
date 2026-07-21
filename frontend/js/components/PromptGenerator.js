@@ -51,8 +51,8 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
         return `
             <div class="prompt-lead-item ${activeClass}" data-id="${lead.id}">
                 <div style="flex:1; min-width:0;">
-                    <h5 style="margin:0 0 2px 0; font-size:13px; color:white; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${lead.name}</h5>
-                    <p style="margin:0; font-size:11px; color:var(--text-muted);">${lead.category || 'General'}</p>
+                    <h5 style="margin:0 0 2px 0; font-size:13px; font-weight:700; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${lead.name}</h5>
+                    <p style="margin:0; font-size:11.5px; font-weight:600; color:#475569;">${lead.category || 'General'}</p>
                 </div>
             </div>
         `;
@@ -194,7 +194,7 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
     `;
 
     return `
-        <div class="prompt-workspace-container" style="padding: 32px; background: #f8fafc; color: #0f172a; border-radius: var(--radius-lg); border: 1px solid #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+        <div class="prompt-workspace-container" style="display: flex; flex-direction: column; gap: 20px; width: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
             <div class="prompt-workspace" style="display:grid; grid-template-columns: 260px 1fr; gap:24px; width:100%;">
                 <!-- Left Panel -->
                 <div class="prompt-sidebar" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:18px; display:flex; flex-direction:column; gap:10px; overflow-y:auto; max-height:calc(100vh - 180px); box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
