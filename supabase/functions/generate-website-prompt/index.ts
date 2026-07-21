@@ -93,8 +93,36 @@ serve(async (req) => {
     const phone = lead.phone || '+91 98765 43210';
     const cleanPhone = phone.replace(/[^0-9]/g, '');
 
+    let platformInstructions = "";
+    if (platform === 'lovable') {
+      platformInstructions = `
+Guidelines for Lovable.dev target prompt:
+- Direct Lovable to build a highly visual React single-page app using Vite, Tailwind CSS, and shadcn/ui.
+- Instruct it to use rich animations (Framer Motion), interactive micro-interactions, and pre-built shadcn components (accordion, cards, dial, toast).
+- Make sure it implements a clean Supabase storage integration or state-based mocking for forms (booking, reviews, inquiry).
+- Emphasize component division: Hero, Features, Service Catalog, Review Grid with rating stars, Interactive Booking Calendar/Modal, Map Placeholder, and FAQ.
+- Highlight visual accents: modern typography (Outfit / Space Grotesk), dark glassmorphism styling, and custom SVG icons/illustrations.`;
+    } else if (platform === 'bolt') {
+      platformInstructions = `
+Guidelines for Bolt.new target prompt:
+- Direct Bolt to bootstrap a complete Vite + React + Lucide Icons environment.
+- Instruct it to install package dependencies explicitly in package.json (e.g. lucide-react, canvas-confetti, framer-motion).
+- Provide a detailed file structure blueprint for them to follow: App.tsx, components/, and index.css.
+- Ensure the layout is a stunning single-page web app with interactive features (interactive booking calendar, responsive mobile menu, testimonial sliders).
+- Advise Bolt to start the local dev server using 'npm run dev' and keep execution self-contained.`;
+    } else if (platform === 'claude') {
+      platformInstructions = `
+Guidelines for Claude Code target prompt:
+- Direct Claude to write clean, modular React/HTML/Tailwind files or update existing project files.
+- Tell Claude exactly what files to create or modify (e.g. index.html, components/, style.css) in their workspace.
+- Instruct Claude to verify correct HTML semantic structure, compile CSS build, and run local dev/build servers to check for errors.
+- Focus on raw coding efficiency, clean layout hierarchy, and robust, zero-dependency Javascript features (e.g. form validations, scroll animations-based visibility).`;
+    }
+
     const systemPrompt = `You are an expert system prompt engineer. Your job is to output a customized prompt that a user can paste into builder tools like Lovable, Bolt.new, or Claude Code to build a highly optimized single-page landing page website for a local business.
-Generate a tailored, highly specific, and creative system prompt that incorporates the business details and matches the requested builder platform.`;
+Generate a tailored, highly specific, and creative system prompt that incorporates the business details and matches the requested builder platform.
+
+${platformInstructions}`;
 
     const userMessage = `Generate a website builder prompt for:
 Name: ${lead.name}
