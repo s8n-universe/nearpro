@@ -10,7 +10,7 @@ export const AUDIT_LIMITS = {
     enterprise: 999999
 };
 
-export function renderWebsiteAudit(leadsWithWebsites, activeAuditLeadId = null, auditResult = null, loading = false) {
+export function renderWebsiteAudit(leadsWithWebsites, activeAuditLeadId = null, auditResult = null, loading = false, targetWebsite = '') {
     // Render left list of leads with websites
     const leadsHTML = leadsWithWebsites.map(lead => {
         const isActive = activeAuditLeadId === lead.id;
@@ -40,10 +40,59 @@ export function renderWebsiteAudit(leadsWithWebsites, activeAuditLeadId = null, 
     let workspaceHTML = '';
     if (loading) {
         workspaceHTML = `
-            <div class="audit-empty-state" style="text-align: center; padding: 60px 20px;">
-                <div class="spinner" style="width:40px; height:40px; border-width:3px; border-top-color: #2563eb; margin: 0 auto 16px auto;"></div>
-                <h4 style="margin:16px 0 6px 0; color:#0f172a; font-weight: 700;">Auditing Website Performance</h4>
-                <p style="color:#475569; font-size:13.5px;">Running Google PageSpeed analysis and checking local search compliance...</p>
+            <style>
+            @keyframes pulseGlow {
+                0% { transform: scale(0.95); opacity: 0.7; box-shadow: 0 0 0 0 rgba(37,99,235,0.4); }
+                70% { transform: scale(1.05); opacity: 1; box-shadow: 0 0 0 16px rgba(37,99,235,0); }
+                100% { transform: scale(0.95); opacity: 0.7; box-shadow: 0 0 0 0 rgba(37,99,235,0); }
+            }
+
+            @keyframes scanProgress {
+                0% { width: 15%; }
+                40% { width: 60%; }
+                80% { width: 88%; }
+                100% { width: 100%; }
+            }
+            </style>
+
+            <div class="audit-scanning-panel" style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:48px 24px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:400px; box-shadow:0 4px 20px -4px rgba(15,23,42,0.04);">
+                <div style="position:relative; width:72px; height:72px; margin-bottom:20px; display:flex; align-items:center; justify-content:center;">
+                    <div style="position:absolute; inset:0; border-radius:50%; background:rgba(37,99,235,0.08); border:2px solid #2563eb; animation: pulseGlow 1.6s ease-in-out infinite;"></div>
+                    <div style="font-size:32px; position:relative; z-index:2;">🔎</div>
+                </div>
+
+                <h4 style="margin:0 0 6px 0; color:#0f172a; font-family:var(--font-heading); font-weight:800; font-size:17px;">
+                    Auditing ${targetWebsite || 'Website Performance'}...
+                </h4>
+                
+                <p style="color:#475569; font-size:13px; margin:0 0 22px 0; max-width:400px; font-weight:500;">
+                    Executing real-time Google PageSpeed checks, SSL handshake inspection, and local Schema validation...
+                </p>
+
+                <!-- Animated Multi-Step Diagnostic Badges -->
+                <div style="display:flex; flex-direction:column; gap:8px; width:100%; max-width:380px; margin-bottom:22px; text-align:left;">
+                    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:9px 14px; font-size:12px; color:#0f172a; font-weight:600; display:flex; align-items:center; justify-content:space-between;">
+                        <span>🌐 Inspecting SSL Security & HTTP Protocol</span>
+                        <span style="color:#059669; font-size:11px; font-weight:800; font-family:var(--font-mono);">CHECKING...</span>
+                    </div>
+                    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:9px 14px; font-size:12px; color:#0f172a; font-weight:600; display:flex; align-items:center; justify-content:space-between;">
+                        <span>⚡ Measuring Core Web Vitals & Mobile Latency</span>
+                        <span style="color:#2563eb; font-size:11px; font-weight:800; font-family:var(--font-mono);">ANALYZING...</span>
+                    </div>
+                    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:9px 14px; font-size:12px; color:#0f172a; font-weight:600; display:flex; align-items:center; justify-content:space-between;">
+                        <span>📍 Validating JSON-LD LocalBusiness Schema</span>
+                        <span style="color:#d97706; font-size:11px; font-weight:800; font-family:var(--font-mono);">EXTRACTING...</span>
+                    </div>
+                    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:9px 14px; font-size:12px; color:#0f172a; font-weight:600; display:flex; align-items:center; justify-content:space-between;">
+                        <span>📊 Computing Predictive Revenue Loss & Pitch Hook</span>
+                        <span style="color:#7c3aed; font-size:11px; font-weight:800; font-family:var(--font-mono);">CALCULATING...</span>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div style="width:100%; max-width:380px; height:6px; background:#e2e8f0; border-radius:50px; overflow:hidden;">
+                    <div style="height:100%; background:linear-gradient(90deg, #2563eb, #7c3aed); border-radius:50px; animation: scanProgress 1.2s ease-in-out infinite;"></div>
+                </div>
             </div>
         `;
     } else if (auditResult) {

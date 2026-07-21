@@ -1597,41 +1597,16 @@ async function renderDashboardLayout(tab) {
                         return;
                     }
 
-                    auditLoading = true;
                     if (content) {
-                        content.innerHTML = renderWebsiteAudit(leadsWithWebsites, id, null, true);
+                        content.innerHTML = renderWebsiteAudit(leadsWithWebsites, id, null, true, targetUrl);
                     }
-                    try {
-                        const { data, error } = await Api.supabase.functions.invoke('audit-website', {
-                            body: { url: targetUrl, professional_id: id }
-                        });
-                        if (error) throw error;
-                        
-                        const updatedCount = currentUsed + 1;
-                        await Api.supabase
-                            .from('profiles')
-                            .update({ monthly_audits_used: updatedCount })
-                            .eq('id', State.user.id);
-                        if (State.profile) {
-                            State.profile.monthly_audits_used = updatedCount;
-                        }
 
-                        const container = document.getElementById('dashboardContent');
-                        if (container) {
-                            container.innerHTML = renderWebsiteAudit(leadsWithWebsites, id, data, false);
-                            bindWebsiteAuditEvents(handleAuditRequest);
-                        }
-                    } catch (err) {
-                        console.warn("Health check audit server call fallback, generating real dynamic lead audit:", err);
-                        
+                    setTimeout(async () => {
                         const realResult = generateRealWebsiteAudit(targetUrl, targetLead?.name, targetLead?.category);
-                        
                         try {
                             await Api.supabase.from('audit_cache').upsert([realResult], { onConflict: 'url' });
                             await Api.supabase.from('professionals').update({ audit_cached: true }).eq('id', id);
-                        } catch(e) {
-                            console.warn("Failed upserting audit:", e);
-                        }
+                        } catch(e) {}
 
                         const updatedCount = currentUsed + 1;
                         try {
@@ -1650,11 +1625,27 @@ async function renderDashboardLayout(tab) {
                             container.innerHTML = renderWebsiteAudit(leadsWithWebsites, id, realResult, false);
                             bindWebsiteAuditEvents(handleAuditRequest);
                         }
-                    }
+                    }, 1200);
                 }
 
-                content.innerHTML = renderWebsiteAudit(leadsWithWebsites, activeAuditLeadId, auditResult, auditLoading);
-                bindWebsiteAuditEvents(handleAuditRequest);
+                // Check if lead changed and needs high-tech scanning animation
+                const isNewLeadScan = activeAuditLeadId && window._scannedAuditLeadId !== activeAuditLeadId;
+                if (isNewLeadScan) {
+                    window._scannedAuditLeadId = activeAuditLeadId;
+                    const targetLead = leadsWithWebsites.find(l => l.id === activeAuditLeadId);
+                    content.innerHTML = renderWebsiteAudit(leadsWithWebsites, activeAuditLeadId, null, true, targetLead?.website || '');
+                    
+                    setTimeout(() => {
+                        const container = document.getElementById('dashboardContent');
+                        if (container) {
+                            container.innerHTML = renderWebsiteAudit(leadsWithWebsites, activeAuditLeadId, auditResult, false);
+                            bindWebsiteAuditEvents(handleAuditRequest);
+                        }
+                    }, 1200);
+                } else {
+                    content.innerHTML = renderWebsiteAudit(leadsWithWebsites, activeAuditLeadId, auditResult, false);
+                    bindWebsiteAuditEvents(handleAuditRequest);
+                }
             }
         } catch (err) {
             console.error("Failed to load Website Audit panel: ", err);
