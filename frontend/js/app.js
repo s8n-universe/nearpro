@@ -1697,69 +1697,74 @@ async function renderDashboardLayout(tab) {
             const activeLeadId = searchParams.get('lead_id');
             const selectedPlatform = searchParams.get('platform') || 'lovable';
 
+            // Initialize prompt cache
+            window._promptCache = window._promptCache || {};
+            const cacheKey = activeLeadId ? `${activeLeadId}_${selectedPlatform}` : null;
+            
             let generatedPrompt = '';
-
             if (activeLeadId) {
-                const activeItem = savedLeads.find(item => item.professionals.id === activeLeadId);
-                const lead = activeItem?.professionals;
-
-                if (lead) {
+                if (window._promptCache[cacheKey]) {
+                    generatedPrompt = window._promptCache[cacheKey];
+                } else if (window._promptGenerating === cacheKey) {
                     generatedPrompt = 'Generating tailored prompt using Gemini... Please wait.';
+                } else {
+                    generatedPrompt = 'Choose your target platform above and click "Generate Prompt" to build your tailored AI system prompt.';
                 }
             }
 
             if (content) {
                 content.innerHTML = renderPromptGenerator(savedLeads, activeLeadId, selectedPlatform, generatedPrompt);
-                bindPromptGeneratorEvents(
-                    (leadId) => {
-                        window.location.hash = `#/dashboard/prompts?lead_id=${leadId}&platform=${selectedPlatform}`;
-                    }, 
-                    (platform) => {
-                        window.location.hash = `#/dashboard/prompts?lead_id=${activeLeadId}&platform=${platform}`;
-                    }
-                );
-
-                // Trigger async backend generation via Supabase Edge Function
-                if (activeLeadId) {
-                    const promptArea = document.getElementById('generatedPromptArea');
-                    const copyBtn = document.getElementById('copyPromptTextBtn');
+                
+                async function handleGenerateRequest() {
+                    if (!activeLeadId || !cacheKey) return;
                     
                     const tier = (State.profile?.subscription_tier || 'free').toLowerCase();
                     const currentCount = State.profile?.monthly_prompt_copies_used || 0;
                     const limit = PROMPT_LIMITS[tier] || 0;
 
-                    if (currentCount < limit && promptArea && copyBtn) {
-                        copyBtn.disabled = true;
-                        copyBtn.style.opacity = 0.5;
+                    if (currentCount >= limit) {
+                        alert(`🚫 Limit Reached: Your current plan (${tier.toUpperCase()}) allows up to ${limit} prompt generations per month. Please upgrade to scan more.`);
+                        return;
+                    }
 
-                        Api.generateWebsitePrompt(activeLeadId, selectedPlatform)
-                            .then(res => {
-                                if (res && res.prompt) {
-                                    promptArea.value = res.prompt;
-                                    copyBtn.disabled = false;
-                                    copyBtn.style.opacity = 1;
+                    window._promptGenerating = cacheKey;
+                    
+                    // Re-render to show loading state
+                    content.innerHTML = renderPromptGenerator(savedLeads, activeLeadId, selectedPlatform, 'Generating tailored prompt using Gemini... Please wait.');
+                    bindEvents();
 
-                                    // Update counter in local State and DOM
-                                    if (State.profile) {
-                                        State.profile.monthly_prompt_copies_used = res.used;
-                                    }
-                                    const counterEl = document.getElementById('promptUsageCounter');
-                                    if (counterEl) {
-                                        if (limit >= 999999) {
-                                            counterEl.innerHTML = `<strong>${res.used}</strong> generations (Unlimited for Enterprise)`;
-                                        } else {
-                                            const remaining = Math.max(0, limit - res.used);
-                                            counterEl.innerHTML = `<strong>${res.used}</strong> of <strong>${limit}</strong> generations used (${remaining} remaining)`;
-                                        }
-                                    }
-                                }
-                            })
-                            .catch(err => {
-                                console.error("Failed to generate prompt via Gemini:", err);
-                                promptArea.value = `Error generating prompt: ${err.message || 'Unknown error'}. Please try again.`;
-                            });
+                    try {
+                        const res = await Api.generateWebsitePrompt(activeLeadId, selectedPlatform);
+                        if (res && res.prompt) {
+                            window._promptCache[cacheKey] = res.prompt;
+                            if (State.profile) {
+                                State.profile.monthly_prompt_copies_used = res.used;
+                            }
+                        }
+                    } catch (err) {
+                        console.error("Failed to generate prompt via Gemini:", err);
+                        window._promptCache[cacheKey] = `Error generating prompt: ${err.message || 'Unknown error'}. Please try again.`;
+                    } finally {
+                        window._promptGenerating = null;
+                        // Final re-render with result or error
+                        content.innerHTML = renderPromptGenerator(savedLeads, activeLeadId, selectedPlatform, window._promptCache[cacheKey] || '');
+                        bindEvents();
                     }
                 }
+
+                function bindEvents() {
+                    bindPromptGeneratorEvents(
+                        (leadId) => {
+                            window.location.hash = `#/dashboard/prompts?lead_id=${leadId}&platform=${selectedPlatform}`;
+                        }, 
+                        (platform) => {
+                            window.location.hash = `#/dashboard/prompts?lead_id=${activeLeadId}&platform=${platform}`;
+                        },
+                        handleGenerateRequest
+                    );
+                }
+
+                bindEvents();
             }
         } catch (err) {
             console.error("Failed to load Website Prompt Engine: ", err);

@@ -79,6 +79,9 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
                 </div>
             `;
         } else {
+            const hasPrompt = generatedPrompt && !generatedPrompt.startsWith('Generating') && !generatedPrompt.startsWith('Error') && !generatedPrompt.startsWith('Choose');
+            const isGenerating = generatedPrompt && generatedPrompt.startsWith('Generating');
+
             workspaceHTML = `
                 <div class="prompt-workspace-grid" style="display:flex; flex-direction:column; gap:20px; width:100%;">
                     
@@ -92,9 +95,14 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
                             </div>
                         </div>
                         
-                        <button class="brand-btn" id="copyPromptTextBtn" style="padding:10px 16px; font-size:13px; display:flex; align-items:center; gap:6px;">
-                            <i data-lucide="copy" style="width:14px; height:14px;"></i> Copy Prompt Code
-                        </button>
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <button class="brand-btn" id="generatePromptBtn" style="padding:10px 20px; font-size:13px; font-weight:700; display:flex; align-items:center; gap:6px;" ${isGenerating ? 'disabled style="opacity:0.5;"' : ''}>
+                                ${isGenerating ? '<div class="spinner" style="width:12px; height:12px; border-width:1.5px; margin:0;"></div> Generating...' : '⚡ Generate Prompt'}
+                            </button>
+                            <button class="brand-btn" id="copyPromptTextBtn" style="padding:10px 16px; font-size:13px; display:flex; align-items:center; gap:6px; ${hasPrompt ? 'opacity:1;' : 'opacity:0.5;'}" ${hasPrompt ? '' : 'disabled'}>
+                                <i data-lucide="copy" style="width:14px; height:14px;"></i> Copy Prompt Code
+                            </button>
+                        </div>
                     </div>
     
                     <div>
@@ -160,7 +168,7 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
     `;
 }
 
-export function bindPromptGeneratorEvents(onLeadSelectCallback, onPlatformSelectCallback) {
+export function bindPromptGeneratorEvents(onLeadSelectCallback, onPlatformSelectCallback, onGenerateRequestCallback) {
     // Process Lucide Icons
     if (window.lucide) {
         window.lucide.createIcons();
@@ -181,6 +189,13 @@ export function bindPromptGeneratorEvents(onLeadSelectCallback, onPlatformSelect
             if (onPlatformSelectCallback) onPlatformSelectCallback(platform);
         });
     });
+
+    const generateBtn = document.getElementById('generatePromptBtn');
+    if (generateBtn) {
+        generateBtn.addEventListener('click', () => {
+            if (onGenerateRequestCallback) onGenerateRequestCallback();
+        });
+    }
 
     const copyBtn = document.getElementById('copyPromptTextBtn');
     if (copyBtn) {
