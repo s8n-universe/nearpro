@@ -1772,7 +1772,17 @@ async function renderDashboardLayout(tab) {
                         let detail = err.message || "Unknown error";
                         if (err.context && typeof err.context === 'object') {
                             try {
-                                detail = err.context.message || JSON.stringify(err.context);
+                                if (typeof err.context.text === 'function') {
+                                    const text = await err.context.text();
+                                    try {
+                                        const parsed = JSON.parse(text);
+                                        detail = parsed.error || parsed.message || text;
+                                    } catch (_) {
+                                        detail = text;
+                                    }
+                                } else {
+                                    detail = err.context.message || JSON.stringify(err.context);
+                                }
                             } catch (_) {}
                         }
                         window._promptCache[cacheKey] = `Error generating prompt: ${detail}`;
