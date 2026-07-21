@@ -14,7 +14,7 @@ export function renderProposalGeneratorLayout(selectedLeadId = null) {
     const isAtLimit = limit > 0 ? (used >= limit) : (userTier === 'free');
 
     return `
-        <div class="proposal-generator-container" style="display: flex; flex-direction: column; gap: 20px; padding: 28px; background: #f8fafc; color: #0f172a; border-radius: var(--radius-lg); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+        <div class="proposal-generator-container" style="display: flex; flex-direction: column; gap: 20px; width: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
             
             <!-- Compact Enterprise Header Bar -->
             <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">

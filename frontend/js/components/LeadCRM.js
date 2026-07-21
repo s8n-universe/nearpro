@@ -181,7 +181,7 @@ export function renderLeadCRM(pipelineData, stats) {
     ` : '';
 
     return `
-        <div class="lead-crm-matrix-workspace" style="padding: 32px; background: #f8fafc; color: #0f172a; border-radius: var(--radius-lg); border: 1px solid #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+        <div class="lead-crm-matrix-workspace" style="display: flex; flex-direction: column; gap: 20px; width: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
             <div style="display: flex; flex-direction: column; gap: 24px;">
                 
                 <!-- Workspace Header & Pipeline Statistics Bar -->

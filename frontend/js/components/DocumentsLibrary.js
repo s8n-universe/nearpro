@@ -89,7 +89,7 @@ export function renderDocumentsLibrary(documentsList = [], loading = false) {
     ` : '';
 
     return `
-        <div class="documents-library-workspace-container" style="padding: 32px; background: #f8fafc; color: #0f172a; border-radius: var(--radius-lg); border: 1px solid #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+        <div class="documents-library-workspace-container" style="display: flex; flex-direction: column; gap: 20px; width: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
             <div class="documents-library-workspace" style="display: flex; flex-direction: column; gap: 24px;">
                 
                 <!-- Header capacity widget -->
