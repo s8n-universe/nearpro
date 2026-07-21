@@ -83,12 +83,6 @@ serve(async (req) => {
       throw new Error(`Professional listing loading failed: ${leadErr?.message || 'not found'}`);
     }
 
-    // 5. Query Gemini API to generate custom website prompt
-    const geminiKey = Deno.env.get('GEMINI_API_KEY');
-    if (!geminiKey) {
-      throw new Error("GEMINI_API_KEY environment variable is not set in Supabase");
-    }
-
     const jsonLdType = (lead.category || '').toLowerCase().includes('dentist') ? 'Dentist' : 'LocalBusiness';
     const phone = lead.phone || '+91 98765 43210';
     const cleanPhone = phone.replace(/[^0-9]/g, '');
@@ -167,6 +161,14 @@ Business Hours: ${formattedHours}
 Target Platform: ${platform}
 JSON-LD Type: ${jsonLdType}`;
 
+    // 5. Multi-tier API key and Model fallback execution
+    const defaultGeminiKey = Deno.env.get('GEMINI_API_KEY');
+    const paidGeminiKey = Deno.env.get('GEMINI_PAID_API_KEY');
+
+    if (!defaultGeminiKey && !paidGeminiKey) {
+      throw new Error("GEMINI_API_KEY environment variable is not set in Supabase");
+    }
+
     const modelsToTry = [
       'gemini-3.5-flash',
       'gemini-flash-latest',
@@ -174,44 +176,52 @@ JSON-LD Type: ${jsonLdType}`;
       'gemini-3.1-flash-lite',
       'gemini-pro-latest'
     ];
+
+    const keysToTry: { key: string; label: string }[] = [];
+    if (defaultGeminiKey) keysToTry.push({ key: defaultGeminiKey, label: 'Free/Default API Key' });
+    if (paidGeminiKey && paidGeminiKey !== defaultGeminiKey) keysToTry.push({ key: paidGeminiKey, label: 'Paid Backup API Key' });
+
     let response: Response | null = null;
     let lastError: Error | null = null;
 
-    for (const modelName of modelsToTry) {
-      try {
-        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${geminiKey}`;
-        console.log(`Attempting prompt generation with model: ${modelName}`);
-        
-        const res = await fetch(geminiUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [
-              { role: 'user', parts: [{ text: `${systemPrompt}\n\n${userMessage}` }] }
-            ],
-            generationConfig: {
-              temperature: 0.7,
-              maxOutputTokens: 8192
-            }
-          })
-        });
+    outerLoop:
+    for (const keyObj of keysToTry) {
+      for (const modelName of modelsToTry) {
+        try {
+          const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${keyObj.key}`;
+          console.log(`Attempting prompt generation using [${keyObj.label}] with model [${modelName}]`);
+          
+          const res = await fetch(geminiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [
+                { role: 'user', parts: [{ text: `${systemPrompt}\n\n${userMessage}` }] }
+              ],
+              generationConfig: {
+                temperature: 0.7,
+                maxOutputTokens: 8192
+              }
+            })
+          });
 
-        if (res.status === 200) {
-          response = res;
-          break; // Success!
-        } else {
-          const errText = await res.text();
-          console.warn(`Model ${modelName} returned status ${res.status}: ${errText}`);
-          lastError = new Error(`Gemini API error (${modelName}): ${res.status} - ${errText}`);
+          if (res.status === 200) {
+            response = res;
+            break outerLoop; // Success!
+          } else {
+            const errText = await res.text();
+            console.warn(`[${keyObj.label}] Model ${modelName} returned status ${res.status}: ${errText}`);
+            lastError = new Error(`Gemini API error (${keyObj.label} / ${modelName}): ${res.status} - ${errText}`);
+          }
+        } catch (err) {
+          console.warn(`[${keyObj.label}] Failed fetch for model ${modelName}:`, err);
+          lastError = err;
         }
-      } catch (err) {
-        console.warn(`Failed fetch for model ${modelName}:`, err);
-        lastError = err;
       }
     }
 
     if (!response) {
-      throw lastError || new Error("All attempts to call Gemini API failed");
+      throw lastError || new Error("All attempts to call Gemini API across free models and paid keys failed.");
     }
 
     const resJson = await response.json();
