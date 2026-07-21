@@ -197,10 +197,10 @@ export function bindPromptGeneratorEvents(onLeadSelectCallback, onPlatformSelect
         });
     });
 
-    const platformBtns = document.querySelectorAll('.platform-btn');
-    platformBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const platform = btn.getAttribute('data-platform');
+    const platformCards = document.querySelectorAll('.platform-card');
+    platformCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const platform = card.getAttribute('data-platform');
             if (onPlatformSelectCallback) onPlatformSelectCallback(platform);
         });
     });

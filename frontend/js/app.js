@@ -1733,6 +1733,32 @@ async function renderDashboardLayout(tab) {
                     content.innerHTML = renderPromptGenerator(savedLeads, activeLeadId, selectedPlatform, 'Generating tailored prompt... Please wait.');
                     bindEvents();
 
+                    const statusTitles = [
+                        "Analyzing business profile...",
+                        "Extracting client reviews & ratings...",
+                        "Formatting physical address & hours...",
+                        "Applying conversion rate optimization...",
+                        "Drafting custom specifications for " + (selectedPlatform === 'v0' ? 'v0.dev' : selectedPlatform === 'cursor' ? 'Cursor IDE' : selectedPlatform === 'claude' ? 'Claude Code' : selectedPlatform === 'bolt' ? 'Bolt.new' : 'Lovable.dev') + "..."
+                    ];
+                    const statusDescs = [
+                        "Reviewing category tags and local target parameters",
+                        "Extracting review highlights to build customer validation",
+                        "Setting up operational details & contact endpoints",
+                        "Optimizing CTA links and WhatsApp parameters for client leadgen",
+                        "Structuring React layout file tree and component guidelines"
+                    ];
+                    
+                    let statusIdx = 0;
+                    const statusInterval = setInterval(() => {
+                        statusIdx = (statusIdx + 1) % statusTitles.length;
+                        const titleEl = document.getElementById('generationStatusTitle');
+                        const descEl = document.getElementById('generationStatusDesc');
+                        if (titleEl && descEl) {
+                            titleEl.innerText = statusTitles[statusIdx];
+                            descEl.innerText = statusDescs[statusIdx];
+                        }
+                    }, 1800);
+
                     try {
                         const res = await Api.generateWebsitePrompt(activeLeadId, selectedPlatform);
                         if (res && res.prompt) {
@@ -1743,8 +1769,9 @@ async function renderDashboardLayout(tab) {
                         }
                     } catch (err) {
                         console.error("Failed to generate prompt:", err);
-                        window._promptCache[cacheKey] = `Error generating prompt: ${err.message || 'Unknown error'}. Please try again.`;
+                        window._promptCache[cacheKey] = `Error generating prompt: Edge Function returned a non-2xx status code. Please try again.`;
                     } finally {
+                        clearInterval(statusInterval);
                         window._promptGenerating = null;
                         // Final re-render with result or error
                         content.innerHTML = renderPromptGenerator(savedLeads, activeLeadId, selectedPlatform, window._promptCache[cacheKey] || '');
