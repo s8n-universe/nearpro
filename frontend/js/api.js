@@ -464,6 +464,50 @@ export const Api = {
         return data || [];
     },
 
+    async getTeamMembers() {
+        try {
+            const { data, error } = await supabase
+                .from('team_members')
+                .select('*');
+            if (error) {
+                console.warn("team_members table query warning:", error);
+                return [];
+            }
+            return data || [];
+        } catch (e) {
+            console.warn("getTeamMembers fallback:", e);
+            return [];
+        }
+    },
+
+    async inviteTeamMember(email, role) {
+        const { data: userSession } = await supabase.auth.getSession();
+        const userId = userSession?.session?.user?.id;
+        if (!userId) throw new Error("User session not found");
+
+        const { data, error } = await supabase
+            .from('team_members')
+            .insert([{ 
+                owner_id: userId,
+                email: email,
+                role: role,
+                status: 'invited'
+            }])
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    },
+
+    async removeTeamMember(email) {
+        const { data, error } = await supabase
+            .from('team_members')
+            .delete()
+            .eq('email', email);
+        if (error) throw error;
+        return data;
+    },
+
     async createLeadList(name, description = '', color = '#ffa000') {
         const { data: userSession } = await supabase.auth.getSession();
         const userId = userSession?.session?.user?.id;

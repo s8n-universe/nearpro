@@ -2055,92 +2055,92 @@ async function renderDashboardLayout(tab) {
             const initialScore = calcScore(name, company, serviceBlurb, portfolio, booking);
 
             content.innerHTML = `
-                <div class="settings-container" style="max-width: 1100px; display: flex; flex-direction: column; gap: 24px;">
+                <div class="settings-container" style="max-width: 1100px; display: flex; flex-direction: column; gap: 20px;">
                     
                     <!-- Top Section: Interactive Profile Progress & Timeline Header -->
-                    <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 24px; backdrop-filter: blur(12px);">
+                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 24px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);">
                         
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 12px;">
                             <div>
-                                <h3 style="margin: 0 0 4px 0; font-size: 18px; color: white; font-family: var(--font-heading); font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                                <h3 style="margin: 0 0 4px 0; font-size: 18px; color: #0f172a; font-family: var(--font-heading); font-weight: 800; display: flex; align-items: center; gap: 8px;">
                                     <span>Workspace Personalization Index</span>
                                 </h3>
-                                <div id="profileGuidanceText" style="font-size: 12.5px; color: var(--text-secondary); line-height: 1.4;">
+                                <div id="profileGuidanceText" style="font-size: 13px; color: #475569; font-weight: 500; line-height: 1.4;">
                                     ${initialScore >= 80 ? '⚡ Maximum Personalization: Your AI pitches and outreach assets are fully optimized.' : 'Complete your profile milestones to unlock automated brochure links and targeted AI outreach.'}
                                 </div>
                             </div>
                             
                             <div style="display: flex; align-items: center; gap: 10px;">
-                                <div id="profileScoreBadge" style="background: rgba(255, 160, 0, 0.1); border: 1px solid rgba(255, 160, 0, 0.3); color: var(--accent-gold); font-size: 13px; font-weight: 700; font-family: var(--font-mono); padding: 6px 14px; border-radius: 50px;">
+                                <div id="profileScoreBadge" style="background: #fef3c7; border: 1px solid #fcd34d; color: #b45309; font-size: 13px; font-weight: 800; font-family: var(--font-mono); padding: 6px 14px; border-radius: 50px;">
                                     ${initialScore}% Complete
                                 </div>
                             </div>
                         </div>
 
                         <!-- Dynamic Progress Bar -->
-                        <div style="width: 100%; height: 8px; background: rgba(255, 255, 255, 0.06); border-radius: 10px; overflow: hidden; margin-bottom: 24px;">
-                            <div id="profileProgressFill" style="width: ${initialScore}%; height: 100%; background: linear-gradient(90deg, #ff8c00 0%, #10b981 100%); border-radius: 10px; transition: width 0.4s ease, background 0.4s ease;"></div>
+                        <div style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 20px;">
+                            <div id="profileProgressFill" style="width: ${initialScore}%; height: 100%; background: linear-gradient(90deg, #d97706 0%, #16a34a 100%); border-radius: 10px; transition: width 0.4s ease;"></div>
                         </div>
 
                         <!-- 4-Step Interactive Milestone Timeline -->
-                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;" id="settingsTimelineStack">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;" id="settingsTimelineStack">
                             
                             <!-- Step 1 -->
-                            <div class="timeline-step-node" data-target="settingsFullName" style="background: rgba(255,255,255,0.02); border: 1px solid ${name ? 'rgba(16,185,129,0.4)' : 'var(--border)'}; padding: 14px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s ease;">
+                            <div class="timeline-step-node" data-target="settingsFullName" style="background: #f8fafc; border: 1px solid ${name ? '#86efac' : '#cbd5e1'}; padding: 14px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s ease;">
                                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-                                    <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); font-weight: bold;">STEP 01</span>
+                                    <span style="font-size: 11px; font-family: var(--font-mono); color: #64748b; font-weight: 800;">STEP 01</span>
                                     <span id="step1Icon" style="font-size: 14px;">${name ? '✅' : '👤'}</span>
                                 </div>
-                                <div style="font-size: 13px; font-weight: 700; color: white; font-family: var(--font-heading); margin-bottom: 2px;">Identity & Role</div>
-                                <div style="font-size: 11px; color: var(--text-muted);">Unlocks AI Message Signatures</div>
+                                <div style="font-size: 13.5px; font-weight: 700; color: #0f172a; font-family: var(--font-heading); margin-bottom: 2px;">Identity & Role</div>
+                                <div style="font-size: 11.5px; color: #475569; font-weight: 500;">Unlocks AI Message Signatures</div>
                             </div>
 
                             <!-- Step 2 -->
-                            <div class="timeline-step-node" data-target="settingsCompanyName" style="background: rgba(255,255,255,0.02); border: 1px solid ${company || serviceBlurb ? 'rgba(16,185,129,0.4)' : 'var(--border)'}; padding: 14px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s ease;">
+                            <div class="timeline-step-node" data-target="settingsCompanyName" style="background: #f8fafc; border: 1px solid ${company || serviceBlurb ? '#86efac' : '#cbd5e1'}; padding: 14px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s ease;">
                                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-                                    <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); font-weight: bold;">STEP 02</span>
+                                    <span style="font-size: 11px; font-family: var(--font-mono); color: #64748b; font-weight: 800;">STEP 02</span>
                                     <span id="step2Icon" style="font-size: 14px;">${company || serviceBlurb ? '✅' : '🎯'}</span>
                                 </div>
-                                <div style="font-size: 13px; font-weight: 700; color: white; font-family: var(--font-heading); margin-bottom: 2px;">Brand & Service</div>
-                                <div style="font-size: 11px; color: var(--text-muted);">Unlocks WhatsApp AI Pitching</div>
+                                <div style="font-size: 13.5px; font-weight: 700; color: #0f172a; font-family: var(--font-heading); margin-bottom: 2px;">Brand & Service</div>
+                                <div style="font-size: 11.5px; color: #475569; font-weight: 500;">Unlocks WhatsApp AI Pitching</div>
                             </div>
 
                             <!-- Step 3 -->
-                            <div class="timeline-step-node" data-target="settingsPortfolioUrl" style="background: rgba(255,255,255,0.02); border: 1px solid ${portfolio && booking ? 'rgba(16,185,129,0.4)' : 'var(--border)'}; padding: 14px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s ease;">
+                            <div class="timeline-step-node" data-target="settingsPortfolioUrl" style="background: #f8fafc; border: 1px solid ${portfolio && booking ? '#86efac' : '#cbd5e1'}; padding: 14px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s ease;">
                                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-                                    <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); font-weight: bold;">STEP 03</span>
+                                    <span style="font-size: 11px; font-family: var(--font-mono); color: #64748b; font-weight: 800;">STEP 03</span>
                                     <span id="step3Icon" style="font-size: 14px;">${portfolio && booking ? '✅' : '🔗'}</span>
                                 </div>
-                                <div style="font-size: 13px; font-weight: 700; color: white; font-family: var(--font-heading); margin-bottom: 2px;">Outreach Assets</div>
-                                <div style="font-size: 11px; color: var(--text-muted);">Unlocks Auto-Brochure & Scheduling</div>
+                                <div style="font-size: 13.5px; font-weight: 700; color: #0f172a; font-family: var(--font-heading); margin-bottom: 2px;">Outreach Assets</div>
+                                <div style="font-size: 11.5px; color: #475569; font-weight: 500;">Unlocks Auto-Brochure & Scheduling</div>
                             </div>
 
                             <!-- Step 4 -->
-                            <div class="timeline-step-node" data-target="changeBillingPlanBtn" style="background: rgba(255,160,0,0.03); border: 1px solid rgba(255,160,0,0.3); padding: 14px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s ease;">
+                            <div class="timeline-step-node" data-target="changeBillingPlanBtn" style="background: #fffbeb; border: 1px solid #fcd34d; padding: 14px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s ease;">
                                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-                                    <span style="font-size: 11px; font-family: var(--font-mono); color: var(--accent-gold); font-weight: bold;">STEP 04</span>
+                                    <span style="font-size: 11px; font-family: var(--font-mono); color: #b45309; font-weight: 800;">STEP 04</span>
                                     <span style="font-size: 14px;">👑</span>
                                 </div>
-                                <div style="font-size: 13px; font-weight: 700; color: white; font-family: var(--font-heading); margin-bottom: 2px;">Growth Tier</div>
-                                <div style="font-size: 11px; color: var(--text-muted);">${userTier.toUpperCase()} Plan Active</div>
+                                <div style="font-size: 13.5px; font-weight: 700; color: #0f172a; font-family: var(--font-heading); margin-bottom: 2px;">Growth Tier</div>
+                                <div style="font-size: 11.5px; color: #b45309; font-weight: 700;">${userTier.toUpperCase()} Plan Active</div>
                             </div>
 
                         </div>
                     </div>
 
                     <!-- Split-Screen Main Content Layout -->
-                    <div style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 24px; align-items: start;">
+                    <div style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 20px; align-items: start;">
                         
                         <!-- Left Column: Form Configurations Card -->
-                        <div class="settings-wrap" style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 28px; display: flex; flex-direction: column; gap: 20px; backdrop-filter: blur(12px);">
+                        <div class="settings-wrap" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 24px; display: flex; flex-direction: column; gap: 18px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);">
                             
-                            <h4 style="margin: 0; color: white; font-family: var(--font-heading); font-size: 16px; font-weight: 700; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+                            <h4 style="margin: 0; color: #0f172a; font-family: var(--font-heading); font-size: 16px; font-weight: 800; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;">
                                 Workspace Configurations
                             </h4>
                             
                             <div>
-                                <label style="display: block; font-size: 12px; font-weight: 600; color: #e2e8f0; font-family: var(--font-heading); margin-bottom: 6px;">My Professional Role</label>
-                                <select id="settingsRole" style="width: 100%; padding: 12px; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13.5px; outline: none; transition: all 0.2s ease; margin-bottom: 8px;">
+                                <label style="display: block; font-size: 12.5px; font-weight: 700; color: #334155; font-family: var(--font-heading); margin-bottom: 6px;">My Professional Role</label>
+                                <select id="settingsRole" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none; transition: all 0.2s ease; margin-bottom: 8px;">
                                     <option value="freelancer" ${role === 'freelancer' ? 'selected' : ''}>💻 Freelancer</option>
                                     <option value="agency" ${role === 'agency' ? 'selected' : ''}>🏢 Agency Owner</option>
                                     <option value="sales_team" ${role === 'sales_team' ? 'selected' : ''}>📈 Sales Representative</option>
@@ -2148,27 +2148,27 @@ async function renderDashboardLayout(tab) {
                                     <option value="other" ${role && !['freelancer', 'agency', 'sales_team', 'startup'].includes(role) ? 'selected' : ''}>❓ Other...</option>
                                 </select>
                                 <div id="settingsCustomRoleContainer" style="display: ${role && !['freelancer', 'agency', 'sales_team', 'startup'].includes(role) ? 'block' : 'none'};">
-                                    <input type="text" id="settingsCustomRole" value="${role && !['freelancer', 'agency', 'sales_team', 'startup'].includes(role) ? role : ''}" placeholder="Enter your professional role..." style="width: 100%; padding: 12px; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13.5px; outline: none;" />
+                                    <input type="text" id="settingsCustomRole" value="${role && !['freelancer', 'agency', 'sales_team', 'startup'].includes(role) ? role : ''}" placeholder="Enter your professional role..." style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none;" />
                                 </div>
                             </div>
 
-                            <h4 style="margin: 10px 0 0 0; color: white; font-family: var(--font-heading); font-size: 16px; font-weight: 700; border-top: 1px solid var(--border); padding-top: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+                            <h4 style="margin: 6px 0 0 0; color: #0f172a; font-family: var(--font-heading); font-size: 16px; font-weight: 800; border-top: 1px solid #e2e8f0; padding-top: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;">
                                 Personalization Settings
                             </h4>
                             
                             <div>
-                                <label style="display: block; font-size: 12px; font-weight: 600; color: #e2e8f0; font-family: var(--font-heading); margin-bottom: 6px;">Your Full Name</label>
-                                <input type="text" id="settingsFullName" value="${name}" placeholder="e.g. Shri Naik" style="width: 100%; padding: 12px; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13.5px; outline: none; transition: all 0.2s ease;" />
+                                <label style="display: block; font-size: 12.5px; font-weight: 700; color: #334155; font-family: var(--font-heading); margin-bottom: 6px;">Your Full Name</label>
+                                <input type="text" id="settingsFullName" value="${name}" placeholder="e.g. Shri Naik" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none; transition: all 0.2s ease;" />
                             </div>
 
                             <div>
-                                <label style="display: block; font-size: 12px; font-weight: 600; color: #e2e8f0; font-family: var(--font-heading); margin-bottom: 6px;">Agency / Company Name</label>
-                                <input type="text" id="settingsCompanyName" value="${company}" placeholder="e.g. NearPro Agency" style="width: 100%; padding: 12px; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13.5px; outline: none; transition: all 0.2s ease;" />
+                                <label style="display: block; font-size: 12.5px; font-weight: 700; color: #334155; font-family: var(--font-heading); margin-bottom: 6px;">Agency / Company Name</label>
+                                <input type="text" id="settingsCompanyName" value="${company}" placeholder="e.g. NearPro Agency" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none; transition: all 0.2s ease;" />
                             </div>
 
                             <div>
-                                <label style="display: block; font-size: 12px; font-weight: 600; color: #e2e8f0; font-family: var(--font-heading); margin-bottom: 6px;">My Primary Service Blurb</label>
-                                <select id="settingsServiceSelect" style="width: 100%; padding: 12px; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13.5px; outline: none; margin-bottom: 8px;">
+                                <label style="display: block; font-size: 12.5px; font-weight: 700; color: #334155; font-family: var(--font-heading); margin-bottom: 6px;">My Primary Service Blurb</label>
+                                <select id="settingsServiceSelect" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none; margin-bottom: 8px;">
                                     <option value="I build websites for local businesses" ${serviceBlurb === 'I build websites for local businesses' ? 'selected' : ''}>💻 Web Design ("I build websites for local businesses")</option>
                                     <option value="I help businesses improve their Google ranking" ${serviceBlurb === 'I help businesses improve their Google ranking' ? 'selected' : ''}>📈 SEO ("I help businesses improve their Google ranking")</option>
                                     <option value="I offer tax and accounting services to businesses" ${serviceBlurb === 'I offer tax and accounting services to businesses' ? 'selected' : ''}>⚖️ CA/Finance ("I offer tax and accounting services to businesses")</option>
@@ -2177,46 +2177,46 @@ async function renderDashboardLayout(tab) {
                                     <option value="custom" ${!['I build websites for local businesses', 'I help businesses improve their Google ranking', 'I offer tax and accounting services to businesses', 'I help businesses get more customers through digital marketing', "I'm a commercial real estate consultant"].includes(serviceBlurb) && serviceBlurb ? 'selected' : ''}>💼 Custom Service...</option>
                                 </select>
                                 <div id="settingsCustomServiceContainer" style="display: ${!['I build websites for local businesses', 'I help businesses improve their Google ranking', 'I offer tax and accounting services to businesses', 'I help businesses get more customers through digital marketing', "I'm a commercial real estate consultant"].includes(serviceBlurb) && serviceBlurb ? 'block' : 'none'};">
-                                    <input type="text" id="settingsCustomService" value="${!['I build websites for local businesses', 'I help businesses improve their Google ranking', 'I offer tax and accounting services to businesses', 'I help businesses get more customers through digital marketing', "I'm a commercial real estate consultant"].includes(serviceBlurb) ? serviceBlurb : ''}" placeholder="Describe your service in one sentence..." style="width: 100%; padding: 12px; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13.5px; outline: none;" />
+                                    <input type="text" id="settingsCustomService" value="${!['I build websites for local businesses', 'I help businesses improve their Google ranking', 'I offer tax and accounting services to businesses', 'I help businesses get more customers through digital marketing', "I'm a commercial real estate consultant"].includes(serviceBlurb) ? serviceBlurb : ''}" placeholder="Describe your service in one sentence..." style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none;" />
                                 </div>
                             </div>
 
                             <div>
-                                <label style="display: block; font-size: 12px; font-weight: 600; color: #e2e8f0; font-family: var(--font-heading); margin-bottom: 6px;">Custom Portfolio URL</label>
-                                <input type="url" id="settingsPortfolioUrl" value="${portfolio}" placeholder="e.g. https://myagency.com" style="width: 100%; padding: 12px; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13.5px; outline: none; transition: all 0.2s ease;" />
+                                <label style="display: block; font-size: 12.5px; font-weight: 700; color: #334155; font-family: var(--font-heading); margin-bottom: 6px;">Custom Portfolio URL</label>
+                                <input type="url" id="settingsPortfolioUrl" value="${portfolio}" placeholder="e.g. https://myagency.com" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none; transition: all 0.2s ease;" />
                             </div>
 
                             <div>
-                                <label style="display: block; font-size: 12px; font-weight: 600; color: #e2e8f0; font-family: var(--font-heading); margin-bottom: 6px;">Meeting Booking Link</label>
-                                <input type="url" id="settingsBookingUrl" value="${booking}" placeholder="e.g. https://calendly.com/shri" style="width: 100%; padding: 12px; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13.5px; outline: none; transition: all 0.2s ease;" />
+                                <label style="display: block; font-size: 12.5px; font-weight: 700; color: #334155; font-family: var(--font-heading); margin-bottom: 6px;">Meeting Booking Link</label>
+                                <input type="url" id="settingsBookingUrl" value="${booking}" placeholder="e.g. https://calendly.com/shri" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none; transition: all 0.2s ease;" />
                             </div>
                             
-                            <div style="border-top: 1px solid var(--border); padding-top: 20px;">
-                                <label style="display: block; font-size: 12px; font-weight: 600; color: #e2e8f0; font-family: var(--font-heading); margin-bottom: 6px;">Billing Information</label>
-                                <div style="padding: 14px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; color: var(--text-secondary); display: flex; justify-content: space-between; align-items: center;">
-                                    <div>Current Tier: <strong style="color: var(--accent-gold); text-transform: uppercase;">${userTier} Plan</strong></div>
-                                    <button class="brand-btn" id="changeBillingPlanBtn" style="padding: 6px 14px; font-size: 11.5px; cursor: pointer;">Upgrade Subscription</button>
+                            <div style="border-top: 1px solid #e2e8f0; padding-top: 16px;">
+                                <label style="display: block; font-size: 12.5px; font-weight: 700; color: #334155; font-family: var(--font-heading); margin-bottom: 6px;">Billing Information</label>
+                                <div style="padding: 12px 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-sm); font-size: 13px; color: #334155; font-weight: 600; display: flex; justify-content: space-between; align-items: center;">
+                                    <div>Current Tier: <strong style="color: #d97706; font-weight: 800; text-transform: uppercase;">${userTier} Plan</strong></div>
+                                    <button class="brand-btn" id="changeBillingPlanBtn" style="padding: 6px 14px; font-size: 11.5px; cursor: pointer; background: #2563eb; color: white; border: none; border-radius: 6px; font-weight: 700;">Upgrade Subscription</button>
                                 </div>
                             </div>
                             
-                            <button class="brand-btn" id="saveSettingsBtn" style="width: 100%; padding: 14px; font-weight: 700; cursor: pointer; font-size: 14px; margin-top: 10px;">Save Configuration</button>
+                            <button class="brand-btn" id="saveSettingsBtn" style="width: 100%; padding: 12px; font-weight: 800; cursor: pointer; font-size: 14px; background: #2563eb; color: white; border: none; border-radius: 8px; box-shadow: 0 4px 12px rgba(37,99,235,0.25); margin-top: 6px;">Save Configuration</button>
                         </div>
 
                         <!-- Right Column: Live AI Pitch Preview Box -->
-                        <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 24px; backdrop-filter: blur(12px); position: sticky; top: 20px;">
+                        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 24px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04); position: sticky; top: 20px;">
                             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-                                <div style="font-size: 15px; font-weight: 700; color: white; font-family: var(--font-heading);">Live AI Pitch Preview</div>
-                                <span style="font-size: 11px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #10b981; padding: 2px 8px; border-radius: 4px; font-family: var(--font-mono);">Real-Time</span>
+                                <div style="font-size: 15px; font-weight: 800; color: #0f172a; font-family: var(--font-heading);">Live AI Pitch Preview</div>
+                                <span style="font-size: 11px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #059669; font-weight: 800; padding: 2px 8px; border-radius: 4px; font-family: var(--font-mono);">Real-Time</span>
                             </div>
 
-                            <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.4; margin-bottom: 16px;">
+                            <p style="font-size: 12.5px; color: #475569; font-weight: 500; line-height: 1.4; margin-bottom: 16px;">
                                 This is how your WhatsApp & Email outreach messages will automatically look when reaching out to leads:
                             </p>
 
                             <!-- Live Card -->
-                            <div style="background: rgba(16, 185, 129, 0.03); border: 1px solid rgba(16, 185, 129, 0.2); padding: 18px; border-radius: var(--radius-md); font-family: var(--font-mono); font-size: 12px; line-height: 1.6; color: #e2e8f0; white-space: pre-wrap;" id="liveAiPitchPreviewBox">Loading live preview...</div>
+                            <div style="background: #f8fafc; border: 1px solid #bfdbfe; padding: 18px; border-radius: var(--radius-md); font-family: var(--font-mono); font-size: 12px; line-height: 1.6; color: #0f172a; font-weight: 500; white-space: pre-wrap;" id="liveAiPitchPreviewBox">Loading live preview...</div>
 
-                            <div style="margin-top: 16px; font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
+                            <div style="margin-top: 16px; font-size: 11.5px; color: #64748b; font-weight: 500; display: flex; align-items: center; gap: 6px;">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
                                 <span>Changes update dynamically as you fill in your profile fields.</span>
                             </div>
