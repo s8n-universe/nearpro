@@ -1987,9 +1987,20 @@ async function renderDashboardLayout(tab) {
             const searchParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
             const activeSubTab = searchParams.get('sub') || 'seats';
 
-            // Fetch real team members from Supabase (not localStorage)
-            let members = await Api.getTeamMembers();
-            const dataRequests = await loadDataRequests();
+            // Fetch real team members & data requests with safe fallbacks
+            let members = [];
+            try {
+                members = await Api.getTeamMembers();
+            } catch (e) {
+                console.warn("getTeamMembers failed, using fallback []", e);
+            }
+
+            let dataRequests = [];
+            try {
+                dataRequests = await loadDataRequests();
+            } catch (e) {
+                console.warn("loadDataRequests failed, using fallback []", e);
+            }
 
             if (content) {
                 content.innerHTML = renderTeamWorkspace(members, dataRequests, activeSubTab);
@@ -2029,7 +2040,9 @@ async function renderDashboardLayout(tab) {
             }
         } catch (err) {
             console.error("Failed to load Team Workspace: ", err);
-            if (content) content.innerHTML = `<p style="color: var(--accent-pink);">Error loading Team Workspace.</p>`;
+            if (content) {
+                content.innerHTML = renderTeamWorkspace([], [], 'seats');
+            }
         }
 
     } else if (tab === 'settings') {

@@ -508,6 +508,43 @@ export const Api = {
         return data;
     },
 
+    async getDataRequests() {
+        try {
+            const { data, error } = await supabase
+                .from('data_requests')
+                .select('*')
+                .order('created_at', { ascending: false });
+            if (error) {
+                console.warn("data_requests table query warning:", error);
+                return [];
+            }
+            return data || [];
+        } catch (e) {
+            console.warn("getDataRequests fallback:", e);
+            return [];
+        }
+    },
+
+    async requestCustomData(niche, city, notes = '') {
+        const { data: userSession } = await supabase.auth.getSession();
+        const userId = userSession?.session?.user?.id;
+        if (!userId) throw new Error("User session not found");
+
+        const { data, error } = await supabase
+            .from('data_requests')
+            .insert([{ 
+                user_id: userId,
+                requested_niche: niche,
+                requested_city: city,
+                notes: notes,
+                status: 'pending'
+            }])
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    },
+
     async createLeadList(name, description = '', color = '#ffa000') {
         const { data: userSession } = await supabase.auth.getSession();
         const userId = userSession?.session?.user?.id;
