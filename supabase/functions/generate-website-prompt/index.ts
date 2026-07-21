@@ -132,10 +132,25 @@ Guidelines for Claude Code target prompt:
 - Focus on raw coding efficiency, clean layout hierarchy, and robust, zero-dependency Javascript features (e.g. form validations, scroll animations-based visibility).`;
     }
 
+    let formattedHours = "Not Specified";
+    if (lead.hours) {
+      try {
+        const hoursObj = typeof lead.hours === 'string' ? JSON.parse(lead.hours) : lead.hours;
+        formattedHours = Object.entries(hoursObj)
+          .map(([day, time]) => `${day}: ${time}`)
+          .join(', ');
+      } catch (e) {
+        formattedHours = JSON.stringify(lead.hours);
+      }
+    }
+
     const systemPrompt = `You are an expert system prompt engineer. Your job is to output a customized prompt that a user can paste into builder tools like Lovable, Bolt.new, or Claude Code to build a highly optimized single-page landing page website for a local business.
 Generate a tailored, highly specific, and creative system prompt that incorporates the business details and matches the requested builder platform.
 
-${platformInstructions}`;
+${platformInstructions}
+
+CRITICAL RULES:
+- The generated prompt MUST explicitly instruct the target builder to include the specific physical address, original website domain (if any), and business operating hours in the footer or contact sections so that the generated demo site is fully operational and client-oriented.`;
 
     const userMessage = `Generate a website builder prompt for:
 Name: ${lead.name}
@@ -145,6 +160,9 @@ Rating: ${lead.rating || '4.5'}
 Review Count: ${lead.review_count || '25'}
 Phone: ${phone}
 WhatsApp link suffix: ${cleanPhone}
+Address: ${lead.address || 'Not specified'}
+Website URL: ${lead.website || 'No existing website'}
+Business Hours: ${formattedHours}
 Target Platform: ${platform}
 JSON-LD Type: ${jsonLdType}`;
 
