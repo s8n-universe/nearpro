@@ -47,7 +47,6 @@ export function renderWebsiteAudit(leadsWithWebsites, activeAuditLeadId = null, 
             </div>
         `;
     } else if (auditResult) {
-    } else if (auditResult) {
         const score = auditResult.page_speed_score || 0;
         let scoreColor = '#dc2626'; // Red
         if (score >= 80) scoreColor = '#059669'; // Green
