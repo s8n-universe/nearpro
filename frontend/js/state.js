@@ -89,6 +89,7 @@ export const State = {
     
     toggleView(viewName) {
         if (viewName === "grid" || viewName === "map") {
+            if (this.view === viewName) return;
             this.view = viewName;
             this.notify();
         }
@@ -149,10 +150,12 @@ export const State = {
 
     setAuthModal(isOpen) {
         if (isOpen && this.user) {
+            if (this.auth_modal_open === false) return;
             this.auth_modal_open = false;
             this.notify();
             return;
         }
+        if (this.auth_modal_open === isOpen) return;
         this.auth_modal_open = isOpen;
         this.notify();
     },
@@ -160,6 +163,7 @@ export const State = {
     pricing_modal_open: false,
     
     setPricingModal(isOpen) {
+        if (this.pricing_modal_open === isOpen) return;
         this.pricing_modal_open = isOpen;
         this.notify();
     },
@@ -189,11 +193,13 @@ export const State = {
     },
 
     setSurveyModal(isOpen) {
+        if (this.survey_modal_open === isOpen) return;
         this.survey_modal_open = isOpen;
         this.notify();
     },
 
     setPersonalizationModal(isOpen) {
+        if (this.personalization_modal_open === isOpen) return;
         this.personalization_modal_open = isOpen;
         this.notify();
     },

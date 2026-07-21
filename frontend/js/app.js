@@ -47,10 +47,6 @@ const appShell = document.getElementById('app');
 // State Subscription - Centralized UI synchronization
 State.subscribe(async (currentState) => {
     State.locked = false;
-    const isPremium = currentUserHasAccess('scout');
-    if (isPremium && State.pricing_modal_open) {
-        State.pricing_modal_open = false;
-    }
 
     // Check if we are on dashboard or browse routes
     const isDashboard = window.location.hash.startsWith('#/dashboard');
@@ -598,7 +594,10 @@ function renderFeedContent(hasMore) {
         const cardsHTML = displayedLeads.map((p, idx) => renderProfessionalCard(p, idx)).join('');
         
         // Step 2: Audit Gap Trigger (Greed & Urgency Banner)
-        const noWebLeads = State.professionals.filter(p => !p.website || p.website.trim() === '');
+        const noWebLeads = State.professionals.filter(p => 
+            (!p.website || p.website.trim() === '') && 
+            ((p.phone && p.phone.trim() !== '') || (p.email && p.email.trim() !== ''))
+        );
         const lowRatingLeads = State.professionals.filter(p => p.rating && p.rating < 4.0);
         const categoryLabel = State.filters.category || State.filters.parentCategory || 'Business';
         const areaLabel = State.filters.area || 'Mumbai';

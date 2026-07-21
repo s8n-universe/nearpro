@@ -61,19 +61,19 @@ export function renderDashboardShell(activeTab = 'crm') {
     let upgradeButtonHTML = '';
     if (userTier === 'free') {
         upgradeButtonHTML = `
-            <button class="brand-btn upgrade-cta" onclick="window.State.selectPlan('scout')" style="width: 100%; padding: 10px; font-weight: 700; font-size: 13px;">
+            <button class="brand-btn upgrade-cta" onclick="window.State.setPricingModal(true)" style="width: 100%; padding: 10px; font-weight: 700; font-size: 13px;">
                 Upgrade to Scout (₹499)
             </button>
         `;
     } else if (userTier === 'scout') {
         upgradeButtonHTML = `
-            <button class="brand-btn upgrade-cta" onclick="window.State.selectPlan('hunter')" style="width: 100%; padding: 10px; font-weight: 700; font-size: 13px;">
+            <button class="brand-btn upgrade-cta" onclick="window.State.setPricingModal(true)" style="width: 100%; padding: 10px; font-weight: 700; font-size: 13px;">
                 Upgrade to Hunter (₹999)
             </button>
         `;
     } else if (userTier === 'hunter') {
         upgradeButtonHTML = `
-            <button class="brand-btn upgrade-cta" onclick="window.State.selectPlan('agency')" style="width: 100%; padding: 10px; font-weight: 700; font-size: 13px;">
+            <button class="brand-btn upgrade-cta" onclick="window.State.setPricingModal(true)" style="width: 100%; padding: 10px; font-weight: 700; font-size: 13px;">
                 Upgrade to Agency (₹2499)
             </button>
         `;

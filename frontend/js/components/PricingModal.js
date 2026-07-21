@@ -79,18 +79,54 @@ export function renderPricingModal() {
                 'Niche Gap Analysis & Lead Scoring',
                 'All Hunter Plan Features Included'
             ]
+        },
+        enterprise: {
+            id: 'enterprise',
+            level: 4,
+            name: 'Enterprise Plan',
+            tagline: 'Enterprise Tier',
+            priceMonthly: 'Custom',
+            priceYearly: 'Custom',
+            subtext: 'Contact sales for custom solutions',
+            badge: userTier === 'enterprise' ? 'CURRENT ACTIVE PLAN' : 'CUSTOM SOLUTIONS',
+            features: [
+                'Unlimited team seats & shared lists',
+                'Developer API access (PostgREST)',
+                'Custom city database discovery runs',
+                'Salesforce and HubSpot CRM sync',
+                'Dedicated account manager & SLA'
+            ]
         }
     };
 
-    // Filter out plans that are lower than the user's active tier
-    // (e.g. If user is on Scout, hide Explorer; if on Hunter, hide Explorer & Scout)
-    const availablePlanKeys = ['free', 'scout', 'hunter', 'agency'].filter(key => {
+    // Filter out plans that are less than or equal to the user's active tier
+    // (Show only strictly higher upgrade plans)
+    const availablePlanKeys = ['scout', 'hunter', 'agency', 'enterprise'].filter(key => {
         const lvl = planDetails[key].level;
-        if (userLevel === 0) return true; // Show all plans for free users
-        return lvl >= userLevel; // For paid users, show current active plan and higher upgrade plans
+        return lvl > userLevel;
     });
 
     const plansToRender = availablePlanKeys.map(k => planDetails[k]);
+
+    if (plansToRender.length === 0) {
+        return `
+            <div class="modal-overlay open" id="pricingModalOverlay" style="z-index: 10000;">
+                <div class="modal-card pricing-modal-inner" style="max-width: 500px; width: 95%; padding: 36px; text-align: center; position: relative;">
+                    <button class="modal-close-btn" id="closePricingModalBtn" style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer;">&times;</button>
+                    <div style="font-size: 40px; margin-bottom: 12px;">👑</div>
+                    <h2 style="font-size: 24px; margin-bottom: 12px; font-family: var(--font-heading); color: white; font-weight: 700;">
+                        Enterprise Tier Active
+                    </h2>
+                    <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.5; margin-bottom: 24px;">
+                        You are currently on the highest plan (Enterprise Plan). Thank you for using NearPro! If you need to make any changes to your subscription, please contact support.
+                    </p>
+                    <a href="mailto:s8nservice@gmail.com?subject=NearPro%20Subscription%20Inquiry" class="brand-btn" style="padding: 10px 24px; text-decoration: none; display: inline-block;">
+                        Contact Support
+                    </a>
+                </div>
+            </div>
+        `;
+    }
 
     return `
         <div class="modal-overlay open" id="pricingModalOverlay" style="z-index: 10000;">
@@ -145,8 +181,8 @@ export function renderPricingModal() {
                     ${plansToRender.map(plan => {
                         const isCurrentActive = plan.id === userTier;
                         const isHunter = plan.id === 'hunter';
-                        const price = cycle === 'yearly' ? plan.priceYearly : plan.priceMonthly;
-                        const period = cycle === 'yearly' ? '/year' : '/month';
+                        const price = plan.id === 'enterprise' ? 'Custom' : (cycle === 'yearly' ? plan.priceYearly : plan.priceMonthly);
+                        const period = plan.id === 'enterprise' ? '' : (cycle === 'yearly' ? '/year' : '/month');
 
                         let borderColor = 'rgba(255, 255, 255, 0.1)';
                         let bgGradient = 'rgba(15, 23, 42, 0.6)';
@@ -160,13 +196,16 @@ export function renderPricingModal() {
                         } else if (plan.id === 'agency') {
                             borderColor = 'rgba(236, 72, 153, 0.3)';
                             bgGradient = 'rgba(236, 72, 153, 0.03)';
+                        } else if (plan.id === 'enterprise') {
+                            borderColor = 'rgba(255, 255, 255, 0.3)';
+                            bgGradient = 'rgba(255, 255, 255, 0.02)';
                         }
 
                         return `
                             <div style="background: ${bgGradient}; border: 1.5px solid ${borderColor}; border-radius: var(--radius-md); padding: 24px; display: flex; flex-direction: column; justify-content: space-between; position: relative; backdrop-filter: blur(12px);">
                                 
                                 ${plan.badge ? `
-                                    <div style="position: absolute; top: -12px; right: 16px; background: ${isCurrentActive ? '#10b981' : (isHunter ? 'var(--accent-gold)' : 'var(--accent-pink)')}; color: black; font-size: 9px; font-family: var(--font-mono); padding: 3px 10px; border-radius: 50px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
+                                    <div style="position: absolute; top: -12px; right: 16px; background: ${isCurrentActive ? '#10b981' : (isHunter ? 'var(--accent-gold)' : (plan.id === 'agency' ? 'var(--accent-pink)' : '#64748b'))}; color: ${plan.id === 'enterprise' ? 'white' : 'black'}; font-size: 9px; font-family: var(--font-mono); padding: 3px 10px; border-radius: 50px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
                                         ${plan.badge}
                                     </div>
                                 ` : ''}
@@ -206,6 +245,10 @@ export function renderPricingModal() {
                                         <button class="secondary-btn" disabled style="width: 100%; padding: 11px; font-size: 12.5px; font-weight: 700; opacity: 0.7; cursor: not-allowed; border-color: rgba(16, 185, 129, 0.4); color: #10b981;">
                                             Current Active Plan
                                         </button>
+                                    ` : plan.id === 'enterprise' ? `
+                                        <a href="mailto:s8nservice@gmail.com?subject=NearPro%20Enterprise%20Plan%20Inquiry" class="brand-btn" style="width: 100%; padding: 11px; font-size: 12.5px; font-weight: 700; text-decoration: none; text-align: center; display: block; box-sizing: border-box; background: var(--bg-surface); color: white; border: 1px solid var(--border);">
+                                            Contact Us
+                                        </a>
                                     ` : `
                                         <button class="brand-btn" style="width: 100%; padding: 11px; font-size: 12.5px; font-weight: 700; ${plan.id === 'agency' ? 'background: linear-gradient(135deg, var(--accent-pink), #a855f7);' : ''}" onclick="window.State.selectPlan('${plan.id}', '${cycle}');">
                                             ${plan.level > userLevel ? `Upgrade to ${plan.name.split(' ')[0]}` : `Switch to ${plan.name.split(' ')[0]}`}

@@ -181,6 +181,7 @@ export const Api = {
             countQuery = countQuery.not('website', 'is', null).neq('website', '');
         } else if (filters.no_website || filters.website_filter === 'no_website') {
             countQuery = countQuery.or('website.is.null,website.eq.');
+            countQuery = countQuery.or('phone.not.is.null,email.not.is.null');
         }
         if (filters.search && filters.search.trim()) {
             const s = filters.search.trim();
@@ -242,7 +243,10 @@ export const Api = {
             if (!errorOccurred) {
                 items = data || [];
                 if (clientSideFilterNoWeb || filters.no_website || filters.website_filter === 'no_website') {
-                    items = items.filter(p => !p.website || p.website.trim() === '');
+                    items = items.filter(p => 
+                        (!p.website || p.website.trim() === '') && 
+                        ((p.phone && p.phone.trim() !== '') || (p.email && p.email.trim() !== ''))
+                    );
                 }
             }
         } catch (e) {
@@ -268,6 +272,7 @@ export const Api = {
                 fallbackQuery = fallbackQuery.not('website', 'is', null).neq('website', '');
             } else if (filters.no_website || filters.website_filter === 'no_website') {
                 fallbackQuery = fallbackQuery.or('website.is.null,website.eq.');
+                fallbackQuery = fallbackQuery.or('phone.not.is.null,email.not.is.null');
             }
             
             if (filters.search && filters.search.trim()) {
