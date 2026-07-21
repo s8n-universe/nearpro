@@ -50,27 +50,54 @@ export function renderTeamWorkspace(members = [], dataRequests = [], activeTab =
 
     const requestsHTML = safeRequests.map(r => {
         const date = new Date(r.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-        const statusColor = r.status === 'fulfilled' ? '#059669' : '#d97706';
+        const isCompleted = r.status === 'fulfilled' || r.status === 'completed';
+        const statusBadge = isCompleted 
+            ? `<span style="font-size:11px; font-weight:800; color:#059669; background:#ecfdf5; border:1px solid #a7f3d0; padding:3px 10px; border-radius:50px; text-transform:uppercase;">✅ Completed</span>`
+            : `<span style="font-size:11px; font-weight:800; color:#d97706; background:#fffbeb; border:1px solid #fcd34d; padding:3px 10px; border-radius:50px; text-transform:uppercase;">⚙️ In Extraction Pipeline (SLA 2-6h)</span>`;
+        
         return `
-            <div style="padding:16px; background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; margin-bottom:12px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                    <h5 style="margin:0; font-size:14px; font-weight:700; color:#0f172a; font-family:var(--font-heading);">${r.requested_niche} in ${r.requested_city}</h5>
-                    <span style="font-size:11px; font-weight:800; color:${statusColor}; text-transform:uppercase;">${r.status}</span>
+            <div style="padding:20px; background:#ffffff; border:1px solid #cbd5e1; border-radius:12px; margin-bottom:14px; box-shadow:0 2px 8px rgba(15,23,42,0.03);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+                    <div>
+                        <h5 style="margin:0 0 2px 0; font-size:15px; font-weight:800; color:#0f172a; font-family:var(--font-heading); display:flex; align-items:center; gap:8px;">
+                            <span>${r.requested_niche}</span>
+                            <span style="font-size:12px; color:#64748b; font-weight:600;">in ${r.requested_city}</span>
+                        </h5>
+                    </div>
+                    ${statusBadge}
                 </div>
-                <div style="font-size:13px; color:#475569; line-height:1.4; margin-bottom:6px;">
-                    ${r.notes || 'No notes specified.'}
+                
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+                    <span style="font-size:11.5px; background:#f1f5f9; border:1px solid #e2e8f0; color:#334155; font-weight:600; padding:2px 8px; border-radius:4px;">🎯 Niche: ${r.requested_niche}</span>
+                    <span style="font-size:11.5px; background:#f1f5f9; border:1px solid #e2e8f0; color:#334155; font-weight:600; padding:2px 8px; border-radius:4px;">📍 Region: ${r.requested_city}</span>
+                    <span style="font-size:11.5px; background:#eff6ff; border:1px solid #bfdbfe; color:#2563eb; font-weight:600; padding:2px 8px; border-radius:4px;">⚡ Status: ${r.status || 'pending'}</span>
                 </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:#64748b; font-weight:600;">
-                    <span>Requested on ${date}</span>
-                    <span>${r.records_added ? `Added ${r.records_added} leads` : ''}</span>
+
+                <div style="font-size:13px; color:#475569; line-height:1.5; margin-bottom:12px; background:#f8fafc; border:1px solid #e2e8f0; padding:10px 14px; border-radius:8px;">
+                    <strong>Extraction Guidelines:</strong> ${r.notes || 'Standard verified phone & Google Maps extractions.'}
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; color:#64748b; font-weight:600; border-top:1px solid #f1f5f9; padding-top:10px;">
+                    <span>Submitted on ${date} • Target SLA: 2 to 6 business hours</span>
+                    <div>
+                        ${isCompleted ? `
+                            <button class="brand-btn" onclick="window.location.hash='#/dashboard'" style="padding:6px 14px; font-size:12px; font-weight:700; background:#059669; color:white; border:none; border-radius:6px; cursor:pointer;">
+                                View Leads in Directory ↗
+                            </button>
+                        ` : `
+                            <span style="font-size:11.5px; color:#d97706; font-weight:700;">🔄 Scraper Active in Background</span>
+                        `}
+                    </div>
                 </div>
             </div>
         `;
     }).join('');
 
     const emptyRequestsHTML = safeRequests.length === 0 ? `
-        <div style="padding:40px 12px; text-align:center; color:#64748b; font-size:13.5px; font-weight:600;">
-            No custom extraction requests registered yet.
+        <div style="padding:48px 16px; text-align:center; background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px; color:#64748b; font-size:13.5px; font-weight:600;">
+            <div style="font-size:28px; margin-bottom:8px;">📊</div>
+            <div style="color:#0f172a; font-weight:800; font-size:15px; margin-bottom:4px;">No Custom Extractions Submitted Yet</div>
+            <div>Submit target parameters to trigger custom regional directory scraping for your niche.</div>
         </div>
     ` : '';
 
@@ -106,9 +133,9 @@ export function renderTeamWorkspace(members = [], dataRequests = [], activeTab =
                 <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:16px;">
                     <div>
                         <h4 style="margin:0 0 4px 0; color:#0f172a; font-size:16px; font-weight:800; font-family:var(--font-heading);">Custom Niche Data Requests</h4>
-                        <p style="margin:0; font-size:13px; color:#475569;">Request custom regional directory extractions for targeted niches.</p>
+                        <p style="margin:0; font-size:13px; color:#475569;">Specify your extraction criteria to trigger targeted regional scrapers.</p>
                     </div>
-                    <button class="brand-btn" id="openDataRequestModalBtn" style="padding:8px 16px; font-size:12.5px; font-weight:700; background:#2563eb; color:white; border:none; border-radius:6px; cursor:pointer;">
+                    <button class="brand-btn" id="openDataRequestModalBtn" style="padding:10px 18px; font-size:13px; font-weight:800; background:#2563eb; color:white; border:none; border-radius:8px; cursor:pointer; box-shadow:0 4px 12px rgba(37,99,235,0.25);">
                         + New Data Request
                     </button>
                 </div>
@@ -148,44 +175,89 @@ export function renderTeamWorkspace(members = [], dataRequests = [], activeTab =
                 </div>
             </div>
 
-            <!-- Enterprise Custom Data Request Modal -->
+            <!-- Enterprise Custom Data Request Questionnaire Modal -->
             <div id="dataRequestModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15, 23, 42, 0.6); backdrop-filter:blur(8px); z-index:9999; justify-content:center; align-items:center; padding:20px;">
-                <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:16px; width:100%; max-width:540px; box-shadow:0 25px 50px -12px rgba(15,23,42,0.25); overflow:hidden;">
+                <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:16px; width:100%; max-width:620px; box-shadow:0 25px 50px -12px rgba(15,23,42,0.25); overflow:hidden; max-height:90vh; display:flex; flex-direction:column;">
                     
                     <!-- Header -->
                     <div style="display:flex; justify-content:space-between; align-items:center; padding:20px 24px; border-bottom:1px solid #e2e8f0; background:#f8fafc;">
                         <div>
-                            <h3 style="margin:0 0 2px 0; font-size:17px; font-weight:800; color:#0f172a; font-family:var(--font-heading);">Request Custom Data Extraction 📊</h3>
-                            <p style="margin:0; font-size:12.5px; color:#475569;">Submit targeted niche parameters for dedicated regional directory scraping.</p>
+                            <h3 style="margin:0 0 2px 0; font-size:17.5px; font-weight:800; color:#0f172a; font-family:var(--font-heading);">Targeted Data Extraction Discovery 📊</h3>
+                            <p style="margin:0; font-size:12.5px; color:#475569;">Specify your targeting parameters to trigger dedicated regional scrapers.</p>
                         </div>
                         <button type="button" id="closeDataReqModalBtn" style="background:none; border:none; font-size:20px; color:#64748b; cursor:pointer; padding:4px; line-height:1; border-radius:6px;">✕</button>
                     </div>
 
-                    <!-- Form Body -->
-                    <form id="dataRequestForm" style="padding:24px; display:flex; flex-direction:column; gap:16px;">
+                    <!-- Form Body (Scrollable Questionnaire) -->
+                    <form id="dataRequestForm" style="padding:24px; overflow-y:auto; display:flex; flex-direction:column; gap:18px;">
+                        
+                        <!-- Question 1: Target Niche -->
                         <div>
-                            <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Target Niche / Industry <span style="color:#dc2626;">*</span></label>
-                            <input type="text" id="reqNicheInput" placeholder="e.g. Dentists, Interior Designers, CA Firms..." required style="width:100%; padding:11px 14px; background:#ffffff; border:1.5px solid #cbd5e1; border-radius:8px; color:#0f172a; font-size:13.5px; font-weight:600; outline:none; box-sizing:border-box;">
+                            <label style="display:block; font-size:13px; font-weight:700; color:#0f172a; margin-bottom:6px;">1. What business niche or industry do you want to extract? <span style="color:#dc2626;">*</span></label>
+                            <input type="text" id="reqNicheInput" placeholder="e.g. Dentists & Dental Clinics, Interior Designers, CA Firms" required style="width:100%; padding:11px 14px; background:#ffffff; border:1.5px solid #cbd5e1; border-radius:8px; color:#0f172a; font-size:13.5px; font-weight:600; outline:none; box-sizing:border-box;">
                         </div>
 
+                        <!-- Question 2: Target City / Region -->
                         <div>
-                            <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Target Region / City <span style="color:#dc2626;">*</span></label>
-                            <input type="text" id="reqCityInput" placeholder="e.g. Mumbai, Pune, Delhi NCR, Bangalore..." required style="width:100%; padding:11px 14px; background:#ffffff; border:1.5px solid #cbd5e1; border-radius:8px; color:#0f172a; font-size:13.5px; font-weight:600; outline:none; box-sizing:border-box;">
+                            <label style="display:block; font-size:13px; font-weight:700; color:#0f172a; margin-bottom:6px;">2. What target region, city, or radius do you require? <span style="color:#dc2626;">*</span></label>
+                            <input type="text" id="reqCityInput" placeholder="e.g. Mumbai Metro, Pune, Delhi NCR, Bangalore" required style="width:100%; padding:11px 14px; background:#ffffff; border:1.5px solid #cbd5e1; border-radius:8px; color:#0f172a; font-size:13.5px; font-weight:600; outline:none; box-sizing:border-box;">
                         </div>
 
+                        <!-- Question 3: Estimated Lead Volume -->
                         <div>
-                            <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Lead Volume & Custom Requirements</label>
-                            <textarea id="reqNotesInput" placeholder="Specify estimated volume (e.g. 500 verified leads), location radius, or required fields (WhatsApp phone, GST number, 4.0+ rating)..." rows="3" style="width:100%; padding:11px 14px; background:#ffffff; border:1.5px solid #cbd5e1; border-radius:8px; color:#0f172a; font-size:13px; font-weight:500; outline:none; box-sizing:border-box; resize:vertical;"></textarea>
+                            <label style="display:block; font-size:13px; font-weight:700; color:#0f172a; margin-bottom:6px;">3. What target volume of verified listings do you need?</label>
+                            <select id="reqVolumeSelect" style="width:100%; padding:11px 14px; background:#ffffff; border:1.5px solid #cbd5e1; border-radius:8px; color:#0f172a; font-size:13.5px; font-weight:600; outline:none; box-sizing:border-box;">
+                                <option value="250 Verified Leads">🎯 250 High-Intent Leads (Standard Batch)</option>
+                                <option value="500 Verified Leads" selected>⚡ 500 Verified Directory Listings (Recommended)</option>
+                                <option value="1,000 Bulk Extractions">🚀 1,000 Bulk Regional Leads</option>
+                                <option value="5,000+ Enterprise Pipeline">🏢 5,000+ Enterprise Pipeline Batch</option>
+                            </select>
                         </div>
 
+                        <!-- Question 4: Verification Rules Checklist -->
+                        <div>
+                            <label style="display:block; font-size:13px; font-weight:700; color:#0f172a; margin-bottom:8px;">4. Select Data Quality & Verification Filters:</label>
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:14px;">
+                                <label style="font-size:12.5px; font-weight:600; color:#334155; display:flex; align-items:center; gap:8px; cursor:pointer;">
+                                    <input type="checkbox" id="reqFilterPhone" checked style="width:16px; height:16px; accent-color:#2563eb;"> Must have Phone / WhatsApp
+                                </label>
+                                <label style="font-size:12.5px; font-weight:600; color:#334155; display:flex; align-items:center; gap:8px; cursor:pointer;">
+                                    <input type="checkbox" id="reqFilterWebsite" checked style="width:16px; height:16px; accent-color:#2563eb;"> Must have Business Website
+                                </label>
+                                <label style="font-size:12.5px; font-weight:600; color:#334155; display:flex; align-items:center; gap:8px; cursor:pointer;">
+                                    <input type="checkbox" id="reqFilterRating" checked style="width:16px; height:16px; accent-color:#2563eb;"> Rating >= 4.0★ Stars Only
+                                </label>
+                                <label style="font-size:12.5px; font-weight:600; color:#334155; display:flex; align-items:center; gap:8px; cursor:pointer;">
+                                    <input type="checkbox" id="reqFilterGst" style="width:16px; height:16px; accent-color:#2563eb;"> Verified Address & GST
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Question 5: Data Destination -->
+                        <div>
+                            <label style="display:block; font-size:13px; font-weight:700; color:#0f172a; margin-bottom:6px;">5. Where should completed extraction results be routed?</label>
+                            <select id="reqDestinationSelect" style="width:100%; padding:11px 14px; background:#ffffff; border:1.5px solid #cbd5e1; border-radius:8px; color:#0f172a; font-size:13.5px; font-weight:600; outline:none; box-sizing:border-box;">
+                                <option value="NearPro Live Directory Feed" selected>🌐 NearPro Live Directory Feed (Instant Search)</option>
+                                <option value="Push to n8n Webhook / Google Sheets">⚡ Auto-Push to n8n Webhook & Google Sheets</option>
+                                <option value="Import directly into Lead CRM Pipeline">📊 Direct Import into Lead CRM Pipeline</option>
+                            </select>
+                        </div>
+
+                        <!-- Additional Instructions -->
+                        <div>
+                            <label style="display:block; font-size:13px; font-weight:700; color:#0f172a; margin-bottom:6px;">6. Additional Notes or Custom Instructions</label>
+                            <textarea id="reqNotesInput" placeholder="Specify any additional parameters, location pincodes, or custom data points required..." rows="2" style="width:100%; padding:11px 14px; background:#ffffff; border:1.5px solid #cbd5e1; border-radius:8px; color:#0f172a; font-size:13px; font-weight:500; outline:none; box-sizing:border-box; resize:vertical;"></textarea>
+                        </div>
+
+                        <!-- SLA Alert -->
                         <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:12px 14px; font-size:12px; color:#1e40af; line-height:1.4;">
-                            ⚡ <strong>Enterprise SLA:</strong> Custom extraction tasks are queued immediately and processed within 2 to 6 business hours. Results will automatically appear in your directory feed.
+                            ⚡ <strong>Enterprise Pipeline SLA:</strong> Upon submission, your request is logged in the backend queue and processed by dedicated headless scrapers within <strong>2 to 6 business hours</strong>. Status updates update live in your dashboard.
                         </div>
 
                         <!-- Footer Buttons -->
                         <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:8px;">
-                            <button type="button" id="cancelDataReqModalBtn" style="padding:10px 18px; font-size:13px; font-weight:700; color:#475569; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:8px; cursor:pointer;">Cancel</button>
-                            <button type="submit" id="submitDataReqFormBtn" style="padding:10px 22px; font-size:13px; font-weight:700; color:#ffffff; background:#2563eb; border:none; border-radius:8px; cursor:pointer; box-shadow:0 4px 12px rgba(37,99,235,0.25);">Submit Extraction Request 🚀</button>
+                            <button type="button" id="cancelDataReqModalBtn" style="padding:11px 20px; font-size:13px; font-weight:700; color:#475569; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:8px; cursor:pointer;">Cancel</button>
+                            <button type="submit" id="submitDataReqFormBtn" style="padding:11px 24px; font-size:13px; font-weight:800; color:#ffffff; background:#2563eb; border:none; border-radius:8px; cursor:pointer; box-shadow:0 4px 12px rgba(37,99,235,0.25);">Submit Extraction Request 🚀</button>
                         </div>
                     </form>
                 </div>
@@ -310,24 +382,33 @@ export function bindTeamWorkspaceEvents(arg1, arg2, arg3, arg4) {
             e.preventDefault();
             const niche = reqNicheInput?.value.trim() || '';
             const city = reqCityInput?.value.trim() || '';
-            const notes = reqNotesInput?.value.trim() || '';
+            const volume = document.getElementById('reqVolumeSelect')?.value || '500 Verified Directory Listings';
+            const filterPhone = document.getElementById('reqFilterPhone')?.checked ? 'Phone/WhatsApp Required' : '';
+            const filterWebsite = document.getElementById('reqFilterWebsite')?.checked ? 'Website Required' : '';
+            const filterRating = document.getElementById('reqFilterRating')?.checked ? 'Rating 4.0+ Stars' : '';
+            const filterGst = document.getElementById('reqFilterGst')?.checked ? 'GST Verified' : '';
+            const destination = document.getElementById('reqDestinationSelect')?.value || 'NearPro Live Directory Feed';
+            const customNotes = reqNotesInput?.value.trim() || '';
 
             if (!niche || !city) {
                 if (window.showToast) window.showToast("Please enter both target niche and region/city.", "error");
                 return;
             }
 
+            const activeFilters = [filterPhone, filterWebsite, filterRating, filterGst].filter(Boolean).join(', ');
+            const compiledNotes = `Volume: ${volume} | Quality Filters: ${activeFilters || 'Standard'} | Target Destination: ${destination}${customNotes ? ` | Notes: ${customNotes}` : ''}`;
+
             if (submitReqBtn) {
                 submitReqBtn.disabled = true;
-                submitReqBtn.innerText = "Submitting...";
+                submitReqBtn.innerText = "Submitting Queue Request...";
             }
 
             try {
                 if (onRequestCallback) {
-                    await onRequestCallback(niche, city, notes);
+                    await onRequestCallback(niche, city, compiledNotes);
                 } else {
-                    await Api.requestCustomData(niche, city, notes);
-                    if (window.showToast) window.showToast("✨ Custom data extraction request submitted!", "success");
+                    await Api.requestCustomData(niche, city, compiledNotes);
+                    if (window.showToast) window.showToast("✨ Custom data extraction queued! Scraper assigned.", "success");
                     if (onTabChangeCallback) onTabChangeCallback('requests');
                 }
                 hideModal();
