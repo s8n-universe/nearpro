@@ -393,37 +393,64 @@ Generate exactly THREE messages as a sequence. Label them clearly.
 MESSAGE 1: DAY 1 — INITIAL OUTREACH
 Channel: ${inputData.channel}
 Language: ${inputData.language}
-Word limit: ${inputData.channel === 'whatsapp' ? '75 words MAXIMUM — hard limit, count before returning' : '150 words maximum'}
-${inputData.channel === 'email' ? 'Generate THREE subject line options (A, B, C) above the email body.' : ''}
+Word limit: ${inputData.channel === 'whatsapp' ? '120 words maximum' : '280 words maximum'}
+${inputData.channel === 'email' ? 'Generate THREE catchy, personalized subject line options (A, B, C) above the email body.' : ''}
 
-STRUCTURE:
-- Line 1: A specific observation about THEIR business (not a greeting, not "I hope this finds you well", not starting with "I")
-- Middle: Connect the observation to one specific consequence or opportunity that is RELEVANT TO THEIR CATEGORY
-- End: ONE single yes/no question or a micro-CTA that takes 5 seconds to respond to
-  (for WhatsApp: "Would this be useful for your business?" or "Kya iske baare mein 5 minute baat kar sakte hain?" — specific, easy to answer)
-- Sign off as: ${inputData.senderName}
+GOLD-STANDARD PITCH LAYOUT TO FOLLOW:
+Model your output on this high-converting structure:
+
+1. Warm & Natural Introduction:
+   "Hi, ${inputData.senderName} here from ${inputData.senderCompany}."
+
+2. Genuine Compliment & Data Observation:
+   Compliment their specific rating and review count.
+   (e.g., "I came across ${inputData.bizName} and noticed you have a ${inputData.rating ? `${inputData.rating}⭐` : 'fantastic'} Google rating, which is brilliant.")
+
+3. Strategic Opportunity Gap:
+   Highlight why competitors with more reviews or website presence rank higher for searches in their category.
+   (e.g., "However, with only ${inputData.reviewCount ? `${inputData.reviewCount}` : 'a few'} Google reviews, competitors with lower ratings but more reviews often end up ranking higher for ${inputData.bizCategory} searches in ${inputData.area}.")
+
+4. Empathy Question:
+   "This made me wonder... Are most of your enquiries currently coming through word of mouth and referrals?"
+
+5. Concept / Demo Showcase (Include URL if provided or sample demo link):
+   "While looking into your business, we also created a sample website concept to show how your online presence could be enhanced and how potential customers could have a smoother enquiry experience."
+   🌐 Sample Website Concept: ${inputData.portfolioUrl || 'https://celestial-gatherings-co.lovable.app/'}
+   "This is just a concept created specifically for ${inputData.bizName} to demonstrate what's possible."
+
+6. Value Offer & Free Consultation CTA:
+   "If you'd like, I'd be happy to walk you through a few ideas on how AI automation and a stronger digital presence can help generate more enquiries, streamline follow ups, and convert more visitors into bookings."
+   🎁 Your first consultation is completely FREE.
+   📅 Book your complimentary consultation: ${inputData.bookingUrl || 'https://topmate.io/shriraj_naik_21/2167683'}
+
+7. Professional Social Proof Footer:
+   🌐 S8N Website: https://s8n.in
+   💼 LinkedIn: https://www.linkedin.com/company/s8n-ai-services/
+
+   Looking forward to connecting.
+
+   ${inputData.senderName}
+   ${inputData.senderRole}, ${inputData.senderCompany}
 
 ───────────────────────────────────
 MESSAGE 2: DAY 3 — FOLLOW-UP (if no reply)
 Channel: ${inputData.channel}
 Language: ${inputData.language}
-Word limit: ${inputData.channel === 'whatsapp' ? '50 words MAXIMUM' : '100 words maximum'}
+Word limit: ${inputData.channel === 'whatsapp' ? '60 words MAXIMUM' : '120 words maximum'}
 
 This message must take a DIFFERENT ANGLE than Message 1.
 Do not repeat the same observation. Do not say "Just following up."
-Instead: add ONE new piece of value, a relevant insight, or a social proof statement (e.g., "Ek similar [category] in [area] ne recently...")
-End with the same easy-to-answer micro-CTA.
+Instead: add ONE new piece of value or social proof (e.g. how similar ${inputData.bizCategory} businesses in ${inputData.area} automated their customer enquiries).
+End with the complimentary consultation booking link: ${inputData.bookingUrl || 'https://topmate.io/shriraj_naik_21/2167683'}
 
 ───────────────────────────────────
 MESSAGE 3: DAY 7 — FINAL TOUCH
 Channel: ${inputData.channel}
 Language: ${inputData.language}
-Word limit: ${inputData.channel === 'whatsapp' ? '40 words MAXIMUM' : '80 words maximum'}
+Word limit: ${inputData.channel === 'whatsapp' ? '50 words MAXIMUM' : '90 words maximum'}
 
-This is the last message. Make it human and low-pressure.
-Acknowledge it may not be the right time, leave the door open.
-Do NOT be desperate. Do NOT offer discounts unprompted.
-A short, warm, no-pressure close that preserves the relationship.
+This is the last message. Make it human, warm, and low-pressure.
+Acknowledge it may not be the right time, leave the door open, and provide ${inputData.senderName}'s direct booking link for future reference.
 
 ───────────────────────────────────
 
@@ -437,18 +464,14 @@ FORBIDDEN — never use these in any of the three messages:
 - "Synergy" / "Leverage" / "Value-add" 
 - "Dear Sir/Madam" / "To Whom It May Concern"
 - Starting any sentence with "I" as the first word
-- Listing more than one service or offering in one message
-- Mentioning pricing in Messages 1 or 2
-- Hyphens anywhere — use "to", spaces, commas, or new lines instead
 - Mentioning that you are an AI or that this is a template
 - Brackets or placeholder text like "[Your Name]" or "[Insert]"
-- More than ONE question per WhatsApp message
-- Exclamation marks used more than twice in a single message
+- Hyphens in normal sentence prose — use "to", spaces, commas, or new lines instead. (NOTE: Hyphens inside valid web URLs like celestial-gatherings-co or s8n-ai-services are ALLOWED and must be preserved!).
 
 REQUIRED:
 - Language Requirement: ${promptInstructions}
 - Channel Format: ${channelFormat}
-- Paragraph Spacing: Use double line breaks (\n\n) to create clean paragraphs. For emails, always structure it with a greeting, 2-3 short structured paragraphs of 1-2 lines each (with spacing between them), and a clear sign-off at the end. Never output a single continuous block of text without paragraph breaks.
+- Paragraph Spacing: Use double line breaks (\n\n) to create clean paragraphs. Always structure with clear paragraph spacing. Never output a single continuous block of text without line breaks.
 - Every message must feel like it was written specifically for THIS business
 - Use their business name naturally at least once in Message 1
 - If Hinglish: write in Latin script, use "Aap" not "Tum", mix Hindi naturally (not translated English)
