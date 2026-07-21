@@ -239,7 +239,7 @@ serve(async (req) => {
     // 3. Load user profile personalization settings
     const { data: profile, error: profileErr } = await supabase
       .from('profiles')
-      .select('subscription_tier, monthly_ai_generations_used, monthly_ai_generations_limit, full_name, company_name, portfolio_url, booking_url, role, survey_role, sender_service_blurb')
+      .select('*')
       .eq('id', user.id)
       .single();
 

@@ -51,7 +51,7 @@ serve(async (req) => {
     // 3. Load user profile
     const { data: profile, error: profileErr } = await supabase
       .from('profiles')
-      .select('subscription_tier, monthly_prompt_copies_used')
+      .select('*')
       .eq('id', user.id)
       .single();
 
