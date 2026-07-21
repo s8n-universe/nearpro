@@ -150,7 +150,8 @@ Generate a tailored, highly specific, and creative system prompt that incorporat
 ${platformInstructions}
 
 CRITICAL RULES:
-- The generated prompt MUST explicitly instruct the target builder to include the specific physical address, original website domain (if any), and business operating hours in the footer or contact sections so that the generated demo site is fully operational and client-oriented.`;
+- The generated prompt MUST explicitly instruct the target builder to include the specific physical address, original website domain (if any), and business operating hours in the footer or contact sections so that the generated demo site is fully operational and client-oriented.
+- Do NOT include any chat introduction, preface, markdown code blocks wrapping the prompt, explanations, or closing remarks. The output must begin directly with the prompt text itself so the user can copy-paste it cleanly.`;
 
     const userMessage = `Generate a website builder prompt for:
 Name: ${lead.name}
@@ -177,7 +178,7 @@ JSON-LD Type: ${jsonLdType}`;
         ],
         generationConfig: {
           temperature: 0.7,
-          maxOutputTokens: 1024
+          maxOutputTokens: 8192
         }
       })
     });
