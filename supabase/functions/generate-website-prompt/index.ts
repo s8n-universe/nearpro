@@ -167,9 +167,10 @@ Business Hours: ${formattedHours}
 Target Platform: ${platform}
 JSON-LD Type: ${jsonLdType}`;
 
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${geminiKey}`;
+    let modelName = 'gemini-3.5-flash';
+    let geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${geminiKey}`;
     
-    const response = await fetch(geminiUrl, {
+    let response = await fetch(geminiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -182,6 +183,25 @@ JSON-LD Type: ${jsonLdType}`;
         }
       })
     });
+
+    if (response.status === 503) {
+      console.warn("gemini-3.5-flash experienced high demand (503). Retrying with gemini-2.5-flash...");
+      modelName = 'gemini-2.5-flash';
+      geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${geminiKey}`;
+      response = await fetch(geminiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [
+            { role: 'user', parts: [{ text: `${systemPrompt}\n\n${userMessage}` }] }
+          ],
+          generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 8192
+          }
+        })
+      });
+    }
 
     if (!response.ok) {
       const errText = await response.text();

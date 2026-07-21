@@ -77,13 +77,28 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
                     </p>
                     <button class="brand-btn" onclick="window.State.setPricingModal(true);">Upgrade Plan</button>
                 </div>
-            `        } else {
+            `;
+        } else {
             const hasPrompt = generatedPrompt && !generatedPrompt.startsWith('Generating') && !generatedPrompt.startsWith('Error') && !generatedPrompt.startsWith('Choose');
             const isGenerating = generatedPrompt && generatedPrompt.startsWith('Generating');
             const isInitial = !generatedPrompt || generatedPrompt.startsWith('Choose');
 
             let contentAreaHTML = '';
-            if (isInitial) {
+            if (isGenerating) {
+                contentAreaHTML = `
+                    <style>
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                    </style>
+                    <div style="background: rgba(255,255,255,0.01); border: 1px dashed var(--border); border-radius: var(--radius-md); padding: 48px 24px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 280px; width: 100%;">
+                        <div style="width: 32px; height: 32px; border: 2.5px solid var(--accent-gold); border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 16px;"></div>
+                        <h4 style="margin: 0 0 8px 0; color: white; font-family: var(--font-heading); font-weight: 700; font-size: 15px;" id="generationStatusTitle">Analyzing business profile...</h4>
+                        <p style="color: var(--text-secondary); font-size: 12.5px; margin: 0;" id="generationStatusDesc">Reviewing category tags and local target parameters</p>
+                    </div>
+                `;
+            } else if (isInitial) {
                 contentAreaHTML = `
                     <div style="background: rgba(255,255,255,0.01); border: 1px dashed var(--border); border-radius: var(--radius-md); padding: 48px 24px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 280px; width: 100%;">
                         <div style="font-size: 32px; margin-bottom: 12px;">✨</div>
