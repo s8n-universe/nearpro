@@ -123,20 +123,24 @@ export function renderProfessionalModal(lead) {
                     <div>
                         <div class="sidebar-title">Contact Info</div>
                         <div class="contact-icon-grid">
-                            <div class="contact-icon-row">
+                            <div class="contact-icon-row" style="display: flex; align-items: center; gap: 8px;">
                                 <i data-lucide="phone" style="width:14px; height:14px; color: var(--text-muted); flex-shrink:0;"></i>
+                                <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); width: 60px; text-transform: uppercase;">Phone:</span>
                                 <span>${phoneDisplay}</span>
                             </div>
-                            <div class="contact-icon-row">
+                            <div class="contact-icon-row" style="display: flex; align-items: center; gap: 8px;">
                                 <i data-lucide="mail" style="width:14px; height:14px; color: var(--text-muted); flex-shrink:0;"></i>
+                                <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); width: 60px; text-transform: uppercase;">Email:</span>
                                 <span>${emailDisplay}</span>
                             </div>
-                            <div class="contact-icon-row">
+                            <div class="contact-icon-row" style="display: flex; align-items: center; gap: 8px;">
                                 <i data-lucide="globe" style="width:14px; height:14px; color: var(--text-muted); flex-shrink:0;"></i>
+                                <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); width: 60px; text-transform: uppercase;">Website:</span>
                                 <span>${websiteDisplay}</span>
                             </div>
-                            <div class="contact-icon-row">
+                            <div class="contact-icon-row" style="display: flex; align-items: center; gap: 8px;">
                                 <i data-lucide="map-pin" style="width:14px; height:14px; color: var(--text-muted); flex-shrink:0;"></i>
+                                <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); width: 60px; text-transform: uppercase;">Area:</span>
                                 <span>${lead.area || "Mumbai"}</span>
                             </div>
                         </div>
@@ -222,6 +226,9 @@ export function renderProfessionalModal(lead) {
 }
 
 export function bindProfessionalModalEvents(lead, onClose) {
+    if (window.lucide) {
+        window.lucide.createIcons();
+    }
     // Handle close button
     const closeBtn = document.getElementById('closeModalBtn');
     if (closeBtn) {
