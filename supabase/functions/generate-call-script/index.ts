@@ -51,7 +51,7 @@ serve(async (req) => {
     // 3. Load user profile & check call script tier quota
     const { data: profile, error: profileErr } = await supabase
       .from('profiles')
-      .select('subscription_tier, monthly_call_scripts_used, full_name, company_name, booking_url, portfolio_url')
+      .select('*')
       .eq('id', user.id)
       .single();
 

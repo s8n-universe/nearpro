@@ -51,7 +51,7 @@ serve(async (req) => {
     // 3. Load user profile & check proposal tier quota
     const { data: profile, error: profileErr } = await supabase
       .from('profiles')
-      .select('subscription_tier, monthly_proposals_used, full_name, company_name, booking_url, portfolio_url')
+      .select('*')
       .eq('id', user.id)
       .single();
 
