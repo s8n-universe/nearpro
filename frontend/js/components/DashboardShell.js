@@ -96,7 +96,7 @@ export function renderDashboardShell(activeTab = 'crm') {
             <aside class="dashboard-sidebar ${sidebarCollapsedClass}">
                 <div class="sidebar-header">
                     <img src="/NearPro_logo_nobg.png" alt="NearPro" class="sidebar-logo">
-                    <span class="sidebar-brand">NearPro Workspace</span>
+                    <span class="sidebar-brand" style="font-size: 13px; font-weight: 800; font-family: var(--font-heading);">NearPro • AI Agency OS</span>
                 </div>
                 
                 <nav class="sidebar-nav">
