@@ -1769,7 +1769,13 @@ async function renderDashboardLayout(tab) {
                         }
                     } catch (err) {
                         console.error("Failed to generate prompt:", err);
-                        window._promptCache[cacheKey] = `Error generating prompt: Edge Function returned a non-2xx status code. Please try again.`;
+                        let detail = err.message || "Unknown error";
+                        if (err.context && typeof err.context === 'object') {
+                            try {
+                                detail = err.context.message || JSON.stringify(err.context);
+                            } catch (_) {}
+                        }
+                        window._promptCache[cacheKey] = `Error generating prompt: ${detail}`;
                     } finally {
                         clearInterval(statusInterval);
                         window._promptGenerating = null;
