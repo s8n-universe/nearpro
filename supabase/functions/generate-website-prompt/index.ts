@@ -192,7 +192,7 @@ JSON-LD Type: ${jsonLdType}`;
           console.log(`Attempting prompt generation using [${keyObj.label}] with model [${modelName}]`);
           
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 3500);
+          const timeoutId = setTimeout(() => controller.abort(), 25000); // Allow up to 25s for active generation completion
 
           const res = await fetch(geminiUrl, {
             method: 'POST',
