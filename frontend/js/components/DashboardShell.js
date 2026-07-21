@@ -21,11 +21,10 @@ export function renderDashboardShell(activeTab = 'crm') {
     }
 
     // Sidebar items configuration
-    // Sidebar items configuration
     const sidebarItems = [
         { id: 'overview', label: 'Getting Started', requiredTier: 'free', icon: 'compass' },
+        { id: 'crm', label: '🤖 360° AI Deal Hub', requiredTier: 'scout', icon: 'clipboard-list' },
         { id: 'directory', label: 'Browse Directory', requiredTier: 'free', icon: 'search' },
-        { id: 'crm', label: 'Outreach Pipeline & 360° Hub', requiredTier: 'scout', icon: 'clipboard-list' },
         { id: 'lists', label: 'Smart Lists', requiredTier: 'scout', icon: 'folder' },
         { id: 'proposals', label: 'PDF Proposals', requiredTier: 'scout', icon: 'file-text' },
         { id: 'call-scripts', label: 'Tele-Sales Scripts', requiredTier: 'scout', icon: 'phone-call' },
@@ -116,7 +115,12 @@ export function renderDashboardShell(activeTab = 'crm') {
                         </button>
                         <h2 class="dashboard-page-title" id="dashboardPageTitle" style="margin: 0;">Dashboard</h2>
                     </div>
-                    <div class="topbar-right">
+                    <div class="topbar-right" style="display: flex; align-items: center; gap: 16px;">
+                        <!-- Prominent Topbar Quick Launch to 360° AI Deal Workstation -->
+                        <a href="#/dashboard/crm" class="brand-btn" style="padding: 8px 18px; font-size: 12.5px; font-weight: 800; background: #2563eb; color: white; border: none; border-radius: 6px; text-decoration: none; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);">
+                            <i data-lucide="zap" style="width: 14px; height: 14px;"></i> Open 360° AI Workstation ➔
+                        </a>
+
                         <div class="user-profile-dropdown-container" style="position: relative; display: inline-block;">
                             <div class="user-profile-badge" style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
                                 <span class="user-avatar-circle" style="width: 32px; height: 32px; border-radius: 50%; background: ${tierColor}; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; text-transform: uppercase; font-family: var(--font-mono);">${initials}</span>
