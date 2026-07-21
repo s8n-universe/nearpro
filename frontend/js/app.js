@@ -42,6 +42,7 @@ import { renderTeamWorkspace, bindTeamWorkspaceEvents, loadDataRequests, createD
 import { renderDocumentViewerLayout } from './components/DocumentViewer.js';
 import { renderProposalGeneratorLayout, bindProposalGeneratorEvents } from './components/ProposalGenerator.js';
 import { renderCallScriptGeneratorLayout, bindCallScriptGeneratorEvents } from './components/CallScriptGenerator.js';
+import { renderPlatformOverviewLayout, bindPlatformOverviewEvents } from './components/PlatformOverview.js';
 
 // Main Application shell reference
 const appShell = document.getElementById('app');
@@ -149,7 +150,7 @@ function initRoutes() {
     });
     Router.on('#/', async () => {
         if (State.user) {
-            Router.navigate('#/dashboard/directory');
+            Router.navigate('#/dashboard/overview');
             return;
         }
         State.resetFilters();
@@ -1209,6 +1210,7 @@ async function renderDashboardLayout(tab) {
 
     // Required tiers for each sub tab
     const requiredTiers = {
+        overview: 'free',
         directory: 'free',
         crm: 'scout',
         lists: 'scout',
@@ -1332,6 +1334,12 @@ async function renderDashboardLayout(tab) {
 
             // Run database query
             await queryProfessionals(false);
+        }
+    } else if (tab === 'overview') {
+        if (titleEl) titleEl.innerText = 'Getting Started';
+        if (content) {
+            content.innerHTML = renderPlatformOverviewLayout();
+            bindPlatformOverviewEvents();
         }
     } else if (tab === 'crm') {
         if (titleEl) titleEl.innerText = 'Outreach Pipeline';

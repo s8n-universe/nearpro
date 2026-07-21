@@ -95,7 +95,7 @@ export function bindUpgradeSuccessModalEvents() {
         State.upgrade_success_modal_open = false;
         State.upgrade_success_data = null;
         State.notify();
-        window.location.hash = '#/dashboard/directory';
+        window.location.hash = '#/dashboard/overview';
     };
 
     if (closeBtn) closeBtn.addEventListener('click', close);
