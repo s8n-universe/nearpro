@@ -170,12 +170,10 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
         }
     } else {
         workspaceHTML = `
-            <div class="prompt-empty-state" style="text-align:center; padding:80px 20px; color:var(--text-muted); display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1;">
-                <div style="margin-bottom:12px; display:flex; justify-content:center;">
-                    <i data-lucide="zap" style="width:40px; height:40px; color:var(--accent-gold); stroke-width:1.5px;"></i>
-                </div>
-                <h4 style="margin:0 0 6px 0; color:white;">Website Prompt Engine</h4>
-                <p style="color:var(--text-muted); font-size:13px; max-width:280px;">Select a saved pipeline lead from the left list to generate a production ready website builder prompt.</p>
+            <div style="text-align:center; padding:60px 20px; color:#64748b;">
+                <i data-lucide="mouse-pointer" style="width:36px; height:36px; stroke-width:1.5; margin-bottom:12px; color:#94a3b8;"></i>
+                <h4 style="margin:0 0 6px 0; color:#0f172a; font-size:15px;">Select a Lead from Pipeline</h4>
+                <p style="margin:0; font-size:13px; color:#475569;">Choose a business lead from the left sidebar to generate custom website prompts.</p>
             </div>
         `;
     }
@@ -189,27 +187,29 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
     }
 
     const usageBarHTML = `
-        <div class="usage-bar" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 16px; margin-bottom: 20px; font-size: 12.5px; color: var(--text-secondary); display: flex; align-items: center; justify-content: space-between; width: 100%; border-left: 3px solid var(--accent-gold);">
+        <div class="usage-bar" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 16px; margin-bottom: 20px; font-size: 12.5px; color: #475569; display: flex; align-items: center; justify-content: space-between; width: 100%; border-left: 3px solid #2563eb;">
             <span>${usageHTML}</span>
-            <span style="font-size: 11px; font-family: var(--font-mono); color: var(--accent-gold); font-weight: bold; text-transform: uppercase;">Tier: ${tier}</span>
+            <span style="font-size: 11px; font-family: var(--font-mono); color: #2563eb; font-weight: bold; text-transform: uppercase;">Tier: ${tier}</span>
         </div>
     `;
 
     return `
-        <div class="prompt-workspace" style="display:grid; grid-template-columns: 260px 1fr; gap:24px; height:100%;">
-            <!-- Left Panel -->
-            <div class="prompt-sidebar" style="background:rgba(255,255,255,0.01); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px; display:flex; flex-direction:column; gap:10px; overflow-y:auto; max-height:calc(100vh - 160px);">
-                <h4 style="margin:0 0 8px 0; font-size:13px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px;">Pipeline Leads</h4>
-                <div class="prompt-leads-list" style="display:flex; flex-direction:column; gap:6px;">
-                    ${leadsHTML}
-                    ${emptyLeadsHTML}
+        <div class="prompt-workspace-container" style="padding: 32px; background: #f8fafc; color: #0f172a; border-radius: var(--radius-lg); border: 1px solid #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+            <div class="prompt-workspace" style="display:grid; grid-template-columns: 260px 1fr; gap:24px; width:100%;">
+                <!-- Left Panel -->
+                <div class="prompt-sidebar" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:18px; display:flex; flex-direction:column; gap:10px; overflow-y:auto; max-height:calc(100vh - 180px); box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                    <h4 style="margin:0 0 8px 0; font-size:12px; font-family:var(--font-mono); color:#64748b; text-transform:uppercase; letter-spacing:0.5px; font-weight: 700;">Pipeline Leads</h4>
+                    <div class="prompt-leads-list" style="display:flex; flex-direction:column; gap:6px;">
+                        ${leadsHTML}
+                        ${emptyLeadsHTML}
+                    </div>
                 </div>
-            </div>
 
-            <!-- Workspace Panel -->
-            <div class="prompt-workspace-body" style="background:rgba(255,255,255,0.01); border:1px solid var(--border); border-radius:var(--radius-md); padding:28px; display:flex; flex-direction:column; min-height:400px; max-height:calc(100vh - 160px); overflow-y:auto; justify-content: flex-start;">
-                ${usageBarHTML}
-                ${workspaceHTML}
+                <!-- Workspace Panel -->
+                <div class="prompt-workspace-body" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:28px; display:flex; flex-direction:column; min-height:400px; max-height:calc(100vh - 180px); overflow-y:auto; justify-content: flex-start; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                    ${usageBarHTML}
+                    ${workspaceHTML}
+                </div>
             </div>
         </div>
     `;

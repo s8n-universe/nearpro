@@ -434,24 +434,26 @@ export function renderOutreachStudio(savedLeads, activeLeadId = null, templates 
         }
         </style>
 
-        <div class="outreach-workspace" style="display:grid; grid-template-columns: 260px 1fr; gap:24px; height:100%;">
-            <!-- Left Panel -->
-            <div class="outreach-sidebar" style="background:rgba(255,255,255,0.01); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px; display:flex; flex-direction:column; gap:10px; overflow-y:auto; max-height:calc(100vh - 160px);">
-                <h4 style="margin:0 0 8px 0; font-size:13px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px;">Pipeline Leads</h4>
-                <div class="outreach-leads-list" style="display:flex; flex-direction:column; gap:6px;">
-                    ${leadsHTML}
-                    ${emptyLeadsHTML}
+        <div class="outreach-workspace-container" style="padding: 32px; background: #f8fafc; color: #0f172a; border-radius: var(--radius-lg); border: 1px solid #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+            <div class="outreach-workspace" style="display:grid; grid-template-columns: 260px 1fr; gap:24px; width:100%;">
+                <!-- Left Panel -->
+                <div class="outreach-sidebar" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:18px; display:flex; flex-direction:column; gap:10px; overflow-y:auto; max-height:calc(100vh - 180px); box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                    <h4 style="margin:0 0 8px 0; font-size:12px; font-family:var(--font-mono); color:#64748b; text-transform:uppercase; letter-spacing:0.5px; font-weight: 700;">Pipeline Leads</h4>
+                    <div class="outreach-leads-list" style="display:flex; flex-direction:column; gap:6px;">
+                        ${leadsHTML}
+                        ${emptyLeadsHTML}
+                    </div>
                 </div>
-            </div>
 
-            <!-- Workspace Panel (White/Light Theme with Zoomed Layout) -->
-            <div class="outreach-workspace-body" style="background:#ffffff; border:1px solid #cbd5e1; border-radius:var(--radius-md); padding:32px; display:flex; flex-direction:column; min-height:400px; max-height:calc(100vh - 160px); overflow-y:auto; justify-content: flex-start; box-shadow: 0 20px 40px rgba(0,0,0,0.18); color: #0f172a; position: relative;">
-                <!-- Usability Banner (High Contrast light version) -->
-                <div class="usability-banner" style="background: #f8fafc; border: 1px solid #cbd5e1; border-left: 4px solid #b45309; border-radius: var(--radius-md); padding: 14px 20px; margin-bottom: 24px; display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; width: 100%; text-align: left; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
-                    <div style="font-size: 13.5px; color: #0f172a; line-height: 1.4; font-weight:700;"><span style="color: #b45309; font-weight: 800;">What it is:</span> Compose highly personalized client pitches and automated follow-ups using AI.</div>
-                    <div style="font-size: 13px; color: #475569; line-height: 1.4; font-weight:500;"><span style="color: #b45309; font-weight: 800;">How to leverage:</span> Generate scripts in Hinglish or Professional tones pre-filled with specific lead audit data.</div>
+                <!-- Workspace Panel (White/Light Theme with Zoomed Layout) -->
+                <div class="outreach-workspace-body" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:32px; display:flex; flex-direction:column; min-height:400px; max-height:calc(100vh - 180px); overflow-y:auto; justify-content: flex-start; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03); color: #0f172a; position: relative;">
+                    <!-- Usability Banner -->
+                    <div class="usability-banner" style="background: #f8fafc; border: 1px solid #cbd5e1; border-left: 4px solid #b45309; border-radius: 8px; padding: 14px 20px; margin-bottom: 24px; display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; width: 100%; text-align: left;">
+                        <div style="font-size: 13.5px; color: #0f172a; line-height: 1.4; font-weight:700;"><span style="color: #b45309; font-weight: 800;">What it is:</span> Compose highly personalized client pitches and automated follow-ups using AI.</div>
+                        <div style="font-size: 13px; color: #475569; line-height: 1.4; font-weight:500;"><span style="color: #b45309; font-weight: 800;">How to leverage:</span> Generate scripts in Hinglish or Professional tones pre-filled with specific lead audit data.</div>
+                    </div>
+                    ${workspaceHTML}
                 </div>
-                ${workspaceHTML}
             </div>
         </div>
     `;

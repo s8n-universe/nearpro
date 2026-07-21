@@ -162,32 +162,34 @@ export function renderConnectionHub(lists, n8nUrl = '', sheetsUrl = '', hubspotT
     }
 
     return `
-        <div class="connection-workspace" style="display:grid; grid-template-columns: 240px 1fr; gap:24px; height:100%;">
-            <!-- Left sidebar -->
-            <div class="connection-sidebar" style="background:rgba(255,255,255,0.01); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px; display:flex; flex-direction:column; gap:6px; height:fit-content;">
-                <h4 style="margin:0 0 10px 0; font-size:13px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px;">Integrations</h4>
-                <button class="sidebar-tab-btn ${activeTab === 'n8n' ? 'active' : ''}" id="tabN8nBtn" style="text-align:left; background:none; border:none; padding:10px 14px; border-radius:var(--radius-sm); font-size:13px; color:${activeTab === 'n8n' ? 'var(--accent-gold)' : 'var(--text-secondary)'}; cursor:pointer; font-weight:500; display:flex; align-items:center; gap:8px;">
-                    <i data-lucide="cpu" style="width:14px; height:14px;"></i> n8n Webhook
-                </button>
-                <button class="sidebar-tab-btn ${activeTab === 'sheets' ? 'active' : ''}" id="tabSheetsBtn" style="text-align:left; background:none; border:none; padding:10px 14px; border-radius:var(--radius-sm); font-size:13px; color:${activeTab === 'sheets' ? 'var(--accent-gold)' : 'var(--text-secondary)'}; cursor:pointer; font-weight:500; display:flex; align-items:center; gap:8px;">
-                    <i data-lucide="file-spreadsheet" style="width:14px; height:14px;"></i> Google Sheets
-                </button>
-                <button class="sidebar-tab-btn ${activeTab === 'hubspot' ? 'active' : ''}" id="tabHubspotBtn" style="text-align:left; background:none; border:none; padding:10px 14px; border-radius:var(--radius-sm); font-size:13px; color:${activeTab === 'hubspot' ? 'var(--accent-gold)' : 'var(--text-secondary)'}; cursor:pointer; font-weight:500; display:flex; align-items:center; gap:8px;">
-                    <i data-lucide="contact" style="width:14px; height:14px;"></i> HubSpot CRM
-                </button>
-                <button class="sidebar-tab-btn ${activeTab === 'zoho' ? 'active' : ''}" id="tabZohoBtn" style="text-align:left; background:none; border:none; padding:10px 14px; border-radius:var(--radius-sm); font-size:13px; color:${activeTab === 'zoho' ? 'var(--accent-gold)' : 'var(--text-secondary)'}; cursor:pointer; font-weight:500; display:flex; align-items:center; gap:8px;">
-                    <i data-lucide="layers" style="width:14px; height:14px;"></i> Zoho CRM
-                </button>
-            </div>
-
-            <!-- Right Workspace -->
-            <div class="connection-workspace-body" style="background:rgba(255,255,255,0.01); border:1px solid var(--border); border-radius:var(--radius-md); padding:28px; display:flex; flex-direction:column; min-height:360px; justify-content: flex-start;">
-                <!-- Usability Banner -->
-                <div class="usability-banner" style="background: rgba(255, 160, 0, 0.02); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px 18px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 4px; border-left: 3px solid var(--accent-gold); flex-shrink: 0; width: 100%; text-align: left;">
-                    <div style="font-size: 12.5px; color: white; line-height: 1.4;"><span style="color: var(--accent-gold); font-weight: 600;">What it is:</span> Link NearPro to CRM databases and automation tools (Zoho, HubSpot, sheets, n8n).</div>
-                    <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.4;"><span style="color: var(--accent-gold); font-weight: 600;">How to leverage:</span> Automate lead push notifications to keep external outreach platforms in sync.</div>
+        <div class="connection-workspace-container" style="padding: 32px; background: #f8fafc; color: #0f172a; border-radius: var(--radius-lg); border: 1px solid #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+            <div class="connection-workspace" style="display:grid; grid-template-columns: 240px 1fr; gap:24px; width:100%;">
+                <!-- Left sidebar -->
+                <div class="connection-sidebar" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:18px; display:flex; flex-direction:column; gap:6px; height:fit-content; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                    <h4 style="margin:0 0 10px 0; font-size:12px; font-family:var(--font-mono); color:#64748b; text-transform:uppercase; letter-spacing:0.5px; font-weight: 700;">Integrations</h4>
+                    <button class="sidebar-tab-btn ${activeTab === 'n8n' ? 'active' : ''}" id="tabN8nBtn" style="text-align:left; background:${activeTab === 'n8n' ? '#eff6ff' : 'transparent'}; border:1px solid ${activeTab === 'n8n' ? '#bfdbfe' : 'transparent'}; padding:10px 14px; border-radius:6px; font-size:13px; color:${activeTab === 'n8n' ? '#2563eb' : '#475569'}; cursor:pointer; font-weight:700; display:flex; align-items:center; gap:8px;">
+                        <i data-lucide="cpu" style="width:14px; height:14px;"></i> n8n Webhook
+                    </button>
+                    <button class="sidebar-tab-btn ${activeTab === 'sheets' ? 'active' : ''}" id="tabSheetsBtn" style="text-align:left; background:${activeTab === 'sheets' ? '#eff6ff' : 'transparent'}; border:1px solid ${activeTab === 'sheets' ? '#bfdbfe' : 'transparent'}; padding:10px 14px; border-radius:6px; font-size:13px; color:${activeTab === 'sheets' ? '#2563eb' : '#475569'}; cursor:pointer; font-weight:700; display:flex; align-items:center; gap:8px;">
+                        <i data-lucide="file-spreadsheet" style="width:14px; height:14px;"></i> Google Sheets
+                    </button>
+                    <button class="sidebar-tab-btn ${activeTab === 'hubspot' ? 'active' : ''}" id="tabHubspotBtn" style="text-align:left; background:${activeTab === 'hubspot' ? '#eff6ff' : 'transparent'}; border:1px solid ${activeTab === 'hubspot' ? '#bfdbfe' : 'transparent'}; padding:10px 14px; border-radius:6px; font-size:13px; color:${activeTab === 'hubspot' ? '#2563eb' : '#475569'}; cursor:pointer; font-weight:700; display:flex; align-items:center; gap:8px;">
+                        <i data-lucide="contact" style="width:14px; height:14px;"></i> HubSpot CRM
+                    </button>
+                    <button class="sidebar-tab-btn ${activeTab === 'zoho' ? 'active' : ''}" id="tabZohoBtn" style="text-align:left; background:${activeTab === 'zoho' ? '#eff6ff' : 'transparent'}; border:1px solid ${activeTab === 'zoho' ? '#bfdbfe' : 'transparent'}; padding:10px 14px; border-radius:6px; font-size:13px; color:${activeTab === 'zoho' ? '#2563eb' : '#475569'}; cursor:pointer; font-weight:700; display:flex; align-items:center; gap:8px;">
+                        <i data-lucide="layers" style="width:14px; height:14px;"></i> Zoho CRM
+                    </button>
                 </div>
-                ${activeTabContent}
+
+                <!-- Right Workspace -->
+                <div class="connection-workspace-body" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:28px; display:flex; flex-direction:column; min-height:360px; justify-content: flex-start; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                    <!-- Usability Banner -->
+                    <div class="usability-banner" style="background: #f8fafc; border: 1px solid #cbd5e1; border-left: 4px solid #2563eb; border-radius: 8px; padding: 12px 18px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; width: 100%; text-align: left;">
+                        <div style="font-size: 13px; color: #0f172a; line-height: 1.4; font-weight: 700;"><span style="color: #2563eb; font-weight: 800;">What it is:</span> Link NearPro to CRM databases and automation tools (Zoho, HubSpot, sheets, n8n).</div>
+                        <div style="font-size: 12.5px; color: #475569; line-height: 1.4;"><span style="color: #2563eb; font-weight: 800;">How to leverage:</span> Automate lead push notifications to keep external outreach platforms in sync.</div>
+                    </div>
+                    ${activeTabContent}
+                </div>
             </div>
         </div>
     `;

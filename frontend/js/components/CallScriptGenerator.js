@@ -14,83 +14,83 @@ export function renderCallScriptGeneratorLayout(selectedLeadId = null) {
     const isAtLimit = limit > 0 ? (used >= limit) : (userTier === 'free');
 
     return `
-        <div class="call-script-generator-container" style="display: flex; flex-direction: column; gap: 24px; padding: 24px; color: white; font-family: var(--font-body);">
+        <div class="call-script-generator-container" style="display: flex; flex-direction: column; gap: 28px; padding: 32px; background: #f8fafc; color: #0f172a; border-radius: var(--radius-lg); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
             
             <!-- Top Quota & Intro Header -->
-            <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap;">
+            <div style="background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%); border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px; display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05);">
                 <div style="flex: 1; min-width: 280px;">
-                    <div style="display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px; border-radius: 99px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: #10b981; font-size: 11.5px; font-weight: 700; font-family: var(--font-mono); margin-bottom: 12px;">
-                        📞 AI Tele-Sales & Cold Calling Script Engine
+                    <div style="display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px; border-radius: 99px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #059669; font-size: 11.5px; font-weight: 700; font-family: var(--font-mono); margin-bottom: 12px;">
+                        📞 AI TELE-SALES & COLD CALLING SCRIPT ENGINE
                     </div>
-                    <h2 style="font-size: 20px; font-weight: 700; margin: 0 0 6px 0; font-family: var(--font-heading);">
+                    <h2 style="font-size: 22px; font-weight: 800; margin: 0 0 6px 0; font-family: var(--font-heading); color: #0f172a;">
                         High-Converting Phone Scripts & Live Objection Rebuttals
                     </h2>
-                    <p style="color: var(--text-secondary); font-size: 13.5px; margin: 0; max-width: 680px; line-height: 1.5;">
+                    <p style="color: #475569; font-size: 14px; margin: 0; max-width: 680px; line-height: 1.5;">
                         Generate category-specific cold calling teleprompter scripts and live objection response cards tailored for local Indian business owners (Dentists, Decorators, Salons, Coaching Centers).
                     </p>
                 </div>
                 
-                <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px 20px; text-align: right; flex-shrink: 0; min-width: 180px;">
-                    <div style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 4px;">Monthly Script Quota</div>
-                    <div style="font-size: 20px; font-weight: 700; color: #10b981; font-family: var(--font-mono);">
+                <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 16px 20px; text-align: right; flex-shrink: 0; min-width: 180px; box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
+                    <div style="font-size: 11px; color: #64748b; font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 4px;">Monthly Script Quota</div>
+                    <div style="font-size: 22px; font-weight: 800; color: #059669; font-family: var(--font-mono);">
                         ${used} / ${limit === 0 ? '0 (Free)' : limit === 999999 ? 'Unlimited' : limit}
                     </div>
-                    <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;">
-                        Plan: <strong style="text-transform: capitalize; color: white;">${userTier}</strong>
+                    <div style="font-size: 11.5px; color: #475569; margin-top: 2px;">
+                        Plan: <strong style="text-transform: capitalize; color: #0f172a;">${userTier}</strong>
                     </div>
                 </div>
             </div>
 
             <!-- KNOWLEDGE GUIDE: HOW TO USE TELE-SALES SCRIPTS -->
-            <details style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: var(--radius-md); padding: 16px 20px; color: var(--text-secondary);" open>
-                <summary style="font-weight: 700; color: #10b981; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 14px; font-family: var(--font-heading);">
+            <details style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 20px 24px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);" open>
+                <summary style="font-weight: 700; color: #0f172a; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 14.5px; font-family: var(--font-heading);">
                     <span style="display: flex; align-items: center; gap: 8px;">
-                        <i data-lucide="phone-call" style="width: 16px; height: 16px;"></i>
+                        <i data-lucide="phone-call" style="width: 16px; height: 16px; color: #059669;"></i>
                         📖 How to Conduct Cold Calls & Handle Objections Live
                     </span>
-                    <span style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">Click to Expand / Collapse</span>
+                    <span style="font-size: 11.5px; color: #059669; font-family: var(--font-mono); font-weight: 700;">Click to Expand / Collapse</span>
                 </summary>
                 
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px;">
-                    <div style="background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px;">
-                        <div style="font-size: 11.5px; font-weight: 700; color: #10b981; font-family: var(--font-mono); margin-bottom: 4px;">1. 30-SEC PATTERN INTERRUPT</div>
-                        <div style="font-size: 12.5px; color: white; line-height: 1.4;">Deliver the warm 30-second intro without rushing. Pause for 2 seconds after asking for 30 seconds.</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 16px; border-top: 1px solid #f1f5f9; padding-top: 16px;">
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
+                        <div style="font-size: 11.5px; font-weight: 700; color: #059669; font-family: var(--font-mono); margin-bottom: 4px;">1. 30-SEC PATTERN INTERRUPT</div>
+                        <div style="font-size: 13px; color: #475569; line-height: 1.45;">Deliver the warm 30-second intro without rushing. Pause for 2 seconds after asking for 30 seconds.</div>
                     </div>
                     
-                    <div style="background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px;">
-                        <div style="font-size: 11.5px; font-weight: 700; color: #10b981; font-family: var(--font-mono); margin-bottom: 4px;">2. LIVE OBJECTION TABS</div>
-                        <div style="font-size: 12.5px; color: white; line-height: 1.4;">When the lead raises an objection, click any objection button for instant rebuttal scripts.</div>
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
+                        <div style="font-size: 11.5px; font-weight: 700; color: #059669; font-family: var(--font-mono); margin-bottom: 4px;">2. LIVE OBJECTION TABS</div>
+                        <div style="font-size: 13px; color: #475569; line-height: 1.45;">When the lead raises an objection, click any objection button for instant rebuttal scripts.</div>
                     </div>
 
-                    <div style="background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px;">
-                        <div style="font-size: 11.5px; font-weight: 700; color: #10b981; font-family: var(--font-mono); margin-bottom: 4px;">3. POST-CALL WHATSAPP</div>
-                        <div style="font-size: 12.5px; color: white; line-height: 1.4;">Use 1-click WhatsApp follow-up to send your custom PDF proposal link right after ending the call.</div>
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
+                        <div style="font-size: 11.5px; font-weight: 700; color: #059669; font-family: var(--font-mono); margin-bottom: 4px;">3. POST-CALL WHATSAPP</div>
+                        <div style="font-size: 13px; color: #475569; line-height: 1.45;">Use 1-click WhatsApp follow-up to send your custom PDF proposal link right after ending the call.</div>
                     </div>
                 </div>
             </details>
 
             <!-- Lead Selection Form -->
-            <div style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-md);">
+            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                     <div>
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                            <label style="font-size: 12px; font-weight: 600; color: var(--text-secondary); font-family: var(--font-mono);">
+                            <label style="font-size: 12px; font-weight: 700; color: #334155; font-family: var(--font-mono);">
                                 SELECT TARGET BUSINESS LEAD:
                             </label>
-                            <a href="#/dashboard/crm" style="font-size: 11px; color: #10b981; text-decoration: underline; font-family: var(--font-mono);">
+                            <a href="#/dashboard/crm" style="font-size: 11.5px; color: #059669; text-decoration: underline; font-family: var(--font-mono); font-weight: 600;">
                                 Manage Tracked Leads in CRM ↗
                             </a>
                         </div>
-                        <select id="scriptLeadSelect" data-selected-id="${selectedLeadId || ''}" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13.5px; outline: none;">
+                        <select id="scriptLeadSelect" data-selected-id="${selectedLeadId || ''}" style="width: 100%; padding: 12px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; color: #0f172a; font-size: 13.5px; outline: none;">
                             <option value="">-- Loading your tracked leads & directory... --</option>
                         </select>
                     </div>
                     
                     <div>
-                        <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; font-family: var(--font-mono);">
+                        <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 8px; font-family: var(--font-mono);">
                             SELECT PRIMARY CALL ANGLE:
                         </label>
-                        <select id="scriptCallAngle" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13.5px; outline: none;">
+                        <select id="scriptCallAngle" style="width: 100%; padding: 12px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; color: #0f172a; font-size: 13.5px; outline: none;">
                             <option value="REPUTATION_AND_REVENUE">Review Deficit Paradox & Lost Revenue Angle</option>
                             <option value="NO_WEBSITE_VISIBILITY">Missing Web Presence & Mobile Funnel Angle</option>
                             <option value="MOBILE_CONVERSION_LEAK">Slow Mobile Speed & Drop-off Leak Angle</option>
@@ -102,10 +102,10 @@ export function renderCallScriptGeneratorLayout(selectedLeadId = null) {
                 <div style="display: flex; justify-content: flex-end; align-items: center; gap: 16px;">
                     ${isAtLimit ? `
                         <div style="color: #ef4444; font-size: 12.5px; font-family: var(--font-mono);">
-                            ⚠️ Monthly call script limit reached. <a href="#/checkout" style="color: var(--accent-gold); text-decoration: underline;">Upgrade plan ↗</a>
+                            ⚠️ Monthly call script limit reached. <a href="#/checkout" style="color: #2563eb; text-decoration: underline;">Upgrade plan ↗</a>
                         </div>
                     ` : ''}
-                    <button id="generateCallScriptBtn" class="brand-btn" style="padding: 12px 24px; font-size: 14px; font-weight: 600; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 8px; cursor: pointer;" ${isAtLimit ? 'disabled' : ''}>
+                    <button id="generateCallScriptBtn" style="background: #059669; color: white; border: none; padding: 12px 26px; font-size: 14px; font-weight: 700; border-radius: 8px; display: flex; align-items: center; gap: 8px; cursor: pointer; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);" ${isAtLimit ? 'disabled' : ''}>
                         <i data-lucide="phone-call" style="width: 16px; height: 16px;"></i>
                         Generate Call Script & Objection Guide
                     </button>
@@ -113,18 +113,18 @@ export function renderCallScriptGeneratorLayout(selectedLeadId = null) {
             </div>
 
             <!-- Dynamic Animated Step Loader -->
-            <div id="scriptStepLoader" style="display: none; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 40px 24px; text-align: center;">
-                <div style="display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 50%; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: #10b981; margin-bottom: 20px;">
+            <div id="scriptStepLoader" style="display: none; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 40px 24px; text-align: center; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                <div style="display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 50%; background: #ecfdf5; border: 1px solid #a7f3d0; color: #059669; margin-bottom: 20px;">
                     <i data-lucide="loader-2" style="width: 28px; height: 28px; animation: spin 1s linear infinite;"></i>
                 </div>
-                <h3 id="scriptLoaderTitle" style="font-size: 18px; font-weight: 700; margin: 0 0 8px 0; font-family: var(--font-heading);">
+                <h3 id="scriptLoaderTitle" style="font-size: 18px; font-weight: 700; margin: 0 0 8px 0; font-family: var(--font-heading); color: #0f172a;">
                     Analyzing target business metrics & Google profile...
                 </h3>
-                <p id="scriptLoaderSub" style="color: var(--text-muted); font-size: 13.5px; margin: 0 0 24px 0;">
+                <p id="scriptLoaderSub" style="color: #64748b; font-size: 13.5px; margin: 0 0 24px 0;">
                     Crafting 30-second pattern interrupt and live objection rebuttals...
                 </p>
-                <div style="max-width: 480px; margin: 0 auto; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; border: 1px solid var(--border);">
-                    <div id="scriptProgressBar" style="width: 25%; height: 100%; background: linear-gradient(90deg, #10b981, #34d399); transition: width 0.4s ease;"></div>
+                <div style="max-width: 480px; margin: 0 auto; height: 6px; background: #f1f5f9; border-radius: 3px; overflow: hidden; border: 1px solid #e2e8f0;">
+                    <div id="scriptProgressBar" style="width: 25%; height: 100%; background: linear-gradient(90deg, #059669, #34d399); transition: width 0.4s ease;"></div>
                 </div>
             </div>
 
@@ -310,80 +310,80 @@ function renderCallScriptOutputCard(script, slug, publicUrl) {
     const waMsg = script.whatsapp_followup_message || '';
 
     const objTabsHTML = objList.map((o, idx) => `
-        <button class="objection-tab-btn ${idx === 0 ? 'active' : ''}" data-idx="${idx}" style="padding: 10px 14px; font-size: 12px; font-weight: 600; border-radius: var(--radius-sm); border: 1px solid ${idx === 0 ? 'var(--accent-gold)' : 'var(--border)'}; background: ${idx === 0 ? 'rgba(217, 119, 6, 0.15)' : 'rgba(255,255,255,0.02)'}; color: ${idx === 0 ? 'var(--accent-gold)' : 'white'}; cursor: pointer; text-align: left;">
+        <button class="objection-tab-btn ${idx === 0 ? 'active' : ''}" data-idx="${idx}" style="padding: 10px 14px; font-size: 12.5px; font-weight: 700; border-radius: 6px; border: 1px solid ${idx === 0 ? '#059669' : '#cbd5e1'}; background: ${idx === 0 ? '#ecfdf5' : '#ffffff'}; color: ${idx === 0 ? '#059669' : '#0f172a'}; cursor: pointer; text-align: left;">
             ${o.objection_title}
         </button>
     `).join('');
 
     container.innerHTML = `
-        <div style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; display: flex; flex-direction: column; gap: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px; display: flex; flex-direction: column; gap: 24px; box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);">
             
             <!-- Top Action Toolbar -->
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 18px; flex-wrap: wrap; gap: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 18px; flex-wrap: wrap; gap: 16px;">
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    <span style="padding: 4px 8px; border-radius: 4px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: #10b981; font-size: 11px; font-weight: 700; font-family: var(--font-mono);">
+                    <span style="padding: 4px 10px; border-radius: 99px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #059669; font-size: 11px; font-weight: 700; font-family: var(--font-mono);">
                         ● TELEPROMPTER SCRIPT ACTIVE
                     </span>
-                    <span style="color: var(--text-muted); font-size: 12px; font-family: var(--font-mono);">Lead: ${script.business_name}</span>
+                    <span style="color: #64748b; font-size: 12px; font-family: var(--font-mono);">Lead: ${script.business_name}</span>
                 </div>
                 
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    <button id="copyWaFollowupBtn" class="brand-btn" style="padding: 8px 16px; font-size: 12.5px; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 6px; font-weight: 600; cursor: pointer; border: none;">
+                    <button id="copyWaFollowupBtn" style="background: #25D366; color: white; border: none; padding: 8px 16px; font-size: 12.5px; border-radius: 6px; display: flex; align-items: center; gap: 6px; font-weight: 700; cursor: pointer;">
                         <i data-lucide="message-square" style="width: 14px; height: 14px;"></i> Copy WhatsApp Follow-up
                     </button>
 
-                    <button id="copyFullScriptBtn" class="secondary-btn" style="padding: 8px 14px; font-size: 12.5px; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                    <button id="copyFullScriptBtn" style="background: #ffffff; border: 1px solid #cbd5e1; color: #0f172a; padding: 8px 14px; font-size: 12.5px; border-radius: 6px; display: flex; align-items: center; gap: 6px; cursor: pointer; font-weight: 600;">
                         <i data-lucide="copy" style="width: 14px; height: 14px;"></i> Copy Full Script
                     </button>
 
-                    <button id="printScriptSheetBtn" class="secondary-btn" style="padding: 8px 14px; font-size: 12.5px; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                    <button id="printScriptSheetBtn" style="background: #ffffff; border: 1px solid #cbd5e1; color: #0f172a; padding: 8px 14px; font-size: 12.5px; border-radius: 6px; display: flex; align-items: center; gap: 6px; cursor: pointer; font-weight: 600;">
                         <i data-lucide="printer" style="width: 14px; height: 14px;"></i> Print Teleprompter
                     </button>
                 </div>
             </div>
 
             <!-- LIVE CALL TELEPROMPTER VIEW -->
-            <div id="printableScriptContainer" style="background: #0b0c10; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 28px; display: flex; flex-direction: column; gap: 24px;">
+            <div id="printableScriptContainer" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 28px; display: flex; flex-direction: column; gap: 24px;">
                 
                 <!-- SECTION 1: 30-SECOND PATTERN INTERRUPT -->
-                <div style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 20px;">
-                    <div style="font-size: 11px; color: var(--accent-gold); font-weight: 700; font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 8px;">
+                <div style="border-bottom: 1px solid #f1f5f9; padding-bottom: 20px;">
+                    <div style="font-size: 11px; color: #059669; font-weight: 700; font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 8px;">
                         STEP 1 • 30-SECOND PATTERN INTERRUPT OPENING
                     </div>
-                    <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 18px; font-size: 15px; line-height: 1.6; color: white; font-family: var(--font-body);">
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px; font-size: 15px; line-height: 1.6; color: #0f172a; font-family: var(--font-body);">
                         "${opening.script_text}"
                     </div>
-                    <div style="font-size: 11.5px; color: var(--text-muted); font-family: var(--font-mono); margin-top: 6px;">
+                    <div style="font-size: 12px; color: #64748b; font-family: var(--font-mono); margin-top: 6px;">
                         💡 Coaching Tip: ${opening.coaching_tip || 'Speak naturally and give a brief pause.'}
                     </div>
                 </div>
 
                 <!-- SECTION 2: DATA-DRIVEN HOOK & EMPATHY PROBE -->
-                <div style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 20px;">
-                    <div style="font-size: 11px; color: var(--accent-gold); font-weight: 700; font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 8px;">
+                <div style="border-bottom: 1px solid #f1f5f9; padding-bottom: 20px;">
+                    <div style="font-size: 11px; color: #059669; font-weight: 700; font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 8px;">
                         STEP 2 • DATA OBSERVATION HOOK & EMPATHY QUESTION
                     </div>
-                    <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 18px; font-size: 15px; line-height: 1.6; color: white; margin-bottom: 12px;">
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px; font-size: 15px; line-height: 1.6; color: #0f172a; margin-bottom: 12px;">
                         "${obs.script_text}"
                     </div>
-                    <div style="background: rgba(217, 119, 6, 0.08); border: 1px solid rgba(217, 119, 6, 0.2); border-radius: var(--radius-sm); padding: 16px; font-size: 14.5px; line-height: 1.6; color: var(--accent-gold);">
+                    <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 16px; font-size: 14.5px; line-height: 1.6; color: #065f46;">
                         <strong>Empathy Question:</strong> "${emp.script_text}"
                     </div>
                 </div>
 
                 <!-- SECTION 3: VALUE PITCH & CONCEPT PROTOTYPE MENTION -->
-                <div style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 20px;">
-                    <div style="font-size: 11px; color: var(--accent-gold); font-weight: 700; font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 8px;">
+                <div style="border-bottom: 1px solid #f1f5f9; padding-bottom: 20px;">
+                    <div style="font-size: 11px; color: #059669; font-weight: 700; font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 8px;">
                         STEP 3 • CONCEPT PROTOTYPE PITCH
                     </div>
-                    <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 18px; font-size: 15px; line-height: 1.6; color: white;">
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px; font-size: 15px; line-height: 1.6; color: #0f172a;">
                         "${val.script_text} ${val.concept_url_mention || ''}"
                     </div>
                 </div>
 
                 <!-- SECTION 4: LIVE INTERACTIVE OBJECTION HANDLING CARDS -->
-                <div style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 20px;">
-                    <div style="font-size: 11px; color: #10b981; font-weight: 700; font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 12px;">
+                <div style="border-bottom: 1px solid #f1f5f9; padding-bottom: 20px;">
+                    <div style="font-size: 11px; color: #059669; font-weight: 700; font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 12px;">
                         STEP 4 • LIVE INTERACTIVE OBJECTION REBUTTAL CARDS (CLICK TO TOGGLE)
                     </div>
                     
@@ -392,14 +392,14 @@ function renderCallScriptOutputCard(script, slug, publicUrl) {
                     </div>
 
                     <!-- Active Rebuttal Display Box -->
-                    <div id="activeRebuttalBox" style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: var(--radius-md); padding: 20px;">
-                        <div id="rebuttalTitle" style="font-size: 13px; font-weight: 700; color: #10b981; margin-bottom: 8px; font-family: var(--font-heading);">
+                    <div id="activeRebuttalBox" style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 20px;">
+                        <div id="rebuttalTitle" style="font-size: 13.5px; font-weight: 800; color: #065f46; margin-bottom: 8px; font-family: var(--font-heading);">
                             ${objList[0]?.objection_title || 'Objection Response'}
                         </div>
-                        <div id="rebuttalText" style="font-size: 15px; line-height: 1.6; color: white; margin-bottom: 10px;">
+                        <div id="rebuttalText" style="font-size: 15px; line-height: 1.6; color: #0f172a; margin-bottom: 10px;">
                             "${objList[0]?.rebuttal_script || ''}"
                         </div>
-                        <div id="rebuttalAngle" style="font-size: 11.5px; color: var(--text-muted); font-family: var(--font-mono);">
+                        <div id="rebuttalAngle" style="font-size: 12px; color: #047857; font-family: var(--font-mono); font-weight: 600;">
                             🎯 Strategic Angle: ${objList[0]?.strategic_angle || ''}
                         </div>
                     </div>
@@ -407,10 +407,10 @@ function renderCallScriptOutputCard(script, slug, publicUrl) {
 
                 <!-- SECTION 5: CALL CLOSING & CONSULTATION BOOKING -->
                 <div>
-                    <div style="font-size: 11px; color: var(--accent-gold); font-weight: 700; font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 8px;">
+                    <div style="font-size: 11px; color: #059669; font-weight: 700; font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 8px;">
                         STEP 5 • CALL CLOSING & STRATEGY SESSION LOCK-IN
                     </div>
-                    <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 18px; font-size: 15px; line-height: 1.6; color: white;">
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px; font-size: 15px; line-height: 1.6; color: #0f172a;">
                         "${closing.script_text}"
                     </div>
                 </div>
@@ -418,12 +418,12 @@ function renderCallScriptOutputCard(script, slug, publicUrl) {
             </div>
 
             <!-- WHATSAPP FOLLOW-UP MESSAGE BOX -->
-            <div style="background: rgba(37, 211, 102, 0.05); border: 1px solid rgba(37, 211, 102, 0.2); border-radius: var(--radius-md); padding: 20px;">
-                <div style="font-size: 12px; font-weight: 700; color: #25D366; font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 20px;">
+                <div style="font-size: 12px; font-weight: 700; color: #15803d; font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
                     <i data-lucide="message-square" style="width: 14px; height: 14px;"></i>
                     PRE-FORMATTED WHATSAPP FOLLOW-UP MESSAGE (POST-CALL)
                 </div>
-                <div id="waFollowupText" style="font-size: 13.5px; line-height: 1.5; color: white; font-family: var(--font-mono); background: rgba(0,0,0,0.3); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border);">
+                <div id="waFollowupText" style="font-size: 13.5px; line-height: 1.5; color: #0f172a; font-family: var(--font-mono); background: #ffffff; padding: 14px; border-radius: 8px; border: 1px solid #cbd5e1;">
                     ${waMsg}
                 </div>
             </div>
@@ -438,13 +438,13 @@ function renderCallScriptOutputCard(script, slug, publicUrl) {
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
             tabs.forEach(t => {
-                t.style.borderColor = 'var(--border)';
-                t.style.background = 'rgba(255,255,255,0.02)';
-                t.style.color = 'white';
+                t.style.borderColor = '#cbd5e1';
+                t.style.background = '#ffffff';
+                t.style.color = '#0f172a';
             });
-            tab.style.borderColor = 'var(--accent-gold)';
-            tab.style.background = 'rgba(217, 119, 6, 0.15)';
-            tab.style.color = 'var(--accent-gold)';
+            tab.style.borderColor = '#059669';
+            tab.style.background = '#ecfdf5';
+            tab.style.color = '#059669';
 
             const idx = parseInt(tab.dataset.idx, 10);
             const targetObj = objList[idx];
@@ -508,7 +508,7 @@ ${closing.script_text}
                     <head>
                         <title>Call_Script_${script.business_name.replace(/\s+/g, '_')}</title>
                         <style>
-                            body { font-family: Arial, sans-serif; background: #0b0c10; color: white; padding: 30px; }
+                            body { font-family: Arial, sans-serif; background: #ffffff; color: #0f172a; padding: 30px; }
                             @media print { body { background: white; color: black; } }
                         </style>
                     </head>
