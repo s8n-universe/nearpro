@@ -66,14 +66,14 @@ export function renderLeadCRM(pipelineData, stats) {
 
     // 5. Render LeadNest Top Analytics Header Widgets
     const topAnalyticsHeaderHTML = `
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 16px;">
             
             <!-- Widget 1: Lead Intake Trend Area Chart -->
-            <div class="feature-panel" style="padding: 16px 20px; border-radius: var(--radius-md); display: flex; flex-direction: column; justify-content: space-between; gap: 12px; background: rgba(22,22,29,0.95);">
+            <div class="feature-panel" style="padding: 16px 20px; border-radius: var(--radius-md); display: flex; flex-direction: column; justify-content: space-between; gap: 12px; background: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 2px 6px rgba(15,23,42,0.03);">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                     <div>
-                        <div style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">New Customers & Leads</div>
-                        <div style="font-size: 22px; font-weight: 700; color: var(--text-primary); margin-top: 2px;">${totalCount} Active Deals</div>
+                        <div style="font-size: 11px; font-family: var(--font-mono); color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">New Customers & Leads</div>
+                        <div style="font-size: 22px; font-weight: 800; color: #0f172a; margin-top: 2px;">${totalCount} Active Deals</div>
                     </div>
                     <span class="crm-pill pill-new">+12% vs last wk</span>
                 </div>
@@ -82,51 +82,51 @@ export function renderLeadCRM(pipelineData, stats) {
                     <svg viewBox="0 0 200 50" style="width: 100%; height: 100%; overflow: visible;">
                         <defs>
                             <linearGradient id="leadGrad" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.4"/>
-                                <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.0"/>
+                                <stop offset="0%" stop-color="#2563eb" stop-opacity="0.3"/>
+                                <stop offset="100%" stop-color="#2563eb" stop-opacity="0.0"/>
                             </linearGradient>
                         </defs>
                         <path d="M 0 45 Q 30 35, 60 40 T 120 20 T 180 15 L 200 10 L 200 50 L 0 50 Z" fill="url(#leadGrad)"/>
-                        <path d="M 0 45 Q 30 35, 60 40 T 120 20 T 180 15 L 200 10" fill="none" stroke="#3b82f6" stroke-width="2.5"/>
+                        <path d="M 0 45 Q 30 35, 60 40 T 120 20 T 180 15 L 200 10" fill="none" stroke="#2563eb" stroke-width="2.5"/>
                     </svg>
                 </div>
             </div>
 
             <!-- Widget 2: Outreach Activity Heatmap -->
-            <div class="feature-panel" style="padding: 16px 20px; border-radius: var(--radius-md); display: flex; flex-direction: column; justify-content: space-between; gap: 10px; background: rgba(22,22,29,0.95);">
+            <div class="feature-panel" style="padding: 16px 20px; border-radius: var(--radius-md); display: flex; flex-direction: column; justify-content: space-between; gap: 10px; background: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 2px 6px rgba(15,23,42,0.03);">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Activity Matrix</div>
-                    <span style="font-size: 11px; color: var(--text-secondary);">Last 14 Days</span>
+                    <div style="font-size: 11px; font-family: var(--font-mono); color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Activity Matrix</div>
+                    <span style="font-size: 11px; color: #475569; font-weight: 500;">Last 14 Days</span>
                 </div>
                 <div class="activity-heatmap-grid" style="grid-template-columns: repeat(14, 1fr); gap: 3px;">
                     ${Array.from({ length: 42 }).map((_, i) => {
                         const opacity = (i * 7) % 100 / 100;
-                        const bg = opacity > 0.6 ? '#22c55e' : (opacity > 0.3 ? '#3b82f6' : 'rgba(255,255,255,0.06)');
-                        return `<div class="heatmap-cell" style="background: ${bg}; opacity: ${Math.max(0.25, opacity)}; height: 10px; border-radius: 2px;"></div>`;
+                        const bg = opacity > 0.6 ? '#16a34a' : (opacity > 0.3 ? '#2563eb' : '#e2e8f0');
+                        return `<div class="heatmap-cell" style="background: ${bg}; opacity: ${Math.max(0.35, opacity)}; height: 10px; border-radius: 2px;"></div>`;
                     }).join('')}
                 </div>
-                <div style="display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text-muted); font-family: var(--font-mono);">
+                <div style="display: flex; justify-content: space-between; font-size: 10.5px; color: #64748b; font-family: var(--font-mono); font-weight: 600;">
                     <span>Mon</span><span>Wed</span><span>Fri</span><span>Sun</span>
                 </div>
             </div>
 
             <!-- Widget 3: Financial Pipeline Metrics -->
-            <div class="feature-panel" style="padding: 16px 20px; border-radius: var(--radius-md); display: flex; flex-direction: column; justify-content: space-between; background: rgba(22,22,29,0.95);">
+            <div class="feature-panel" style="padding: 16px 20px; border-radius: var(--radius-md); display: flex; flex-direction: column; justify-content: space-between; background: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 2px 6px rgba(15,23,42,0.03);">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                     <div>
-                        <div style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Est. Pipeline Value</div>
-                        <div style="font-size: 24px; font-weight: 700; color: var(--accent-gold); margin-top: 2px;">${formattedPipelineVal}</div>
+                        <div style="font-size: 11px; font-family: var(--font-mono); color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Est. Pipeline Value</div>
+                        <div style="font-size: 24px; font-weight: 800; color: #d97706; margin-top: 2px;">${formattedPipelineVal}</div>
                     </div>
                     <span class="crm-pill pill-followup">₹30k / Lead</span>
                 </div>
-                <div style="display: flex; gap: 16px; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.06);">
+                <div style="display: flex; gap: 16px; margin-top: 8px; padding-top: 8px; border-top: 1px solid #f1f5f9;">
                     <div>
-                        <span style="font-size: 10.5px; color: var(--text-muted);">Conversion Rate</span>
-                        <div style="font-size: 14px; font-weight: 700; color: #4ade80;">${conversionRate}%</div>
+                        <span style="font-size: 10.5px; color: #64748b;">Conversion Rate</span>
+                        <div style="font-size: 14px; font-weight: 800; color: #16a34a;">${conversionRate}%</div>
                     </div>
                     <div>
-                        <span style="font-size: 10.5px; color: var(--text-muted);">Deals Converted</span>
-                        <div style="font-size: 14px; font-weight: 700; color: #c084fc;">${convertedCount}</div>
+                        <span style="font-size: 10.5px; color: #64748b;">Deals Converted</span>
+                        <div style="font-size: 14px; font-weight: 800; color: #9333ea;">${convertedCount}</div>
                     </div>
                 </div>
             </div>
@@ -139,7 +139,7 @@ export function renderLeadCRM(pipelineData, stats) {
         const stageLeads = displayedLeads.filter(l => l.crm_status === stageKey);
         if (stageLeads.length === 0) {
             return `
-                <div style="padding: 24px 12px; text-align: center; color: var(--text-muted); font-size: 12px; border: 1px dashed rgba(255,255,255,0.08); border-radius: var(--radius-md);">
+                <div style="padding: 24px 12px; text-align: center; color: #64748b; font-size: 12px; border: 1px dashed #cbd5e1; border-radius: var(--radius-md); background: #ffffff;">
                     No deals in this stage
                 </div>
             `;
@@ -174,7 +174,7 @@ export function renderLeadCRM(pipelineData, stats) {
                 <div class="kanban-lead-card" data-id="${lead.saved_lead_id}">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
                         <span class="crm-pill ${pillClass}">${pillText}</span>
-                        <select class="matrix-stage-select" data-id="${lead.saved_lead_id}" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: var(--text-secondary); font-size: 10px; font-weight: 600; padding: 2px 4px; cursor: pointer;">
+                        <select class="matrix-stage-select" data-id="${lead.saved_lead_id}" style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 4px; color: #0f172a; font-size: 10.5px; font-weight: 700; padding: 2px 4px; cursor: pointer;">
                             <option value="new" ${stageKey === 'new' ? 'selected' : ''}>New</option>
                             <option value="contacted" ${stageKey === 'contacted' ? 'selected' : ''}>Contacted</option>
                             <option value="responded" ${stageKey === 'responded' ? 'selected' : ''}>Offer Sent</option>
@@ -184,20 +184,20 @@ export function renderLeadCRM(pipelineData, stats) {
                     </div>
 
                     <div>
-                        <h4 style="margin: 0 0 3px 0; font-size: 14.5px; font-weight: 700; color: var(--text-primary); font-family: var(--font-heading);">${lead.name}</h4>
-                        <div style="font-size: 11.5px; color: var(--text-muted);">${lead.category || 'Local Business'} &middot; ${lead.area || 'Mumbai'}</div>
+                        <h4 style="margin: 0 0 3px 0; font-size: 14.5px; font-weight: 700; color: #0f172a; font-family: var(--font-heading);">${lead.name}</h4>
+                        <div style="font-size: 11.5px; color: #475569;">${lead.category || 'Local Business'} &middot; ${lead.area || 'Mumbai'}</div>
                     </div>
 
-                    <div style="display: flex; items-center; gap: 8px; font-size: 11px; color: var(--text-secondary);">
+                    <div style="display: flex; items-center; gap: 8px; font-size: 11px; color: #475569;">
                         <span>⭐ ${rating} (${reviewCount})</span>
-                        ${website ? `<span style="color: #60a5fa;">🌐 Site Active</span>` : `<span style="color: #fb7185;">⚡ No Website</span>`}
+                        ${website ? `<span style="color: #2563eb; font-weight: 600;">🌐 Site Active</span>` : `<span style="color: #dc2626; font-weight: 600;">⚡ No Website</span>`}
                     </div>
 
                     <!-- Action Shortcut Buttons -->
                     <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px;" onclick="event.stopPropagation();">
-                        <a href="#/dashboard/proposals?lead_id=${lead.id}" style="padding: 3px 8px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 4px; font-size: 10.5px; color: #60a5fa; text-decoration: none; font-weight: 600;">📄 Proposal</a>
-                        <a href="#/dashboard/call-scripts?lead_id=${lead.id}" style="padding: 3px 8px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.25); border-radius: 4px; font-size: 10.5px; color: #4ade80; text-decoration: none; font-weight: 600;">📞 Script</a>
-                        <a href="#/dashboard/outreach?lead_id=${lead.id}" style="padding: 3px 8px; background: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.25); border-radius: 4px; font-size: 10.5px; color: #c084fc; text-decoration: none; font-weight: 600;">⚡ Pitch</a>
+                        <a href="#/dashboard/proposals?lead_id=${lead.id}" style="padding: 3px 8px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 4px; font-size: 10.5px; color: #2563eb; text-decoration: none; font-weight: 700;">📄 Proposal</a>
+                        <a href="#/dashboard/call-scripts?lead_id=${lead.id}" style="padding: 3px 8px; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 4px; font-size: 10.5px; color: #059669; text-decoration: none; font-weight: 700;">📞 Script</a>
+                        <a href="#/dashboard/outreach?lead_id=${lead.id}" style="padding: 3px 8px; background: #f5f3ff; border: 1px solid #ddd6fe; border-radius: 4px; font-size: 10.5px; color: #7c3aed; text-decoration: none; font-weight: 700;">⚡ Pitch</a>
                     </div>
 
                     <!-- Footer: Assignee avatar + Date -->
@@ -285,50 +285,50 @@ export function renderLeadCRM(pipelineData, stats) {
         const completionPct = Math.min(100, Math.round((completedSteps / 5) * 100));
 
         return `
-            <div class="lead-matrix-row" style="background: rgba(22,22,29,0.95); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-md); padding: 14px 18px; display: grid; grid-template-columns: 240px 140px 140px 140px 140px 160px 140px; gap: 14px; align-items: center; transition: all 0.2s ease;">
+            <div class="lead-matrix-row" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 14px 18px; display: grid; grid-template-columns: 240px 140px 140px 140px 140px 160px 140px; gap: 14px; align-items: center; transition: all 0.2s ease; box-shadow: 0 2px 6px rgba(15,23,42,0.03);">
                 <div>
-                    <h5 style="margin: 0 0 3px 0; font-size: 14px; font-weight: 700; color: var(--text-primary);" title="${lead.name}">${lead.name}</h5>
-                    <div style="font-size: 11.5px; color: var(--text-muted);">${lead.category || 'Business'} &middot; ${lead.area || 'Mumbai'}</div>
-                    <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;">⭐ ${rating} (${reviewCount} reviews)</div>
+                    <h5 style="margin: 0 0 3px 0; font-size: 14px; font-weight: 700; color: #0f172a;" title="${lead.name}">${lead.name}</h5>
+                    <div style="font-size: 11.5px; color: #475569;">${lead.category || 'Business'} &middot; ${lead.area || 'Mumbai'}</div>
+                    <div style="font-size: 11px; color: #64748b; margin-top: 2px;">⭐ ${rating} (${reviewCount} reviews)</div>
                 </div>
 
                 <div>
-                    <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 4px;">1. HEALTH AUDIT</div>
+                    <div style="font-size: 10px; font-weight: 800; color: #64748b; font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 4px;">1. HEALTH AUDIT</div>
                     ${isAuditDone ? `
-                        <span style="background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.3); color: #4ade80; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-family: var(--font-mono);">✅ ${auditScore}/100</span>
+                        <span style="background: #ecfdf5; border: 1px solid #a7f3d0; color: #059669; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; font-family: var(--font-mono);">✅ ${auditScore}/100</span>
                     ` : hasWebsite ? `
-                        <button class="matrix-audit-btn" data-id="${lead.saved_lead_id}" data-url="${website}" style="background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.3); color: #60a5fa; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer;">⚡ Run Audit</button>
-                    ` : `<span style="color: var(--text-muted); font-size: 11px;">No Website</span>`}
+                        <button class="matrix-audit-btn" data-id="${lead.saved_lead_id}" data-url="${website}" style="background: #eff6ff; border: 1px solid #bfdbfe; color: #2563eb; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer;">⚡ Run Audit</button>
+                    ` : `<span style="color: #64748b; font-size: 11px;">No Website</span>`}
                 </div>
 
                 <div>
-                    <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 4px;">2. PROPOSAL</div>
-                    <a href="#/dashboard/proposals?lead_id=${lead.id}" style="color: #60a5fa; font-size: 11.5px; text-decoration: none; font-weight: 600;">📄 Proposal ↗</a>
+                    <div style="font-size: 10px; font-weight: 800; color: #64748b; font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 4px;">2. PROPOSAL</div>
+                    <a href="#/dashboard/proposals?lead_id=${lead.id}" style="color: #2563eb; font-size: 11.5px; text-decoration: none; font-weight: 700;">📄 Proposal ↗</a>
                 </div>
 
                 <div>
-                    <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 4px;">3. CALL SCRIPT</div>
-                    <a href="#/dashboard/call-scripts?lead_id=${lead.id}" style="color: #4ade80; font-size: 11.5px; text-decoration: none; font-weight: 600;">📞 Script ↗</a>
+                    <div style="font-size: 10px; font-weight: 800; color: #64748b; font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 4px;">3. CALL SCRIPT</div>
+                    <a href="#/dashboard/call-scripts?lead_id=${lead.id}" style="color: #059669; font-size: 11.5px; text-decoration: none; font-weight: 700;">📞 Script ↗</a>
                 </div>
 
                 <div>
-                    <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 4px;">4. AI OUTREACH</div>
-                    <a href="#/dashboard/outreach?lead_id=${lead.id}" style="color: #c084fc; font-size: 11.5px; text-decoration: none; font-weight: 600;">⚡ Pitch ↗</a>
+                    <div style="font-size: 10px; font-weight: 800; color: #64748b; font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 4px;">4. AI OUTREACH</div>
+                    <a href="#/dashboard/outreach?lead_id=${lead.id}" style="color: #7c3aed; font-size: 11.5px; text-decoration: none; font-weight: 700;">⚡ Pitch ↗</a>
                 </div>
 
                 <div>
                     <div style="display: flex; justify-content: space-between; font-size: 10.5px; font-family: var(--font-mono); margin-bottom: 4px;">
-                        <span style="color: var(--text-muted);">Progress:</span>
-                        <strong style="color: var(--accent-gold);">${completedSteps}/5</strong>
+                        <span style="color: #64748b; font-weight: 700;">Progress:</span>
+                        <strong style="color: #2563eb;">${completedSteps}/5</strong>
                     </div>
-                    <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden;">
-                        <div style="width: ${completionPct}%; height: 100%; background: var(--brand-gradient);"></div>
+                    <div style="width: 100%; height: 4px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 4px; overflow: hidden;">
+                        <div style="width: ${completionPct}%; height: 100%; background: linear-gradient(90deg, #2563eb, #059669);"></div>
                     </div>
                 </div>
 
                 <div>
-                    <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 4px;">STAGE</div>
-                    <select class="matrix-stage-select" data-id="${lead.saved_lead_id}" style="width: 100%; padding: 4px 6px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 4px; color: var(--text-primary); font-size: 11.5px;">
+                    <div style="font-size: 10px; font-weight: 800; color: #64748b; font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 4px;">STAGE</div>
+                    <select class="matrix-stage-select" data-id="${lead.saved_lead_id}" style="width: 100%; padding: 4px 6px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 4px; color: #0f172a; font-size: 11.5px; font-weight: 700;">
                         <option value="new" ${lead.crm_status === 'new' ? 'selected' : ''}>🔵 New</option>
                         <option value="contacted" ${lead.crm_status === 'contacted' ? 'selected' : ''}>📞 Contacted</option>
                         <option value="responded" ${lead.crm_status === 'responded' ? 'selected' : ''}>💬 Offer Sent</option>
@@ -341,10 +341,10 @@ export function renderLeadCRM(pipelineData, stats) {
     }).join('');
 
     const emptyStateHTML = displayedLeads.length === 0 ? `
-        <div style="padding: 48px 24px; text-align: center; color: var(--text-muted); background: rgba(22,22,29,0.5); border: 1px dashed var(--border); border-radius: var(--radius-lg);">
+        <div style="padding: 48px 24px; text-align: center; color: #64748b; background: #ffffff; border: 1px dashed #cbd5e1; border-radius: var(--radius-lg);">
             <div style="font-size: 32px; margin-bottom: 12px;">📊</div>
-            <h4 style="margin: 0 0 6px 0; color: var(--text-primary); font-size: 15px;">No Tracked Leads Found</h4>
-            <p style="margin: 0 0 16px 0; font-size: 13px; color: var(--text-secondary);">Save leads from the directory to track deals per profile in your CRM workspace.</p>
+            <h4 style="margin: 0 0 6px 0; color: #0f172a; font-size: 15px; font-weight: 800;">No Tracked Leads Found</h4>
+            <p style="margin: 0 0 16px 0; font-size: 13px; color: #475569;">Save leads from the directory to track deals per profile in your CRM workspace.</p>
             <a href="#/dashboard/directory" class="brand-btn" style="padding: 8px 18px; font-size: 12.5px; text-decoration: none; display: inline-block;">
                 Browse Directory Leads &rarr;
             </a>
@@ -358,28 +358,28 @@ export function renderLeadCRM(pipelineData, stats) {
             ${topAnalyticsHeaderHTML}
 
             <!-- View Switcher & Control Toolbar -->
-            <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; background: rgba(22,22,29,0.95); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 10px 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 10px 16px; box-shadow: 0 2px 6px rgba(15,23,42,0.03);">
                 
                 <!-- View Mode Toggle Buttons -->
                 <div style="display: flex; gap: 8px; align-items: center;">
-                    <button class="crm-view-btn ${crmView === 'kanban' ? 'active' : ''}" id="toggleKanbanViewBtn" style="padding: 6px 14px; font-size: 12px; font-weight: 600; border-radius: var(--radius-sm); border: 1px solid ${crmView === 'kanban' ? 'var(--accent-gold)' : 'var(--border)'}; background: ${crmView === 'kanban' ? 'rgba(255,160,0,0.12)' : 'transparent'}; color: ${crmView === 'kanban' ? 'var(--accent-gold)' : 'var(--text-secondary)'}; cursor: pointer;">
+                    <button class="crm-view-btn ${crmView === 'kanban' ? 'active' : ''}" id="toggleKanbanViewBtn" style="padding: 6px 14px; font-size: 12px; font-weight: 700; border-radius: var(--radius-sm); border: 1px solid ${crmView === 'kanban' ? '#2563eb' : '#cbd5e1'}; background: ${crmView === 'kanban' ? '#eff6ff' : '#f8fafc'}; color: ${crmView === 'kanban' ? '#2563eb' : '#475569'}; cursor: pointer;">
                         📋 LeadNest Kanban Board
                     </button>
-                    <button class="crm-view-btn ${crmView === 'matrix' ? 'active' : ''}" id="toggleMatrixViewBtn" style="padding: 6px 14px; font-size: 12px; font-weight: 600; border-radius: var(--radius-sm); border: 1px solid ${crmView === 'matrix' ? 'var(--accent-gold)' : 'var(--border)'}; background: ${crmView === 'matrix' ? 'rgba(255,160,0,0.12)' : 'transparent'}; color: ${crmView === 'matrix' ? 'var(--accent-gold)' : 'var(--text-secondary)'}; cursor: pointer;">
+                    <button class="crm-view-btn ${crmView === 'matrix' ? 'active' : ''}" id="toggleMatrixViewBtn" style="padding: 6px 14px; font-size: 12px; font-weight: 700; border-radius: var(--radius-sm); border: 1px solid ${crmView === 'matrix' ? '#2563eb' : '#cbd5e1'}; background: ${crmView === 'matrix' ? '#eff6ff' : '#f8fafc'}; color: ${crmView === 'matrix' ? '#2563eb' : '#475569'}; cursor: pointer;">
                         📊 360° Feature Matrix
                     </button>
                 </div>
 
                 <!-- Stage Quick Filter -->
                 <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
-                    <a href="#/dashboard/crm?view=${crmView}&stage=all" style="padding: 4px 10px; font-size: 11.5px; font-weight: 600; border-radius: 4px; text-decoration: none; color: ${filterStage === 'all' ? 'var(--accent-gold)' : 'var(--text-muted)'}; background: ${filterStage === 'all' ? 'rgba(255,160,0,0.1)' : 'transparent'};">All (${totalCount})</a>
-                    <a href="#/dashboard/crm?view=${crmView}&stage=new" style="padding: 4px 10px; font-size: 11.5px; font-weight: 600; border-radius: 4px; text-decoration: none; color: ${filterStage === 'new' ? '#4ade80' : 'var(--text-muted)'}; background: ${filterStage === 'new' ? 'rgba(34,197,94,0.1)' : 'transparent'};">New (${newCount})</a>
-                    <a href="#/dashboard/crm?view=${crmView}&stage=contacted" style="padding: 4px 10px; font-size: 11.5px; font-weight: 600; border-radius: 4px; text-decoration: none; color: ${filterStage === 'contacted' ? '#60a5fa' : 'var(--text-muted)'}; background: ${filterStage === 'contacted' ? 'rgba(59,130,246,0.1)' : 'transparent'};">Contacted (${contactedCount})</a>
-                    <a href="#/dashboard/crm?view=${crmView}&stage=responded" style="padding: 4px 10px; font-size: 11.5px; font-weight: 600; border-radius: 4px; text-decoration: none; color: ${filterStage === 'responded' ? '#fbbf24' : 'var(--text-muted)'}; background: ${filterStage === 'responded' ? 'rgba(245,158,11,0.1)' : 'transparent'};">Offer Sent (${respondedCount})</a>
-                    <a href="#/dashboard/crm?view=${crmView}&stage=converted" style="padding: 4px 10px; font-size: 11.5px; font-weight: 600; border-radius: 4px; text-decoration: none; color: ${filterStage === 'converted' ? '#c084fc' : 'var(--text-muted)'}; background: ${filterStage === 'converted' ? 'rgba(168,85,247,0.1)' : 'transparent'};">Converted (${convertedCount})</a>
+                    <a href="#/dashboard/crm?view=${crmView}&stage=all" style="padding: 4px 10px; font-size: 11.5px; font-weight: 700; border-radius: 4px; text-decoration: none; color: ${filterStage === 'all' ? '#2563eb' : '#64748b'}; background: ${filterStage === 'all' ? '#eff6ff' : 'transparent'};">All (${totalCount})</a>
+                    <a href="#/dashboard/crm?view=${crmView}&stage=new" style="padding: 4px 10px; font-size: 11.5px; font-weight: 700; border-radius: 4px; text-decoration: none; color: ${filterStage === 'new' ? '#15803d' : '#64748b'}; background: ${filterStage === 'new' ? '#dcfce7' : 'transparent'};">New (${newCount})</a>
+                    <a href="#/dashboard/crm?view=${crmView}&stage=contacted" style="padding: 4px 10px; font-size: 11.5px; font-weight: 700; border-radius: 4px; text-decoration: none; color: ${filterStage === 'contacted' ? '#1d4ed8' : '#64748b'}; background: ${filterStage === 'contacted' ? '#dbeafe' : 'transparent'};">Contacted (${contactedCount})</a>
+                    <a href="#/dashboard/crm?view=${crmView}&stage=responded" style="padding: 4px 10px; font-size: 11.5px; font-weight: 700; border-radius: 4px; text-decoration: none; color: ${filterStage === 'responded' ? '#b45309' : '#64748b'}; background: ${filterStage === 'responded' ? '#fef3c7' : 'transparent'};">Offer Sent (${respondedCount})</a>
+                    <a href="#/dashboard/crm?view=${crmView}&stage=converted" style="padding: 4px 10px; font-size: 11.5px; font-weight: 700; border-radius: 4px; text-decoration: none; color: ${filterStage === 'converted' ? '#6b21a8' : '#64748b'}; background: ${filterStage === 'converted' ? '#f3e8ff' : 'transparent'};">Converted (${convertedCount})</a>
                 </div>
 
-                <input type="text" id="crmSearchInput" placeholder="Search leads or location..." value="${searchQuery}" style="width: 220px; padding: 6px 12px; background: var(--bg-base); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 12px; outline: none;">
+                <input type="text" id="crmSearchInput" placeholder="Search leads or location..." value="${searchQuery}" style="width: 220px; padding: 6px 12px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 12px; font-weight: 500; outline: none;">
             </div>
 
             <!-- Active View Container -->
