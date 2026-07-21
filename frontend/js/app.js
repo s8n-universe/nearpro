@@ -696,6 +696,7 @@ function renderFeedContent(hasMore) {
             ${isListExceeded ? paywallHTML : (hasMore ? `
                 <div class="load-more-wrap">
                     <button id="loadMoreBtn" class="secondary-btn load-more-btn">Load More Results</button>
+                    <div id="infiniteScrollSentinel" style="height: 20px; width: 100%; margin-top: 16px;"></div>
                 </div>
             ` : '')}
         `;
@@ -731,11 +732,33 @@ function renderFeedContent(hasMore) {
         
         if (!isListExceeded && hasMore) {
             const loadMoreBtn = document.getElementById('loadMoreBtn');
+            const sentinel = document.getElementById('infiniteScrollSentinel');
+
+            const triggerAutoLoad = async () => {
+                if (window._isLoadingMoreCards) return;
+                window._isLoadingMoreCards = true;
+                
+                if (loadMoreBtn) {
+                    loadMoreBtn.innerText = 'Auto-loading cards...';
+                    loadMoreBtn.style.opacity = '0.7';
+                }
+
+                State.offset += State.limit;
+                await queryProfessionals(false);
+                window._isLoadingMoreCards = false;
+            };
+
             if (loadMoreBtn) {
-                loadMoreBtn.addEventListener('click', async () => {
-                    State.offset += State.limit;
-                    await queryProfessionals(false);
-                });
+                loadMoreBtn.addEventListener('click', triggerAutoLoad);
+            }
+
+            if (sentinel && window.IntersectionObserver) {
+                const observer = new IntersectionObserver((entries) => {
+                    if (entries[0].isIntersecting && !window._isLoadingMoreCards) {
+                        triggerAutoLoad();
+                    }
+                }, { rootMargin: '300px' });
+                observer.observe(sentinel);
             }
         }
 
