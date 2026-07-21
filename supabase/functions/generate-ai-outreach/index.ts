@@ -163,6 +163,8 @@ interface OutreachInput {
   senderService: string;
   portfolioUrl: string | null;
   bookingUrl: string | null;
+  websiteUrl: string | null;
+  linkedinUrl: string | null;
   
   channel: 'whatsapp' | 'email' | 'instagram';
   language: 'hinglish' | 'english';
@@ -239,7 +241,7 @@ serve(async (req) => {
     // 3. Load user profile personalization settings
     const { data: profile, error: profileErr } = await supabase
       .from('profiles')
-      .select('subscription_tier, monthly_ai_generations_used, monthly_ai_generations_limit, full_name, company_name, portfolio_url, booking_url, role, survey_role, sender_service_blurb')
+      .select('subscription_tier, monthly_ai_generations_used, monthly_ai_generations_limit, full_name, company_name, portfolio_url, booking_url, website_url, linkedin_url, role, survey_role, sender_service_blurb')
       .eq('id', user.id)
       .single();
 
@@ -329,12 +331,14 @@ serve(async (req) => {
       hasWebsite: hasWebsite,
       website: lead.website,
       hasEmail: hasEmail,
-      senderName: profile.full_name || "Shri",
-      senderCompany: profile.company_name || "NearPro Agency",
+      senderName: profile.full_name || "Agency Founder",
+      senderCompany: profile.company_name || "Growth Agency",
       senderRole: senderRole,
       senderService: senderService,
-      portfolioUrl: profile.portfolio_url,
-      bookingUrl: profile.booking_url,
+      portfolioUrl: profile.portfolio_url || null,
+      bookingUrl: profile.booking_url || null,
+      websiteUrl: profile.website_url || null,
+      linkedinUrl: profile.linkedin_url || null,
       channel: channel || 'whatsapp',
       language: language || 'hinglish',
       tone: tone || 'friendly',
@@ -381,9 +385,13 @@ INDUSTRY CONTEXT (use this knowledge, do not quote it directly):
 ${painPoint}
 
 SENDER CONTEXT:
+- Sender Name: ${inputData.senderName}
+- Sender Company: ${inputData.senderCompany}
 - What ${inputData.senderName} offers: ${inputData.senderService}
-- Portfolio/demo link: ${inputData.portfolioUrl || 'not provided'}
-- Booking link: ${inputData.bookingUrl || 'not provided'}
+- Portfolio/demo link: ${inputData.portfolioUrl ? inputData.portfolioUrl : 'not provided'}
+- Booking link: ${inputData.bookingUrl ? inputData.bookingUrl : 'not provided'}
+- Website link: ${inputData.websiteUrl ? inputData.websiteUrl : 'not provided'}
+- LinkedIn link: ${inputData.linkedinUrl ? inputData.linkedinUrl : 'not provided'}
 - Tone: ${inputData.tone}
 
 WHAT TO GENERATE:
@@ -396,15 +404,15 @@ Language: ${inputData.language}
 Word limit: ${inputData.channel === 'whatsapp' ? '120 words maximum' : '280 words maximum'}
 ${inputData.channel === 'email' ? 'Generate THREE catchy, personalized subject line options (A, B, C) above the email body.' : ''}
 
-GOLD-STANDARD PITCH LAYOUT TO FOLLOW:
-Model your output on this high-converting structure:
+DYNAMIC PITCH LAYOUT TO FOLLOW:
+Adapt this high-converting structure dynamically using the target lead's actual name, category, rating, review count, and area:
 
 1. Warm & Natural Introduction:
    "Hi, ${inputData.senderName} here from ${inputData.senderCompany}."
 
 2. Genuine Compliment & Data Observation:
-   Compliment their specific rating and review count.
-   (e.g., "I came across ${inputData.bizName} and noticed you have a ${inputData.rating ? `${inputData.rating}⭐` : 'fantastic'} Google rating, which is brilliant.")
+   Compliment their specific rating and review count from THEIR profile data above.
+   (e.g., "I came across ${inputData.bizName} and noticed you have a ${inputData.rating ? `${inputData.rating}⭐` : 'great'} Google rating, which is brilliant.")
 
 3. Strategic Opportunity Gap:
    Highlight why competitors with more reviews or website presence rank higher for searches in their category.
@@ -413,24 +421,25 @@ Model your output on this high-converting structure:
 4. Empathy Question:
    "This made me wonder... Are most of your enquiries currently coming through word of mouth and referrals?"
 
-5. Concept / Demo Showcase (Include URL if provided or sample demo link):
-   "While looking into your business, we also created a sample website concept to show how your online presence could be enhanced and how potential customers could have a smoother enquiry experience."
-   🌐 Sample Website Concept: ${inputData.portfolioUrl || 'https://celestial-gatherings-co.lovable.app/'}
-   "This is just a concept created specifically for ${inputData.bizName} to demonstrate what's possible."
+5. Concept / Demo Showcase:
+   ${inputData.portfolioUrl ? `Include the sender's actual demo concept link:
+   "While looking into your business, we also created a sample website concept to show how your online presence could be enhanced..."
+   🌐 Sample Website: ${inputData.portfolioUrl}` : `Mention that you looked into their business and have visual ideas/concepts to show how their online presence could be enhanced.`}
 
 6. Value Offer & Free Consultation CTA:
-   "If you'd like, I'd be happy to walk you through a few ideas on how AI automation and a stronger digital presence can help generate more enquiries, streamline follow ups, and convert more visitors into bookings."
+   Offer a free consultation call to discuss generating more enquiries and automating follow-ups.
+   ${inputData.bookingUrl ? `Include the booking link:
    🎁 Your first consultation is completely FREE.
-   📅 Book your complimentary consultation: ${inputData.bookingUrl || 'https://topmate.io/shriraj_naik_21/2167683'}
+   📅 Book your complimentary consultation: ${inputData.bookingUrl}` : `🎁 Your first consultation is completely FREE. Let me know if you'd like to schedule a quick 10-minute chat!`}
 
-7. Professional Social Proof Footer:
-   🌐 S8N Website: https://s8n.in
-   💼 LinkedIn: https://www.linkedin.com/company/s8n-ai-services/
-
+7. Professional Signature:
+   Sign off as:
    Looking forward to connecting.
 
    ${inputData.senderName}
    ${inputData.senderRole}, ${inputData.senderCompany}
+   ${inputData.websiteUrl ? `🌐 Website: ${inputData.websiteUrl}` : ''}
+   ${inputData.linkedinUrl ? `💼 LinkedIn: ${inputData.linkedinUrl}` : ''}
 
 ───────────────────────────────────
 MESSAGE 2: DAY 3 — FOLLOW-UP (if no reply)
@@ -441,7 +450,7 @@ Word limit: ${inputData.channel === 'whatsapp' ? '60 words MAXIMUM' : '120 words
 This message must take a DIFFERENT ANGLE than Message 1.
 Do not repeat the same observation. Do not say "Just following up."
 Instead: add ONE new piece of value or social proof (e.g. how similar ${inputData.bizCategory} businesses in ${inputData.area} automated their customer enquiries).
-End with the complimentary consultation booking link: ${inputData.bookingUrl || 'https://topmate.io/shriraj_naik_21/2167683'}
+${inputData.bookingUrl ? `End with the complimentary consultation booking link: ${inputData.bookingUrl}` : `End with a simple micro-CTA asking if they are open to a 5-minute chat.`}
 
 ───────────────────────────────────
 MESSAGE 3: DAY 7 — FINAL TOUCH
@@ -450,7 +459,7 @@ Language: ${inputData.language}
 Word limit: ${inputData.channel === 'whatsapp' ? '50 words MAXIMUM' : '90 words maximum'}
 
 This is the last message. Make it human, warm, and low-pressure.
-Acknowledge it may not be the right time, leave the door open, and provide ${inputData.senderName}'s direct booking link for future reference.
+Acknowledge it may not be the right time, leave the door open, and provide ${inputData.senderName}'s direct contact info.
 
 ───────────────────────────────────
 
