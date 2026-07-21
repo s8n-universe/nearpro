@@ -69,13 +69,13 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
     if (activeLeadId) {
         if (isLimitReached) {
             workspaceHTML = `
-                <div style="text-align: center; padding: 60px 20px; border: 1px dashed var(--border); border-radius: var(--radius-md); max-width: 500px; margin: 40px auto; width: 100%;">
+                <div style="text-align: center; padding: 60px 20px; border: 1.5px dashed #cbd5e1; background: #f8fafc; border-radius: var(--radius-md); max-width: 500px; margin: 40px auto; width: 100%;">
                     <div style="font-size: 40px; margin-bottom: 16px;">🚫</div>
-                    <h3 style="margin-bottom: 12px; color: white;">Prompt Limit Reached</h3>
-                    <p style="color: var(--text-muted); font-size: 13.5px; line-height: 1.5; margin-bottom: 24px;">
+                    <h3 style="margin-bottom: 12px; color: #0f172a; font-weight: 800;">Prompt Limit Reached</h3>
+                    <p style="color: #475569; font-size: 13.5px; line-height: 1.5; margin-bottom: 24px; font-weight: 500;">
                         You have used all ${limit} prompt copies allowed on your ${tier.toUpperCase()} plan. Upgrade now to unlock more generations!
                     </p>
-                    <button class="brand-btn" onclick="window.State.setPricingModal(true);">Upgrade Plan</button>
+                    <button class="brand-btn" onclick="window.State.setPricingModal(true);" style="background:#2563eb; color:white; border:none; padding:10px 22px; font-weight:700; border-radius:8px;">Upgrade Plan</button>
                 </div>
             `;
         } else {
@@ -92,32 +92,32 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
                         100% { transform: rotate(360deg); }
                     }
                     </style>
-                    <div style="background: rgba(255,255,255,0.01); border: 1px dashed var(--border); border-radius: var(--radius-md); padding: 48px 24px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 280px; width: 100%;">
-                        <div style="width: 32px; height: 32px; border: 2.5px solid var(--accent-gold); border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 16px;"></div>
-                        <h4 style="margin: 0 0 8px 0; color: white; font-family: var(--font-heading); font-weight: 700; font-size: 15px;" id="generationStatusTitle">Analyzing business profile...</h4>
-                        <p style="color: var(--text-secondary); font-size: 12.5px; margin: 0;" id="generationStatusDesc">Reviewing category tags and local target parameters</p>
+                    <div style="background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: var(--radius-md); padding: 48px 24px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 280px; width: 100%;">
+                        <div style="width: 32px; height: 32px; border: 2.5px solid #2563eb; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 16px;"></div>
+                        <h4 style="margin: 0 0 8px 0; color: #0f172a; font-family: var(--font-heading); font-weight: 800; font-size: 15px;" id="generationStatusTitle">Analyzing business profile...</h4>
+                        <p style="color: #475569; font-size: 12.5px; margin: 0; font-weight: 500;" id="generationStatusDesc">Reviewing category tags and local target parameters</p>
                     </div>
                 `;
             } else if (isInitial) {
                 contentAreaHTML = `
-                    <div style="background: rgba(255,255,255,0.01); border: 1px dashed var(--border); border-radius: var(--radius-md); padding: 48px 24px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 280px; width: 100%;">
-                        <div style="font-size: 32px; margin-bottom: 12px;">✨</div>
-                        <h4 style="margin: 0 0 6px 0; color: white; font-family: var(--font-heading); font-weight: 700; font-size: 15px;">Ready to create your layout prompt?</h4>
-                        <p style="color: var(--text-secondary); font-size: 12.5px; max-width: 340px; line-height: 1.5; margin: 0;">
-                            Select a target platform above and click <strong>Generate Prompt</strong>. We will write a customized layout specification tailored to this business.
+                    <div style="background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: var(--radius-md); padding: 48px 24px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 280px; width: 100%;">
+                        <div style="font-size: 36px; margin-bottom: 12px;">✨</div>
+                        <h4 style="margin: 0 0 6px 0; color: #0f172a; font-family: var(--font-heading); font-weight: 800; font-size: 16px;">Ready to create your layout prompt?</h4>
+                        <p style="color: #475569; font-size: 13px; max-width: 380px; line-height: 1.5; margin: 0; font-weight: 500;">
+                            Select a target platform above and click <strong style="color: #0f172a;">Generate Prompt</strong>. We will write a customized layout specification tailored to this business.
                         </p>
                     </div>
                 `;
             } else {
                 contentAreaHTML = `
                     <div style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="display:block; font-size:11px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase;">Generated Prompt</label>
-                        <textarea readonly id="generatedPromptArea" style="width:100%; height:260px; background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:var(--radius-sm); padding:16px; color:white; font-size:13.5px; line-height:1.6; resize:none; outline:none; font-family:var(--font-mono);">${generatedPrompt}</textarea>
+                        <label style="display:block; font-size:11.5px; font-family:var(--font-mono); color:#0f172a; font-weight:800; text-transform:uppercase;">Generated Prompt Specification</label>
+                        <textarea readonly id="generatedPromptArea" style="width:100%; height:260px; background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:var(--radius-sm); padding:16px; color:#0f172a; font-size:13.5px; font-weight:600; line-height:1.6; resize:none; outline:none; font-family:var(--font-mono); box-sizing:border-box;">${generatedPrompt}</textarea>
                     </div>
                     
-                    <div style="background:rgba(255,160,0,0.02); border:1px solid rgba(255,160,0,0.1); border-radius:var(--radius-md); padding:14px 16px; font-size:12.5px; color:var(--text-secondary); line-height:1.5; display: flex; flex-direction: column; gap: 4px;">
-                        <div><strong style="color:var(--accent-gold);">Next Step:</strong> Copy this prompt code and paste it directly into Lovable or Bolt to generate a complete, high-converting demo website draft in under 60 seconds.</div>
-                        <div style="font-size:11.5px; color:var(--text-muted);">How to leverage: Wow prospects with their personalized demo site before scheduling your sales pitch.</div>
+                    <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:var(--radius-md); padding:14px 16px; font-size:12.5px; color:#1e40af; line-height:1.5; display: flex; flex-direction: column; gap: 4px;">
+                        <div><strong style="color:#2563eb;">Next Step:</strong> Copy this prompt code and paste it directly into Lovable or Bolt to generate a complete, high-converting demo website draft in under 60 seconds.</div>
+                        <div style="font-size:11.5px; color:#475569; font-weight:600;">How to leverage: Wow prospects with their personalized demo site before scheduling your sales pitch.</div>
                     </div>
                 `;
             }
@@ -136,9 +136,9 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
             workspaceHTML = `
                 <div class="prompt-workspace-grid" style="display:flex; flex-direction:column; gap:20px; width:100%;">
                     
-                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; background: rgba(255,255,255,0.01); border: 1px solid var(--border); padding: 16px; border-radius: var(--radius-md);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; background: #ffffff; border: 1px solid #e2e8f0; padding: 18px; border-radius: var(--radius-md); box-shadow: 0 2px 8px rgba(15,23,42,0.03);">
                         <div>
-                            <label style="display:block; font-size:11px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px;">Target Platform</label>
+                            <label style="display:block; font-size:12px; font-family:var(--font-mono); color:#64748b; font-weight:800; text-transform:uppercase; margin-bottom:8px;">TARGET PLATFORM</label>
                             <div style="display:flex; gap:8px; flex-wrap:wrap;">
                                 <button class="platform-btn ${selectedPlatform === 'lovable' ? 'active' : ''}" data-platform="lovable">Lovable.dev</button>
                                 <button class="platform-btn ${selectedPlatform === 'bolt' ? 'active' : ''}" data-platform="bolt">Bolt.new</button>
@@ -151,14 +151,14 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
                         
                         <div style="display:flex; gap:8px; align-items:center; margin-top: 12px; width: 100%; justify-content: flex-end; flex-wrap: wrap;">
                             <a href="${currentPlatformMeta.url}" target="_blank" rel="noopener noreferrer" id="launchPlatformBtn" style="text-decoration:none;" title="Auto-copy prompt & open ${currentPlatformMeta.name}">
-                                <button class="brand-btn" style="padding:10px 14px; font-size:12.5px; background:rgba(255,255,255,0.03); border:1px solid var(--border); color:white; display:flex; align-items:center; gap:6px;">
-                                    <i data-lucide="external-link" style="width:14px; height:14px; color:var(--accent-gold);"></i> Launch ${currentPlatformMeta.name} ↗
+                                <button class="brand-btn" style="padding:10px 16px; font-size:13px; font-weight:700; background:#ffffff; border:1.5px solid #cbd5e1; color:#0f172a; display:flex; align-items:center; gap:6px; border-radius:8px; cursor:pointer;">
+                                    <i data-lucide="external-link" style="width:14px; height:14px; color:#2563eb;"></i> Launch ${currentPlatformMeta.name} ↗
                                 </button>
                             </a>
-                            <button class="brand-btn" id="generatePromptBtn" style="padding:10px 20px; font-size:13px; font-weight:700; display:flex; align-items:center; gap:6px;" ${isGenerating ? 'disabled style="opacity:0.5;"' : ''}>
+                            <button class="brand-btn" id="generatePromptBtn" style="padding:10px 20px; font-size:13px; font-weight:800; background:#2563eb; color:white; border:none; border-radius:8px; display:flex; align-items:center; gap:6px; cursor:pointer; box-shadow:0 4px 12px rgba(37,99,235,0.25);" ${isGenerating ? 'disabled style="opacity:0.5;"' : ''}>
                                 ${isGenerating ? '<div class="spinner" style="width:12px; height:12px; border-width:1.5px; margin:0;"></div> Generating...' : '⚡ Generate Prompt'}
                             </button>
-                            <button class="brand-btn" id="copyPromptTextBtn" style="padding:10px 16px; font-size:13px; display:flex; align-items:center; gap:6px; ${hasPrompt ? 'opacity:1;' : 'opacity:0.5;'}" ${hasPrompt ? '' : 'disabled'}>
+                            <button class="brand-btn" id="copyPromptTextBtn" style="padding:10px 16px; font-size:13px; font-weight:700; background:#ffffff; border:1.5px solid #cbd5e1; color:#0f172a; display:flex; align-items:center; gap:6px; border-radius:8px; cursor:pointer; ${hasPrompt ? 'opacity:1;' : 'opacity:0.5;'}" ${hasPrompt ? '' : 'disabled'}>
                                 <i data-lucide="copy" style="width:14px; height:14px;"></i> Copy
                             </button>
                         </div>
@@ -171,9 +171,9 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
     } else {
         workspaceHTML = `
             <div style="text-align:center; padding:60px 20px; color:#64748b;">
-                <i data-lucide="mouse-pointer" style="width:36px; height:36px; stroke-width:1.5; margin-bottom:12px; color:#94a3b8;"></i>
-                <h4 style="margin:0 0 6px 0; color:#0f172a; font-size:15px;">Select a Lead from Pipeline</h4>
-                <p style="margin:0; font-size:13px; color:#475569;">Choose a business lead from the left sidebar to generate custom website prompts.</p>
+                <i data-lucide="mouse-pointer" style="width:36px; height:36px; stroke-width:1.5; margin-bottom:12px; color:#2563eb;"></i>
+                <h4 style="margin:0 0 6px 0; color:#0f172a; font-size:16px; font-weight:800;">Select a Lead from Pipeline</h4>
+                <p style="margin:0; font-size:13px; color:#475569; font-weight:500;">Choose a business lead from the left sidebar to generate custom website prompts.</p>
             </div>
         `;
     }
