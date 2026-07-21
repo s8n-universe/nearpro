@@ -157,8 +157,10 @@
 .dashboard-content-area {
     flex: 1;
     overflow-y: auto;
-    padding: 32px;
+    padding: 28px 32px;
     position: relative;
+    background: #f8fafc;
+    color: #0f172a;
 }
 
 .dashboard-loading {

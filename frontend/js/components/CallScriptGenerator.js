@@ -14,30 +14,30 @@ export function renderCallScriptGeneratorLayout(selectedLeadId = null) {
     const isAtLimit = limit > 0 ? (used >= limit) : (userTier === 'free');
 
     return `
-        <div class="call-script-generator-container" style="display: flex; flex-direction: column; gap: 28px; padding: 32px; background: #f8fafc; color: #0f172a; border-radius: var(--radius-lg); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+        <div class="call-script-generator-container" style="display: flex; flex-direction: column; gap: 20px; width: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
             
-            <!-- Top Quota & Intro Header -->
-            <div style="background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%); border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px; display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05);">
-                <div style="flex: 1; min-width: 280px;">
-                    <div style="display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px; border-radius: 99px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #059669; font-size: 11.5px; font-weight: 700; font-family: var(--font-mono); margin-bottom: 12px;">
-                        📞 AI TELE-SALES & COLD CALLING SCRIPT ENGINE
+            <!-- Compact Enterprise Header Bar -->
+            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                        <h2 style="font-size: 19px; font-weight: 800; margin: 0; color: #0f172a; font-family: var(--font-heading);">
+                            📞 AI Tele-Sales Cold Calling Teleprompter
+                        </h2>
+                        <span style="background: #ecfdf5; border: 1px solid #a7f3d0; color: #059669; padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 700;">
+                            LIVE OBJECTION REBUTTALS
+                        </span>
                     </div>
-                    <h2 style="font-size: 22px; font-weight: 800; margin: 0 0 6px 0; font-family: var(--font-heading); color: #0f172a;">
-                        High-Converting Phone Scripts & Live Objection Rebuttals
-                    </h2>
-                    <p style="color: #475569; font-size: 14px; margin: 0; max-width: 680px; line-height: 1.5;">
-                        Generate category-specific cold calling teleprompter scripts and live objection response cards tailored for local Indian business owners (Dentists, Decorators, Salons, Coaching Centers).
+                    <p style="color: #475569; font-size: 13.5px; margin: 0; line-height: 1.4;">
+                        Category-specific cold calling teleprompter scripts and live objection response cards tailored for local business owners.
                     </p>
                 </div>
                 
-                <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 16px 20px; text-align: right; flex-shrink: 0; min-width: 180px; box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
-                    <div style="font-size: 11px; color: #64748b; font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 4px;">Monthly Script Quota</div>
-                    <div style="font-size: 22px; font-weight: 800; color: #059669; font-family: var(--font-mono);">
-                        ${used} / ${limit === 0 ? '0 (Free)' : limit === 999999 ? 'Unlimited' : limit}
-                    </div>
-                    <div style="font-size: 11.5px; color: #475569; margin-top: 2px;">
-                        Plan: <strong style="text-transform: capitalize; color: #0f172a;">${userTier}</strong>
-                    </div>
+                <div style="display: flex; align-items: center; gap: 12px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 14px;">
+                    <span style="font-size: 12px; color: #475569; font-weight: 600;">Monthly Script Quota:</span>
+                    <strong style="font-size: 14px; color: #059669;">${used} / ${limit === 0 ? '0 (Free)' : limit === 999999 ? 'Unlimited' : limit}</strong>
+                    <span style="font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 700; background: #e2e8f0; padding: 2px 6px; border-radius: 4px;">
+                        ${userTier}
+                    </span>
                 </div>
             </div>
 
