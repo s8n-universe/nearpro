@@ -35,7 +35,7 @@ import { renderLeadCRM, bindCRMWorkspaceEvents } from './components/LeadCRM.js';
 import { renderLeadLists, bindLeadListsEvents, bindListDetailEvents } from './components/LeadLists.js';
 import { renderWebsiteAudit, bindWebsiteAuditEvents } from './components/WebsiteAudit.js';
 import { renderOutreachStudio, bindOutreachStudioEvents, buildOutreach } from './components/OutreachStudio.js';
-import { renderPromptGenerator, bindPromptGeneratorEvents, buildPrompt } from './components/PromptGenerator.js';
+import { renderPromptGenerator, bindPromptGeneratorEvents, buildPrompt, PROMPT_LIMITS } from './components/PromptGenerator.js';
 import { renderConnectionHub, bindConnectionHubEvents } from './components/ConnectionHub.js';
 import { renderDocumentsLibrary, bindDocumentsLibraryEvents } from './components/DocumentsLibrary.js';
 import { renderTeamWorkspace, bindTeamWorkspaceEvents, loadDataRequests, createDataRequest } from './components/TeamWorkspace.js';
@@ -1675,16 +1675,7 @@ async function renderDashboardLayout(tab) {
                 const lead = activeItem?.professionals;
 
                 if (lead) {
-                    let audit = null;
-                    if (lead.website) {
-                        const { data } = await Api.supabase
-                            .from('audit_cache')
-                            .select('*')
-                            .eq('url', lead.website.trim().toLowerCase())
-                            .maybeSingle();
-                        audit = data;
-                    }
-                    generatedPrompt = buildPrompt(selectedPlatform, lead, audit);
+                    generatedPrompt = 'Generating tailored prompt using Gemini... Please wait.';
                 }
             }
 
@@ -1698,6 +1689,48 @@ async function renderDashboardLayout(tab) {
                         window.location.hash = `#/dashboard/prompts?lead_id=${activeLeadId}&platform=${platform}`;
                     }
                 );
+
+                // Trigger async backend generation via Supabase Edge Function
+                if (activeLeadId) {
+                    const promptArea = document.getElementById('generatedPromptArea');
+                    const copyBtn = document.getElementById('copyPromptTextBtn');
+                    
+                    const tier = (State.profile?.subscription_tier || 'free').toLowerCase();
+                    const currentCount = State.profile?.monthly_prompt_copies_used || 0;
+                    const limit = PROMPT_LIMITS[tier] || 0;
+
+                    if (currentCount < limit && promptArea && copyBtn) {
+                        copyBtn.disabled = true;
+                        copyBtn.style.opacity = 0.5;
+
+                        Api.generateWebsitePrompt(activeLeadId, selectedPlatform)
+                            .then(res => {
+                                if (res && res.prompt) {
+                                    promptArea.value = res.prompt;
+                                    copyBtn.disabled = false;
+                                    copyBtn.style.opacity = 1;
+
+                                    // Update counter in local State and DOM
+                                    if (State.profile) {
+                                        State.profile.monthly_prompt_copies_used = res.used;
+                                    }
+                                    const counterEl = document.getElementById('promptUsageCounter');
+                                    if (counterEl) {
+                                        if (limit >= 999999) {
+                                            counterEl.innerHTML = `<strong>${res.used}</strong> generations (Unlimited for Enterprise)`;
+                                        } else {
+                                            const remaining = Math.max(0, limit - res.used);
+                                            counterEl.innerHTML = `<strong>${res.used}</strong> of <strong>${limit}</strong> generations used (${remaining} remaining)`;
+                                        }
+                                    }
+                                }
+                            })
+                            .catch(err => {
+                                console.error("Failed to generate prompt via Gemini:", err);
+                                promptArea.value = `Error generating prompt: ${err.message || 'Unknown error'}. Please try again.`;
+                            });
+                    }
+                }
             }
         } catch (err) {
             console.error("Failed to load Website Prompt Engine: ", err);

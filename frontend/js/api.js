@@ -755,6 +755,17 @@ export const Api = {
         return data;
     },
 
+    async generateWebsitePrompt(professionalId, platform) {
+        const { data, error } = await supabase.functions.invoke('generate-website-prompt', {
+            body: { 
+                professional_id: professionalId, 
+                platform: platform
+            }
+        });
+        if (error) throw error;
+        return data;
+    },
+
     async getDocuments(userId) {
         const { data, error } = await supabase
             .from('documents')

@@ -11,16 +11,11 @@ export const PROMPT_LIMITS = {
 };
 
 export function getPromptGenerationCount() {
-    const userId = State.user?.id || 'anonymous';
-    const key = `nearpro_prompt_count_${userId}`;
-    return parseInt(localStorage.getItem(key) || '0', 10);
+    return State.profile?.monthly_prompt_copies_used || 0;
 }
 
 export function incrementPromptGenerationCount() {
-    const userId = State.user?.id || 'anonymous';
-    const key = `nearpro_prompt_count_${userId}`;
-    const current = getPromptGenerationCount();
-    localStorage.setItem(key, (current + 1).toString());
+    // Increment is handled backend-side in Supabase Edge Function
 }
 
 export function buildPrompt(platform, lead, audit = null) {
@@ -191,46 +186,13 @@ export function bindPromptGeneratorEvents(onLeadSelectCallback, onPlatformSelect
     if (copyBtn) {
         copyBtn.addEventListener('click', () => {
             const text = document.getElementById('generatedPromptArea').value;
-            const tier = getUserTier();
-            const limit = PROMPT_LIMITS[tier] || 0;
-            const current = getPromptGenerationCount();
-            
-            if (current >= limit) {
-                alert(`🚫 Usage Limit Reached: Your current plan (${tier.toUpperCase()}) allows up to ${limit} prompt copies. Please upgrade to a higher plan for more access.`);
-                return;
-            }
-
             navigator.clipboard.writeText(text).then(() => {
                 const originalText = copyBtn.innerHTML;
                 copyBtn.innerHTML = '✓ Copied!';
                 copyBtn.style.color = 'var(--accent-gold)';
-                
-                // Increment usage counter
-                incrementPromptGenerationCount();
-                
-                // Dynamically update counter in DOM
-                const newCount = getPromptGenerationCount();
-                const counterEl = document.getElementById('promptUsageCounter');
-                if (counterEl) {
-                    if (limit >= 999999) {
-                        counterEl.innerHTML = `<strong>${newCount}</strong> generations (Unlimited for Enterprise)`;
-                    } else {
-                        const remaining = Math.max(0, limit - newCount);
-                        counterEl.innerHTML = `<strong>${newCount}</strong> of <strong>${limit}</strong> generations used (${remaining} remaining)`;
-                    }
-                }
-
                 setTimeout(() => {
                     copyBtn.innerHTML = originalText;
                     copyBtn.style.color = '';
-                    
-                    // If the new count reached the limit, refresh view to show the lock/limit screen
-                    if (newCount >= limit) {
-                        // Reload this route to render lock screen
-                        const activeLeadId = new URLSearchParams(window.location.hash.split('?')[1] || '').get('lead_id');
-                        const selectedPlatform = new URLSearchParams(window.location.hash.split('?')[1] || '').get('platform') || 'lovable';
-                        window.location.hash = `#/dashboard/prompts?lead_id=${activeLeadId}&platform=${selectedPlatform}&ts=${Date.now()}`;
-                    }
                 }, 2000);
             });
         });
