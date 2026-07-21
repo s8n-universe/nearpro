@@ -40,6 +40,8 @@ import { renderConnectionHub, bindConnectionHubEvents } from './components/Conne
 import { renderDocumentsLibrary, bindDocumentsLibraryEvents } from './components/DocumentsLibrary.js';
 import { renderTeamWorkspace, bindTeamWorkspaceEvents, loadDataRequests, createDataRequest } from './components/TeamWorkspace.js';
 import { renderDocumentViewerLayout } from './components/DocumentViewer.js';
+import { renderProposalGeneratorLayout, bindProposalGeneratorEvents } from './components/ProposalGenerator.js';
+import { renderCallScriptGeneratorLayout, bindCallScriptGeneratorEvents } from './components/CallScriptGenerator.js';
 
 // Main Application shell reference
 const appShell = document.getElementById('app');
@@ -1479,7 +1481,6 @@ async function renderDashboardLayout(tab) {
             }
 
             if (content) {
-                const { renderProposalGeneratorLayout, bindProposalGeneratorEvents } = await import('./components/ProposalGenerator.js');
                 content.innerHTML = renderProposalGeneratorLayout(selectedLeadId);
                 bindProposalGeneratorEvents();
             }
@@ -1499,7 +1500,6 @@ async function renderDashboardLayout(tab) {
             }
 
             if (content) {
-                const { renderCallScriptGeneratorLayout, bindCallScriptGeneratorEvents } = await import('./components/CallScriptGenerator.js');
                 content.innerHTML = renderCallScriptGeneratorLayout(selectedLeadId);
                 bindCallScriptGeneratorEvents();
             }
