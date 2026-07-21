@@ -211,6 +211,19 @@ export function bindDocumentsLibraryEvents(onUploadStart, onUploadSuccess, onUpl
         });
     });
 
+    // Bind enter key press on slug inputs
+    const slugInputs = document.querySelectorAll('.doc-slug-input');
+    slugInputs.forEach(input => {
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const id = input.dataset.id;
+                const saveBtn = document.querySelector(`.save-doc-slug-btn[data-id="${id}"]`);
+                if (saveBtn) saveBtn.click();
+            }
+        });
+    });
+
     // Bind save slug buttons
     const saveSlugBtns = document.querySelectorAll('.save-doc-slug-btn');
     saveSlugBtns.forEach(btn => {
