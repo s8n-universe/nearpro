@@ -16,7 +16,7 @@ export function renderDocumentsLibrary(documentsList = [], loading = false) {
     const isAtLimit = used >= limit;
     const capacityPct = limit > 0 ? Math.min(100, (used / limit) * 100) : 0;
 
-    // Build MNC-grade enterprise list of document rows
+    // Build enterprise list of document rows
     const fileItemsHTML = documentsList.map(doc => {
         const uploadDate = new Date(doc.created_at).toLocaleDateString('en-IN', {
             day: 'numeric',
