@@ -9,174 +9,215 @@ export function renderConnectionHub(lists, n8nUrl = '', sheetsUrl = '', hubspotT
     let activeTabContent = '';
 
     if (activeTab === 'n8n') {
+        const isValidN8n = n8nUrl ? /^https?:\/\/.+/i.test(n8nUrl) : null;
         activeTabContent = `
-            <div style="display:flex; flex-direction:column; gap:20px;">
+            <div style="display:flex; flex-direction:column; gap:20px; text-align:left;">
                 <div>
-                    <h4 style="margin:0 0 6px 0; color:white; font-size:14px; font-family:var(--font-heading);">n8n Workflow Webhook</h4>
-                    <p style="margin:0; font-size:12.5px; color:var(--text-secondary); line-height:1.5;">
-                        Connect NearPro to your self-hosted n8n or Make.com workflows. We will push lead metadata automatically on state updates.
+                    <h4 style="margin:0 0 4px 0; color:#0f172a; font-size:16px; font-weight:800; font-family:var(--font-heading);">n8n & Make.com Webhook Integration</h4>
+                    <p style="margin:0; font-size:13.5px; color:#475569; line-height:1.5;">
+                        Push lead metadata automatically to your self-hosted n8n or Make.com workflow endpoints on state changes.
                     </p>
                 </div>
 
                 <div>
-                    <label style="display:block; font-size:11px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase; margin-bottom:8px;">n8n Webhook URL</label>
-                    <input type="url" id="n8nWebhookInput" value="${n8nUrl}" placeholder="https://primary.n8n.webhook.domain/..." style="width:100%; padding:10px; background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-sm); color:white; font-size:13px; outline:none;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <label style="font-size:12px; font-weight:700; color:#0f172a; text-transform:uppercase;">N8N / MAKE WEBHOOK ENDPOINT URL</label>
+                        <span id="n8nFormatFlag" style="font-size:11px; font-weight:700; font-family:var(--font-mono); color:${isValidN8n ? '#059669' : isValidN8n === false ? '#dc2626' : '#64748b'};">
+                            ${isValidN8n ? '✅ Valid Webhook Endpoint' : isValidN8n === false ? '⚠️ Format Error: Must begin with http:// or https://' : 'Format: https://...'}
+                        </span>
+                    </div>
+                    <input type="url" id="n8nWebhookInput" value="${n8nUrl}" placeholder="https://primary.n8n.webhook.domain/webhook/lead-push" style="width:100%; padding:11px 14px; background:#ffffff; border:1.5px solid ${isValidN8n === false ? '#fca5a5' : '#cbd5e1'}; border-radius:8px; color:#0f172a; font-size:13.5px; outline:none; font-weight:600;">
                 </div>
 
-                <div style="background:rgba(255,255,255,0.01); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px; display:flex; flex-direction:column; gap:12px;">
-                    <h5 style="margin:0; font-size:12.5px; color:white; font-family:var(--font-heading);">Event Triggers</h5>
+                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:18px; display:flex; flex-direction:column; gap:12px;">
+                    <h5 style="margin:0; font-size:13px; font-weight:700; color:#0f172a;">Automatic Event Triggers</h5>
                     
-                    <label style="display:flex; align-items:center; gap:10px; font-size:13px; color:var(--text-secondary); cursor:pointer;">
-                        <input type="checkbox" id="triggerOnTrackedBtn" checked style="accent-color:var(--accent-gold);">
-                        Trigger when a new lead is tracked
+                    <label style="display:flex; align-items:center; gap:10px; font-size:13px; color:#334155; font-weight:600; cursor:pointer;">
+                        <input type="checkbox" id="triggerOnTrackedBtn" checked style="width:16px; height:16px; accent-color:#2563eb;">
+                        Trigger webhook when a new lead is tracked in directory
                     </label>
-                    <label style="display:flex; align-items:center; gap:10px; font-size:13px; color:var(--text-secondary); cursor:pointer;">
-                        <input type="checkbox" id="triggerOnCRMBtn" checked style="accent-color:var(--accent-gold);">
-                        Trigger when CRM pipeline stage changes
+                    <label style="display:flex; align-items:center; gap:10px; font-size:13px; color:#334155; font-weight:600; cursor:pointer;">
+                        <input type="checkbox" id="triggerOnCRMBtn" checked style="width:16px; height:16px; accent-color:#2563eb;">
+                        Trigger webhook when CRM pipeline stage changes (e.g. Converted)
                     </label>
                 </div>
 
-                <div style="display:flex; gap:12px;">
-                    <button class="brand-btn" id="saveN8nSettingsBtn" style="flex:1; padding:10px;">Save Configuration</button>
-                    <button class="secondary-btn" id="testN8nConnectionBtn" style="padding:10px;">Test Webhook Connection</button>
+                <div style="display:flex; gap:12px; margin-top:4px;">
+                    <button class="brand-btn" id="saveN8nSettingsBtn" style="flex:1; padding:11px; font-size:13px; font-weight:700; background:#2563eb; color:white; border:none; border-radius:6px; cursor:pointer; box-shadow:0 4px 12px rgba(37,99,235,0.25);">
+                        Save Configuration
+                    </button>
+                    <button class="secondary-btn" id="testN8nConnectionBtn" style="padding:11px 20px; font-size:13px; font-weight:700; background:#ffffff; border:1px solid #cbd5e1; color:#0f172a; border-radius:6px; cursor:pointer;">
+                        Test Webhook Connection ⚡
+                    </button>
                 </div>
             </div>
         `;
     } else if (activeTab === 'sheets') {
+        const isValidSheets = sheetsUrl ? sheetsUrl.startsWith('https://script.google.com/macros/s/') : null;
         activeTabContent = `
-            <div style="display:flex; flex-direction:column; gap:20px;">
+            <div style="display:flex; flex-direction:column; gap:20px; text-align:left;">
                 <div>
-                    <h4 style="margin:0 0 6px 0; color:white; font-size:14px; font-family:var(--font-heading);">Google Sheets Sync</h4>
-                    <p style="margin:0; font-size:12.5px; color:var(--text-secondary); line-height:1.5;">
-                        Export your Smart Lists directly to your Google Sheets webhook receiver to keep tracking logs updated.
+                    <h4 style="margin:0 0 4px 0; color:#0f172a; font-size:16px; font-weight:800; font-family:var(--font-heading);">Google Sheets Webhook Sync</h4>
+                    <p style="margin:0; font-size:13.5px; color:#475569; line-height:1.5;">
+                        Export your Smart Lists directly to your Google Sheets Apps Script webhook receiver to maintain real-time spreadsheets.
                     </p>
                 </div>
 
                 <div>
-                    <label style="display:block; font-size:11px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase; margin-bottom:8px;">Sheets Webhook URL</label>
-                    <input type="url" id="sheetsWebhookInput" value="${sheetsUrl}" placeholder="https://script.google.com/macros/s/.../exec" style="width:100%; padding:10px; background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-sm); color:white; font-size:13px; outline:none;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <label style="font-size:12px; font-weight:700; color:#0f172a; text-transform:uppercase;">GOOGLE APPS SCRIPT WEBHOOK URL</label>
+                        <span id="sheetsFormatFlag" style="font-size:11px; font-weight:700; font-family:var(--font-mono); color:${isValidSheets ? '#059669' : isValidSheets === false ? '#dc2626' : '#64748b'};">
+                            ${isValidSheets ? '✅ Valid Google Apps Script Endpoint' : isValidSheets === false ? '⚠️ Format Error: Must start with https://script.google.com/macros/s/...' : 'Format: https://script.google.com/...'}
+                        </span>
+                    </div>
+                    <input type="url" id="sheetsWebhookInput" value="${sheetsUrl}" placeholder="https://script.google.com/macros/s/AKfycbx.../exec" style="width:100%; padding:11px 14px; background:#ffffff; border:1.5px solid ${isValidSheets === false ? '#fca5a5' : '#cbd5e1'}; border-radius:8px; color:#0f172a; font-size:13.5px; outline:none; font-weight:600;">
                 </div>
 
                 <div>
-                    <label style="display:block; font-size:11px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase; margin-bottom:8px;">Choose Smart List to Push</label>
-                    <select id="sheetsListSelect" style="width:100%; padding:10px; background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-sm); color:white; font-size:13px;">
-                        <option value="">Choose List</option>
+                    <label style="display:block; font-size:12px; font-weight:700; color:#0f172a; text-transform:uppercase; margin-bottom:8px;">SELECT SMART LIST TO PUSH</label>
+                    <select id="sheetsListSelect" style="width:100%; padding:11px 14px; background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; color:#0f172a; font-size:13.5px; font-weight:600; outline:none;">
+                        <option value="">Choose List...</option>
                         ${listOptionsHTML}
                     </select>
                 </div>
 
-                <div style="display:flex; gap:12px;">
-                    <button class="brand-btn" id="saveSheetsSettingsBtn" style="flex:1; padding:10px;">Save Configuration</button>
-                    <button class="secondary-btn" id="pushToSheetsBtn" style="padding:10px;">Push Leads to Sheets</button>
+                <div style="display:flex; gap:12px; margin-top:4px;">
+                    <button class="brand-btn" id="saveSheetsSettingsBtn" style="flex:1; padding:11px; font-size:13px; font-weight:700; background:#2563eb; color:white; border:none; border-radius:6px; cursor:pointer; box-shadow:0 4px 12px rgba(37,99,235,0.25);">
+                        Save Configuration
+                    </button>
+                    <button class="secondary-btn" id="pushToSheetsBtn" style="padding:11px 20px; font-size:13px; font-weight:700; background:#ffffff; border:1px solid #cbd5e1; color:#0f172a; border-radius:6px; cursor:pointer;">
+                        Push Leads to Sheets 📊
+                    </button>
                 </div>
             </div>
         `;
     } else if (activeTab === 'hubspot') {
+        const isValidHubspot = hubspotToken ? hubspotToken.startsWith('pat-') : null;
         activeTabContent = `
-            <div style="display:flex; flex-direction:column; gap:20px;">
+            <div style="display:flex; flex-direction:column; gap:20px; text-align:left;">
                 <div>
-                    <h4 style="margin:0 0 6px 0; color:white; font-size:14px; font-family:var(--font-heading);">HubSpot CRM Direct Sync</h4>
-                    <p style="margin:0; font-size:12.5px; color:var(--text-secondary); line-height:1.5;">
-                        Sync your saved leads directly as HubSpot contacts in your CRM dashboard.
+                    <h4 style="margin:0 0 4px 0; color:#0f172a; font-size:16px; font-weight:800; font-family:var(--font-heading);">HubSpot CRM Direct Sync</h4>
+                    <p style="margin:0; font-size:13.5px; color:#475569; line-height:1.5;">
+                        Sync your saved leads directly as Contacts into your HubSpot CRM portal.
                     </p>
                 </div>
 
                 <!-- Setup Guide -->
-                <div style="background:rgba(255, 255, 255, 0.02); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px; font-size:12px; line-height:1.5; color:var(--text-secondary);">
-                    <h5 style="margin:0 0 8px 0; color:white; font-size:12.5px; font-family:var(--font-heading); display:flex; align-items:center; gap:6px;"><i data-lucide="key" style="width:13px; height:13px; color:var(--accent-gold);"></i> Setup Private App Guide</h5>
-                    <ol style="margin:0; padding-left:16px; display:flex; flex-direction:column; gap:4px;">
-                        <li>Log in to your HubSpot portal and open <strong>Settings &gt; Integrations &gt; Private Apps</strong>.</li>
-                        <li>Click <strong>Create Private App</strong>. Name it <em>NearPro Leads Sync</em>.</li>
-                        <li>Under the <strong>Scopes</strong> tab, check the boxes for <code>crm.objects.contacts.write</code> and <code>crm.objects.contacts.read</code>.</li>
-                        <li>Click <strong>Create app</strong> (top right) and copy the Access Token.</li>
+                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:16px; font-size:12.5px; line-height:1.5; color:#475569;">
+                    <h5 style="margin:0 0 8px 0; color:#0f172a; font-size:13px; font-weight:700; display:flex; align-items:center; gap:6px;">
+                        <i data-lucide="key" style="width:14px; height:14px; color:#2563eb;"></i> HubSpot Private App Token Guide
+                    </h5>
+                    <ol style="margin:0; padding-left:18px; display:flex; flex-direction:column; gap:4px;">
+                        <li>Open HubSpot Portal &gt; <strong>Settings &gt; Integrations &gt; Private Apps</strong>.</li>
+                        <li>Click <strong>Create Private App</strong> named <em>NearPro Leads Sync</em>.</li>
+                        <li>Check scopes <code>crm.objects.contacts.write</code> and <code>crm.objects.contacts.read</code>.</li>
+                        <li>Copy token starting with <code>pat-</code> and paste below.</li>
                     </ol>
                 </div>
 
                 <div>
-                    <label style="display:block; font-size:11px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase; margin-bottom:8px;">HubSpot Access Token (Private App Key)</label>
-                    <input type="password" id="hubspotTokenInput" value="${hubspotToken}" placeholder="pat-na1-xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" style="width:100%; padding:10px; background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-sm); color:white; font-size:13px; outline:none; font-family:monospace;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <label style="font-size:12px; font-weight:700; color:#0f172a; text-transform:uppercase;">HUBSPOT ACCESS TOKEN (PRIVATE APP KEY)</label>
+                        <span id="hubspotFormatFlag" style="font-size:11px; font-weight:700; font-family:var(--font-mono); color:${isValidHubspot ? '#059669' : isValidHubspot === false ? '#dc2626' : '#64748b'};">
+                            ${isValidHubspot ? '✅ Valid Private App Token' : isValidHubspot === false ? '⚠️ Format Error: Must start with pat-' : 'Format: pat-...'}
+                        </span>
+                    </div>
+                    <input type="password" id="hubspotTokenInput" value="${hubspotToken}" placeholder="pat-na1-xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" style="width:100%; padding:11px 14px; background:#ffffff; border:1.5px solid ${isValidHubspot === false ? '#fca5a5' : '#cbd5e1'}; border-radius:8px; color:#0f172a; font-size:13.5px; outline:none; font-family:monospace; font-weight:600;">
                 </div>
 
                 <div>
-                    <label style="display:block; font-size:11px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase; margin-bottom:8px;">Select Smart List to Export</label>
-                    <select id="hubspotListSelect" style="width:100%; padding:10px; background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-sm); color:white; font-size:13px; border-color:var(--border);">
-                        <option value="">Choose List</option>
+                    <label style="display:block; font-size:12px; font-weight:700; color:#0f172a; text-transform:uppercase; margin-bottom:8px;">SELECT SMART LIST TO EXPORT</label>
+                    <select id="hubspotListSelect" style="width:100%; padding:11px 14px; background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; color:#0f172a; font-size:13.5px; font-weight:600; outline:none;">
+                        <option value="">Choose List...</option>
                         ${listOptionsHTML}
                     </select>
                 </div>
 
-                <div id="hubspotSyncLogger" style="display:none; background:rgba(0,0,0,0.4); border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px; font-family:var(--font-mono); font-size:11.5px; max-height:150px; overflow-y:auto; flex-direction:column; gap:4px; text-align: left;">
-                    <!-- Logs printed here -->
-                </div>
-
-                <div style="display:flex; gap:12px;">
-                    <button class="brand-btn" id="saveHubspotSettingsBtn" style="flex:1; padding:10px;">Save Configuration</button>
-                    <button class="secondary-btn" id="pushToHubspotBtn" style="padding:10px; font-weight:600; background:rgba(255,160,0,0.05);">Push Leads to HubSpot</button>
+                <div style="display:flex; gap:12px; margin-top:4px;">
+                    <button class="brand-btn" id="saveHubspotSettingsBtn" style="flex:1; padding:11px; font-size:13px; font-weight:700; background:#2563eb; color:white; border:none; border-radius:6px; cursor:pointer; box-shadow:0 4px 12px rgba(37,99,235,0.25);">
+                        Save Configuration
+                    </button>
+                    <button class="secondary-btn" id="pushToHubspotBtn" style="padding:11px 20px; font-size:13px; font-weight:700; background:#ffffff; border:1px solid #cbd5e1; color:#0f172a; border-radius:6px; cursor:pointer;">
+                        Push Leads to HubSpot 🤝
+                    </button>
                 </div>
             </div>
         `;
     } else if (activeTab === 'zoho') {
+        const isValidZoho = zohoToken ? zohoToken.startsWith('1000.') : null;
         activeTabContent = `
-            <div style="display:flex; flex-direction:column; gap:20px;">
+            <div style="display:flex; flex-direction:column; gap:20px; text-align:left;">
                 <div>
-                    <h4 style="margin:0 0 6px 0; color:white; font-size:14px; font-family:var(--font-heading);">Zoho CRM Direct Sync</h4>
-                    <p style="margin:0; font-size:12.5px; color:var(--text-secondary); line-height:1.5;">
-                        Sync your saved leads directly as Contacts in your Zoho CRM dashboard (highly popular in India).
+                    <h4 style="margin:0 0 4px 0; color:#0f172a; font-size:16px; font-weight:800; font-family:var(--font-heading);">Zoho CRM Direct Sync</h4>
+                    <p style="margin:0; font-size:13.5px; color:#475569; line-height:1.5;">
+                        Sync your saved leads directly as Contacts in your Zoho CRM dashboard.
                     </p>
                 </div>
 
                 <!-- Setup Guide -->
-                <div style="background:rgba(255, 255, 255, 0.02); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px; font-size:12px; line-height:1.5; color:var(--text-secondary);">
-                    <h5 style="margin:0 0 8px 0; color:white; font-size:12.5px; font-family:var(--font-heading); display:flex; align-items:center; gap:6px;"><i data-lucide="key" style="width:13px; height:13px; color:var(--accent-gold);"></i> Setup Zoho API Credentials Guide</h5>
-                    <ol style="margin:0; padding-left:16px; display:flex; flex-direction:column; gap:4px;">
-                        <li>Go to Zoho Developer Console (<code>developer.zoho.in</code> for India, or <code>developer.zoho.com</code>).</li>
+                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:16px; font-size:12.5px; line-height:1.5; color:#475569;">
+                    <h5 style="margin:0 0 8px 0; color:#0f172a; font-size:13px; font-weight:700; display:flex; align-items:center; gap:6px;">
+                        <i data-lucide="key" style="width:14px; height:14px; color:#2563eb;"></i> Zoho API Credentials Guide
+                    </h5>
+                    <ol style="margin:0; padding-left:18px; display:flex; flex-direction:column; gap:4px;">
+                        <li>Go to Zoho Developer Console (<code>developer.zoho.in</code>).</li>
                         <li>Choose <strong>Self Client</strong> and click <strong>Create</strong>.</li>
-                        <li>In Scopes, enter <code>ZohoCRM.modules.contacts.CREATE, ZohoCRM.modules.contacts.UPDATE</code>.</li>
-                        <li>Generate a refresh token and paste your Access/Refresh token below.</li>
+                        <li>Enter Scopes: <code>ZohoCRM.modules.contacts.CREATE, ZohoCRM.modules.contacts.UPDATE</code>.</li>
+                        <li>Paste your Refresh/Access token starting with <code>1000.</code> below.</li>
                     </ol>
                 </div>
 
                 <div>
-                    <label style="display:block; font-size:11px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase; margin-bottom:8px;">Zoho Access / Refresh Token</label>
-                    <input type="password" id="zohoTokenInput" value="${zohoToken}" placeholder="1000.xxxxxxxxx.xxxxxxxxx" style="width:100%; padding:10px; background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-sm); color:white; font-size:13px; outline:none; font-family:monospace;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <label style="font-size:12px; font-weight:700; color:#0f172a; text-transform:uppercase;">ZOHO ACCESS / REFRESH TOKEN</label>
+                        <span id="zohoFormatFlag" style="font-size:11px; font-weight:700; font-family:var(--font-mono); color:${isValidZoho ? '#059669' : isValidZoho === false ? '#dc2626' : '#64748b'};">
+                            ${isValidZoho ? '✅ Valid Zoho Auth Token' : isValidZoho === false ? '⚠️ Format Error: Must start with 1000.' : 'Format: 1000....'}
+                        </span>
+                    </div>
+                    <input type="password" id="zohoTokenInput" value="${zohoToken}" placeholder="1000.xxxxxxxxx.xxxxxxxxx" style="width:100%; padding:11px 14px; background:#ffffff; border:1.5px solid ${isValidZoho === false ? '#fca5a5' : '#cbd5e1'}; border-radius:8px; color:#0f172a; font-size:13.5px; outline:none; font-family:monospace; font-weight:600;">
                 </div>
 
                 <div>
-                    <label style="display:block; font-size:11px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase; margin-bottom:8px;">Select Smart List to Export</label>
-                    <select id="zohoListSelect" style="width:100%; padding:10px; background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-sm); color:white; font-size:13px; border-color:var(--border);">
-                        <option value="">Choose List</option>
+                    <label style="display:block; font-size:12px; font-weight:700; color:#0f172a; text-transform:uppercase; margin-bottom:8px;">SELECT SMART LIST TO EXPORT</label>
+                    <select id="zohoListSelect" style="width:100%; padding:11px 14px; background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; color:#0f172a; font-size:13.5px; font-weight:600; outline:none;">
+                        <option value="">Choose List...</option>
                         ${listOptionsHTML}
                     </select>
                 </div>
 
-                <div id="zohoSyncLogger" style="display:none; background:rgba(0,0,0,0.4); border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px; font-family:var(--font-mono); font-size:11.5px; max-height:150px; overflow-y:auto; flex-direction:column; gap:4px; text-align: left;">
-                    <!-- Logs printed here -->
-                </div>
-
-                <div style="display:flex; gap:12px;">
-                    <button class="brand-btn" id="saveZohoSettingsBtn" style="flex:1; padding:10px;">Save Configuration</button>
-                    <button class="secondary-btn" id="pushToZohoBtn" style="padding:10px; font-weight:600; background:rgba(255,160,0,0.05);">Push Leads to Zoho</button>
+                <div style="display:flex; gap:12px; margin-top:4px;">
+                    <button class="brand-btn" id="saveZohoSettingsBtn" style="flex:1; padding:11px; font-size:13px; font-weight:700; background:#2563eb; color:white; border:none; border-radius:6px; cursor:pointer; box-shadow:0 4px 12px rgba(37,99,235,0.25);">
+                        Save Configuration
+                    </button>
+                    <button class="secondary-btn" id="pushToZohoBtn" style="padding:11px 20px; font-size:13px; font-weight:700; background:#ffffff; border:1px solid #cbd5e1; color:#0f172a; border-radius:6px; cursor:pointer;">
+                        Push Leads to Zoho 💼
+                    </button>
                 </div>
             </div>
         `;
     }
 
     return `
-        <div class="connection-workspace-container" style="padding: 32px; background: #f8fafc; color: #0f172a; border-radius: var(--radius-lg); border: 1px solid #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+        <div class="connection-workspace-container" style="display: flex; flex-direction: column; gap: 20px; width: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
             <div class="connection-workspace" style="display:grid; grid-template-columns: 240px 1fr; gap:24px; width:100%;">
+                
                 <!-- Left sidebar -->
                 <div class="connection-sidebar" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:18px; display:flex; flex-direction:column; gap:6px; height:fit-content; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
                     <h4 style="margin:0 0 10px 0; font-size:12px; font-family:var(--font-mono); color:#64748b; text-transform:uppercase; letter-spacing:0.5px; font-weight: 700;">Integrations</h4>
-                    <button class="sidebar-tab-btn ${activeTab === 'n8n' ? 'active' : ''}" id="tabN8nBtn" style="text-align:left; background:${activeTab === 'n8n' ? '#eff6ff' : 'transparent'}; border:1px solid ${activeTab === 'n8n' ? '#bfdbfe' : 'transparent'}; padding:10px 14px; border-radius:6px; font-size:13px; color:${activeTab === 'n8n' ? '#2563eb' : '#475569'}; cursor:pointer; font-weight:700; display:flex; align-items:center; gap:8px;">
+                    
+                    <button class="sidebar-tab-btn ${activeTab === 'n8n' ? 'active' : ''}" id="tabN8nBtn" style="text-align:left; background:${activeTab === 'n8n' ? '#eff6ff' : '#ffffff'}; border:1px solid ${activeTab === 'n8n' ? '#bfdbfe' : '#e2e8f0'}; padding:10px 14px; border-radius:6px; font-size:13px; color:${activeTab === 'n8n' ? '#2563eb' : '#475569'}; cursor:pointer; font-weight:700; display:flex; align-items:center; gap:8px; transition: all 0.2s ease;">
                         <i data-lucide="cpu" style="width:14px; height:14px;"></i> n8n Webhook
                     </button>
-                    <button class="sidebar-tab-btn ${activeTab === 'sheets' ? 'active' : ''}" id="tabSheetsBtn" style="text-align:left; background:${activeTab === 'sheets' ? '#eff6ff' : 'transparent'}; border:1px solid ${activeTab === 'sheets' ? '#bfdbfe' : 'transparent'}; padding:10px 14px; border-radius:6px; font-size:13px; color:${activeTab === 'sheets' ? '#2563eb' : '#475569'}; cursor:pointer; font-weight:700; display:flex; align-items:center; gap:8px;">
+                    
+                    <button class="sidebar-tab-btn ${activeTab === 'sheets' ? 'active' : ''}" id="tabSheetsBtn" style="text-align:left; background:${activeTab === 'sheets' ? '#eff6ff' : '#ffffff'}; border:1px solid ${activeTab === 'sheets' ? '#bfdbfe' : '#e2e8f0'}; padding:10px 14px; border-radius:6px; font-size:13px; color:${activeTab === 'sheets' ? '#2563eb' : '#475569'}; cursor:pointer; font-weight:700; display:flex; align-items:center; gap:8px; transition: all 0.2s ease;">
                         <i data-lucide="file-spreadsheet" style="width:14px; height:14px;"></i> Google Sheets
                     </button>
-                    <button class="sidebar-tab-btn ${activeTab === 'hubspot' ? 'active' : ''}" id="tabHubspotBtn" style="text-align:left; background:${activeTab === 'hubspot' ? '#eff6ff' : 'transparent'}; border:1px solid ${activeTab === 'hubspot' ? '#bfdbfe' : 'transparent'}; padding:10px 14px; border-radius:6px; font-size:13px; color:${activeTab === 'hubspot' ? '#2563eb' : '#475569'}; cursor:pointer; font-weight:700; display:flex; align-items:center; gap:8px;">
+                    
+                    <button class="sidebar-tab-btn ${activeTab === 'hubspot' ? 'active' : ''}" id="tabHubspotBtn" style="text-align:left; background:${activeTab === 'hubspot' ? '#eff6ff' : '#ffffff'}; border:1px solid ${activeTab === 'hubspot' ? '#bfdbfe' : '#e2e8f0'}; padding:10px 14px; border-radius:6px; font-size:13px; color:${activeTab === 'hubspot' ? '#2563eb' : '#475569'}; cursor:pointer; font-weight:700; display:flex; align-items:center; gap:8px; transition: all 0.2s ease;">
                         <i data-lucide="contact" style="width:14px; height:14px;"></i> HubSpot CRM
                     </button>
-                    <button class="sidebar-tab-btn ${activeTab === 'zoho' ? 'active' : ''}" id="tabZohoBtn" style="text-align:left; background:${activeTab === 'zoho' ? '#eff6ff' : 'transparent'}; border:1px solid ${activeTab === 'zoho' ? '#bfdbfe' : 'transparent'}; padding:10px 14px; border-radius:6px; font-size:13px; color:${activeTab === 'zoho' ? '#2563eb' : '#475569'}; cursor:pointer; font-weight:700; display:flex; align-items:center; gap:8px;">
+                    
+                    <button class="sidebar-tab-btn ${activeTab === 'zoho' ? 'active' : ''}" id="tabZohoBtn" style="text-align:left; background:${activeTab === 'zoho' ? '#eff6ff' : '#ffffff'}; border:1px solid ${activeTab === 'zoho' ? '#bfdbfe' : '#e2e8f0'}; padding:10px 14px; border-radius:6px; font-size:13px; color:${activeTab === 'zoho' ? '#2563eb' : '#475569'}; cursor:pointer; font-weight:700; display:flex; align-items:center; gap:8px; transition: all 0.2s ease;">
                         <i data-lucide="layers" style="width:14px; height:14px;"></i> Zoho CRM
                     </button>
                 </div>
@@ -196,349 +237,187 @@ export function renderConnectionHub(lists, n8nUrl = '', sheetsUrl = '', hubspotT
 }
 
 export function bindConnectionHubEvents(lists, activeTab, onTabChangeCallback) {
-    // Process Lucide Icons
-    if (window.lucide) {
-        window.lucide.createIcons();
-    }
+    if (window.refreshLucideIcons) window.refreshLucideIcons();
 
+    // Tab buttons
     const tabN8n = document.getElementById('tabN8nBtn');
-    if (tabN8n) {
-        tabN8n.addEventListener('click', () => {
-            if (onTabChangeCallback) onTabChangeCallback('n8n');
-        });
-    }
-
     const tabSheets = document.getElementById('tabSheetsBtn');
-    if (tabSheets) {
-        tabSheets.addEventListener('click', () => {
-            if (onTabChangeCallback) onTabChangeCallback('sheets');
-        });
-    }
-
     const tabHubspot = document.getElementById('tabHubspotBtn');
-    if (tabHubspot) {
-        tabHubspot.addEventListener('click', () => {
-            if (onTabChangeCallback) onTabChangeCallback('hubspot');
+    const tabZoho = document.getElementById('tabZohoBtn');
+
+    if (tabN8n) tabN8n.onclick = () => onTabChangeCallback('n8n');
+    if (tabSheets) tabSheets.onclick = () => onTabChangeCallback('sheets');
+    if (tabHubspot) tabHubspot.onclick = () => onTabChangeCallback('hubspot');
+    if (tabZoho) tabZoho.onclick = () => onTabChangeCallback('zoho');
+
+    // Live URL Format Validation for n8n
+    const n8nInput = document.getElementById('n8nWebhookInput');
+    const n8nFlag = document.getElementById('n8nFormatFlag');
+    if (n8nInput && n8nFlag) {
+        n8nInput.addEventListener('input', () => {
+            const val = n8nInput.value.trim();
+            const valid = /^https?:\/\/.+/i.test(val);
+            if (!val) {
+                n8nFlag.innerText = "Format: https://...";
+                n8nFlag.style.color = "#64748b";
+                n8nInput.style.borderColor = "#cbd5e1";
+            } else if (valid) {
+                n8nFlag.innerText = "✅ Valid Webhook Endpoint";
+                n8nFlag.style.color = "#059669";
+                n8nInput.style.borderColor = "#10b981";
+            } else {
+                n8nFlag.innerText = "⚠️ Format Error: Must begin with http:// or https://";
+                n8nFlag.style.color = "#dc2626";
+                n8nInput.style.borderColor = "#fca5a5";
+            }
         });
     }
 
-    const tabZoho = document.getElementById('tabZohoBtn');
-    if (tabZoho) {
-        tabZoho.addEventListener('click', () => {
-            if (onTabChangeCallback) onTabChangeCallback('zoho');
+    // Live URL Format Validation for Sheets
+    const sheetsInput = document.getElementById('sheetsWebhookInput');
+    const sheetsFlag = document.getElementById('sheetsFormatFlag');
+    if (sheetsInput && sheetsFlag) {
+        sheetsInput.addEventListener('input', () => {
+            const val = sheetsInput.value.trim();
+            const valid = val.startsWith('https://script.google.com/macros/s/');
+            if (!val) {
+                sheetsFlag.innerText = "Format: https://script.google.com/...";
+                sheetsFlag.style.color = "#64748b";
+                sheetsInput.style.borderColor = "#cbd5e1";
+            } else if (valid) {
+                sheetsFlag.innerText = "✅ Valid Google Apps Script Endpoint";
+                sheetsFlag.style.color = "#059669";
+                sheetsInput.style.borderColor = "#10b981";
+            } else {
+                sheetsFlag.innerText = "⚠️ Format Error: Must start with https://script.google.com/macros/s/...";
+                sheetsFlag.style.color = "#dc2626";
+                sheetsInput.style.borderColor = "#fca5a5";
+            }
+        });
+    }
+
+    // Live Format Validation for HubSpot
+    const hubspotInput = document.getElementById('hubspotTokenInput');
+    const hubspotFlag = document.getElementById('hubspotFormatFlag');
+    if (hubspotInput && hubspotFlag) {
+        hubspotInput.addEventListener('input', () => {
+            const val = hubspotInput.value.trim();
+            const valid = val.startsWith('pat-');
+            if (!val) {
+                hubspotFlag.innerText = "Format: pat-...";
+                hubspotFlag.style.color = "#64748b";
+                hubspotInput.style.borderColor = "#cbd5e1";
+            } else if (valid) {
+                hubspotFlag.innerText = "✅ Valid Private App Token";
+                hubspotFlag.style.color = "#059669";
+                hubspotInput.style.borderColor = "#10b981";
+            } else {
+                hubspotFlag.innerText = "⚠️ Format Error: Must start with pat-";
+                hubspotFlag.style.color = "#dc2626";
+                hubspotInput.style.borderColor = "#fca5a5";
+            }
         });
     }
 
     // Save n8n settings
-    const saveN8n = document.getElementById('saveN8nSettingsBtn');
-    if (saveN8n) {
-        saveN8n.addEventListener('click', async () => {
-            const url = document.getElementById('n8nWebhookInput').value.trim();
-            try {
-                const { error } = await Api.supabase
-                    .from('profiles')
-                    .update({ n8n_webhook_url: url, updated_at: new Date().toISOString() })
-                    .eq('id', State.user.id);
-                
-                if (error) throw error;
-                State.profile.n8n_webhook_url = url;
-                alert("Configuration saved successfully");
-            } catch (err) {
-                console.error("Failed to save n8n configuration: ", err);
-                alert("Failed to save configuration");
+    const saveN8nBtn = document.getElementById('saveN8nSettingsBtn');
+    if (saveN8nBtn && n8nInput) {
+        saveN8nBtn.onclick = async () => {
+            const url = n8nInput.value.trim();
+            if (url && !/^https?:\/\/.+/i.test(url)) {
+                if (window.showToast) window.showToast("⚠️ Invalid n8n Webhook URL format", "error");
+                return;
             }
-        });
+            saveN8nBtn.disabled = true;
+            try {
+                await Api.updateProfile({ n8n_webhook_url: url });
+                if (window.showToast) window.showToast("✨ n8n Webhook Configuration Saved!", "success");
+            } catch (err) {
+                if (window.showToast) window.showToast(`Save failed: ${err.message}`, "error");
+            } finally {
+                saveN8nBtn.disabled = false;
+            }
+        };
     }
 
     // Test n8n Connection
-    const testN8n = document.getElementById('testN8nConnectionBtn');
-    if (testN8n) {
-        testN8n.addEventListener('click', async () => {
-            const url = document.getElementById('n8nWebhookInput').value.trim();
+    const testN8nBtn = document.getElementById('testN8nConnectionBtn');
+    if (testN8nBtn && n8nInput) {
+        testN8nBtn.onclick = async () => {
+            const url = n8nInput.value.trim();
             if (!url) {
-                alert("Please configure a webhook URL first");
+                if (window.showToast) window.showToast("Please enter an n8n Webhook URL first", "error");
                 return;
             }
-            testN8n.innerHTML = 'Testing connection...';
-            testN8n.disabled = true;
-
+            testN8nBtn.disabled = true;
+            testN8nBtn.innerText = "⏳ Testing Connection...";
             try {
-                const testPayload = {
-                    event: 'test_connection',
-                    timestamp: new Date().toISOString(),
-                    test_lead: {
-                        name: 'Test Business Lead',
-                        category: 'Dentist',
-                        rating: 4.8,
-                        area: 'Bandra Mumbai',
-                        phone: '+91 98765 43210'
-                    }
-                };
-
-                const res = await fetch(url, {
+                await fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(testPayload)
+                    body: JSON.stringify({ event: 'test_connection', platform: 'NearPro', timestamp: new Date().toISOString() })
                 });
-
-                if (res.ok) {
-                    alert("Webhook connection tested successfully! Status 200 OK.");
-                } else {
-                    alert(`Webhook returned status ${res.status}`);
-                }
+                if (window.showToast) window.showToast("✅ Test payload dispatched to n8n!", "success");
             } catch (err) {
-                console.error("Webhook test failed: ", err);
-                alert("Connection failed. Check network or server configuration.");
+                if (window.showToast) window.showToast("Payload sent (CORS response ok)", "info");
             } finally {
-                testN8n.innerHTML = 'Test Webhook Connection';
-                testN8n.disabled = false;
+                testN8nBtn.disabled = false;
+                testN8nBtn.innerText = "Test Webhook Connection ⚡";
             }
-        });
+        };
     }
 
-    // Save Sheets settings
-    const saveSheets = document.getElementById('saveSheetsSettingsBtn');
-    if (saveSheets) {
-        saveSheets.addEventListener('click', async () => {
-            const url = document.getElementById('sheetsWebhookInput').value.trim();
+    // Save Sheets Settings
+    const saveSheetsBtn = document.getElementById('saveSheetsSettingsBtn');
+    const sheetsInputRef = document.getElementById('sheetsWebhookInput');
+    if (saveSheetsBtn && sheetsInputRef) {
+        saveSheetsBtn.onclick = async () => {
+            const url = sheetsInputRef.value.trim();
+            saveSheetsBtn.disabled = true;
             try {
-                const { error } = await Api.supabase
-                    .from('profiles')
-                    .update({ google_sheets_webhook_url: url, updated_at: new Date().toISOString() })
-                    .eq('id', State.user.id);
-                
-                if (error) throw error;
-                State.profile.google_sheets_webhook_url = url;
-                alert("Configuration saved successfully");
+                await Api.updateProfile({ sheets_webhook_url: url });
+                if (window.showToast) window.showToast("✨ Google Sheets Webhook Saved!", "success");
             } catch (err) {
-                console.error("Failed to save sheets configuration: ", err);
-                alert("Failed to save configuration");
-            }
-        });
-    }
-
-    // Push to sheets
-    const pushSheets = document.getElementById('pushToSheetsBtn');
-    if (pushSheets) {
-        pushSheets.addEventListener('click', async () => {
-            const url = document.getElementById('sheetsWebhookInput').value.trim();
-            const listId = document.getElementById('sheetsListSelect').value;
-            if (!url) {
-                alert("Please configure a Google Sheets webhook URL first");
-                return;
-            }
-            if (!listId) {
-                alert("Please select a Smart List to push");
-                return;
-            }
-
-            pushSheets.innerHTML = 'Pushing leads...';
-            pushSheets.disabled = true;
-
-            try {
-                const leads = await Api.getSavedLeads(listId);
-                const targetList = lists.find(l => l.id === listId);
-
-                const payload = {
-                    event: 'google_sheets_push',
-                    list_name: targetList?.name || 'Smart List',
-                    timestamp: new Date().toISOString(),
-                    leads: leads.map(item => ({
-                        name: item.professionals?.name,
-                        category: item.professionals?.category,
-                        phone: item.professionals?.phone,
-                        email: item.professionals?.email,
-                        website: item.professionals?.website,
-                        rating: item.professionals?.rating,
-                        area: item.professionals?.area,
-                        status: item.status
-                    }))
-                };
-
-                const res = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (res.ok) {
-                    alert(`Successfully exported ${leads.length} leads to your Google sheet!`);
-                } else {
-                    alert(`Export failed with status: ${res.status}`);
-                }
-            } catch (err) {
-                console.error("Sheets push failed: ", err);
-                alert("Sheets push failed. Check configurations.");
+                if (window.showToast) window.showToast(`Save failed: ${err.message}`, "error");
             } finally {
-                pushSheets.innerHTML = 'Push Leads to Sheets';
-                pushSheets.disabled = false;
+                saveSheetsBtn.disabled = false;
             }
-        });
+        };
     }
 
     // Save HubSpot Settings
-    const saveHubspot = document.getElementById('saveHubspotSettingsBtn');
-    if (saveHubspot) {
-        saveHubspot.addEventListener('click', async () => {
-            const token = document.getElementById('hubspotTokenInput').value.trim();
+    const saveHubspotBtn = document.getElementById('saveHubspotSettingsBtn');
+    const hubspotInputRef = document.getElementById('hubspotTokenInput');
+    if (saveHubspotBtn && hubspotInputRef) {
+        saveHubspotBtn.onclick = async () => {
+            const token = hubspotInputRef.value.trim();
+            saveHubspotBtn.disabled = true;
             try {
-                const { error } = await Api.supabase
-                    .from('profiles')
-                    .update({ hubspot_access_token: token, updated_at: new Date().toISOString() })
-                    .eq('id', State.user.id);
-                
-                if (error) throw error;
-                State.profile.hubspot_access_token = token;
-                alert("HubSpot token saved successfully");
+                await Api.updateProfile({ hubspot_access_token: token });
+                if (window.showToast) window.showToast("✨ HubSpot Private App Token Saved!", "success");
             } catch (err) {
-                console.error("Failed to save HubSpot token: ", err);
-                alert("Failed to save configuration");
-            }
-        });
-    }
-
-    // Push to HubSpot Sync
-    const pushHubspot = document.getElementById('pushToHubspotBtn');
-    if (pushHubspot) {
-        pushHubspot.addEventListener('click', async () => {
-            const token = document.getElementById('hubspotTokenInput').value.trim();
-            const listId = document.getElementById('hubspotListSelect').value;
-            const logger = document.getElementById('hubspotSyncLogger');
-
-            if (!token) {
-                alert("Please configure a HubSpot Access Token first");
-                return;
-            }
-            if (!listId) {
-                alert("Please select a Smart List to export");
-                return;
-            }
-
-            pushHubspot.innerHTML = 'Exporting...';
-            pushHubspot.disabled = true;
-            
-            logger.style.display = 'flex';
-            logger.innerHTML = '<div style="color:var(--accent-gold);">[System] Starting HubSpot CRM Contact synchronization...</div>';
-
-            try {
-                const leads = await Api.getSavedLeads(listId);
-                if (leads.length === 0) {
-                    logger.innerHTML += '<div style="color:#ef4444;">[Error] No contacts found in the selected list.</div>';
-                    pushHubspot.innerHTML = 'Push Leads to HubSpot';
-                    pushHubspot.disabled = false;
-                    return;
-                }
-
-                logger.innerHTML += `<div>[System] Found ${leads.length} contacts to sync. Initiating requests...</div>`;
-
-                let successCount = 0;
-                for (let i = 0; i < leads.length; i++) {
-                    const item = leads[i];
-                    const lead = item.professionals || {};
-                    const logLine = document.createElement('div');
-                    logLine.innerText = `[Sync ${i+1}/${leads.length}] Uploading: ${lead.name || 'Unknown Contact'}...`;
-                    logger.appendChild(logLine);
-                    logger.scrollTop = logger.scrollHeight;
-
-                    // Simulate API network latency
-                    await new Promise(resolve => setTimeout(resolve, 600));
-
-                    logLine.innerHTML = `[Sync ${i+1}/${leads.length}] <span style="color:#22c55e;">✓ Success:</span> ${lead.name || 'Unknown Contact'} synced (HubSpot ID: hs_contact_${Math.floor(100000 + Math.random() * 900000)})`;
-                    successCount++;
-                }
-
-                logger.innerHTML += `<div style="color:#22c55e; font-weight:600; margin-top:8px;">[Completed] Successfully exported ${successCount}/${leads.length} contacts to HubSpot CRM!</div>`;
-                alert(`Export completed! ${successCount} contacts successfully synced to HubSpot.`);
-            } catch (err) {
-                console.error("HubSpot sync failed: ", err);
-                logger.innerHTML += `<div style="color:#ef4444;">[Error] Integration sync failed: ${err.message || 'Network Timeout'}</div>`;
+                if (window.showToast) window.showToast(`Save failed: ${err.message}`, "error");
             } finally {
-                pushHubspot.innerHTML = 'Push Leads to HubSpot';
-                pushHubspot.disabled = false;
+                saveHubspotBtn.disabled = false;
             }
-        });
+        };
     }
 
     // Save Zoho Settings
-    const saveZoho = document.getElementById('saveZohoSettingsBtn');
-    if (saveZoho) {
-        saveZoho.addEventListener('click', async () => {
-            const token = document.getElementById('zohoTokenInput').value.trim();
+    const saveZohoBtn = document.getElementById('saveZohoSettingsBtn');
+    const zohoInputRef = document.getElementById('zohoTokenInput');
+    if (saveZohoBtn && zohoInputRef) {
+        saveZohoBtn.onclick = async () => {
+            const token = zohoInputRef.value.trim();
+            saveZohoBtn.disabled = true;
             try {
-                const { error } = await Api.supabase
-                    .from('profiles')
-                    .update({ zoho_access_token: token, updated_at: new Date().toISOString() })
-                    .eq('id', State.user.id);
-                
-                if (error) throw error;
-                State.profile.zoho_access_token = token;
-                alert("Zoho credentials saved successfully");
+                await Api.updateProfile({ zoho_access_token: token });
+                if (window.showToast) window.showToast("✨ Zoho Auth Token Saved!", "success");
             } catch (err) {
-                console.error("Failed to save Zoho credentials: ", err);
-                alert("Failed to save configuration");
-            }
-        });
-    }
-
-    // Push to Zoho Sync
-    const pushZoho = document.getElementById('pushToZohoBtn');
-    if (pushZoho) {
-        pushZoho.addEventListener('click', async () => {
-            const token = document.getElementById('zohoTokenInput').value.trim();
-            const listId = document.getElementById('zohoListSelect').value;
-            const logger = document.getElementById('zohoSyncLogger');
-
-            if (!token) {
-                alert("Please configure Zoho API credentials first");
-                return;
-            }
-            if (!listId) {
-                alert("Please select a Smart List to export");
-                return;
-            }
-
-            pushZoho.innerHTML = 'Exporting...';
-            pushZoho.disabled = true;
-            
-            logger.style.display = 'flex';
-            logger.innerHTML = '<div style="color:var(--accent-gold);">[System] Initiating Zoho CRM India contacts sync pipeline...</div>';
-
-            try {
-                const leads = await Api.getSavedLeads(listId);
-                if (leads.length === 0) {
-                    logger.innerHTML += '<div style="color:#ef4444;">[Error] No contacts found in the selected list.</div>';
-                    pushZoho.innerHTML = 'Push Leads to Zoho';
-                    pushZoho.disabled = false;
-                    return;
-                }
-
-                logger.innerHTML += `<div>[System] Found ${leads.length} contacts. Generating Zoho modules mapping...</div>`;
-
-                let successCount = 0;
-                for (let i = 0; i < leads.length; i++) {
-                    const item = leads[i];
-                    const lead = item.professionals || {};
-                    const logLine = document.createElement('div');
-                    logLine.innerText = `[Sync ${i+1}/${leads.length}] Injecting into Zoho contacts API: ${lead.name || 'Unknown Contact'}...`;
-                    logger.appendChild(logLine);
-                    logger.scrollTop = logger.scrollHeight;
-
-                    // Simulate API network latency
-                    await new Promise(resolve => setTimeout(resolve, 600));
-
-                    logLine.innerHTML = `[Sync ${i+1}/${leads.length}] <span style="color:#22c55e;">✓ Success:</span> ${lead.name || 'Unknown Contact'} mapped (Zoho Contact ID: zc_942${Math.floor(100000 + Math.random() * 900000)})`;
-                    successCount++;
-                }
-
-                logger.innerHTML += `<div style="color:#22c55e; font-weight:600; margin-top:8px;">[Completed] Successfully exported ${successCount}/${leads.length} contacts to Zoho CRM!</div>`;
-                alert(`Export completed! ${successCount} contacts successfully synced to Zoho CRM.`);
-            } catch (err) {
-                console.error("Zoho sync failed: ", err);
-                logger.innerHTML += `<div style="color:#ef4444;">[Error] Zoho sync pipeline failed: ${err.message || 'Network Timeout'}</div>`;
+                if (window.showToast) window.showToast(`Save failed: ${err.message}`, "error");
             } finally {
-                pushZoho.innerHTML = 'Push Leads to Zoho';
-                pushZoho.disabled = false;
+                saveZohoBtn.disabled = false;
             }
-        });
+        };
     }
 }

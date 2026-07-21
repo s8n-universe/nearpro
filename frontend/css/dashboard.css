@@ -66,6 +66,17 @@
     color: white;
 }
 
+/* Light Inner Sidebar Tab Buttons Hover Highlight */
+.sidebar-tab-btn {
+    transition: all 0.2s ease !important;
+}
+
+.sidebar-tab-btn:hover {
+    background: #eff6ff !important;
+    border-color: #bfdbfe !important;
+    color: #2563eb !important;
+}
+
 .dashboard-nav-item.active {
     background: rgba(255, 160, 0, 0.08);
     color: var(--accent-gold);
