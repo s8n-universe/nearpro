@@ -104,18 +104,41 @@ export function renderProposalGeneratorLayout(selectedLeadId = null) {
 }
 
 export function bindProposalGeneratorEvents() {
+    window._proposalCache = window._proposalCache || {};
+    window._activeProposalPromises = window._activeProposalPromises || {};
+
     const btn = document.getElementById('generateProposalBtn');
+    const leadSelect = document.getElementById('proposalLeadSelect');
+    const loader = document.getElementById('proposalStepLoader');
+    const resultContainer = document.getElementById('proposalResultContainer');
+
+    const currentLeadId = leadSelect ? leadSelect.value : null;
+
+    if (currentLeadId && window._proposalCache[currentLeadId] && resultContainer) {
+        const cached = window._proposalCache[currentLeadId];
+        renderProposalOutputCard(cached.proposal, cached.slug, cached.public_url);
+    }
+
+    if (currentLeadId && window._activeProposalPromises[currentLeadId] && loader) {
+        loader.style.display = 'block';
+        if (btn) btn.disabled = true;
+
+        window._activeProposalPromises[currentLeadId].then(res => {
+            if (loader) loader.style.display = 'none';
+            if (btn) btn.disabled = false;
+            if (res && res.proposal) {
+                renderProposalOutputCard(res.proposal, res.slug, res.public_url);
+            }
+        }).catch(err => {
+            if (loader) loader.style.display = 'none';
+            if (btn) btn.disabled = false;
+        });
+    }
+
     if (!btn) return;
 
     btn.addEventListener('click', async () => {
-        const leadSelect = document.getElementById('proposalLeadSelect');
         const notesInput = document.getElementById('proposalCustomNotes');
-        const loader = document.getElementById('proposalStepLoader');
-        const resultContainer = document.getElementById('proposalResultContainer');
-        const titleEl = document.getElementById('loaderStepTitle');
-        const subEl = document.getElementById('loaderStepSub');
-        const barEl = document.getElementById('loaderProgressBar');
-
         const leadId = leadSelect ? leadSelect.value : null;
         if (!leadId) {
             if (window.showToast) window.showToast("Please select a target lead from the dropdown", "error");
@@ -124,12 +147,10 @@ export function bindProposalGeneratorEvents() {
 
         const customNotes = notesInput ? notesInput.value.trim() : '';
 
-        // Hide old results & show loader animation
         btn.disabled = true;
         if (resultContainer) resultContainer.style.display = 'none';
         if (loader) loader.style.display = 'block';
 
-        // Animate 4 steps
         const steps = [
             { pct: '25%', title: '🔍 Step 1/4: Analyzing business profile & Google Maps social proof...', sub: 'Extracting rating, review volume, and local search visibility metrics...' },
             { pct: '50%', title: '📊 Step 2/4: Benchmarking review gap vs top 3 local competitors...', sub: 'Calculating search ranking deficit and mobile visitor bounce penalties...' },
@@ -140,31 +161,43 @@ export function bindProposalGeneratorEvents() {
         let stepIdx = 0;
         const stepInterval = setInterval(() => {
             stepIdx = (stepIdx + 1) % steps.length;
-            if (titleEl) titleEl.innerText = steps[stepIdx].title;
-            if (subEl) subEl.innerText = steps[stepIdx].sub;
-            if (barEl) barEl.style.width = steps[stepIdx].pct;
+            const currentTitle = document.getElementById('loaderStepTitle');
+            const currentSub = document.getElementById('loaderStepSub');
+            const currentBar = document.getElementById('loaderProgressBar');
+            if (currentTitle) currentTitle.innerText = steps[stepIdx].title;
+            if (currentSub) currentSub.innerText = steps[stepIdx].sub;
+            if (currentBar) currentBar.style.width = steps[stepIdx].pct;
         }, 1200);
 
-        try {
-            const res = await Api.generatePDFProposal(leadId, customNotes);
-            clearInterval(stepInterval);
+        const promise = Api.generatePDFProposal(leadId, customNotes);
+        window._activeProposalPromises[leadId] = promise;
 
-            if (loader) loader.style.display = 'none';
-            btn.disabled = false;
+        try {
+            const res = await promise;
+            clearInterval(stepInterval);
+            delete window._activeProposalPromises[leadId];
 
             if (res && res.proposal) {
-                // Update profile proposal counter
+                window._proposalCache[leadId] = res;
                 if (res.quota && State.profile) {
                     State.profile.monthly_proposals_used = res.quota.used;
                 }
+
+                const currentLoader = document.getElementById('proposalStepLoader');
+                const currentBtn = document.getElementById('generateProposalBtn');
+                if (currentLoader) currentLoader.style.display = 'none';
+                if (currentBtn) currentBtn.disabled = false;
 
                 if (window.showToast) window.showToast("✨ 3-Page Client Proposal generated & saved to Documents!", "success");
                 renderProposalOutputCard(res.proposal, res.slug, res.public_url);
             }
         } catch (err) {
             clearInterval(stepInterval);
-            if (loader) loader.style.display = 'none';
-            btn.disabled = false;
+            delete window._activeProposalPromises[leadId];
+            const currentLoader = document.getElementById('proposalStepLoader');
+            const currentBtn = document.getElementById('generateProposalBtn');
+            if (currentLoader) currentLoader.style.display = 'none';
+            if (currentBtn) currentBtn.disabled = false;
             console.error("Proposal generation failed:", err);
             if (window.showToast) {
                 window.showToast(`Generation failed: ${err.message}`, "error");

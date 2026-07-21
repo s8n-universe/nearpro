@@ -109,14 +109,43 @@ export function renderCallScriptGeneratorLayout(selectedLeadId = null) {
 }
 
 export function bindCallScriptGeneratorEvents() {
+    window._callScriptCache = window._callScriptCache || {};
+    window._activeCallScriptPromises = window._activeCallScriptPromises || {};
+
     const btn = document.getElementById('generateCallScriptBtn');
+    const leadSelect = document.getElementById('scriptLeadSelect');
+    const loader = document.getElementById('scriptStepLoader');
+    const resultContainer = document.getElementById('callScriptResultContainer');
+
+    const currentLeadId = leadSelect ? leadSelect.value : null;
+
+    // Restore cached result if available for this lead
+    if (currentLeadId && window._callScriptCache[currentLeadId] && resultContainer) {
+        const cached = window._callScriptCache[currentLeadId];
+        renderCallScriptOutputCard(cached.call_script, cached.slug, cached.public_url);
+    }
+
+    // Restore in-flight step loader if background promise is running
+    if (currentLeadId && window._activeCallScriptPromises[currentLeadId] && loader) {
+        loader.style.display = 'block';
+        if (btn) btn.disabled = true;
+
+        window._activeCallScriptPromises[currentLeadId].then(res => {
+            if (loader) loader.style.display = 'none';
+            if (btn) btn.disabled = false;
+            if (res && res.call_script) {
+                renderCallScriptOutputCard(res.call_script, res.slug, res.public_url);
+            }
+        }).catch(err => {
+            if (loader) loader.style.display = 'none';
+            if (btn) btn.disabled = false;
+        });
+    }
+
     if (!btn) return;
 
     btn.addEventListener('click', async () => {
-        const leadSelect = document.getElementById('scriptLeadSelect');
         const angleSelect = document.getElementById('scriptCallAngle');
-        const loader = document.getElementById('scriptStepLoader');
-        const resultContainer = document.getElementById('callScriptResultContainer');
         const titleEl = document.getElementById('scriptLoaderTitle');
         const subEl = document.getElementById('scriptLoaderSub');
         const barEl = document.getElementById('scriptProgressBar');
@@ -143,30 +172,44 @@ export function bindCallScriptGeneratorEvents() {
         let stepIdx = 0;
         const stepInterval = setInterval(() => {
             stepIdx = (stepIdx + 1) % steps.length;
-            if (titleEl) titleEl.innerText = steps[stepIdx].title;
-            if (subEl) subEl.innerText = steps[stepIdx].sub;
-            if (barEl) barEl.style.width = steps[stepIdx].pct;
+            const currentTitle = document.getElementById('scriptLoaderTitle');
+            const currentSub = document.getElementById('scriptLoaderSub');
+            const currentBar = document.getElementById('scriptProgressBar');
+            if (currentTitle) currentTitle.innerText = steps[stepIdx].title;
+            if (currentSub) currentSub.innerText = steps[stepIdx].sub;
+            if (currentBar) currentBar.style.width = steps[stepIdx].pct;
         }, 1100);
 
-        try {
-            const res = await Api.generateCallScript(leadId, callAngle);
-            clearInterval(stepInterval);
+        // Store promise globally to prevent tab switch interruption
+        const promise = Api.generateCallScript(leadId, callAngle);
+        window._activeCallScriptPromises[leadId] = promise;
 
-            if (loader) loader.style.display = 'none';
-            btn.disabled = false;
+        try {
+            const res = await promise;
+            clearInterval(stepInterval);
+            delete window._activeCallScriptPromises[leadId];
 
             if (res && res.call_script) {
+                window._callScriptCache[leadId] = res;
                 if (res.quota && State.profile) {
                     State.profile.monthly_call_scripts_used = res.quota.used;
                 }
+
+                const currentLoader = document.getElementById('scriptStepLoader');
+                const currentBtn = document.getElementById('generateCallScriptBtn');
+                if (currentLoader) currentLoader.style.display = 'none';
+                if (currentBtn) currentBtn.disabled = false;
 
                 if (window.showToast) window.showToast("✨ Tele-Sales Cold Call Script ready!", "success");
                 renderCallScriptOutputCard(res.call_script, res.slug, res.public_url);
             }
         } catch (err) {
             clearInterval(stepInterval);
-            if (loader) loader.style.display = 'none';
-            btn.disabled = false;
+            delete window._activeCallScriptPromises[leadId];
+            const currentLoader = document.getElementById('scriptStepLoader');
+            const currentBtn = document.getElementById('generateCallScriptBtn');
+            if (currentLoader) currentLoader.style.display = 'none';
+            if (currentBtn) currentBtn.disabled = false;
             console.error("Call script generation failed:", err);
             if (window.showToast) {
                 window.showToast(`Generation failed: ${err.message}`, "error");
