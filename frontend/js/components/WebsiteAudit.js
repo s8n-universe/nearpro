@@ -47,37 +47,62 @@ export function renderWebsiteAudit(leadsWithWebsites, activeAuditLeadId = null, 
             </div>
         `;
     } else if (auditResult) {
+    } else if (auditResult) {
         const score = auditResult.page_speed_score || 0;
         let scoreColor = '#dc2626'; // Red
         if (score >= 80) scoreColor = '#059669'; // Green
         else if (score >= 50) scoreColor = '#d97706'; // Yellow
 
+        const bounceRate = auditResult.predictive_bounce_rate || 45;
+        const lostVisitors = auditResult.estimated_lost_visitors_monthly || 320;
+        const winProb = auditResult.sales_win_probability || 80;
+        const cwvStatus = auditResult.core_web_vitals_status || '🔴 FAILING';
+        const pitchAngle = auditResult.recommended_pitch_angle || 'Offer a 24-hour website speed & mobile conversion optimization package.';
+        const projectQuote = auditResult.project_quote_range || '₹25,000 - ₹40,000';
+        const retainerQuote = auditResult.monthly_retainer_quote || '₹6,000/mo';
+
         const gapsHTML = (auditResult.gaps || []).map(gap => `
-            <li class="audit-gap-item" style="color: #0f172a; margin-bottom: 8px; font-size: 13.5px;">❌ ${gap}</li>
+            <li class="audit-gap-item" style="color: #0f172a; margin-bottom: 8px; font-size: 13.5px; font-weight: 500;">❌ ${gap}</li>
         `).join('');
 
         workspaceHTML = `
             <div class="audit-results-dashboard" style="display: flex; flex-direction: column; gap: 24px;">
                 <div class="audit-header-banner" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:20px 24px; display:flex; justify-content:space-between; align-items:center; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
                     <div>
-                        <h4 style="margin:0; font-size:16px; color:#0f172a; font-family:var(--font-heading); font-weight: 700;">Audit Report for ${auditResult.url}</h4>
-                        <p style="margin:4px 0 0 0; font-size:12px; color:#64748b; font-family:var(--font-mono);">Scanned via NearPro Health Check Engine</p>
+                        <h4 style="margin:0; font-size:17px; color:#0f172a; font-family:var(--font-heading); font-weight: 800;">Audit & Predictive Report for ${auditResult.url}</h4>
+                        <p style="margin:4px 0 0 0; font-size:12px; color:#64748b; font-family:var(--font-mono);">Scanned via NearPro Health Check & Predictive Intelligence Engine</p>
                     </div>
+                    <span style="font-size:11.5px; background:#eff6ff; border:1px solid #bfdbfe; color:#2563eb; padding:4px 12px; border-radius:50px; font-weight:700;">PREDICTIVE INTELLIGENCE</span>
                 </div>
 
+                <!-- 4 KPI Metrics Row -->
                 <div class="audit-metrics-row" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:16px;">
-                    <div class="metric-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:20px; text-align:center; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                    <div class="metric-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:18px; text-align:center; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
                         <div style="font-size:11px; color:#64748b; font-family:var(--font-mono); text-transform:uppercase; font-weight: 700;">PageSpeed Score</div>
-                        <div style="font-size:32px; font-weight:800; color:${scoreColor}; margin-top:6px; font-family:var(--font-mono);">${score}/100</div>
+                        <div style="font-size:30px; font-weight:800; color:${scoreColor}; margin-top:6px; font-family:var(--font-mono);">${score}/100</div>
                     </div>
-                    <div class="metric-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:20px; text-align:center; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                    
+                    <div class="metric-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:18px; text-align:center; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
                         <div style="font-size:11px; color:#64748b; font-family:var(--font-mono); text-transform:uppercase; font-weight: 700;">Est. Monthly Leak</div>
-                        <div style="font-size:24px; font-weight:800; color:#d97706; margin-top:10px; font-family:var(--font-mono);">₹${(auditResult.est_lost_revenue_per_month || 8500).toLocaleString('en-IN')}</div>
+                        <div style="font-size:24px; font-weight:800; color:#d97706; margin-top:8px; font-family:var(--font-mono);">₹${(auditResult.est_lost_revenue_per_month || 8500).toLocaleString('en-IN')}</div>
+                    </div>
+
+                    <div class="metric-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:18px; text-align:center; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                        <div style="font-size:11px; color:#64748b; font-family:var(--font-mono); text-transform:uppercase; font-weight: 700;">Est. Lost Traffic</div>
+                        <div style="font-size:22px; font-weight:800; color:#dc2626; margin-top:8px; font-family:var(--font-mono);">~${lostVisitors}/mo</div>
+                        <div style="font-size:11px; color:#64748b; margin-top:2px;">${bounceRate}% Bounce Rate</div>
+                    </div>
+
+                    <div class="metric-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:18px; text-align:center; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                        <div style="font-size:11px; color:#64748b; font-family:var(--font-mono); text-transform:uppercase; font-weight: 700;">Sales Closing Chance</div>
+                        <div style="font-size:22px; font-weight:800; color:#2563eb; margin-top:8px; font-family:var(--font-mono);">${winProb}% High</div>
+                        <div style="font-size:11px; color:#059669; font-weight:700; margin-top:2px;">🔥 High Intent Pitch</div>
                     </div>
                 </div>
 
-                <div class="audit-checks-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:16px;">
-                    <div class="check-item-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:18px; display:flex; align-items:center; gap:12px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                <!-- 6 Health Check Items Grid -->
+                <div class="audit-checks-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
+                    <div class="check-item-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:16px; display:flex; align-items:center; gap:12px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
                         <span class="check-icon" style="font-size: 20px;">${auditResult.mobile_friendly ? '✅' : '❌'}</span>
                         <div>
                             <div style="font-size:13px; font-weight:700; color:#0f172a;">Mobile Responsive</div>
@@ -85,7 +110,7 @@ export function renderWebsiteAudit(leadsWithWebsites, activeAuditLeadId = null, 
                         </div>
                     </div>
 
-                    <div class="check-item-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:18px; display:flex; align-items:center; gap:12px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                    <div class="check-item-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:16px; display:flex; align-items:center; gap:12px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
                         <span class="check-icon" style="font-size: 20px;">${auditResult.has_https ? '✅' : '❌'}</span>
                         <div>
                             <div style="font-size:13px; font-weight:700; color:#0f172a;">SSL Security (HTTPS)</div>
@@ -93,23 +118,67 @@ export function renderWebsiteAudit(leadsWithWebsites, activeAuditLeadId = null, 
                         </div>
                     </div>
 
-                    <div class="check-item-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:18px; display:flex; align-items:center; gap:12px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                    <div class="check-item-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:16px; display:flex; align-items:center; gap:12px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
                         <span class="check-icon" style="font-size: 20px;">${auditResult.has_schema ? '✅' : '❌'}</span>
                         <div>
-                            <div style="font-size:13px; font-weight:700; color:#0f172a;">Structured Schema Data</div>
-                            <span class="check-status" style="font-size:11.5px; color:#64748b;">${auditResult.has_schema ? 'JSON LD active' : 'Missing'}</span>
+                            <div style="font-size:13px; font-weight:700; color:#0f172a;">Structured Schema</div>
+                            <span class="check-status" style="font-size:11.5px; color:#64748b;">${auditResult.has_schema ? 'JSON-LD Active' : 'Missing'}</span>
                         </div>
                     </div>
 
-                    <div class="check-item-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:18px; display:flex; align-items:center; gap:12px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                    <div class="check-item-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:16px; display:flex; align-items:center; gap:12px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
                         <span class="check-icon" style="font-size: 20px;">⚡</span>
                         <div>
-                            <div style="font-size:13px; font-weight:700; color:#0f172a;">Estimated Load Speed</div>
+                            <div style="font-size:13px; font-weight:700; color:#0f172a;">Load Speed</div>
                             <span class="check-status" style="font-size:11.5px; color:#64748b;">${((auditResult.load_time_ms || 2400) / 1000).toFixed(1)} seconds</span>
+                        </div>
+                    </div>
+
+                    <div class="check-item-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:16px; display:flex; align-items:center; gap:12px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                        <span class="check-icon" style="font-size: 18px;">🌐</span>
+                        <div>
+                            <div style="font-size:13px; font-weight:700; color:#0f172a;">Core Web Vitals</div>
+                            <span class="check-status" style="font-size:11.5px; font-weight:700;">${cwvStatus}</span>
+                        </div>
+                    </div>
+
+                    <div class="check-item-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:16px; display:flex; align-items:center; gap:12px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                        <span class="check-icon" style="font-size: 18px;">💬</span>
+                        <div>
+                            <div style="font-size:13px; font-weight:700; color:#0f172a;">WhatsApp OpenGraph</div>
+                            <span class="check-status" style="font-size:11.5px; color:#64748b;">${auditResult.has_og_tags ? '✅ Active' : '❌ Missing'}</span>
                         </div>
                     </div>
                 </div>
 
+                <!-- Strategic Agency Sales & Pitch Advisory Panel -->
+                <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-left: 5px solid #2563eb; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 2px 8px rgba(37, 99, 235, 0.04);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                        <h5 style="margin:0; font-size:14px; font-weight:800; color:#0f172a; text-transform:uppercase; font-family:var(--font-mono);">
+                            🎯 Strategic Agency Sales & Pricing Advisory
+                        </h5>
+                        <span style="font-size:11px; background:#ffffff; border:1px solid #cbd5e1; color:#0f172a; padding:2px 8px; border-radius:4px; font-weight:700;">AI CLOSING RECOMMENDATION</span>
+                    </div>
+
+                    <div style="font-size:13px; color:#1e293b; line-height:1.5; font-weight:500;">
+                        <strong style="color:#2563eb;">Recommended Pitch Hook:</strong> ${pitchAngle}
+                    </div>
+
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; background:#ffffff; padding:14px; border-radius:8px; border:1px solid #e2e8f0; margin-top:4px;">
+                        <div>
+                            <label style="display:block; font-size:11px; font-family:var(--font-mono); color:#64748b; font-weight:700; text-transform:uppercase; margin-bottom:2px;">Target Project Quote (One-Time)</label>
+                            <div style="font-size:16px; font-weight:800; color:#0f172a;">${projectQuote}</div>
+                            <div style="font-size:11px; color:#475569;">Includes Redesign + Local JSON-LD Schema</div>
+                        </div>
+                        <div>
+                            <label style="display:block; font-size:11px; font-family:var(--font-mono); color:#64748b; font-weight:700; text-transform:uppercase; margin-bottom:2px;">Target Monthly Retainer</label>
+                            <div style="font-size:16px; font-weight:800; color:#059669;">${retainerQuote}</div>
+                            <div style="font-size:11px; color:#475569;">Monthly Maintenance & SEO Audit</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technical Gaps Panel -->
                 <div class="audit-section-panel" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:20px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
                     <h5 style="margin:0 0 12px 0; color:#0f172a; font-size:14px; font-weight:700; font-family:var(--font-heading);">Technical Gaps & Conversion Impediments</h5>
                     <ul class="audit-gaps-list" style="margin:0; padding-left:20px; line-height:1.6;">
@@ -117,9 +186,10 @@ export function renderWebsiteAudit(leadsWithWebsites, activeAuditLeadId = null, 
                     </ul>
                 </div>
 
-                <div style="display:flex; gap:12px; margin-top:8px;">
-                    <button class="brand-btn" id="auditLaunchOutreachBtn" data-id="${activeAuditLeadId}" style="flex:1; padding:12px; background: #2563eb; color: white; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);">
-                        Draft AI Outreach Pitch for this Audit ➔
+                <!-- Dual Action CTAs -->
+                <div style="display:flex; gap:12px; margin-top:4px; flex-wrap:wrap;">
+                    <button class="brand-btn" id="auditLaunchOutreachBtn" data-id="${activeAuditLeadId}" style="flex:1; padding:12px 18px; background: #2563eb; color: white; font-weight: 800; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25); display:flex; align-items:center; justify-content:center; gap:8px;">
+                        <span>Draft AI Outreach Pitch for this Audit</span> ➔
                     </button>
                 </div>
             </div>
