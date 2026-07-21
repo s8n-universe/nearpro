@@ -167,45 +167,45 @@ Business Hours: ${formattedHours}
 Target Platform: ${platform}
 JSON-LD Type: ${jsonLdType}`;
 
-    let modelName = 'gemini-3.5-flash';
-    let geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${geminiKey}`;
-    
-    let response = await fetch(geminiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [
-          { role: 'user', parts: [{ text: `${systemPrompt}\n\n${userMessage}` }] }
-        ],
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 8192
-        }
-      })
-    });
+    const modelsToTry = ['gemini-3.5-flash', 'gemini-flash-latest', 'gemini-2.0-flash'];
+    let response: Response | null = null;
+    let lastError: Error | null = null;
 
-    if (response.status === 503) {
-      console.warn("gemini-3.5-flash experienced high demand (503). Retrying with gemini-2.0-flash...");
-      modelName = 'gemini-2.0-flash';
-      geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${geminiKey}`;
-      response = await fetch(geminiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [
-            { role: 'user', parts: [{ text: `${systemPrompt}\n\n${userMessage}` }] }
-          ],
-          generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 8192
-          }
-        })
-      });
+    for (const modelName of modelsToTry) {
+      try {
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${geminiKey}`;
+        console.log(`Attempting prompt generation with model: ${modelName}`);
+        
+        const res = await fetch(geminiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [
+              { role: 'user', parts: [{ text: `${systemPrompt}\n\n${userMessage}` }] }
+            ],
+            generationConfig: {
+              temperature: 0.7,
+              maxOutputTokens: 8192
+            }
+          })
+        });
+
+        if (res.status === 200) {
+          response = res;
+          break; // Success!
+        } else {
+          const errText = await res.text();
+          console.warn(`Model ${modelName} returned status ${res.status}: ${errText}`);
+          lastError = new Error(`Gemini API error (${modelName}): ${res.status} - ${errText}`);
+        }
+      } catch (err) {
+        console.warn(`Failed fetch for model ${modelName}:`, err);
+        lastError = err;
+      }
     }
 
-    if (!response.ok) {
-      const errText = await response.text();
-      throw new Error(`Gemini API error: ${response.status} - ${errText}`);
+    if (!response) {
+      throw lastError || new Error("All attempts to call Gemini API failed");
     }
 
     const resJson = await response.json();
