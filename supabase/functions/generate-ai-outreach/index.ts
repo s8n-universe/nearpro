@@ -493,35 +493,71 @@ OUTPUT FORMAT — return ONLY this JSON structure, nothing else:
 }
 `;
 
-    const geminiKey = Deno.env.get('GEMINI_API_KEY');
-    if (!geminiKey) {
+    const defaultGeminiKey = Deno.env.get('GEMINI_API_KEY');
+    const paidGeminiKey = Deno.env.get('GEMINI_PAID_API_KEY');
+
+    if (!defaultGeminiKey && !paidGeminiKey) {
       throw new Error("GEMINI_API_KEY environment variable is not set in Supabase");
     }
 
-    // Call Gemini 3.5 Flash to handle strict constraint instructions
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`;
-    
+    const modelsToTry = [
+      'gemini-3.5-flash',
+      'gemini-flash-latest',
+      'gemini-2.0-flash',
+      'gemini-3.1-flash-lite',
+      'gemini-pro-latest'
+    ];
+
+    const keysToTry: { key: string; label: string }[] = [];
+    if (defaultGeminiKey) keysToTry.push({ key: defaultGeminiKey, label: 'Free/Default API Key' });
+    if (paidGeminiKey && paidGeminiKey !== defaultGeminiKey) keysToTry.push({ key: paidGeminiKey, label: 'Paid Backup API Key' });
+
     let attempt = 0;
     let finalJSON: any = null;
 
     // Retry loop up to 3 times to ensure word limit and JSON schema compliance
     while (attempt < 3) {
       attempt++;
-      const response = await fetch(geminiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: masterPrompt }] }],
-          generationConfig: {
-            temperature: 0.7,
-            responseMimeType: "application/json"
-          }
-        })
-      });
+      let response: Response | null = null;
+      let lastError: Error | null = null;
 
-      if (!response.ok) {
-        const errText = await response.text();
-        throw new Error(`Gemini API error: ${response.status} - ${errText}`);
+      outerLoop:
+      for (const keyObj of keysToTry) {
+        for (const modelName of modelsToTry) {
+          try {
+            const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${keyObj.key}`;
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 3500);
+
+            const res = await fetch(geminiUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              signal: controller.signal,
+              body: JSON.stringify({
+                contents: [{ parts: [{ text: masterPrompt }] }],
+                generationConfig: {
+                  temperature: 0.7,
+                  responseMimeType: "application/json"
+                }
+              })
+            });
+            clearTimeout(timeoutId);
+
+            if (res.status === 200) {
+              response = res;
+              break outerLoop;
+            } else {
+              const errText = await res.text();
+              lastError = new Error(`Gemini API error (${keyObj.label} / ${modelName}): ${res.status} - ${errText}`);
+            }
+          } catch (err) {
+            lastError = err;
+          }
+        }
+      }
+
+      if (!response) {
+        throw lastError || new Error("All attempts to call Gemini API across models and keys failed");
       }
 
       let resData;

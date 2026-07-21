@@ -191,9 +191,13 @@ JSON-LD Type: ${jsonLdType}`;
           const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${keyObj.key}`;
           console.log(`Attempting prompt generation using [${keyObj.label}] with model [${modelName}]`);
           
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 3500);
+
           const res = await fetch(geminiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            signal: controller.signal,
             body: JSON.stringify({
               contents: [
                 { role: 'user', parts: [{ text: `${systemPrompt}\n\n${userMessage}` }] }
@@ -204,6 +208,7 @@ JSON-LD Type: ${jsonLdType}`;
               }
             })
           });
+          clearTimeout(timeoutId);
 
           if (res.status === 200) {
             response = res;
