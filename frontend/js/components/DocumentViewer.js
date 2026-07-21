@@ -158,11 +158,61 @@ export async function renderDocumentViewerLayout(docId) {
                 </div>
 
                 <!-- Main Document View Area -->
-                <div id="pdfViewerMainContainer" style="flex: 1; width: 100%; height: calc(100vh - 98px); position: relative; background: #121318; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                <div id="pdfViewerMainContainer" style="flex: 1; width: 100%; height: calc(100vh - 98px); position: relative; background: #121318; display: flex; align-items: center; justify-content: center; overflow-y: auto; padding: 24px;">
                     <!-- Transparent Top-Right Overlay Blocker: Blocks Google Docs iframe popout icon -->
                     <div style="position: absolute; top: 0; right: 0; width: 60px; height: 60px; z-index: 50; background: transparent; cursor: default;" title="NearPro Controlled Panel"></div>
                     
-                    ${isImage ? `
+                    ${data.content_json ? `
+                        <div style="max-width: 900px; width: 100%; background: #0d0e12; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 36px; display: flex; flex-direction: column; gap: 32px; color: white; margin: auto;">
+                            <!-- PAGE 1: EXECUTIVE AUDIT -->
+                            <div style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 24px;">
+                                <span style="font-size: 11px; color: var(--accent-gold); font-weight: 700; font-family: var(--font-mono); text-transform: uppercase;">PAGE 1 OF 3 • EXECUTIVE AUDIT SUMMARY</span>
+                                <h2 style="font-size: 24px; font-weight: 800; margin: 6px 0 12px 0; font-family: var(--font-heading); color: white;">
+                                    ${data.content_json.executive_summary?.headline || data.name}
+                                </h2>
+                                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px;">
+                                    <div>
+                                        <div style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">BUSINESS</div>
+                                        <div style="font-size: 14px; font-weight: 700; color: white; margin-top: 2px;">${data.content_json.executive_summary?.business_name || data.name}</div>
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">RATING & REVIEWS</div>
+                                        <div style="font-size: 14px; font-weight: 700; color: var(--accent-gold); margin-top: 2px;">${data.content_json.executive_summary?.rating || 4.5}⭐ (${data.content_json.executive_summary?.review_count || 12} reviews)</div>
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">LOCAL RANK</div>
+                                        <div style="font-size: 14px; font-weight: 700; color: #10b981; margin-top: 2px;">${data.content_json.executive_summary?.audit_scores?.local_pack_rank || 'Position #5'}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- PAGE 2: GAP ANALYSIS & REVENUE LOSS -->
+                            <div style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 24px;">
+                                <span style="font-size: 11px; color: var(--accent-gold); font-weight: 700; font-family: var(--font-mono); text-transform: uppercase;">PAGE 2 OF 3 • COMPETITOR GAP & REVENUE LOSS</span>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 12px 0;">
+                                    <div style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: var(--radius-md); padding: 18px;">
+                                        <div style="font-size: 11px; color: #ef4444; font-weight: 700; font-family: var(--font-mono);">ESTIMATED LOST REVENUE</div>
+                                        <div style="font-size: 24px; font-weight: 800; color: #ef4444; font-family: var(--font-mono); margin-top: 4px;">${data.content_json.gap_analysis?.estimated_revenue_leak || '₹15,000 / mo'}</div>
+                                    </div>
+                                    <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 18px;">
+                                        <div style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">REVIEW DEFICIT GAP</div>
+                                        <div style="font-size: 24px; font-weight: 800; color: var(--accent-gold); font-family: var(--font-mono); margin-top: 4px;">${data.content_json.gap_analysis?.review_gap || 45} Reviews Behind</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- PAGE 3: PACKAGES & CTA -->
+                            <div>
+                                <span style="font-size: 11px; color: var(--accent-gold); font-weight: 700; font-family: var(--font-mono); text-transform: uppercase;">PAGE 3 OF 3 • SOLUTIONS & CONSULTATION CALL</span>
+                                <div style="margin-top: 16px; background: linear-gradient(135deg, rgba(217, 119, 6, 0.15) 0%, rgba(16, 185, 129, 0.1) 100%); border: 1px solid rgba(217, 119, 6, 0.4); border-radius: var(--radius-md); padding: 20px; text-align: center;">
+                                    <h4 style="font-size: 16px; font-weight: 700; margin: 0 0 8px 0; color: white;">${data.content_json.consultation_cta?.headline || 'Book Strategy Consultation'}</h4>
+                                    <a href="${data.content_json.consultation_cta?.booking_url || '#'}" target="_blank" class="brand-btn" style="display: inline-block; padding: 10px 24px; font-size: 13px; font-weight: 700; text-decoration: none; border-radius: var(--radius-sm); margin-top: 8px;">
+                                        ${data.content_json.consultation_cta?.button_label || '📅 Book Free Consultation'}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    ` : isImage ? `
                         <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding: 24px;">
                             <img src="${fileUrl}" alt="${data.name}" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: var(--radius-md); box-shadow: 0 20px 50px rgba(0,0,0,0.8);">
                         </div>

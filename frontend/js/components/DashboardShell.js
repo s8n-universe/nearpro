@@ -26,6 +26,7 @@ export function renderDashboardShell(activeTab = 'crm') {
         { id: 'directory', label: 'Browse Directory', requiredTier: 'free', icon: 'search' },
         { id: 'crm', label: 'Outreach Pipeline', requiredTier: 'scout', icon: 'clipboard-list' },
         { id: 'lists', label: 'Smart Lists', requiredTier: 'scout', icon: 'folder' },
+        { id: 'proposals', label: 'PDF Proposals', requiredTier: 'scout', icon: 'file-text' },
         { id: 'documents', label: 'Documents Library', requiredTier: 'scout', icon: 'paperclip' },
         { id: 'audit', label: 'Business Health Check', requiredTier: 'scout', icon: 'activity' },
         { id: 'outreach', label: 'AI Outreach Studio', requiredTier: 'scout', icon: 'send' },

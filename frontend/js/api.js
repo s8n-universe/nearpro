@@ -876,14 +876,35 @@ export const Api = {
             .eq('id', documentId);
         if (dbError) throw dbError;
 
-        const { error: storageError } = await supabase.storage
-            .from('documents')
-            .remove([filePath]);
-        if (storageError) {
-            console.warn("Deleted DB record, but failed to remove physical storage object:", storageError);
+        if (filePath) {
+            await supabase.storage.from('documents').remove([filePath]);
+        }
+        return true;
+    },
+
+    async generatePDFProposal(professionalId, customNotes = '') {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) throw new Error("User authentication required");
+
+        const { data, error } = await supabase.functions.invoke('generate-pdf-proposal', {
+            body: {
+                professional_id: professionalId,
+                custom_notes: customNotes
+            }
+        });
+
+        if (error) {
+            let errMsg = error.message;
+            if (error.context && typeof error.context.text === 'function') {
+                try {
+                    const txt = await error.context.text();
+                    const parsed = JSON.parse(txt);
+                    if (parsed.error) errMsg = parsed.error;
+                } catch (_) {}
+            }
+            throw new Error(errMsg);
         }
 
-        return true;
+        return data;
     }
 };
-
