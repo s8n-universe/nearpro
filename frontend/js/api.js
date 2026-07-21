@@ -487,12 +487,14 @@ export const Api = {
 
         try {
             import('./components/ConnectionHub.js').then(m => {
-                m.triggerN8nWebhook('lead_tracked', {
-                    lead_id: professionalId,
-                    list_id: listId,
-                    status: 'new'
-                });
-            });
+                if (m && typeof m.triggerN8nWebhook === 'function') {
+                    m.triggerN8nWebhook('lead_tracked', {
+                        lead_id: professionalId,
+                        list_id: listId,
+                        status: 'new'
+                    });
+                }
+            }).catch(e => console.warn("Webhook dispatch warning: ", e));
         } catch (e) {
             console.warn("Webhook dispatch failed: ", e);
         }
@@ -511,11 +513,13 @@ export const Api = {
 
         try {
             import('./components/ConnectionHub.js').then(m => {
-                m.triggerN8nWebhook('crm_status_changed', {
-                    saved_lead_id: savedLeadId,
-                    status: status
-                });
-            });
+                if (m && typeof m.triggerN8nWebhook === 'function') {
+                    m.triggerN8nWebhook('crm_status_changed', {
+                        saved_lead_id: savedLeadId,
+                        status: status
+                    });
+                }
+            }).catch(e => console.warn("Webhook dispatch warning: ", e));
         } catch (e) {
             console.warn("Webhook dispatch failed: ", e);
         }
