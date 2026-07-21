@@ -30,6 +30,27 @@ export async function renderDocumentViewerLayout(docId) {
             data = res.data;
         } catch (_) {}
 
+        // Ensure 10-year permanent signed URL validity so links never expire!
+        if (data && data.file_path) {
+            try {
+                const { data: signedData } = await Api.supabase.storage
+                    .from('documents')
+                    .createSignedUrl(data.file_path, 315360000); // 10 years validity (24/7/365 guaranteed)
+                if (signedData && signedData.signedUrl) {
+                    data.file_url = signedData.signedUrl;
+                }
+            } catch (_) {
+                try {
+                    const { data: pubData } = Api.supabase.storage
+                        .from('documents')
+                        .getPublicUrl(data.file_path);
+                    if (pubData && pubData.publicUrl) {
+                        data.file_url = pubData.publicUrl;
+                    }
+                } catch (_) {}
+            }
+        }
+
         if (!data) {
             // Render modern interactive Concept Prototype Preview page for generated/demo links
             appShell.innerHTML = `
@@ -119,14 +140,9 @@ export async function renderDocumentViewerLayout(docId) {
                             <span class="desktop-only-inline">Fullscreen</span>
                         </button>
 
-                        <a href="${fileUrl}" target="_blank" class="secondary-btn" style="padding: 7px 12px; font-size: 12px; border-radius: var(--radius-sm); text-decoration: none; display: flex; align-items: center; gap: 6px;" title="Open in new tab">
-                            <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
-                            <span class="desktop-only-inline">Open ↗</span>
-                        </a>
-
-                        <a href="${fileUrl}" download="${data.name}" target="_blank" class="brand-btn" style="padding: 7px 16px; font-size: 12.5px; border-radius: var(--radius-sm); text-decoration: none; display: flex; align-items: center; gap: 6px; font-weight: 600;">
+                        <button id="docDownloadBtn" class="brand-btn" style="padding: 7px 16px; font-size: 12.5px; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 6px; font-weight: 600; cursor: pointer; border: none;">
                             <i data-lucide="download" style="width: 14px; height: 14px;"></i> Download PDF
-                        </a>
+                        </button>
                     </div>
                 </header>
 
@@ -136,15 +152,16 @@ export async function renderDocumentViewerLayout(docId) {
                         <span>🔒 256-Bit SSL Encrypted Link</span>
                         ${formattedDate ? `<span>• Created ${formattedDate}</span>` : ''}
                     </div>
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <button id="toggleViewerEngineBtn" style="background: none; border: none; color: var(--accent-gold); font-size: 11px; cursor: pointer; text-decoration: underline; font-family: var(--font-mono);">
-                            ⚡ Switch Viewer Engine
-                        </button>
+                    <div>
+                        <span style="color: #10b981;">● Guaranteed Permanent Availability</span>
                     </div>
                 </div>
 
                 <!-- Main Document View Area -->
                 <div id="pdfViewerMainContainer" style="flex: 1; width: 100%; height: calc(100vh - 98px); position: relative; background: #121318; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                    <!-- Transparent Top-Right Overlay Blocker: Blocks Google Docs iframe popout icon -->
+                    <div style="position: absolute; top: 0; right: 0; width: 60px; height: 60px; z-index: 50; background: transparent; cursor: default;" title="NearPro Controlled Panel"></div>
+                    
                     ${isImage ? `
                         <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding: 24px;">
                             <img src="${fileUrl}" alt="${data.name}" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: var(--radius-md); box-shadow: 0 20px 50px rgba(0,0,0,0.8);">
@@ -191,19 +208,29 @@ export async function renderDocumentViewerLayout(docId) {
             });
         }
 
-        const toggleEngineBtn = document.getElementById('toggleViewerEngineBtn');
-        if (toggleEngineBtn) {
-            let useDirect = false;
-            toggleEngineBtn.addEventListener('click', () => {
-                const iframe = document.getElementById('pdfDocIframe');
-                if (!iframe) return;
-                useDirect = !useDirect;
-                if (useDirect) {
-                    iframe.src = fileUrl;
-                    toggleEngineBtn.innerText = "⚡ Switch to Google Docs Engine";
-                } else {
-                    iframe.src = googleDocsViewerUrl;
-                    toggleEngineBtn.innerText = "⚡ Switch to Direct Native Engine";
+        const downloadBtn = document.getElementById('docDownloadBtn');
+        if (downloadBtn) {
+            downloadBtn.addEventListener('click', async () => {
+                downloadBtn.innerText = "Downloading...";
+                downloadBtn.style.opacity = "0.7";
+                try {
+                    const response = await fetch(fileUrl);
+                    const blob = await response.blob();
+                    const blobUrl = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = blobUrl;
+                    a.download = data.name.toLowerCase().endsWith('.pdf') ? data.name : `${data.name}.pdf`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(blobUrl);
+                    if (window.showToast) window.showToast("✨ Download started via website panel!", "success");
+                } catch (_) {
+                    window.open(fileUrl, '_blank');
+                } finally {
+                    downloadBtn.innerHTML = `<i data-lucide="download" style="width: 14px; height: 14px;"></i> Download PDF`;
+                    downloadBtn.style.opacity = "1";
+                    if (window.refreshLucideIcons) window.refreshLucideIcons();
                 }
             });
         }

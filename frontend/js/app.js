@@ -48,16 +48,21 @@ const appShell = document.getElementById('app');
 State.subscribe(async (currentState) => {
     State.locked = false;
 
-    // Check if we are on dashboard or browse routes
-    const isDashboard = window.location.hash.startsWith('#/dashboard');
-    const isBrowse = window.location.hash.startsWith('#/browse') || window.location.hash.startsWith('#/category');
+    // Check route types to prevent state subscribers from resetting standalone views
+    const hash = window.location.hash || '';
+    const isDashboard = hash.startsWith('#/dashboard');
+    const isBrowse = hash.startsWith('#/browse') || hash.startsWith('#/category');
+    const isDocumentViewer = hash.startsWith('#/d/') || hash.startsWith('#/preview/') || hash.startsWith('#/view/');
+    const isStandalonePage = hash.startsWith('#/privacy') || hash.startsWith('#/terms') || hash.startsWith('#/opt-out') || hash.startsWith('#/checkout');
     
     if (isDashboard) {
-        const tab = window.location.hash.split('#/dashboard/')[1] || 'crm';
+        const tab = hash.split('#/dashboard/')[1] || 'crm';
         const cleanTab = tab.split('?')[0];
         await renderDashboardLayout(cleanTab);
     } else if (isBrowse) {
         await updateDirectoryView();
+    } else if (isDocumentViewer || isStandalonePage) {
+        // Preserve document viewer & standalone pages during state sync / tab switches
     } else {
         if (!document.querySelector('.marketing-hero')) {
             renderMarketingLayout();
