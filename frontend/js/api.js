@@ -906,5 +906,31 @@ export const Api = {
         }
 
         return data;
+    },
+
+    async generateCallScript(professionalId, callAngle = 'REPUTATION_AND_REVENUE') {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) throw new Error("User authentication required");
+
+        const { data, error } = await supabase.functions.invoke('generate-call-script', {
+            body: {
+                professional_id: professionalId,
+                call_angle: callAngle
+            }
+        });
+
+        if (error) {
+            let errMsg = error.message;
+            if (error.context && typeof error.context.text === 'function') {
+                try {
+                    const txt = await error.context.text();
+                    const parsed = JSON.parse(txt);
+                    if (parsed.error) errMsg = parsed.error;
+                } catch (_) {}
+            }
+            throw new Error(errMsg);
+        }
+
+        return data;
     }
 };

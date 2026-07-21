@@ -1211,6 +1211,7 @@ async function renderDashboardLayout(tab) {
         crm: 'scout',
         lists: 'scout',
         proposals: 'scout',
+        'call-scripts': 'scout',
         documents: 'scout',
         audit: 'scout',
         outreach: 'scout',
@@ -1485,6 +1486,26 @@ async function renderDashboardLayout(tab) {
         } catch (err) {
             console.error("Failed to load PDF Proposals generator: ", err);
             if (content) content.innerHTML = `<p style="color: var(--accent-pink);">Error loading PDF Proposals module.</p>`;
+        }
+    } else if (tab === 'call-scripts') {
+        if (titleEl) titleEl.innerText = 'Tele-Sales Scripts';
+        try {
+            const searchParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+            const selectedLeadId = searchParams.get('lead_id');
+            
+            if (!State.professionals || State.professionals.length === 0) {
+                const res = await Api.getProfessionals({}, 0, 50);
+                if (res && res.items) State.professionals = res.items;
+            }
+
+            if (content) {
+                const { renderCallScriptGeneratorLayout, bindCallScriptGeneratorEvents } = await import('./components/CallScriptGenerator.js');
+                content.innerHTML = renderCallScriptGeneratorLayout(selectedLeadId);
+                bindCallScriptGeneratorEvents();
+            }
+        } catch (err) {
+            console.error("Failed to load Call Script Generator: ", err);
+            if (content) content.innerHTML = `<p style="color: var(--accent-pink);">Error loading Tele-Sales Scripts module.</p>`;
         }
     } else if (tab === 'audit') {
         if (titleEl) titleEl.innerText = 'Business Health Check';
