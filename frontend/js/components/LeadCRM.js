@@ -447,17 +447,18 @@ export function renderLeadCRM(pipelineData, stats) {
     `;
 
     return `
-        <!-- Pipeline Stats Summary Bar -->
-        ${pipelineStatsBar}
+        <div class="lead-crm-workspace-container" style="padding: 32px; background: #f8fafc; color: #0f172a; border-radius: var(--radius-lg); border: 1px solid #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; display: flex; flex-direction: column; gap: 24px;">
+            <!-- Pipeline Stats Summary Bar -->
+            ${pipelineStatsBar}
 
-        <!-- 3-Column main workstation content grid -->
-        <div class="dashboard-workspace-3col">
-            
-            <!-- Column 1: Lead Selector list -->
-            <div class="workspace-3col-panel col-selector">
-                <div class="selector-tabs">
-                    <button class="selector-tab-btn ${activeSubTab === 'all' ? 'active' : ''}" data-tab="all">All (${allCount})</button>
-                    <button class="selector-tab-btn ${activeSubTab === 'calls' ? 'active' : ''}" data-tab="calls">Active (${callsCount})</button>
+            <!-- 3-Column main workstation content grid -->
+            <div class="dashboard-workspace-3col">
+                
+                <!-- Column 1: Lead Selector list -->
+                <div class="workspace-3col-panel col-selector" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                    <div class="selector-tabs" style="background: #f1f5f9; padding: 4px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 12px;">
+                        <button class="selector-tab-btn ${activeSubTab === 'all' ? 'active' : ''}" data-tab="all">All (${allCount})</button>
+                        <button class="selector-tab-btn ${activeSubTab === 'calls' ? 'active' : ''}" data-tab="calls">Active (${callsCount})</button>
                     <button class="selector-tab-btn ${activeSubTab === 'done' ? 'active' : ''}" data-tab="done">Done (${doneCount})</button>
                 </div>
                 <div class="selector-search-wrap">
@@ -480,6 +481,7 @@ export function renderLeadCRM(pipelineData, stats) {
             </div>
 
         </div>
+    </div>
     `;
 }
 

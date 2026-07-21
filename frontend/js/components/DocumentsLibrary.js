@@ -79,67 +79,69 @@ export function renderDocumentsLibrary(documentsList = [], loading = false) {
     ` : '';
 
     return `
-        <div class="documents-library-workspace" style="display: flex; flex-direction: column; gap: 28px; height: 100%;">
-            
-            <!-- Header capacity widget -->
-            <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; gap: 32px; flex-wrap: wrap;">
-                <div style="flex: 1; min-width: 250px;">
-                    <h3 style="margin: 0 0 6px 0; font-size: 16px; color: white; font-family: var(--font-heading);">Brochures & Collateral Storage</h3>
-                    <p style="margin: 0; font-size: 12px; color: var(--text-secondary); line-height: 1.4;">
-                        Upload marketing PDFs and catalogs. Your attachments will be securely hosted online for quick selection inside WhatsApp and Email templates.
-                    </p>
-                </div>
-                <div style="width: 220px; flex-shrink: 0; display: flex; flex-direction: column; gap: 6px;">
-                    <div style="display: flex; justify-content: space-between; font-size: 12px; font-family: var(--font-mono);">
-                        <span style="color: var(--text-secondary);">Storage capacity:</span>
-                        <strong style="color: var(--accent-gold);">${used} / ${limit} files</strong>
-                    </div>
-                    <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; border: 1px solid var(--border);">
-                        <div style="width: ${capacityPct}%; height: 100%; background: linear-gradient(90deg, var(--accent-gold), #fbbf24); border-radius: 4px; transition: width 0.3s ease;"></div>
-                    </div>
-                    <span style="font-size: 10.5px; color: var(--text-muted); text-align: right; text-transform: uppercase; font-family: var(--font-mono);">
-                        ${tierLabel} Allocation
-                    </span>
-                </div>
-            </div>
-
-            <!-- Usability Banner -->
-            <div class="usability-banner" style="background: rgba(255, 160, 0, 0.02); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px 18px; margin-bottom: 4px; display: flex; flex-direction: column; gap: 4px; border-left: 3px solid var(--accent-gold);">
-                <div style="font-size: 12.5px; color: white; line-height: 1.4;"><span style="color: var(--accent-gold); font-weight: 600;">What it is:</span> Store and manage PDF brochures, catalogs, and marketing pamphlets.</div>
-                <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.4;"><span style="color: var(--accent-gold); font-weight: 600;">How to leverage:</span> Attach public PDF links directly in WhatsApp and email pitches to boost proposal conversion rates.</div>
-            </div>
-
-            <!-- Upload Dropzone -->
-            <div id="documentUploadDropzone" class="${isAtLimit ? 'disabled' : ''}" style="background: rgba(255, 160, 0, 0.02); border: 2px dashed ${isAtLimit ? 'var(--border)' : 'var(--accent-gold)'}; opacity: ${isAtLimit ? '0.5' : '1'}; border-radius: var(--radius-md); padding: 40px 24px; text-align: center; cursor: ${isAtLimit ? 'not-allowed' : 'pointer'}; position: relative; transition: background 0.2s;">
-                <input type="file" id="docFileInput" accept="application/pdf" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: inherit;" ${isAtLimit ? 'disabled' : ''}>
-                <div style="margin-bottom: 12px; display: flex; justify-content: center;">
-                    <i data-lucide="upload-cloud" style="width: 40px; height: 40px; color: var(--accent-gold); stroke-width: 1.5px;"></i>
-                </div>
-                <h4 style="margin: 0 0 6px 0; color: white; font-family: var(--font-heading);">
-                    ${isAtLimit ? 'Upload Limit Reached' : 'Upload PDF Brochure'}
-                </h4>
-                <p style="margin: 0; font-size: 13px; color: var(--text-secondary); max-width: 400px; margin: 0 auto; line-height: 1.4;">
-                    ${isAtLimit 
-                        ? 'Delete an existing file or upgrade your subscription plan to expand your brochure catalog.' 
-                        : 'Drag & drop your brochure PDF here, or click to browse. Max file size: 5MB.'}
-                </p>
+        <div class="documents-library-workspace-container" style="padding: 32px; background: #f8fafc; color: #0f172a; border-radius: var(--radius-lg); border: 1px solid #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+            <div class="documents-library-workspace" style="display: flex; flex-direction: column; gap: 24px;">
                 
-                <!-- Loading overlay -->
-                <div id="uploadLoader" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); border-radius: var(--radius-md); align-items: center; justify-content: center; flex-direction: column; gap: 12px; z-index: 10;">
-                    <div class="spinner" style="width: 32px; height: 32px; border-width: 3px;"></div>
-                    <span style="font-size: 13px; color: var(--accent-gold); font-family: var(--font-mono);">Uploading brochure to Supabase...</span>
+                <!-- Header capacity widget -->
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; display: flex; justify-content: space-between; align-items: center; gap: 32px; flex-wrap: wrap; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                    <div style="flex: 1; min-width: 250px;">
+                        <h3 style="margin: 0 0 6px 0; font-size: 18px; font-weight: 800; color: #0f172a; font-family: var(--font-heading);">Brochures & Collateral Storage</h3>
+                        <p style="margin: 0; font-size: 13.5px; color: #475569; line-height: 1.5;">
+                            Upload marketing PDFs and catalogs. Your attachments will be securely hosted online for quick selection inside WhatsApp and Email templates.
+                        </p>
+                    </div>
+                    <div style="width: 220px; flex-shrink: 0; display: flex; flex-direction: column; gap: 6px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 12.5px; font-family: var(--font-mono);">
+                            <span style="color: #475569;">Storage capacity:</span>
+                            <strong style="color: #2563eb;">${used} / ${limit} files</strong>
+                        </div>
+                        <div style="width: 100%; height: 8px; background: #f1f5f9; border-radius: 4px; overflow: hidden; border: 1px solid #cbd5e1;">
+                            <div style="width: ${capacityPct}%; height: 100%; background: linear-gradient(90deg, #2563eb, #60a5fa); border-radius: 4px; transition: width 0.3s ease;"></div>
+                        </div>
+                        <span style="font-size: 11px; color: #64748b; text-align: right; text-transform: uppercase; font-family: var(--font-mono); font-weight: 700;">
+                            ${tierLabel} Allocation
+                        </span>
+                    </div>
                 </div>
-            </div>
 
-            <!-- List Grid -->
-            <div style="flex: 1;">
-                <h4 style="margin: 0 0 16px 0; font-size: 13px; font-family: var(--font-mono); color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">Your Document Library</h4>
-                <div class="documents-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px;">
-                    ${fileItemsHTML}
-                    ${emptyHTML}
+                <!-- Usability Banner -->
+                <div class="usability-banner" style="background: #ffffff; border: 1px solid #e2e8f0; border-left: 4px solid #2563eb; border-radius: 8px; padding: 14px 20px; display: flex; flex-direction: column; gap: 4px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                    <div style="font-size: 13px; color: #0f172a; line-height: 1.4; font-weight: 700;"><span style="color: #2563eb; font-weight: 800;">What it is:</span> Store and manage PDF brochures, catalogs, and marketing pamphlets.</div>
+                    <div style="font-size: 12.5px; color: #475569; line-height: 1.4;"><span style="color: #2563eb; font-weight: 800;">How to leverage:</span> Attach public PDF links directly in WhatsApp and email pitches to boost proposal conversion rates.</div>
                 </div>
-            </div>
 
+                <!-- Upload Dropzone -->
+                <div id="documentUploadDropzone" class="${isAtLimit ? 'disabled' : ''}" style="background: #ffffff; border: 2px dashed ${isAtLimit ? '#cbd5e1' : '#2563eb'}; opacity: ${isAtLimit ? '0.5' : '1'}; border-radius: 12px; padding: 36px 24px; text-align: center; cursor: ${isAtLimit ? 'not-allowed' : 'pointer'}; position: relative; transition: background 0.2s; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                    <input type="file" id="docFileInput" accept="application/pdf" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: inherit;" ${isAtLimit ? 'disabled' : ''}>
+                    <div style="margin-bottom: 12px; display: flex; justify-content: center;">
+                        <i data-lucide="upload-cloud" style="width: 36px; height: 36px; color: #2563eb; stroke-width: 1.5px;"></i>
+                    </div>
+                    <h4 style="margin: 0 0 6px 0; color: #0f172a; font-family: var(--font-heading); font-weight: 700;">
+                        ${isAtLimit ? 'Upload Limit Reached' : 'Upload PDF Brochure'}
+                    </h4>
+                    <p style="margin: 0; font-size: 13px; color: #475569; max-width: 400px; margin: 0 auto; line-height: 1.4;">
+                        ${isAtLimit 
+                            ? 'Delete an existing file or upgrade your subscription plan to expand your brochure catalog.' 
+                            : 'Drag & drop your brochure PDF here, or click to browse. Max file size: 5MB.'}
+                    </p>
+                    
+                    <!-- Loading overlay -->
+                    <div id="uploadLoader" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.92); border-radius: 12px; align-items: center; justify-content: center; flex-direction: column; gap: 12px; z-index: 10;">
+                        <div class="spinner" style="width: 32px; height: 32px; border-width: 3px; border-top-color: #2563eb;"></div>
+                        <span style="font-size: 13px; color: #2563eb; font-family: var(--font-mono); font-weight: 700;">Uploading brochure to Supabase...</span>
+                    </div>
+                </div>
+
+                <!-- List Grid -->
+                <div style="flex: 1;">
+                    <h4 style="margin: 0 0 16px 0; font-size: 12px; font-family: var(--font-mono); color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700;">Your Document Library</h4>
+                    <div class="documents-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px;">
+                        ${fileItemsHTML}
+                        ${emptyHTML}
+                    </div>
+                </div>
+
+            </div>
         </div>
     `;
 }

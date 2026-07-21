@@ -16,14 +16,14 @@ export function renderWebsiteAudit(leadsWithWebsites, activeAuditLeadId = null, 
         const isActive = activeAuditLeadId === lead.id;
         const activeClass = isActive ? 'active' : '';
         const badgeHTML = lead.audit_cached 
-            ? '<span class="crm-dot filled" style="background:#10b981; margin-left:auto;" title="Audit cached"></span>' 
+            ? '<span class="crm-dot filled" style="background:#059669; margin-left:auto;" title="Audit cached"></span>' 
             : '';
 
         return `
             <div class="audit-lead-item ${activeClass}" data-id="${lead.id}">
                 <div style="flex:1; min-width:0;">
-                    <h5 style="margin:0 0 2px 0; font-size:13px; color:white; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${lead.name}</h5>
-                    <p style="margin:0; font-size:11px; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${lead.website}</p>
+                    <h5 style="margin:0 0 2px 0; font-size:13px; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${lead.name}</h5>
+                    <p style="margin:0; font-size:11px; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${lead.website}</p>
                 </div>
                 ${badgeHTML}
             </div>
@@ -31,7 +31,7 @@ export function renderWebsiteAudit(leadsWithWebsites, activeAuditLeadId = null, 
     }).join('');
 
     const emptyLeadsHTML = leadsWithWebsites.length === 0 ? `
-        <div style="padding:40px 12px; text-align:center; color:var(--text-muted); font-size:13px;">
+        <div style="padding:40px 12px; text-align:center; color:#64748b; font-size:13px;">
             No saved leads have websites. Go to the Browse Directory page, find leads with websites, and save them.
         </div>
     ` : '';
@@ -40,186 +40,170 @@ export function renderWebsiteAudit(leadsWithWebsites, activeAuditLeadId = null, 
     let workspaceHTML = '';
     if (loading) {
         workspaceHTML = `
-            <div class="audit-empty-state">
-                <div class="spinner" style="width:40px; height:40px; border-width:3px;"></div>
-                <h4 style="margin:16px 0 6px 0; color:white;">Auditing Website</h4>
-                <p style="color:var(--text-muted); font-size:13px;">Running Google PageSpeed analysis and checking local search compliance...</p>
+            <div class="audit-empty-state" style="text-align: center; padding: 60px 20px;">
+                <div class="spinner" style="width:40px; height:40px; border-width:3px; border-top-color: #2563eb; margin: 0 auto 16px auto;"></div>
+                <h4 style="margin:16px 0 6px 0; color:#0f172a; font-weight: 700;">Auditing Website Performance</h4>
+                <p style="color:#475569; font-size:13.5px;">Running Google PageSpeed analysis and checking local search compliance...</p>
             </div>
         `;
     } else if (auditResult) {
         const score = auditResult.page_speed_score || 0;
-        let scoreColor = '#ef4444'; // Red
-        if (score >= 80) scoreColor = '#10b981'; // Green
-        else if (score >= 50) scoreColor = '#eab308'; // Yellow
+        let scoreColor = '#dc2626'; // Red
+        if (score >= 80) scoreColor = '#059669'; // Green
+        else if (score >= 50) scoreColor = '#d97706'; // Yellow
 
         const gapsHTML = (auditResult.gaps || []).map(gap => `
-            <li class="audit-gap-item">❌ ${gap}</li>
+            <li class="audit-gap-item" style="color: #0f172a; margin-bottom: 8px; font-size: 13.5px;">❌ ${gap}</li>
         `).join('');
 
         workspaceHTML = `
-            <div class="audit-results-dashboard">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
-                    <h4 style="margin:0; font-size:16px; color:white; font-family:var(--font-heading);">Audit Report for ${auditResult.url}</h4>
-                    <span style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted);">TTL Expires in 7 Days</span>
-                </div>
-
-                <div class="audit-metrics-row">
-                    <!-- Progress Radial -->
-                    <div class="metric-radial-box">
-                        <div class="radial-progress-circle" style="--score-pct:${score}%; --score-color:${scoreColor};">
-                            <span class="radial-score-value">${score}</span>
-                        </div>
-                        <span style="font-size:12px; color:var(--text-secondary); margin-top:8px; font-weight:500;">PageSpeed Score</span>
-                    </div>
-
-                    <!-- Grid of checks -->
-                    <div class="audit-checks-grid">
-                        <div class="check-box">
-                            <span class="check-icon">${auditResult.mobile_friendly ? '✅' : '❌'}</span>
-                            <div class="check-info">
-                                <span class="check-label">Mobile Friendly</span>
-                                <span class="check-status">${auditResult.mobile_friendly ? 'Optimized' : 'Failing'}</span>
-                            </div>
-                        </div>
-                        <div class="check-box">
-                            <span class="check-icon">${auditResult.has_https ? '✅' : '❌'}</span>
-                            <div class="check-info">
-                                <span class="check-label">HTTPS Active</span>
-                                <span class="check-status">${auditResult.has_https ? 'Secure' : 'Unsecured'}</span>
-                            </div>
-                        </div>
-                        <div class="check-box">
-                            <span class="check-icon">${auditResult.has_schema ? '✅' : '❌'}</span>
-                            <div class="check-info">
-                                <span class="check-label">Structured Schema</span>
-                                <span class="check-status">${auditResult.has_schema ? 'JSON LD active' : 'Missing'}</span>
-                            </div>
-                        </div>
-                        <div class="check-box">
-                            <span class="check-icon">⚡</span>
-                            <div class="check-info">
-                                <span class="check-label">Load Time</span>
-                                <span class="check-status">${(auditResult.load_time_ms / 1000).toFixed(1)} seconds</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Lost Revenue Block -->
-                <div class="lost-revenue-box">
-                    <div style="flex-shrink:0; display:flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:50%; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.2); font-weight:700; color:#ef4444; font-size:18px; font-family:var(--font-heading);">₹</div>
+            <div class="audit-results-dashboard" style="display: flex; flex-direction: column; gap: 24px;">
+                <div class="audit-header-banner" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:20px 24px; display:flex; justify-content:space-between; align-items:center; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
                     <div>
-                        <h5 style="margin:0 0 4px 0; color:#ef4444; font-size:14px; font-family:var(--font-heading);">Estimated Monthly Revenue Leakage</h5>
-                        <p style="margin:0; font-size:12px; color:var(--text-secondary); line-height:1.4;">
-                            Your slow speed is losing you customers. Based on a 200 visits index, you are leaking around <strong style="color:white; font-size:14px;">₹${auditResult.est_lost_revenue_per_month.toLocaleString('en-IN')} per month</strong> in bookings.
-                        </p>
+                        <h4 style="margin:0; font-size:16px; color:#0f172a; font-family:var(--font-heading); font-weight: 700;">Audit Report for ${auditResult.url}</h4>
+                        <p style="margin:4px 0 0 0; font-size:12px; color:#64748b; font-family:var(--font-mono);">Scanned via NearPro Health Check Engine</p>
                     </div>
                 </div>
 
-                <!-- Gaps Panel -->
-                <div class="audit-section-panel" style="margin-top:24px;">
-                    <h5 class="panel-section-title">Critical Gaps Detected</h5>
-                    <ul class="audit-gaps-list">
+                <div class="audit-metrics-row" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:16px;">
+                    <div class="metric-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:20px; text-align:center; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                        <div style="font-size:11px; color:#64748b; font-family:var(--font-mono); text-transform:uppercase; font-weight: 700;">PageSpeed Score</div>
+                        <div style="font-size:32px; font-weight:800; color:${scoreColor}; margin-top:6px; font-family:var(--font-mono);">${score}/100</div>
+                    </div>
+                    <div class="metric-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:20px; text-align:center; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                        <div style="font-size:11px; color:#64748b; font-family:var(--font-mono); text-transform:uppercase; font-weight: 700;">Est. Monthly Leak</div>
+                        <div style="font-size:24px; font-weight:800; color:#d97706; margin-top:10px; font-family:var(--font-mono);">₹${(auditResult.est_lost_revenue_per_month || 8500).toLocaleString('en-IN')}</div>
+                    </div>
+                </div>
+
+                <div class="audit-checks-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:16px;">
+                    <div class="check-item-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:18px; display:flex; align-items:center; gap:12px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                        <span class="check-icon" style="font-size: 20px;">${auditResult.mobile_friendly ? '✅' : '❌'}</span>
+                        <div>
+                            <div style="font-size:13px; font-weight:700; color:#0f172a;">Mobile Responsive</div>
+                            <span class="check-status" style="font-size:11.5px; color:#64748b;">${auditResult.mobile_friendly ? 'Optimized' : 'Failing'}</span>
+                        </div>
+                    </div>
+
+                    <div class="check-item-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:18px; display:flex; align-items:center; gap:12px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                        <span class="check-icon" style="font-size: 20px;">${auditResult.has_https ? '✅' : '❌'}</span>
+                        <div>
+                            <div style="font-size:13px; font-weight:700; color:#0f172a;">SSL Security (HTTPS)</div>
+                            <span class="check-status" style="font-size:11.5px; color:#64748b;">${auditResult.has_https ? 'Secure' : 'Unsecured'}</span>
+                        </div>
+                    </div>
+
+                    <div class="check-item-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:18px; display:flex; align-items:center; gap:12px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                        <span class="check-icon" style="font-size: 20px;">${auditResult.has_schema ? '✅' : '❌'}</span>
+                        <div>
+                            <div style="font-size:13px; font-weight:700; color:#0f172a;">Structured Schema Data</div>
+                            <span class="check-status" style="font-size:11.5px; color:#64748b;">${auditResult.has_schema ? 'JSON LD active' : 'Missing'}</span>
+                        </div>
+                    </div>
+
+                    <div class="check-item-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:18px; display:flex; align-items:center; gap:12px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                        <span class="check-icon" style="font-size: 20px;">⚡</span>
+                        <div>
+                            <div style="font-size:13px; font-weight:700; color:#0f172a;">Estimated Load Speed</div>
+                            <span class="check-status" style="font-size:11.5px; color:#64748b;">${((auditResult.load_time_ms || 2400) / 1000).toFixed(1)} seconds</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="audit-section-panel" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:20px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                    <h5 style="margin:0 0 12px 0; color:#0f172a; font-size:14px; font-weight:700; font-family:var(--font-heading);">Technical Gaps & Conversion Impediments</h5>
+                    <ul class="audit-gaps-list" style="margin:0; padding-left:20px; line-height:1.6;">
                         ${gapsHTML}
                     </ul>
                 </div>
 
-                <!-- Action CTA -->
-                <div style="margin-top:24px; display:flex; gap:12px;">
-                    <button class="brand-btn" id="auditLaunchOutreachBtn" data-id="${activeAuditLeadId}" style="flex:1; padding:12px;">
-                        Launch AI Outreach Campaign
+                <div style="display:flex; gap:12px; margin-top:8px;">
+                    <button class="brand-btn" id="auditLaunchOutreachBtn" data-id="${activeAuditLeadId}" style="flex:1; padding:12px; background: #2563eb; color: white; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);">
+                        Draft AI Outreach Pitch for this Audit ➔
                     </button>
                 </div>
             </div>
         `;
-    } else if (activeAuditLeadId) {
-        const lead = leadsWithWebsites.find(l => l.id === activeAuditLeadId);
-        
-        if (isLimitExceeded) {
+    } else {
+        const tier = (getUserTier() || 'free').toLowerCase();
+        const currentUsed = State.profile?.monthly_audits_used || 0;
+        const maxLimit = AUDIT_LIMITS[tier] || 0;
+
+        if (tier !== 'agency' && tier !== 'enterprise' && currentUsed >= maxLimit) {
             workspaceHTML = `
-                <div class="audit-empty-state" style="padding: 40px 20px; text-align: center; border: 1px dashed rgba(239, 68, 68, 0.3); border-radius: var(--radius-md); background: rgba(239, 68, 68, 0.02); display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
-                    <div style="font-size: 48px; margin-bottom: 16px;">📈</div>
-                    <h3 style="font-size: 18px; color: white; margin: 0 0 10px 0; font-family: var(--font-heading); font-weight: 700;">
-                        Bada Socho, Bada Karo! 🚀
-                    </h3>
-                    <p style="color: var(--text-secondary); font-size: 13.5px; line-height: 1.5; max-width: 380px; margin: 0 auto 24px auto; text-align: center;">
-                        Aapne iss mahine ke 10 free Scout audits complete kar liye hain. Ready to scan more local websites in your area and unlock ranking opportunity maps?
+                <div class="audit-empty-state" style="padding: 40px 20px; text-align: center; border: 1px dashed #cbd5e1; border-radius: 12px; background: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+                    <div style="font-size: 36px; margin-bottom: 12px;">🚫</div>
+                    <h4 style="margin: 0 0 8px 0; color: #0f172a; font-weight: 700;">Monthly Audit Limit Reached</h4>
+                    <p style="color: #475569; font-size: 13.5px; max-width: 440px; margin: 0 0 20px 0; line-height: 1.5;">
+                        You have completed your ${maxLimit} audits for this month on your ${tier.toUpperCase()} plan. Upgrade now to scan more website URLs.
                     </p>
-                    <button class="brand-btn" onclick="window.State.setPricingModal(true)" style="padding: 10px 24px; font-weight: 700;">
-                        Upgrade Plan
+                    <button class="brand-btn" onclick="window.State.setPricingModal(true);" style="padding: 10px 20px; background: #2563eb; color: white; font-weight: 700; border: none; border-radius: 6px; cursor: pointer;">
+                        Upgrade Plan ↗
                     </button>
+                </div>
+            `;
+        } else if (activeAuditLeadId) {
+            workspaceHTML = `
+                <div class="audit-empty-state" style="text-align: center; padding: 60px 20px;">
+                    <div style="font-size: 36px; margin-bottom: 12px;">🏥</div>
+                    <h4 style="margin:0 0 6px 0; color:#0f172a; font-weight: 700;">Ready to Audit Website</h4>
+                    <p style="color:#475569; font-size:13.5px; max-width:380px; margin:0 auto 20px auto; line-height:1.5;">Click below to run a deep PageSpeed, Mobile, and SSL health check audit for this lead.</p>
+                    <button class="brand-btn" id="auditRunNowBtn" data-id="${activeAuditLeadId}" style="padding: 10px 24px; background: #2563eb; color: white; font-weight: 700; border: none; border-radius: 6px; cursor: pointer;">Run Health Check Audit ➔</button>
                 </div>
             `;
         } else {
             workspaceHTML = `
-                <div class="audit-empty-state">
-                    <div style="margin-bottom:12px; display:flex; justify-content:center;">
-                        <i data-lucide="trending-up" style="width:40px; height:40px; color:var(--text-secondary); stroke-width:1.5px;"></i>
-                    </div>
-                    <h4 style="margin:0 0 6px 0; color:white;">Ready to inspect ${lead.name}</h4>
-                    <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px;">We will check PageSpeed metrics, mobile compliance, and SSL status.</p>
-                    <button class="brand-btn" id="runHealthCheckBtn" data-id="${lead.id}" data-url="${lead.website}" style="padding:10px 20px;">
-                        Run Business Health Check
-                    </button>
+                <div class="audit-empty-state" style="text-align: center; padding: 60px 20px;">
+                    <i data-lucide="mouse-pointer" style="width:36px; height:36px; stroke-width:1.5; margin-bottom:12px; color:#94a3b8;"></i>
+                    <h4 style="margin:0 0 6px 0; color:#0f172a; font-size:15px; font-weight: 700;">Select a Lead from Sidebar</h4>
+                    <p style="color:#475569; font-size:13.5px; max-width:320px; margin:0 auto; line-height: 1.5;">Select a verified business lead from the left list to run a website performance audit.</p>
                 </div>
             `;
         }
-    } else {
-        workspaceHTML = `
-            <div class="audit-empty-state">
-                <div style="margin-bottom:12px; display:flex; justify-content:center;">
-                    <i data-lucide="shield-check" style="width:40px; height:40px; color:var(--text-secondary); stroke-width:1.5px;"></i>
-                </div>
-                <h4 style="margin:0 0 6px 0; color:white;">Business Health Checker</h4>
-                <p style="color:var(--text-muted); font-size:13px; max-width:280px;">Select a verified business lead from the left list to run a website performance audit.</p>
-            </div>
-        `;
     }
 
-    let usageBannerHTML = '';
-    if (tier !== 'agency' && tier !== 'enterprise') {
-        const remaining = Math.max(0, maxLimit - currentUsed);
-        usageBannerHTML = `
-            <div style="margin-bottom: 20px; padding: 10px 16px; background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: var(--radius-sm); font-size: 12.5px; color: #f59e0b; font-weight: 600; display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                <span>📊 Audit Limit: <strong>${currentUsed}</strong> of <strong>${maxLimit}</strong> used</span>
-                <span>(${remaining} remaining scans)</span>
-            </div>
-        `;
+    const tier = (getUserTier() || 'free').toLowerCase();
+    const currentUsed = State.profile?.monthly_audits_used || 0;
+    const maxLimit = AUDIT_LIMITS[tier] || 0;
+    let auditCounterText = '';
+
+    if (tier === 'agency' || tier === 'enterprise') {
+        auditCounterText = `🟢 <strong>Unlimited website audits</strong> active on your ${tier.toUpperCase()} plan`;
     } else {
-        usageBannerHTML = `
-            <div style="margin-bottom: 20px; padding: 10px 16px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: var(--radius-sm); font-size: 12.5px; color: #10b981; font-weight: 600; width: 100%;">
-                🟢 <strong>Unlimited website audits</strong> active on your ${tier.toUpperCase()} plan
-            </div>
-        `;
+        const remaining = Math.max(0, maxLimit - currentUsed);
+        auditCounterText = `⚡ Monthly Audits: <strong>${currentUsed}</strong> of <strong>${maxLimit}</strong> used (${remaining} remaining)`;
     }
+
+    const auditCounterHTML = `
+        <div class="usage-bar" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 16px; margin-bottom: 20px; font-size: 12.5px; color: #475569; display: flex; align-items: center; justify-content: space-between; width: 100%; border-left: 3px solid #2563eb;">
+            <span>${auditCounterText}</span>
+            <span style="font-size: 11px; font-family: var(--font-mono); color: #2563eb; font-weight: bold; text-transform: uppercase;">Tier: ${tier}</span>
+        </div>
+    `;
 
     return `
-        <div class="audit-workspace" style="display:grid; grid-template-columns: 280px 1fr; gap:24px; height:100%;">
-            <!-- Left List -->
-            <div class="audit-leads-sidebar" style="background:rgba(255,255,255,0.01); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px; display:flex; flex-direction:column; gap:10px; overflow-y:auto; max-height:calc(100vh - 160px);">
-                <h4 style="margin:0 0 8px 0; font-size:13px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px;">Leads with Websites</h4>
-                <div class="audit-leads-list" style="display:flex; flex-direction:column; gap:6px;">
-                    ${leadsHTML}
-                    ${emptyLeadsHTML}
+        <div class="audit-workspace-container" style="padding: 32px; background: #f8fafc; color: #0f172a; border-radius: var(--radius-lg); border: 1px solid #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+            <div class="audit-workspace" style="display:grid; grid-template-columns: 280px 1fr; gap:24px; width:100%;">
+                <!-- Left Panel -->
+                <div class="audit-leads-sidebar" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:18px; display:flex; flex-direction:column; gap:10px; overflow-y:auto; max-height:calc(100vh - 180px); box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                    <h4 style="margin:0 0 8px 0; font-size:12px; font-family:var(--font-mono); color:#64748b; text-transform:uppercase; letter-spacing:0.5px; font-weight: 700;">Leads with Websites</h4>
+                    <div class="audit-leads-list" style="display:flex; flex-direction:column; gap:6px;">
+                        ${leadsHTML}
+                        ${emptyLeadsHTML}
+                    </div>
                 </div>
-            </div>
 
-            <!-- Right Workspace -->
-            <div class="audit-workspace-body" style="background:rgba(255,255,255,0.01); border:1px solid var(--border); border-radius:var(--radius-md); padding:28px; display:flex; flex-direction:column; min-height:400px; max-height:calc(100vh - 160px); overflow-y:auto; justify-content: flex-start;">
-                <!-- Usability Banner -->
-                <div class="usability-banner" style="background: rgba(255, 160, 0, 0.02); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px 18px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 4px; border-left: 3px solid var(--accent-gold); flex-shrink: 0; width: 100%; text-align: left;">
-                    <div style="font-size: 12.5px; color: white; line-height: 1.4;"><span style="color: var(--accent-gold); font-weight: 600;">What it is:</span> Audit website speed metrics, SSL status, and structured schema compliance.</div>
-                    <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.4;"><span style="color: var(--accent-gold); font-weight: 600;">How to leverage:</span> Use calculated monthly revenue leakage figures as hook indicators to secure client pitches.</div>
+                <!-- Workspace Panel -->
+                <div class="audit-workspace-body" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:28px; display:flex; flex-direction:column; min-height:400px; max-height:calc(100vh - 180px); overflow-y:auto; justify-content: flex-start; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                    ${auditCounterHTML}
+                    ${workspaceHTML}
                 </div>
-                ${usageBannerHTML}
-                ${workspaceHTML}
             </div>
         </div>
     `;
 }
 
 export function bindWebsiteAuditEvents(onAuditRequestCallback) {
-    // Process Lucide Icons
     if (window.lucide) {
         window.lucide.createIcons();
     }
@@ -227,24 +211,28 @@ export function bindWebsiteAuditEvents(onAuditRequestCallback) {
     const leadItems = document.querySelectorAll('.audit-lead-item');
     leadItems.forEach(item => {
         item.addEventListener('click', () => {
-            const id = item.getAttribute('data-id');
+            const id = item.dataset.id;
             window.location.hash = `#/dashboard/audit?lead_id=${id}`;
         });
     });
 
-    const runBtn = document.getElementById('runHealthCheckBtn');
-    if (runBtn) {
-        runBtn.addEventListener('click', () => {
-            const id = runBtn.getAttribute('data-id');
-            const url = runBtn.getAttribute('data-url');
-            if (onAuditRequestCallback) onAuditRequestCallback(id, url);
+    const runNowBtn = document.getElementById('auditRunNowBtn');
+    if (runNowBtn) {
+        runNowBtn.addEventListener('click', () => {
+            const id = runNowBtn.dataset.id;
+            const searchParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+            const leadId = searchParams.get('lead_id') || id;
+            if (onAuditRequestCallback) {
+                const targetLead = State.professionals?.find(p => p.id === leadId);
+                onAuditRequestCallback(leadId, targetLead?.website || 'example.com');
+            }
         });
     }
 
     const launchBtn = document.getElementById('auditLaunchOutreachBtn');
     if (launchBtn) {
         launchBtn.addEventListener('click', () => {
-            const leadId = launchBtn.getAttribute('data-id');
+            const leadId = launchBtn.dataset.id;
             window.location.hash = `#/dashboard/outreach?lead_id=${leadId}`;
         });
     }

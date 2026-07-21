@@ -140,21 +140,23 @@ export function renderTeamWorkspace(members = [], dataRequests = [], activeTab =
     }
 
     return `
-        <div class="team-workspace" style="display:grid; grid-template-columns: 240px 1fr; gap:24px; height:100%;">
-            <!-- Left Sidebar -->
-            <div class="team-sidebar" style="background:rgba(255,255,255,0.01); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px; display:flex; flex-direction:column; gap:6px; height:fit-content;">
-                <h4 style="margin:0 0 10px 0; font-size:13px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase;">Team Workspace</h4>
-                <button class="sidebar-tab-btn ${activeTab === 'seats' ? 'active' : ''}" id="tabSeatsBtn" style="text-align:left; background:none; border:none; padding:10px 14px; border-radius:var(--radius-sm); font-size:13.5px; color:${activeTab === 'seats' ? 'var(--accent-gold)' : 'var(--text-secondary)'}; cursor:pointer; font-weight:500; display:flex; align-items:center; gap:8px;">
-                    👥 Team Seats
-                </button>
-                <button class="sidebar-tab-btn ${activeTab === 'requests' ? 'active' : ''}" id="tabRequestsBtn" style="text-align:left; background:none; border:none; padding:10px 14px; border-radius:var(--radius-sm); font-size:13.5px; color:${activeTab === 'requests' ? 'var(--accent-gold)' : 'var(--text-secondary)'}; cursor:pointer; font-weight:500; display:flex; align-items:center; gap:8px;">
-                    📈 Data Extraction
-                </button>
-            </div>
+        <div class="team-workspace-container" style="padding: 32px; background: #f8fafc; color: #0f172a; border-radius: var(--radius-lg); border: 1px solid #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+            <div class="team-workspace" style="display:grid; grid-template-columns: 240px 1fr; gap:24px; width:100%;">
+                <!-- Left Sidebar -->
+                <div class="team-sidebar" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:18px; display:flex; flex-direction:column; gap:6px; height:fit-content; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                    <h4 style="margin:0 0 10px 0; font-size:12px; font-family:var(--font-mono); color:#64748b; text-transform:uppercase; font-weight: 700;">Team Workspace</h4>
+                    <button class="sidebar-tab-btn ${activeTab === 'seats' ? 'active' : ''}" id="tabSeatsBtn" style="text-align:left; background:${activeTab === 'seats' ? '#eff6ff' : 'transparent'}; border:1px solid ${activeTab === 'seats' ? '#bfdbfe' : 'transparent'}; padding:10px 14px; border-radius:6px; font-size:13.5px; color:${activeTab === 'seats' ? '#2563eb' : '#475569'}; cursor:pointer; font-weight:700; display:flex; align-items:center; gap:8px;">
+                        👥 Team Seats
+                    </button>
+                    <button class="sidebar-tab-btn ${activeTab === 'requests' ? 'active' : ''}" id="tabRequestsBtn" style="text-align:left; background:${activeTab === 'requests' ? '#eff6ff' : 'transparent'}; border:1px solid ${activeTab === 'requests' ? '#bfdbfe' : 'transparent'}; padding:10px 14px; border-radius:6px; font-size:13.5px; color:${activeTab === 'requests' ? '#2563eb' : '#475569'}; cursor:pointer; font-weight:700; display:flex; align-items:center; gap:8px;">
+                        📈 Data Extraction
+                    </button>
+                </div>
 
-            <!-- Right Workspace -->
-            <div class="team-workspace-body" style="background:rgba(255,255,255,0.01); border:1px solid var(--border); border-radius:var(--radius-md); padding:28px; display:flex; flex-direction:column; min-height:360px;">
-                ${tabContent}
+                <!-- Right Workspace -->
+                <div class="team-workspace-body" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:28px; display:flex; flex-direction:column; min-height:360px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                    ${tabContent}
+                </div>
             </div>
         </div>
     `;

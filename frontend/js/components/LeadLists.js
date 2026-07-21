@@ -46,26 +46,28 @@ export function renderLeadLists(listsData, activeListId = null, listLeads = []) 
     ` : '';
 
     return `
-        <div class="lists-workspace">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                <div>
-                    <h3 style="margin: 0; font-size: 18px; color: white;">Smart Lists</h3>
-                    <p style="margin: 4px 0 0 0; font-size: 12px; color: var(--text-secondary);">Manage your segments and database selections</p>
+        <div class="lists-workspace-container" style="padding: 32px; background: #f8fafc; color: #0f172a; border-radius: var(--radius-lg); border: 1px solid #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+            <div class="lists-workspace" style="display: flex; flex-direction: column; gap: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <div>
+                        <h3 style="margin: 0; font-size: 20px; font-weight: 800; color: #0f172a; font-family: var(--font-heading);">Smart Lists</h3>
+                        <p style="margin: 4px 0 0 0; font-size: 13.5px; color: #475569;">Manage your segments and database selections</p>
+                    </div>
+                    <button class="brand-btn" id="openCreateListModalBtn" style="padding: 10px 18px; font-size: 13px; background: #2563eb; color: white; border: none; font-weight: 700; border-radius: 6px; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);">
+                        Create New List ➔
+                    </button>
                 </div>
-                <button class="brand-btn" id="openCreateListModalBtn" style="padding: 10px 16px; font-size: 13px;">
-                    Create New List
-                </button>
-            </div>
-            
-            <!-- Usability Banner -->
-            <div class="usability-banner" style="background: rgba(255, 160, 0, 0.02); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px 18px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 4px; border-left: 3px solid var(--accent-gold);">
-                <div style="font-size: 12.5px; color: white; line-height: 1.4;"><span style="color: var(--accent-gold); font-weight: 600;">What it is:</span> Segment and group your business leads into distinct target lists.</div>
-                <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.4;"><span style="color: var(--accent-gold); font-weight: 600;">How to leverage:</span> Export segments to CSV files or sheet webhooks to feed external cold email campaigns.</div>
-            </div>
-            
-            <div class="lists-grid">
-                ${listCardsHTML}
-                ${emptyStateHTML}
+                
+                <!-- Usability Banner -->
+                <div class="usability-banner" style="background: #ffffff; border: 1px solid #e2e8f0; border-left: 4px solid #2563eb; border-radius: 8px; padding: 14px 20px; display: flex; flex-direction: column; gap: 4px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
+                    <div style="font-size: 13px; color: #0f172a; line-height: 1.4; font-weight: 700;"><span style="color: #2563eb; font-weight: 800;">What it is:</span> Segment and group your business leads into distinct target lists.</div>
+                    <div style="font-size: 12.5px; color: #475569; line-height: 1.4;"><span style="color: #2563eb; font-weight: 800;">How to leverage:</span> Export segments to CSV files or sheet webhooks to feed external cold email campaigns.</div>
+                </div>
+                
+                <div class="lists-grid">
+                    ${listCardsHTML}
+                    ${emptyStateHTML}
+                </div>
             </div>
 
             <!-- Create List Modal Popup -->

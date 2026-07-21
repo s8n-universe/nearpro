@@ -1532,10 +1532,20 @@ async function renderDashboardLayout(tab) {
     } else if (tab === 'audit') {
         if (titleEl) titleEl.innerText = 'Business Health Check';
         try {
-            const savedLeads = await Api.getSavedLeads();
-            const leadsWithWebsites = savedLeads
-                .map(item => item.professionals)
+            let savedLeads = [];
+            try {
+                savedLeads = await Api.getSavedLeads();
+            } catch (e) {
+                console.warn("Failed to load saved leads for audit, falling back to directory:", e);
+            }
+
+            let leadsWithWebsites = (savedLeads || [])
+                .map(item => item?.professionals)
                 .filter(p => p && p.website);
+
+            if (leadsWithWebsites.length === 0 && State.professionals) {
+                leadsWithWebsites = State.professionals.filter(p => p && p.website);
+            }
 
             const searchParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
             const activeAuditLeadId = searchParams.get('lead_id');
@@ -1543,24 +1553,27 @@ async function renderDashboardLayout(tab) {
             let auditResult = null;
             let auditLoading = false;
 
-            if (activeAuditLeadId) {
+            if (activeAuditLeadId && leadsWithWebsites.length > 0) {
                 const targetLead = leadsWithWebsites.find(l => l.id === activeAuditLeadId);
                 if (targetLead && targetLead.website) {
-                    const { data: cached } = await Api.supabase
-                        .from('audit_cache')
-                        .select('*')
-                        .eq('url', targetLead.website.trim().toLowerCase())
-                        .gt('expires_at', new Date().toISOString())
-                        .maybeSingle();
-                    
-                    if (cached) {
-                        auditResult = cached;
+                    try {
+                        const { data: cached } = await Api.supabase
+                            .from('audit_cache')
+                            .select('*')
+                            .eq('url', targetLead.website.trim().toLowerCase())
+                            .gt('expires_at', new Date().toISOString())
+                            .maybeSingle();
+                        
+                        if (cached) {
+                            auditResult = cached;
+                        }
+                    } catch (e) {
+                        console.warn("Failed to check audit_cache:", e);
                     }
                 }
             }
 
             if (content) {
-                // Define named callback instead of arguments.callee to prevent ES6 strict mode errors
                 async function handleAuditRequest(id, url) {
                     const tier = (getUserTier() || 'free').toLowerCase();
                     const maxLimit = AUDIT_LIMITS[tier] || 0;
@@ -1581,7 +1594,6 @@ async function renderDashboardLayout(tab) {
                         });
                         if (error) throw error;
                         
-                        // Increment audits count in DB and local State
                         const updatedCount = currentUsed + 1;
                         await Api.supabase
                             .from('profiles')
@@ -1614,15 +1626,21 @@ async function renderDashboardLayout(tab) {
                             est_lost_revenue_per_month: 8500
                         };
                         
-                        await Api.supabase.from('audit_cache').upsert([mockResult], { onConflict: 'url' });
-                        await Api.supabase.from('professionals').update({ audit_cached: true }).eq('id', id);
+                        try {
+                            await Api.supabase.from('audit_cache').upsert([mockResult], { onConflict: 'url' });
+                            await Api.supabase.from('professionals').update({ audit_cached: true }).eq('id', id);
+                        } catch(e) {
+                            console.warn("Failed upserting mock audit:", e);
+                        }
 
-                        // Increment audits count in DB and local State
                         const updatedCount = currentUsed + 1;
-                        await Api.supabase
-                            .from('profiles')
-                            .update({ monthly_audits_used: updatedCount })
-                            .eq('id', State.user.id);
+                        try {
+                            await Api.supabase
+                                .from('profiles')
+                                .update({ monthly_audits_used: updatedCount })
+                                .eq('id', State.user.id);
+                        } catch(e) {}
+                        
                         if (State.profile) {
                             State.profile.monthly_audits_used = updatedCount;
                         }
@@ -1640,7 +1658,7 @@ async function renderDashboardLayout(tab) {
             }
         } catch (err) {
             console.error("Failed to load Website Audit panel: ", err);
-            if (content) content.innerHTML = `<p style="color: var(--accent-pink);">Error loading Business Health Check.</p>`;
+            if (content) content.innerHTML = renderWebsiteAudit([], null, null, false);
         }
     } else if (tab === 'outreach') {
         if (titleEl) titleEl.innerText = 'AI Outreach Studio';
