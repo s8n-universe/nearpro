@@ -71,6 +71,7 @@ ALTER TABLE profiles ADD COLUMN IF NOT EXISTS survey_niches TEXT[];
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS total_leads_viewed INTEGER DEFAULT 0;
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS total_exports INTEGER DEFAULT 0;
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS monthly_prompt_copies_used INTEGER DEFAULT 0;
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS monthly_audits_used INTEGER DEFAULT 0;
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT NOW();
 
 -- Sync subscription_tier with tier for existing profiles

@@ -98,12 +98,19 @@ export function showUpgradeModal({ feature, requiredTier, headline, description,
     State.notify();
 }
 
+export const SCOUT_LIMITS = {
+    website_audit: 10,
+    outreach_studio: 10,
+    integration_hub: 999999,
+    team_workspace: 3
+};
+
 /**
  * Feature gate definitions — maps feature names to required tiers.
  * Used by UI components to check access and show appropriate gates.
  */
 export const FEATURE_GATES = {
-    // Scout+ features
+    // Scout+ features (All premium modules unlocked for Scout tier under usage limits)
     contact_unlock: 'scout',
     csv_export: 'scout',
     lead_lists: 'scout',
@@ -111,20 +118,16 @@ export const FEATURE_GATES = {
     lead_notes: 'scout',
     compare_modal: 'scout',
     prompt_generator: 'scout',
-
-    // Hunter+ features
-    website_audit: 'hunter',
-    conversion_score: 'hunter',
-    outreach_studio: 'hunter',
-    unlimited_export: 'hunter',
-    follow_up_reminders: 'hunter',
-
-    // Agency+ features
-    bulk_outreach: 'agency',
-    integration_hub: 'agency',
-    team_workspace: 'agency',
-    data_requests: 'agency',
-    density_heatmap: 'agency',
-    gap_analysis: 'agency',
-    whitelabel_reports: 'agency'
+    website_audit: 'scout',
+    conversion_score: 'scout',
+    outreach_studio: 'scout',
+    unlimited_export: 'scout',
+    follow_up_reminders: 'scout',
+    bulk_outreach: 'scout',
+    integration_hub: 'scout',
+    team_workspace: 'scout',
+    data_requests: 'scout',
+    density_heatmap: 'scout',
+    gap_analysis: 'scout',
+    whitelabel_reports: 'scout'
 };

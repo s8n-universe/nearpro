@@ -2,7 +2,12 @@ import { State } from '../state.js';
 import { Api } from '../api.js';
 
 export function renderTeamWorkspace(members = [], dataRequests = [], activeTab = 'seats') {
-    const seatLimit = State.profile?.tier === 'agency' ? 3 : 1;
+    const userTier = State.profile?.subscription_tier || State.profile?.tier || 'free';
+    let seatLimit = 1;
+    if (userTier === 'scout') seatLimit = 3;
+    else if (userTier === 'hunter') seatLimit = 5;
+    else if (userTier === 'agency' || userTier === 'enterprise') seatLimit = 999999;
+
     const currentSeats = members.length + 1; // including owner
 
     const membersHTML = members.map(m => {
@@ -30,8 +35,10 @@ export function renderTeamWorkspace(members = [], dataRequests = [], activeTab =
             </div>
         </div>
     ` : `
-        <div style="background:rgba(255,160,0,0.03); border:1px solid rgba(255,160,0,0.15); border-radius:var(--radius-md); padding:16px; font-size:12.5px; color:var(--text-secondary); line-height:1.5;">
-            ⚠️ <strong>Seat Limit Reached:</strong> Your current plan supports up to ${seatLimit} seats. Upgrade to Enterprise to invite more workspace members.
+        <div style="background:rgba(255,160,0,0.03); border:1px solid rgba(255,160,0,0.15); border-radius:var(--radius-md); padding:20px; font-size:13px; color:var(--text-secondary); line-height:1.5; border-left: 3px solid var(--accent-gold); display: flex; flex-direction: column; gap: 10px; width: 100%;">
+            <div style="font-weight: 700; color: white;">Work together with your team 🤝</div>
+            <div>Scout plan includes 3 team seats (1 admin + 2 view-only collaborator/client seats). Upgrade to Agency to invite up to 10 collaborators with full editing and management permissions.</div>
+            <button class="brand-btn" onclick="window.State.setPricingModal(true)" style="align-self: flex-start; padding: 6px 16px; font-size: 12px; margin-top: 4px;">Upgrade Workspace</button>
         </div>
     `;
 

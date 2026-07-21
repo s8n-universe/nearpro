@@ -1,5 +1,14 @@
 import { State } from '../state.js';
 import { Api } from '../api.js';
+import { getUserTier } from '../auth.js';
+
+export const AUDIT_LIMITS = {
+    free: 0,
+    scout: 10,
+    hunter: 50,
+    agency: 999999,
+    enterprise: 999999
+};
 
 export function renderWebsiteAudit(leadsWithWebsites, activeAuditLeadId = null, auditResult = null, loading = false) {
     // Render left list of leads with websites
@@ -125,18 +134,36 @@ export function renderWebsiteAudit(leadsWithWebsites, activeAuditLeadId = null, 
         `;
     } else if (activeAuditLeadId) {
         const lead = leadsWithWebsites.find(l => l.id === activeAuditLeadId);
-        workspaceHTML = `
-            <div class="audit-empty-state">
-                <div style="margin-bottom:12px; display:flex; justify-content:center;">
-                    <i data-lucide="trending-up" style="width:40px; height:40px; color:var(--text-secondary); stroke-width:1.5px;"></i>
+        
+        if (isLimitExceeded) {
+            workspaceHTML = `
+                <div class="audit-empty-state" style="padding: 40px 20px; text-align: center; border: 1px dashed rgba(239, 68, 68, 0.3); border-radius: var(--radius-md); background: rgba(239, 68, 68, 0.02); display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+                    <div style="font-size: 48px; margin-bottom: 16px;">📈</div>
+                    <h3 style="font-size: 18px; color: white; margin: 0 0 10px 0; font-family: var(--font-heading); font-weight: 700;">
+                        Bada Socho, Bada Karo! 🚀
+                    </h3>
+                    <p style="color: var(--text-secondary); font-size: 13.5px; line-height: 1.5; max-width: 380px; margin: 0 auto 24px auto; text-align: center;">
+                        Aapne iss mahine ke 10 free Scout audits complete kar liye hain. Ready to scan more local websites in your area and unlock ranking opportunity maps?
+                    </p>
+                    <button class="brand-btn" onclick="window.State.setPricingModal(true)" style="padding: 10px 24px; font-weight: 700;">
+                        Upgrade Plan
+                    </button>
                 </div>
-                <h4 style="margin:0 0 6px 0; color:white;">Ready to inspect ${lead.name}</h4>
-                <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px;">We will check PageSpeed metrics, mobile compliance, and SSL status.</p>
-                <button class="brand-btn" id="runHealthCheckBtn" data-id="${lead.id}" data-url="${lead.website}" style="padding:10px 20px;">
-                    Run Business Health Check
-                </button>
-            </div>
-        `;
+            `;
+        } else {
+            workspaceHTML = `
+                <div class="audit-empty-state">
+                    <div style="margin-bottom:12px; display:flex; justify-content:center;">
+                        <i data-lucide="trending-up" style="width:40px; height:40px; color:var(--text-secondary); stroke-width:1.5px;"></i>
+                    </div>
+                    <h4 style="margin:0 0 6px 0; color:white;">Ready to inspect ${lead.name}</h4>
+                    <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px;">We will check PageSpeed metrics, mobile compliance, and SSL status.</p>
+                    <button class="brand-btn" id="runHealthCheckBtn" data-id="${lead.id}" data-url="${lead.website}" style="padding:10px 20px;">
+                        Run Business Health Check
+                    </button>
+                </div>
+            `;
+        }
     } else {
         workspaceHTML = `
             <div class="audit-empty-state">
@@ -145,6 +172,23 @@ export function renderWebsiteAudit(leadsWithWebsites, activeAuditLeadId = null, 
                 </div>
                 <h4 style="margin:0 0 6px 0; color:white;">Business Health Checker</h4>
                 <p style="color:var(--text-muted); font-size:13px; max-width:280px;">Select a verified business lead from the left list to run a website performance audit.</p>
+            </div>
+        `;
+    }
+
+    let usageBannerHTML = '';
+    if (tier !== 'agency' && tier !== 'enterprise') {
+        const remaining = Math.max(0, maxLimit - currentUsed);
+        usageBannerHTML = `
+            <div style="margin-bottom: 20px; padding: 10px 16px; background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: var(--radius-sm); font-size: 12.5px; color: #f59e0b; font-weight: 600; display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <span>📊 Audit Limit: <strong>${currentUsed}</strong> of <strong>${maxLimit}</strong> used</span>
+                <span>(${remaining} remaining scans)</span>
+            </div>
+        `;
+    } else {
+        usageBannerHTML = `
+            <div style="margin-bottom: 20px; padding: 10px 16px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: var(--radius-sm); font-size: 12.5px; color: #10b981; font-weight: 600; width: 100%;">
+                🟢 <strong>Unlimited website audits</strong> active on your ${tier.toUpperCase()} plan
             </div>
         `;
     }
@@ -167,6 +211,7 @@ export function renderWebsiteAudit(leadsWithWebsites, activeAuditLeadId = null, 
                     <div style="font-size: 12.5px; color: white; line-height: 1.4;"><span style="color: var(--accent-gold); font-weight: 600;">What it is:</span> Audit website speed metrics, SSL status, and structured schema compliance.</div>
                     <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.4;"><span style="color: var(--accent-gold); font-weight: 600;">How to leverage:</span> Use calculated monthly revenue leakage figures as hook indicators to secure client pitches.</div>
                 </div>
+                ${usageBannerHTML}
                 ${workspaceHTML}
             </div>
         </div>

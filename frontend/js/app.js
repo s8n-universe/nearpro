@@ -33,7 +33,7 @@ import { renderUpgradeSuccessModal, bindUpgradeSuccessModalEvents } from './comp
 import { renderDashboardShell, bindDashboardShellEvents } from './components/DashboardShell.js';
 import { renderLeadCRM, bindCRMWorkspaceEvents } from './components/LeadCRM.js';
 import { renderLeadLists, bindLeadListsEvents, bindListDetailEvents } from './components/LeadLists.js';
-import { renderWebsiteAudit, bindWebsiteAuditEvents } from './components/WebsiteAudit.js';
+import { renderWebsiteAudit, bindWebsiteAuditEvents, AUDIT_LIMITS } from './components/WebsiteAudit.js';
 import { renderOutreachStudio, bindOutreachStudioEvents, buildOutreach } from './components/OutreachStudio.js';
 import { renderPromptGenerator, bindPromptGeneratorEvents, buildPrompt, PROMPT_LIMITS } from './components/PromptGenerator.js';
 import { renderConnectionHub, bindConnectionHubEvents } from './components/ConnectionHub.js';
@@ -1461,6 +1461,15 @@ async function renderDashboardLayout(tab) {
             if (content) {
                 // Define named callback instead of arguments.callee to prevent ES6 strict mode errors
                 async function handleAuditRequest(id, url) {
+                    const tier = (getUserTier() || 'free').toLowerCase();
+                    const maxLimit = AUDIT_LIMITS[tier] || 0;
+                    const currentUsed = State.profile?.monthly_audits_used || 0;
+
+                    if (tier !== 'agency' && tier !== 'enterprise' && currentUsed >= maxLimit) {
+                        alert(`🚫 Limit Reached: Your current plan (${tier.toUpperCase()}) allows up to ${maxLimit} audits per month. Please upgrade to scan more websites.`);
+                        return;
+                    }
+
                     auditLoading = true;
                     if (content) {
                         content.innerHTML = renderWebsiteAudit(leadsWithWebsites, id, null, true);
@@ -1471,6 +1480,16 @@ async function renderDashboardLayout(tab) {
                         });
                         if (error) throw error;
                         
+                        // Increment audits count in DB and local State
+                        const updatedCount = currentUsed + 1;
+                        await Api.supabase
+                            .from('profiles')
+                            .update({ monthly_audits_used: updatedCount })
+                            .eq('id', State.user.id);
+                        if (State.profile) {
+                            State.profile.monthly_audits_used = updatedCount;
+                        }
+
                         const container = document.getElementById('dashboardContent');
                         if (container) {
                             container.innerHTML = renderWebsiteAudit(leadsWithWebsites, id, data, false);
@@ -1496,6 +1515,16 @@ async function renderDashboardLayout(tab) {
                         
                         await Api.supabase.from('audit_cache').upsert([mockResult], { onConflict: 'url' });
                         await Api.supabase.from('professionals').update({ audit_cached: true }).eq('id', id);
+
+                        // Increment audits count in DB and local State
+                        const updatedCount = currentUsed + 1;
+                        await Api.supabase
+                            .from('profiles')
+                            .update({ monthly_audits_used: updatedCount })
+                            .eq('id', State.user.id);
+                        if (State.profile) {
+                            State.profile.monthly_audits_used = updatedCount;
+                        }
 
                         const container = document.getElementById('dashboardContent');
                         if (container) {

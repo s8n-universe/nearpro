@@ -248,11 +248,11 @@ serve(async (req) => {
     }
 
     // Check limits
-    const allowedTiers = ['hunter', 'agency', 'enterprise'];
+    const allowedTiers = ['scout', 'hunter', 'agency', 'enterprise'];
     const currentTier = (profile.subscription_tier || 'free').toLowerCase();
     if (!allowedTiers.includes(currentTier)) {
       return new Response(JSON.stringify({ 
-        error: 'AI Outreach generation requires the Hunter or Agency plan.' 
+        error: 'AI Outreach generation requires the Scout, Hunter or Agency plan.' 
       }), {
         status: 403,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -262,9 +262,18 @@ serve(async (req) => {
     const maxLimit = profile.monthly_ai_generations_limit ?? 500;
     const currentUsed = profile.monthly_ai_generations_used ?? 0;
     
+    if (currentTier === 'scout' && currentUsed >= 10) {
+      return new Response(JSON.stringify({ 
+        error: 'Aapne Scout plan ke 10 free AI pitches complete kar liye hain. Upgrade to Hunter to unlock 500 pitches/month!' 
+      }), {
+        status: 429,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
     if (currentTier === 'hunter' && currentUsed >= maxLimit) {
       return new Response(JSON.stringify({ 
-        error: 'You have reached your limit of 500 AI generations this month.' 
+        error: `You have reached your limit of ${maxLimit} AI generations this month.` 
       }), {
         status: 429,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }

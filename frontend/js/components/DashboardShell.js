@@ -27,11 +27,11 @@ export function renderDashboardShell(activeTab = 'crm') {
         { id: 'crm', label: 'Outreach Pipeline', requiredTier: 'scout', icon: 'clipboard-list' },
         { id: 'lists', label: 'Smart Lists', requiredTier: 'scout', icon: 'folder' },
         { id: 'documents', label: 'Documents Library', requiredTier: 'scout', icon: 'paperclip' },
-        { id: 'audit', label: 'Business Health Check', requiredTier: 'hunter', icon: 'activity' },
-        { id: 'outreach', label: 'AI Outreach Studio', requiredTier: 'hunter', icon: 'send' },
+        { id: 'audit', label: 'Business Health Check', requiredTier: 'scout', icon: 'activity' },
+        { id: 'outreach', label: 'AI Outreach Studio', requiredTier: 'scout', icon: 'send' },
         { id: 'prompts', label: 'Website Prompt Engine', requiredTier: 'scout', icon: 'zap' },
-        { id: 'integrations', label: 'Connection Hub', requiredTier: 'agency', icon: 'plug' },
-        { id: 'team', label: 'Team Workspace', requiredTier: 'agency', icon: 'users' },
+        { id: 'integrations', label: 'Connection Hub', requiredTier: 'scout', icon: 'plug' },
+        { id: 'team', label: 'Team Workspace', requiredTier: 'scout', icon: 'users' },
         { id: 'settings', label: 'Settings', requiredTier: 'free', icon: 'settings' }
     ];
 
