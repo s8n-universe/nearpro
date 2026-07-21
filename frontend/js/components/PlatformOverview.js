@@ -287,5 +287,6 @@ export function renderPlatformOverviewLayout() {
 }
 
 export function bindPlatformOverviewEvents() {
+    localStorage.setItem('nearpro_onboarding_completed', 'true');
     if (window.refreshLucideIcons) window.refreshLucideIcons();
 }
