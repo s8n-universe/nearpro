@@ -163,8 +163,6 @@ interface OutreachInput {
   senderService: string;
   portfolioUrl: string | null;
   bookingUrl: string | null;
-  websiteUrl: string | null;
-  linkedinUrl: string | null;
   
   channel: 'whatsapp' | 'email' | 'instagram';
   language: 'hinglish' | 'english';
@@ -337,8 +335,6 @@ serve(async (req) => {
       senderService: senderService,
       portfolioUrl: profile.portfolio_url || null,
       bookingUrl: profile.booking_url || null,
-      websiteUrl: (profile as any).website_url || null,
-      linkedinUrl: (profile as any).linkedin_url || null,
       channel: channel || 'whatsapp',
       language: language || 'hinglish',
       tone: tone || 'friendly',
@@ -390,8 +386,6 @@ SENDER CONTEXT:
 - What ${inputData.senderName} offers: ${inputData.senderService}
 - Portfolio/demo link: ${inputData.portfolioUrl ? inputData.portfolioUrl : 'not provided'}
 - Booking link: ${inputData.bookingUrl ? inputData.bookingUrl : 'not provided'}
-- Website link: ${inputData.websiteUrl ? inputData.websiteUrl : 'not provided'}
-- LinkedIn link: ${inputData.linkedinUrl ? inputData.linkedinUrl : 'not provided'}
 - Tone: ${inputData.tone}
 
 WHAT TO GENERATE:
@@ -438,8 +432,6 @@ Adapt this high-converting structure dynamically using the target lead's actual 
 
    ${inputData.senderName}
    ${inputData.senderRole}, ${inputData.senderCompany}
-   ${inputData.websiteUrl ? `🌐 Website: ${inputData.websiteUrl}` : ''}
-   ${inputData.linkedinUrl ? `💼 LinkedIn: ${inputData.linkedinUrl}` : ''}
 
 ───────────────────────────────────
 MESSAGE 2: DAY 3 — FOLLOW-UP (if no reply)
