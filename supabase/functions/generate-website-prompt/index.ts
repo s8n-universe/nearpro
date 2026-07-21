@@ -166,7 +166,7 @@ Business Hours: ${formattedHours}
 Target Platform: ${platform}
 JSON-LD Type: ${jsonLdType}`;
 
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${geminiKey}`;
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`;
     
     const response = await fetch(geminiUrl, {
       method: 'POST',

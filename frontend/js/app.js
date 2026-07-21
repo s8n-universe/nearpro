@@ -1706,9 +1706,9 @@ async function renderDashboardLayout(tab) {
                 if (window._promptCache[cacheKey]) {
                     generatedPrompt = window._promptCache[cacheKey];
                 } else if (window._promptGenerating === cacheKey) {
-                    generatedPrompt = 'Generating tailored prompt using Gemini... Please wait.';
+                    generatedPrompt = 'Generating tailored prompt... Please wait.';
                 } else {
-                    generatedPrompt = 'Choose your target platform above and click "Generate Prompt" to build your tailored AI system prompt.';
+                    generatedPrompt = 'Choose your target platform above and click "Generate Prompt" to build your tailored system prompt.';
                 }
             }
 
@@ -1730,7 +1730,7 @@ async function renderDashboardLayout(tab) {
                     window._promptGenerating = cacheKey;
                     
                     // Re-render to show loading state
-                    content.innerHTML = renderPromptGenerator(savedLeads, activeLeadId, selectedPlatform, 'Generating tailored prompt using Gemini... Please wait.');
+                    content.innerHTML = renderPromptGenerator(savedLeads, activeLeadId, selectedPlatform, 'Generating tailored prompt... Please wait.');
                     bindEvents();
 
                     try {
@@ -1742,7 +1742,7 @@ async function renderDashboardLayout(tab) {
                             }
                         }
                     } catch (err) {
-                        console.error("Failed to generate prompt via Gemini:", err);
+                        console.error("Failed to generate prompt:", err);
                         window._promptCache[cacheKey] = `Error generating prompt: ${err.message || 'Unknown error'}. Please try again.`;
                     } finally {
                         window._promptGenerating = null;

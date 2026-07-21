@@ -77,15 +77,40 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
                     </p>
                     <button class="brand-btn" onclick="window.State.setPricingModal(true);">Upgrade Plan</button>
                 </div>
-            `;
-        } else {
+            `        } else {
             const hasPrompt = generatedPrompt && !generatedPrompt.startsWith('Generating') && !generatedPrompt.startsWith('Error') && !generatedPrompt.startsWith('Choose');
             const isGenerating = generatedPrompt && generatedPrompt.startsWith('Generating');
+            const isInitial = !generatedPrompt || generatedPrompt.startsWith('Choose');
+
+            let contentAreaHTML = '';
+            if (isInitial) {
+                contentAreaHTML = `
+                    <div style="background: rgba(255,255,255,0.01); border: 1px dashed var(--border); border-radius: var(--radius-md); padding: 48px 24px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 280px; width: 100%;">
+                        <div style="font-size: 32px; margin-bottom: 12px;">✨</div>
+                        <h4 style="margin: 0 0 6px 0; color: white; font-family: var(--font-heading); font-weight: 700; font-size: 15px;">Ready to create your layout prompt?</h4>
+                        <p style="color: var(--text-secondary); font-size: 12.5px; max-width: 340px; line-height: 1.5; margin: 0;">
+                            Select a target platform above and click <strong>Generate Prompt</strong>. We will write a customized layout specification tailored to this business.
+                        </p>
+                    </div>
+                `;
+            } else {
+                contentAreaHTML = `
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="display:block; font-size:11px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase;">Generated Prompt</label>
+                        <textarea readonly id="generatedPromptArea" style="width:100%; height:260px; background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:var(--radius-sm); padding:16px; color:white; font-size:13.5px; line-height:1.6; resize:none; outline:none; font-family:var(--font-mono);">${generatedPrompt}</textarea>
+                    </div>
+                    
+                    <div style="background:rgba(255,160,0,0.02); border:1px solid rgba(255,160,0,0.1); border-radius:var(--radius-md); padding:14px 16px; font-size:12.5px; color:var(--text-secondary); line-height:1.5; display: flex; flex-direction: column; gap: 4px;">
+                        <div><strong style="color:var(--accent-gold);">Next Step:</strong> Copy this prompt code and paste it directly into Lovable or Bolt to generate a complete, high-converting demo website draft in under 60 seconds.</div>
+                        <div style="font-size:11.5px; color:var(--text-muted);">How to leverage: Wow prospects with their personalized demo site before scheduling your sales pitch.</div>
+                    </div>
+                `;
+            }
 
             workspaceHTML = `
                 <div class="prompt-workspace-grid" style="display:flex; flex-direction:column; gap:20px; width:100%;">
                     
-                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; background: rgba(255,255,255,0.01); border: 1px solid var(--border); padding: 16px; border-radius: var(--radius-md);">
                         <div>
                             <label style="display:block; font-size:11px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px;">Target Platform</label>
                             <div style="display:flex; gap:8px; flex-wrap:wrap;">
@@ -97,24 +122,17 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
                             </div>
                         </div>
                         
-                        <div style="display:flex; gap:10px; align-items:center;">
+                        <div style="display:flex; gap:8px; align-items:center; margin-top: 12px; width: 100%; justify-content: flex-end;">
                             <button class="brand-btn" id="generatePromptBtn" style="padding:10px 20px; font-size:13px; font-weight:700; display:flex; align-items:center; gap:6px;" ${isGenerating ? 'disabled style="opacity:0.5;"' : ''}>
                                 ${isGenerating ? '<div class="spinner" style="width:12px; height:12px; border-width:1.5px; margin:0;"></div> Generating...' : '⚡ Generate Prompt'}
                             </button>
                             <button class="brand-btn" id="copyPromptTextBtn" style="padding:10px 16px; font-size:13px; display:flex; align-items:center; gap:6px; ${hasPrompt ? 'opacity:1;' : 'opacity:0.5;'}" ${hasPrompt ? '' : 'disabled'}>
-                                <i data-lucide="copy" style="width:14px; height:14px;"></i> Copy Prompt Code
+                                <i data-lucide="copy" style="width:14px; height:14px;"></i> Copy
                             </button>
                         </div>
                     </div>
     
-                    <div>
-                        <label style="display:block; font-size:11px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase; margin-bottom:8px;">Generated AI Prompt</label>
-                        <textarea readonly id="generatedPromptArea" style="width:100%; height:260px; background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:var(--radius-sm); padding:16px; color:white; font-size:13.5px; line-height:1.6; resize:none; outline:none; font-family:var(--font-mono);">${generatedPrompt}</textarea>
-                    </div>
-                    
-                    <div style="background:rgba(255,160,0,0.03); border:1px solid rgba(255,160,0,0.15); border-radius:var(--radius-md); padding:16px; font-size:12.5px; color:var(--text-secondary); line-height:1.5;">
-                        <strong style="color:var(--accent-gold);">Instructions:</strong> Copy this prompt code and paste it directly into Lovable or Bolt to generate a complete, high converting local website draft for this business in 60 seconds.
-                    </div>
+                    ${contentAreaHTML}
                 </div>
             `;
         }
@@ -158,11 +176,6 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
 
             <!-- Workspace Panel -->
             <div class="prompt-workspace-body" style="background:rgba(255,255,255,0.01); border:1px solid var(--border); border-radius:var(--radius-md); padding:28px; display:flex; flex-direction:column; min-height:400px; max-height:calc(100vh - 160px); overflow-y:auto; justify-content: flex-start;">
-                <!-- Usability Banner -->
-                <div class="usability-banner" style="background: rgba(255, 160, 0, 0.02); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px 18px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 4px; border-left: 3px solid var(--accent-gold); flex-shrink: 0; width: 100%; text-align: left;">
-                    <div style="font-size: 12.5px; color: white; line-height: 1.4;"><span style="color: var(--accent-gold); font-weight: 600;">What it is:</span> Generate customized layout prompts for Lovable, Bolt.new, or v0.dev.</div>
-                    <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.4;"><span style="color: var(--accent-gold); font-weight: 600;">How to leverage:</span> Copy generated prompts to quickly build functional demo sites and wow prospects before scheduling pitches.</div>
-                </div>
                 ${usageBarHTML}
                 ${workspaceHTML}
             </div>

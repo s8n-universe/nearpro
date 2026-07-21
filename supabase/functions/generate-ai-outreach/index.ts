@@ -499,7 +499,7 @@ OUTPUT FORMAT — return ONLY this JSON structure, nothing else:
     }
 
     // Call Gemini 3.5 Flash to handle strict constraint instructions
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${geminiKey}`;
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`;
     
     let attempt = 0;
     let finalJSON: any = null;
