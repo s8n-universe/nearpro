@@ -592,13 +592,14 @@ OUTPUT FORMAT — return ONLY this JSON structure, nothing else:
         throw lastError || new Error("All attempts to call Gemini API across models and keys failed");
       }
 
-      let resData;
+      const rawResponseText = await response.text();
+      let resData: any;
       try {
-        resData = await response.json();
+        resData = JSON.parse(rawResponseText);
       } catch (jsonErr) {
-        const textBody = await response.text();
-        throw new Error(`Failed to parse Gemini response as JSON. Body: ${textBody.slice(0, 500)}`);
+        throw new Error(`Failed to parse Gemini response payload as JSON. Body: ${rawResponseText.slice(0, 500)}`);
       }
+
       let rawText = resData.candidates?.[0]?.content?.parts?.[0]?.text || "";
       
       // Clean markdown code blocks
@@ -609,12 +610,6 @@ OUTPUT FORMAT — return ONLY this JSON structure, nothing else:
 
       try {
         const parsed = JSON.parse(rawText);
-        
-        // Remove trailing or accidental hyphens if AI slipped
-        const removeHyphens = (t: string) => t ? t.replace(/-/g, " ") : "";
-        if (parsed.day1) parsed.day1.message = removeHyphens(parsed.day1.message);
-        if (parsed.day3) parsed.day3.message = removeHyphens(parsed.day3.message);
-        if (parsed.day7) parsed.day7.message = removeHyphens(parsed.day7.message);
 
         // Word count verification loop
         const w1 = countWords(parsed.day1?.message || "");

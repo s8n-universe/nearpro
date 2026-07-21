@@ -755,7 +755,21 @@ export const Api = {
                 existing_day7: existingDay7
             }
         });
-        if (error) throw error;
+        if (error) {
+            let detail = error.message || 'Edge Function error';
+            if (error.context && typeof error.context === 'object' && typeof error.context.text === 'function') {
+                try {
+                    const text = await error.context.text();
+                    try {
+                        const parsed = JSON.parse(text);
+                        detail = parsed.error || parsed.message || text;
+                    } catch (_) {
+                        detail = text;
+                    }
+                } catch (_) {}
+            }
+            throw new Error(detail);
+        }
         return data;
     },
 
@@ -766,7 +780,21 @@ export const Api = {
                 platform: platform
             }
         });
-        if (error) throw error;
+        if (error) {
+            let detail = error.message || 'Edge Function error';
+            if (error.context && typeof error.context === 'object' && typeof error.context.text === 'function') {
+                try {
+                    const text = await error.context.text();
+                    try {
+                        const parsed = JSON.parse(text);
+                        detail = parsed.error || parsed.message || text;
+                    } catch (_) {
+                        detail = text;
+                    }
+                } catch (_) {}
+            }
+            throw new Error(detail);
+        }
         return data;
     },
 
