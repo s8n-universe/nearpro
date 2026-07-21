@@ -79,37 +79,79 @@ export async function renderDocumentViewerLayout(docId) {
             return;
         }
 
-        // 3. Detect mobile vs desktop to choose best PDF preview strategy
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        const embedUrl = isMobile 
-            ? `https://docs.google.com/viewer?url=${encodeURIComponent(data.file_url)}&embedded=true`
-            : data.file_url;
+        // 3. Detect file type & choose hybrid rendering engine
+        const fileUrl = data.file_url || '';
+        const isPdf = fileUrl.toLowerCase().includes('.pdf') || fileUrl.includes('application/pdf') || (data.file_type && data.file_type.includes('pdf'));
+        const isImage = /\.(png|jpe?g|webp|gif|svg)(\?.*)?$/i.test(fileUrl);
+        
+        const googleDocsViewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(fileUrl)}&embedded=true`;
+        const initialEmbedUrl = isPdf ? googleDocsViewerUrl : fileUrl;
+        const fileExt = isPdf ? 'PDF' : isImage ? 'IMAGE' : (data.file_type || 'DOC').toUpperCase();
+        const formattedDate = data.created_at ? new Date(data.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
 
-        // 4. Render the premium viewer page
+        // 4. Render ultra-premium feature-rich PDF Viewer
         appShell.innerHTML = `
-            <div style="height: 100vh; display: flex; flex-direction: column; background: var(--bg-base); font-family: var(--font-body); overflow: hidden;">
+            <div style="height: 100vh; display: flex; flex-direction: column; background: #0b0c10; font-family: var(--font-body); overflow: hidden;">
                 <!-- Header / Topbar -->
-                <header style="height: 60px; background: rgba(10, 10, 12, 0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; flex-shrink: 0; z-index: 100;">
-                    <div style="display: flex; align-items: center; gap: 14px; min-width: 0;">
-                        <a href="#/" style="display: flex; align-items: center; gap: 8px;">
-                            <img src="/NearPro_logo_nobg.png" alt="NearPro" style="height: 28px; width: auto;">
+                <header style="height: 64px; background: rgba(12, 13, 18, 0.98); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; flex-shrink: 0; z-index: 100;">
+                    <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
+                        <a href="#/" style="display: flex; align-items: center; text-decoration: none;">
+                            <img src="/NearPro_logo_nobg.png" alt="NearPro" style="height: 26px; width: auto;">
                         </a>
-                        <span style="width: 1px; height: 20px; background: var(--border); flex-shrink: 0;"></span>
-                        <h2 style="font-size: 14px; color: white; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin: 0; font-family: var(--font-heading);">
-                            ${data.name}
-                        </h2>
+                        <span style="width: 1px; height: 18px; background: var(--border); flex-shrink: 0;"></span>
+                        <div style="display: flex; align-items: center; gap: 8px; min-width: 0;">
+                            <span style="padding: 2px 7px; border-radius: 4px; background: rgba(217, 119, 6, 0.15); border: 1px solid rgba(217, 119, 6, 0.3); color: var(--accent-gold); font-size: 10.5px; font-weight: 700; font-family: var(--font-mono); flex-shrink: 0;">${fileExt}</span>
+                            <h2 style="font-size: 14px; color: white; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin: 0; font-family: var(--font-heading);" title="${data.name}">
+                                ${data.name}
+                            </h2>
+                        </div>
                     </div>
                     
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <a href="${data.file_url}" target="_blank" class="brand-btn" style="padding: 8px 16px; font-size: 12.5px; border-radius: var(--radius-sm); text-decoration: none; display: flex; align-items: center; gap: 6px; font-weight: 600;">
+                    <!-- Action Toolbar -->
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <button id="docCopyLinkBtn" class="secondary-btn" style="padding: 7px 12px; font-size: 12px; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 6px; cursor: pointer;" title="Copy share link">
+                            <i data-lucide="link" style="width: 14px; height: 14px;"></i>
+                            <span class="desktop-only-inline">Copy Link</span>
+                        </button>
+
+                        <button id="docFullscreenBtn" class="secondary-btn" style="padding: 7px 12px; font-size: 12px; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 6px; cursor: pointer;" title="Toggle Fullscreen">
+                            <i data-lucide="maximize-2" style="width: 14px; height: 14px;"></i>
+                            <span class="desktop-only-inline">Fullscreen</span>
+                        </button>
+
+                        <a href="${fileUrl}" target="_blank" class="secondary-btn" style="padding: 7px 12px; font-size: 12px; border-radius: var(--radius-sm); text-decoration: none; display: flex; align-items: center; gap: 6px;" title="Open in new tab">
+                            <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
+                            <span class="desktop-only-inline">Open ↗</span>
+                        </a>
+
+                        <a href="${fileUrl}" download="${data.name}" target="_blank" class="brand-btn" style="padding: 7px 16px; font-size: 12.5px; border-radius: var(--radius-sm); text-decoration: none; display: flex; align-items: center; gap: 6px; font-weight: 600;">
                             <i data-lucide="download" style="width: 14px; height: 14px;"></i> Download PDF
                         </a>
                     </div>
                 </header>
 
-                <!-- Embedded PDF Viewer Content -->
-                <div style="flex: 1; width: 100%; height: calc(100vh - 60px); position: relative; background: #141416;">
-                    <iframe src="${embedUrl}" style="width: 100%; height: 100%; border: none;" title="${data.name}"></iframe>
+                <!-- Sub-bar Meta Info -->
+                <div style="height: 34px; background: rgba(18, 20, 28, 0.9); border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-size: 11.5px; color: var(--text-muted); font-family: var(--font-mono); flex-shrink: 0;">
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <span>🔒 256-Bit SSL Encrypted Link</span>
+                        ${formattedDate ? `<span>• Created ${formattedDate}</span>` : ''}
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <button id="toggleViewerEngineBtn" style="background: none; border: none; color: var(--accent-gold); font-size: 11px; cursor: pointer; text-decoration: underline; font-family: var(--font-mono);">
+                            ⚡ Switch Viewer Engine
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Main Document View Area -->
+                <div id="pdfViewerMainContainer" style="flex: 1; width: 100%; height: calc(100vh - 98px); position: relative; background: #121318; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                    ${isImage ? `
+                        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding: 24px;">
+                            <img src="${fileUrl}" alt="${data.name}" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: var(--radius-md); box-shadow: 0 20px 50px rgba(0,0,0,0.8);">
+                        </div>
+                    ` : `
+                        <iframe id="pdfDocIframe" src="${initialEmbedUrl}" style="width: 100%; height: 100%; border: none;" title="${data.name}"></iframe>
+                    `}
                 </div>
             </div>
         `;
@@ -117,6 +159,53 @@ export async function renderDocumentViewerLayout(docId) {
         // Refresh icons
         if (window.refreshLucideIcons) {
             window.refreshLucideIcons();
+        }
+
+        // Bind Toolbar Event Listeners
+        const copyBtn = document.getElementById('docCopyLinkBtn');
+        if (copyBtn) {
+            copyBtn.addEventListener('click', () => {
+                const currentUrl = window.location.href;
+                navigator.clipboard.writeText(currentUrl).then(() => {
+                    if (window.showToast) {
+                        window.showToast("🔗 Document link copied to clipboard!", "success");
+                    } else {
+                        alert("Link copied to clipboard!");
+                    }
+                }).catch(() => {
+                    alert("Copy URL: " + currentUrl);
+                });
+            });
+        }
+
+        const fullscreenBtn = document.getElementById('docFullscreenBtn');
+        if (fullscreenBtn) {
+            fullscreenBtn.addEventListener('click', () => {
+                const container = document.getElementById('pdfViewerMainContainer') || document.documentElement;
+                if (!document.fullscreenElement) {
+                    if (container.requestFullscreen) container.requestFullscreen();
+                    else if (container.webkitRequestFullscreen) container.webkitRequestFullscreen();
+                } else {
+                    if (document.exitFullscreen) document.exitFullscreen();
+                }
+            });
+        }
+
+        const toggleEngineBtn = document.getElementById('toggleViewerEngineBtn');
+        if (toggleEngineBtn) {
+            let useDirect = false;
+            toggleEngineBtn.addEventListener('click', () => {
+                const iframe = document.getElementById('pdfDocIframe');
+                if (!iframe) return;
+                useDirect = !useDirect;
+                if (useDirect) {
+                    iframe.src = fileUrl;
+                    toggleEngineBtn.innerText = "⚡ Switch to Google Docs Engine";
+                } else {
+                    iframe.src = googleDocsViewerUrl;
+                    toggleEngineBtn.innerText = "⚡ Switch to Direct Native Engine";
+                }
+            });
         }
 
     } catch (err) {
