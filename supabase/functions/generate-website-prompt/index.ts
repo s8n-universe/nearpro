@@ -110,6 +110,19 @@ Guidelines for Bolt.new target prompt:
 - Provide a detailed file structure blueprint for them to follow: App.tsx, components/, and index.css.
 - Ensure the layout is a stunning single-page web app with interactive features (interactive booking calendar, responsive mobile menu, testimonial sliders).
 - Advise Bolt to start the local dev server using 'npm run dev' and keep execution self-contained.`;
+    } else if (platform === 'v0') {
+      platformInstructions = `
+Guidelines for v0.dev target prompt:
+- Direct v0 to generate a modern, responsive React/Next.js component layout using Tailwind CSS and shadcn/ui.
+- Focus on clean visual styling, cards layout grids, and interactive mockup states (like a booking scheduler modal, pricing tiers, and FAQ accordions).
+- Emphasize copy-paste convenience for shadcn component blocks.`;
+    } else if (platform === 'cursor') {
+      platformInstructions = `
+Guidelines for Cursor IDE target prompt:
+- Direct Cursor to act as a senior frontend engineer building a Vite + React + TypeScript local website.
+- Instruct it to output clear steps to set up a '.cursorrules' configuration file.
+- Provide instructions for generating separate modular React TSX components (Hero.tsx, Services.tsx, Booking.tsx) and importing them cleanly into App.tsx.
+- Advise it on strict typescript typing, lint error prevention, and clean file tree management.`;
     } else if (platform === 'claude') {
       platformInstructions = `
 Guidelines for Claude Code target prompt:

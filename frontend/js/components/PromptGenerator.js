@@ -88,9 +88,11 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
                     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
                         <div>
                             <label style="display:block; font-size:11px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px;">Target Platform</label>
-                            <div style="display:flex; gap:8px;">
+                            <div style="display:flex; gap:8px; flex-wrap:wrap;">
                                 <button class="platform-btn ${selectedPlatform === 'lovable' ? 'active' : ''}" data-platform="lovable">Lovable.dev</button>
                                 <button class="platform-btn ${selectedPlatform === 'bolt' ? 'active' : ''}" data-platform="bolt">Bolt.new</button>
+                                <button class="platform-btn ${selectedPlatform === 'v0' ? 'active' : ''}" data-platform="v0">v0.dev</button>
+                                <button class="platform-btn ${selectedPlatform === 'cursor' ? 'active' : ''}" data-platform="cursor">Cursor IDE</button>
                                 <button class="platform-btn ${selectedPlatform === 'claude' ? 'active' : ''}" data-platform="claude">Claude Code</button>
                             </div>
                         </div>
