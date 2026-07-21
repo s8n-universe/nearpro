@@ -110,6 +110,12 @@ Guidelines for v0.dev target prompt:
 - Direct v0 to generate a modern, responsive React/Next.js component layout using Tailwind CSS and shadcn/ui.
 - Focus on clean visual styling, cards layout grids, and interactive mockup states (like a booking scheduler modal, pricing tiers, and FAQ accordions).
 - Emphasize copy-paste convenience for shadcn component blocks.`;
+    } else if (platform === 'emergent') {
+      platformInstructions = `
+Guidelines for Emergent AI target prompt:
+- Direct Emergent AI to bootstrap a full-stack, highly aesthetic single-page React application tailored for local business clients.
+- Instruct it to use modern typography, responsive Tailwind CSS components, interactive scheduling modals, and customer review cards.
+- Direct Emergent AI to output clean, self-contained TypeScript file blueprints ready for instant compilation and deployment.`;
     } else if (platform === 'cursor') {
       platformInstructions = `
 Guidelines for Cursor IDE target prompt:

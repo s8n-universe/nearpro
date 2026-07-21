@@ -122,6 +122,16 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
                 `;
             }
 
+            const PLATFORM_LINKS = {
+                lovable: { name: 'Lovable.dev', url: 'https://lovable.dev/?via=nearpro' },
+                bolt: { name: 'Bolt.new', url: 'https://bolt.new/?ref=nearpro' },
+                v0: { name: 'v0.dev', url: 'https://v0.dev/?ref=nearpro' },
+                emergent: { name: 'Emergent AI', url: 'https://emergent.sh/?ref=nearpro' },
+                cursor: { name: 'Cursor IDE', url: 'https://cursor.com/?ref=nearpro' },
+                claude: { name: 'Claude Code', url: 'https://claude.ai/?ref=nearpro' }
+            };
+            const currentPlatformMeta = PLATFORM_LINKS[selectedPlatform] || PLATFORM_LINKS.lovable;
+
             workspaceHTML = `
                 <div class="prompt-workspace-grid" style="display:flex; flex-direction:column; gap:20px; width:100%;">
                     
@@ -132,12 +142,18 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
                                 <button class="platform-btn ${selectedPlatform === 'lovable' ? 'active' : ''}" data-platform="lovable">Lovable.dev</button>
                                 <button class="platform-btn ${selectedPlatform === 'bolt' ? 'active' : ''}" data-platform="bolt">Bolt.new</button>
                                 <button class="platform-btn ${selectedPlatform === 'v0' ? 'active' : ''}" data-platform="v0">v0.dev</button>
+                                <button class="platform-btn ${selectedPlatform === 'emergent' ? 'active' : ''}" data-platform="emergent">Emergent AI</button>
                                 <button class="platform-btn ${selectedPlatform === 'cursor' ? 'active' : ''}" data-platform="cursor">Cursor IDE</button>
                                 <button class="platform-btn ${selectedPlatform === 'claude' ? 'active' : ''}" data-platform="claude">Claude Code</button>
                             </div>
                         </div>
                         
-                        <div style="display:flex; gap:8px; align-items:center; margin-top: 12px; width: 100%; justify-content: flex-end;">
+                        <div style="display:flex; gap:8px; align-items:center; margin-top: 12px; width: 100%; justify-content: flex-end; flex-wrap: wrap;">
+                            <a href="${currentPlatformMeta.url}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;" title="Open ${currentPlatformMeta.name} in a new tab">
+                                <button class="brand-btn" style="padding:10px 14px; font-size:12.5px; background:rgba(255,255,255,0.03); border:1px solid var(--border); color:white; display:flex; align-items:center; gap:6px;">
+                                    <i data-lucide="external-link" style="width:14px; height:14px; color:var(--accent-gold);"></i> Launch ${currentPlatformMeta.name} ↗
+                                </button>
+                            </a>
                             <button class="brand-btn" id="generatePromptBtn" style="padding:10px 20px; font-size:13px; font-weight:700; display:flex; align-items:center; gap:6px;" ${isGenerating ? 'disabled style="opacity:0.5;"' : ''}>
                                 ${isGenerating ? '<div class="spinner" style="width:12px; height:12px; border-width:1.5px; margin:0;"></div> Generating...' : '⚡ Generate Prompt'}
                             </button>
