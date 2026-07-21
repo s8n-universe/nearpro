@@ -167,12 +167,12 @@ export function renderPlatformOverviewLayout() {
                     <!-- Step 2 -->
                     <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; transition: transform 0.2s ease;">
                         <div style="font-size: 12px; font-weight: 800; color: #059669; font-family: var(--font-mono); background: #ecfdf5; display: inline-block; padding: 2px 8px; border-radius: 4px; margin-bottom: 12px;">STEP 02</div>
-                        <h4 style="font-size: 15px; font-weight: 700; margin: 0 0 6px 0; color: #0f172a;">Track in CRM Pipeline</h4>
+                        <h4 style="font-size: 15px; font-weight: 700; margin: 0 0 6px 0; color: #0f172a;">Track in 360° AI Deal Hub</h4>
                         <p style="font-size: 13px; color: #475569; margin: 0 0 14px 0; line-height: 1.5;">
-                            Click "Track Lead" to save prospect records into your sales pipeline and Smart Lists.
+                            Save prospects into your pipeline to view 360° audits, proposals, scripts, pitches, and notes.
                         </p>
                         <a href="#/dashboard/crm" style="font-size: 12px; color: #059669; text-decoration: none; font-family: var(--font-mono); font-weight: 700;">
-                            Go to Pipeline ↗
+                            Open 360° Deal Workstation ➔
                         </a>
                     </div>
 

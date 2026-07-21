@@ -25,7 +25,7 @@ export function renderDashboardShell(activeTab = 'crm') {
     const sidebarItems = [
         { id: 'overview', label: 'Getting Started', requiredTier: 'free', icon: 'compass' },
         { id: 'directory', label: 'Browse Directory', requiredTier: 'free', icon: 'search' },
-        { id: 'crm', label: 'Outreach Pipeline', requiredTier: 'scout', icon: 'clipboard-list' },
+        { id: 'crm', label: 'Outreach Pipeline & 360° Hub', requiredTier: 'scout', icon: 'clipboard-list' },
         { id: 'lists', label: 'Smart Lists', requiredTier: 'scout', icon: 'folder' },
         { id: 'proposals', label: 'PDF Proposals', requiredTier: 'scout', icon: 'file-text' },
         { id: 'call-scripts', label: 'Tele-Sales Scripts', requiredTier: 'scout', icon: 'phone-call' },
