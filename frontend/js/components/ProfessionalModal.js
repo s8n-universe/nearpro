@@ -207,6 +207,15 @@ export function renderProfessionalModal(lead) {
                 ${mapHTML}
                 
                 <div class="modal-ctas">
+                    <div style="display: flex; gap: 10px; width: 100%; margin-bottom: 12px; flex-wrap: wrap;">
+                        <a href="#/dashboard/proposals?lead_id=${lead.id}" onclick="document.getElementById('modalBackdrop')?.remove();" class="brand-btn" style="flex: 1; min-width: 160px; text-decoration: none; padding: 10px; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 600;">
+                            <i data-lucide="sparkles" style="width:14px; height:14px;"></i> 📄 Generate PDF Proposal
+                        </a>
+                        <a href="#/dashboard/call-scripts?lead_id=${lead.id}" onclick="document.getElementById('modalBackdrop')?.remove();" class="secondary-btn" style="flex: 1; min-width: 160px; text-decoration: none; padding: 10px; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 6px; border-color: rgba(16, 185, 129, 0.4); color: #10b981; font-weight: 600;">
+                            <i data-lucide="phone-call" style="width:14px; height:14px;"></i> 📞 Generate Call Script
+                        </a>
+                    </div>
+
                     ${bottomCtaHTML}
                     
                     <div style="display: flex; gap: 12px; width: 100%; margin-bottom: 12px;">

@@ -13,13 +13,6 @@ export function renderCallScriptGeneratorLayout(selectedLeadId = null) {
 
     const isAtLimit = limit > 0 ? (used >= limit) : (userTier === 'free');
 
-    const leads = State.professionals || [];
-    const leadOptions = leads.map(l => `
-        <option value="${l.id}" ${l.id === selectedLeadId ? 'selected' : ''}>
-            ${l.name} (${l.category || l.parent_category || 'Business'}, ${l.rating || 'N/A'}⭐ - ${l.review_count || 0} reviews)
-        </option>
-    `).join('');
-
     return `
         <div class="call-script-generator-container" style="display: flex; flex-direction: column; gap: 24px; padding: 24px; color: white; font-family: var(--font-body);">
             
@@ -48,15 +41,48 @@ export function renderCallScriptGeneratorLayout(selectedLeadId = null) {
                 </div>
             </div>
 
+            <!-- KNOWLEDGE GUIDE: HOW TO USE TELE-SALES SCRIPTS -->
+            <details style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: var(--radius-md); padding: 16px 20px; color: var(--text-secondary);" open>
+                <summary style="font-weight: 700; color: #10b981; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 14px; font-family: var(--font-heading);">
+                    <span style="display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="phone-call" style="width: 16px; height: 16px;"></i>
+                        📖 How to Conduct Cold Calls & Handle Objections Live
+                    </span>
+                    <span style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">Click to Expand / Collapse</span>
+                </summary>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px;">
+                    <div style="background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px;">
+                        <div style="font-size: 11.5px; font-weight: 700; color: #10b981; font-family: var(--font-mono); margin-bottom: 4px;">1. 30-SEC PATTERN INTERRUPT</div>
+                        <div style="font-size: 12.5px; color: white; line-height: 1.4;">Deliver the warm 30-second intro without rushing. Pause for 2 seconds after asking for 30 seconds.</div>
+                    </div>
+                    
+                    <div style="background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px;">
+                        <div style="font-size: 11.5px; font-weight: 700; color: #10b981; font-family: var(--font-mono); margin-bottom: 4px;">2. LIVE OBJECTION TABS</div>
+                        <div style="font-size: 12.5px; color: white; line-height: 1.4;">When the lead raises an objection, click any objection button for instant rebuttal scripts.</div>
+                    </div>
+
+                    <div style="background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px;">
+                        <div style="font-size: 11.5px; font-weight: 700; color: #10b981; font-family: var(--font-mono); margin-bottom: 4px;">3. POST-CALL WHATSAPP</div>
+                        <div style="font-size: 12.5px; color: white; line-height: 1.4;">Use 1-click WhatsApp follow-up to send your custom PDF proposal link right after ending the call.</div>
+                    </div>
+                </div>
+            </details>
+
             <!-- Lead Selection Form -->
             <div style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-md);">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                     <div>
-                        <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; font-family: var(--font-mono);">
-                            SELECT TARGET BUSINESS LEAD:
-                        </label>
-                        <select id="scriptLeadSelect" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13.5px; outline: none;">
-                            ${leadOptions.length > 0 ? leadOptions : '<option value="">-- No directory leads loaded. Please search in Browse Directory --</option>'}
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <label style="font-size: 12px; font-weight: 600; color: var(--text-secondary); font-family: var(--font-mono);">
+                                SELECT TARGET BUSINESS LEAD:
+                            </label>
+                            <a href="#/dashboard/crm" style="font-size: 11px; color: #10b981; text-decoration: underline; font-family: var(--font-mono);">
+                                Manage Tracked Leads in CRM ↗
+                            </a>
+                        </div>
+                        <select id="scriptLeadSelect" data-selected-id="${selectedLeadId || ''}" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13.5px; outline: none;">
+                            <option value="">-- Loading your tracked leads & directory... --</option>
                         </select>
                     </div>
                     
@@ -108,6 +134,54 @@ export function renderCallScriptGeneratorLayout(selectedLeadId = null) {
     `;
 }
 
+export async function populateLeadDropdownOptions(selectEl, selectedLeadId = null) {
+    if (!selectEl) return;
+
+    let savedLeads = [];
+    try {
+        savedLeads = await Api.getSavedLeads();
+    } catch (e) {
+        console.warn("Failed to load saved leads:", e);
+    }
+
+    const trackedProfessionals = savedLeads
+        .map(sl => sl.professionals)
+        .filter(p => p && p.id);
+
+    const directoryLeads = State.professionals || [];
+
+    const trackedIds = new Set(trackedProfessionals.map(p => p.id));
+    const otherLeads = directoryLeads.filter(p => p.id && !trackedIds.has(p.id));
+
+    let optionsHTML = '';
+
+    if (trackedProfessionals.length > 0) {
+        optionsHTML += `<optgroup label="📍 YOUR TRACKED LEADS (CRM PIPELINE)">`;
+        optionsHTML += trackedProfessionals.map(p => `
+            <option value="${p.id}" ${p.id === selectedLeadId ? 'selected' : ''}>
+                ⭐ ${p.name} (${p.category || p.parent_category || 'Business'} - ${p.rating || 'N/A'}★, ${p.review_count || 0} reviews)
+            </option>
+        `).join('');
+        optionsHTML += `</optgroup>`;
+    }
+
+    if (otherLeads.length > 0) {
+        optionsHTML += `<optgroup label="🔍 UNLOCKED DIRECTORY LEADS">`;
+        optionsHTML += otherLeads.map(p => `
+            <option value="${p.id}" ${p.id === selectedLeadId ? 'selected' : ''}>
+                ${p.name} (${p.category || p.parent_category || 'Business'} - ${p.rating || 'N/A'}★)
+            </option>
+        `).join('');
+        optionsHTML += `</optgroup>`;
+    }
+
+    if (!optionsHTML) {
+        optionsHTML = `<option value="">-- No leads found. Please unlock leads in Browse Directory --</option>`;
+    }
+
+    selectEl.innerHTML = optionsHTML;
+}
+
 export function bindCallScriptGeneratorEvents() {
     window._callScriptCache = window._callScriptCache || {};
     window._activeCallScriptPromises = window._activeCallScriptPromises || {};
@@ -117,15 +191,19 @@ export function bindCallScriptGeneratorEvents() {
     const loader = document.getElementById('scriptStepLoader');
     const resultContainer = document.getElementById('callScriptResultContainer');
 
-    const currentLeadId = leadSelect ? leadSelect.value : null;
+    const preSelectedId = leadSelect ? leadSelect.dataset.selectedId : null;
 
-    // Restore cached result if available for this lead
+    if (leadSelect) {
+        populateLeadDropdownOptions(leadSelect, preSelectedId);
+    }
+
+    const currentLeadId = leadSelect ? (leadSelect.value || preSelectedId) : null;
+
     if (currentLeadId && window._callScriptCache[currentLeadId] && resultContainer) {
         const cached = window._callScriptCache[currentLeadId];
         renderCallScriptOutputCard(cached.call_script, cached.slug, cached.public_url);
     }
 
-    // Restore in-flight step loader if background promise is running
     if (currentLeadId && window._activeCallScriptPromises[currentLeadId] && loader) {
         loader.style.display = 'block';
         if (btn) btn.disabled = true;
@@ -180,7 +258,6 @@ export function bindCallScriptGeneratorEvents() {
             if (currentBar) currentBar.style.width = steps[stepIdx].pct;
         }, 1100);
 
-        // Store promise globally to prevent tab switch interruption
         const promise = Api.generateCallScript(leadId, callAngle);
         window._activeCallScriptPromises[leadId] = promise;
 
@@ -232,7 +309,6 @@ function renderCallScriptOutputCard(script, slug, publicUrl) {
     const closing = script.call_closing || {};
     const waMsg = script.whatsapp_followup_message || '';
 
-    // Render objection tabs & response card
     const objTabsHTML = objList.map((o, idx) => `
         <button class="objection-tab-btn ${idx === 0 ? 'active' : ''}" data-idx="${idx}" style="padding: 10px 14px; font-size: 12px; font-weight: 600; border-radius: var(--radius-sm); border: 1px solid ${idx === 0 ? 'var(--accent-gold)' : 'var(--border)'}; background: ${idx === 0 ? 'rgba(217, 119, 6, 0.15)' : 'rgba(255,255,255,0.02)'}; color: ${idx === 0 ? 'var(--accent-gold)' : 'white'}; cursor: pointer; text-align: left;">
             ${o.objection_title}
@@ -358,7 +434,6 @@ function renderCallScriptOutputCard(script, slug, publicUrl) {
     container.style.display = 'flex';
     if (window.refreshLucideIcons) window.refreshLucideIcons();
 
-    // Bind interactive objection tabs
     const tabs = container.querySelectorAll('.objection-tab-btn');
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
@@ -385,7 +460,6 @@ function renderCallScriptOutputCard(script, slug, publicUrl) {
         });
     });
 
-    // Toolbar handlers
     const waBtn = document.getElementById('copyWaFollowupBtn');
     if (waBtn) {
         waBtn.addEventListener('click', () => {
