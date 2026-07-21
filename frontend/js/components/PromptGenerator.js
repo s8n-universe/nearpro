@@ -122,13 +122,14 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
                 `;
             }
 
+            const customLinks = State.profile?.custom_referral_links || {};
             const PLATFORM_LINKS = {
-                lovable: { name: 'Lovable.dev', url: 'https://lovable.dev/?via=nearpro' },
-                bolt: { name: 'Bolt.new', url: 'https://bolt.new/?ref=nearpro' },
-                v0: { name: 'v0.dev', url: 'https://v0.dev/?ref=nearpro' },
-                emergent: { name: 'Emergent AI', url: 'https://emergent.sh/?ref=nearpro' },
-                cursor: { name: 'Cursor IDE', url: 'https://cursor.com/?ref=nearpro' },
-                claude: { name: 'Claude Code', url: 'https://claude.ai/?ref=nearpro' }
+                lovable: { name: 'Lovable.dev', url: customLinks.lovable || 'https://lovable.dev/?via=nearpro' },
+                bolt: { name: 'Bolt.new', url: customLinks.bolt || 'https://bolt.new/?ref=nearpro' },
+                v0: { name: 'v0.dev', url: customLinks.v0 || 'https://v0.dev/?ref=nearpro' },
+                emergent: { name: 'Emergent AI', url: customLinks.emergent || 'https://emergent.sh/?ref=nearpro' },
+                cursor: { name: 'Cursor IDE', url: customLinks.cursor || 'https://cursor.com/?ref=nearpro' },
+                claude: { name: 'Claude Code', url: customLinks.claude || 'https://claude.ai/?ref=nearpro' }
             };
             const currentPlatformMeta = PLATFORM_LINKS[selectedPlatform] || PLATFORM_LINKS.lovable;
 
@@ -149,7 +150,7 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
                         </div>
                         
                         <div style="display:flex; gap:8px; align-items:center; margin-top: 12px; width: 100%; justify-content: flex-end; flex-wrap: wrap;">
-                            <a href="${currentPlatformMeta.url}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;" title="Open ${currentPlatformMeta.name} in a new tab">
+                            <a href="${currentPlatformMeta.url}" target="_blank" rel="noopener noreferrer" id="launchPlatformBtn" style="text-decoration:none;" title="Auto-copy prompt & open ${currentPlatformMeta.name}">
                                 <button class="brand-btn" style="padding:10px 14px; font-size:12.5px; background:rgba(255,255,255,0.03); border:1px solid var(--border); color:white; display:flex; align-items:center; gap:6px;">
                                     <i data-lucide="external-link" style="width:14px; height:14px; color:var(--accent-gold);"></i> Launch ${currentPlatformMeta.name} ↗
                                 </button>
@@ -246,16 +247,37 @@ export function bindPromptGeneratorEvents(onLeadSelectCallback, onPlatformSelect
     const copyBtn = document.getElementById('copyPromptTextBtn');
     if (copyBtn) {
         copyBtn.addEventListener('click', () => {
-            const text = document.getElementById('generatedPromptArea').value;
-            navigator.clipboard.writeText(text).then(() => {
-                const originalText = copyBtn.innerHTML;
-                copyBtn.innerHTML = '✓ Copied!';
-                copyBtn.style.color = 'var(--accent-gold)';
-                setTimeout(() => {
-                    copyBtn.innerHTML = originalText;
-                    copyBtn.style.color = '';
-                }, 2000);
-            });
+            const promptArea = document.getElementById('generatedPromptArea');
+            if (promptArea && promptArea.value) {
+                navigator.clipboard.writeText(promptArea.value).then(() => {
+                    const originalText = copyBtn.innerHTML;
+                    copyBtn.innerHTML = '✓ Copied!';
+                    copyBtn.style.color = 'var(--accent-gold)';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = originalText;
+                        copyBtn.style.color = '';
+                    }, 2000);
+                });
+            }
+        });
+    }
+
+    const launchBtn = document.getElementById('launchPlatformBtn');
+    if (launchBtn) {
+        launchBtn.addEventListener('click', () => {
+            const promptArea = document.getElementById('generatedPromptArea');
+            if (promptArea && promptArea.value) {
+                navigator.clipboard.writeText(promptArea.value).then(() => {
+                    if (copyBtn) {
+                        copyBtn.innerHTML = '✓ Copied & Launching!';
+                        copyBtn.style.color = 'var(--accent-gold)';
+                        setTimeout(() => {
+                            copyBtn.innerHTML = '<i data-lucide="copy" style="width:14px; height:14px;"></i> Copy';
+                            copyBtn.style.color = '';
+                        }, 2500);
+                    }
+                }).catch(() => {});
+            }
         });
     }
 }
