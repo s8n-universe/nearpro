@@ -246,6 +246,14 @@ function initRoutes() {
         renderDocumentViewerLayout(id);
     });
 
+    Router.on('#/preview/:id', async (id) => {
+        renderDocumentViewerLayout(id);
+    });
+
+    Router.on('#/view/:id', async (id) => {
+        renderDocumentViewerLayout(id);
+    });
+
     Router.on('*', () => {
         appShell.innerHTML = `
             <div class="app-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; text-align: center; font-family: var(--font-body); padding: 24px;">

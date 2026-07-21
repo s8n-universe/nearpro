@@ -24,9 +24,10 @@ export function buildOutreach(templateText, lead, audit = null) {
 
     let demoUrl = '';
     if (hasPortfolio) {
-        const base = State.profile.portfolio_url;
-        const prefix = base.endsWith('/') ? base : base + '/';
-        demoUrl = `${prefix}preview/nearpro_${(lead.id || 'preview').slice(0, 8)}`;
+        demoUrl = State.profile.portfolio_url;
+    } else {
+        const origin = window.location.origin + window.location.pathname;
+        demoUrl = `${origin}#/preview/nearpro_${(lead.id || 'preview').slice(0, 8)}`;
     }
     
     const variables = {
