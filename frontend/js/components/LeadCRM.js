@@ -393,9 +393,10 @@ export function renderLeadCRM(pipelineData, stats) {
                 </div>
 
                 <div style="display:flex; flex-direction:column; gap:6px; margin-top:8px;">
-                    <button class="brand-btn" id="crmSendWhatsAppBtn" data-phone="${activeLead.phone || ''}" data-name="${activeLead.name}" style="background:#22c55e; border-color:#22c55e; color:black; font-weight:600; font-size:12px; padding:8px; display:flex; align-items:center; gap:6px; justify-content:center;">
+                    <button class="brand-btn" id="crmSendWhatsAppBtn" data-phone="${activeLead.phone || ''}" data-name="${activeLead.name}" style="background:#22c55e; border-color:#22c55e; color:black; font-weight:600; font-size:12px; padding:8px; display:flex; align-items:center; gap:6px; justify-content:center; cursor:${activeLead.phone ? 'pointer' : 'not-allowed'}; opacity:${activeLead.phone ? 1 : 0.5};" ${activeLead.phone ? '' : 'disabled'}>
                         <i data-lucide="message-square" style="width:13px; height:13px;"></i> Send via WhatsApp
                     </button>
+                    ${!activeLead.phone ? `<div style="font-size: 10.5px; color: #f87171; text-align: center; margin-top: -2px;">⚠️ No phone number available to send WhatsApp</div>` : ''}
                     <button class="secondary-btn" id="crmCopyPitchBtn" style="font-size:12px; padding:8px; display:flex; align-items:center; gap:6px; justify-content:center;">
                         <i data-lucide="copy" style="width:13px; height:13px;"></i> Copy Pitch Text
                     </button>

@@ -1,5 +1,27 @@
 import { State } from '../state.js';
 import { Api } from '../api.js';
+import { getUserTier } from '../auth.js';
+
+export const PROMPT_LIMITS = {
+    free: 3,
+    scout: 30,
+    hunter: 60,
+    agency: 100,
+    enterprise: 999999
+};
+
+export function getPromptGenerationCount() {
+    const userId = State.user?.id || 'anonymous';
+    const key = `nearpro_prompt_count_${userId}`;
+    return parseInt(localStorage.getItem(key) || '0', 10);
+}
+
+export function incrementPromptGenerationCount() {
+    const userId = State.user?.id || 'anonymous';
+    const key = `nearpro_prompt_count_${userId}`;
+    const current = getPromptGenerationCount();
+    localStorage.setItem(key, (current + 1).toString());
+}
 
 export function buildPrompt(platform, lead, audit = null) {
     const jsonLdType = (lead.category || '').toLowerCase().includes('dentist') ? 'Dentist' : 'LocalBusiness';
@@ -20,6 +42,11 @@ Local Search Compliance:
 }
 
 export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedPlatform = 'lovable', generatedPrompt = '') {
+    const tier = getUserTier();
+    const limit = PROMPT_LIMITS[tier] || 0;
+    const count = getPromptGenerationCount();
+    const isLimitReached = count >= limit;
+
     // 1. Render Left panel (Lead Selector)
     const leadsHTML = savedLeads.map(item => {
         const lead = item.professionals || {};
@@ -45,34 +72,47 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
     // 2. Render Prompt Workspace
     let workspaceHTML = '';
     if (activeLeadId) {
-        workspaceHTML = `
-            <div class="prompt-workspace-grid" style="display:flex; flex-direction:column; gap:20px; width:100%;">
-                
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-                    <div>
-                        <label style="display:block; font-size:11px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px;">Target Platform</label>
-                        <div style="display:flex; gap:8px;">
-                            <button class="platform-btn ${selectedPlatform === 'lovable' ? 'active' : ''}" data-platform="lovable">Lovable.dev</button>
-                            <button class="platform-btn ${selectedPlatform === 'bolt' ? 'active' : ''}" data-platform="bolt">Bolt.new</button>
-                            <button class="platform-btn ${selectedPlatform === 'claude' ? 'active' : ''}" data-platform="claude">Claude Code</button>
+        if (isLimitReached) {
+            workspaceHTML = `
+                <div style="text-align: center; padding: 60px 20px; border: 1px dashed var(--border); border-radius: var(--radius-md); max-width: 500px; margin: 40px auto; width: 100%;">
+                    <div style="font-size: 40px; margin-bottom: 16px;">🚫</div>
+                    <h3 style="margin-bottom: 12px; color: white;">Prompt Limit Reached</h3>
+                    <p style="color: var(--text-muted); font-size: 13.5px; line-height: 1.5; margin-bottom: 24px;">
+                        You have used all ${limit} prompt copies allowed on your ${tier.toUpperCase()} plan. Upgrade now to unlock more generations!
+                    </p>
+                    <button class="brand-btn" onclick="window.State.setPricingModal(true);">Upgrade Plan</button>
+                </div>
+            `;
+        } else {
+            workspaceHTML = `
+                <div class="prompt-workspace-grid" style="display:flex; flex-direction:column; gap:20px; width:100%;">
+                    
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                        <div>
+                            <label style="display:block; font-size:11px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px;">Target Platform</label>
+                            <div style="display:flex; gap:8px;">
+                                <button class="platform-btn ${selectedPlatform === 'lovable' ? 'active' : ''}" data-platform="lovable">Lovable.dev</button>
+                                <button class="platform-btn ${selectedPlatform === 'bolt' ? 'active' : ''}" data-platform="bolt">Bolt.new</button>
+                                <button class="platform-btn ${selectedPlatform === 'claude' ? 'active' : ''}" data-platform="claude">Claude Code</button>
+                            </div>
                         </div>
+                        
+                        <button class="brand-btn" id="copyPromptTextBtn" style="padding:10px 16px; font-size:13px; display:flex; align-items:center; gap:6px;">
+                            <i data-lucide="copy" style="width:14px; height:14px;"></i> Copy Prompt Code
+                        </button>
+                    </div>
+    
+                    <div>
+                        <label style="display:block; font-size:11px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase; margin-bottom:8px;">Generated AI Prompt</label>
+                        <textarea readonly id="generatedPromptArea" style="width:100%; height:260px; background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:var(--radius-sm); padding:16px; color:white; font-size:13.5px; line-height:1.6; resize:none; outline:none; font-family:var(--font-mono);">${generatedPrompt}</textarea>
                     </div>
                     
-                    <button class="brand-btn" id="copyPromptTextBtn" style="padding:10px 16px; font-size:13px; display:flex; align-items:center; gap:6px;">
-                        <i data-lucide="copy" style="width:14px; height:14px;"></i> Copy Prompt Code
-                    </button>
+                    <div style="background:rgba(255,160,0,0.03); border:1px solid rgba(255,160,0,0.15); border-radius:var(--radius-md); padding:16px; font-size:12.5px; color:var(--text-secondary); line-height:1.5;">
+                        <strong style="color:var(--accent-gold);">Instructions:</strong> Copy this prompt code and paste it directly into Lovable or Bolt to generate a complete, high converting local website draft for this business in 60 seconds.
+                    </div>
                 </div>
-
-                <div>
-                    <label style="display:block; font-size:11px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase; margin-bottom:8px;">Generated AI Prompt</label>
-                    <textarea readonly id="generatedPromptArea" style="width:100%; height:260px; background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:var(--radius-sm); padding:16px; color:white; font-size:13.5px; line-height:1.6; resize:none; outline:none; font-family:var(--font-mono);">${generatedPrompt}</textarea>
-                </div>
-                
-                <div style="background:rgba(255,160,0,0.03); border:1px solid rgba(255,160,0,0.15); border-radius:var(--radius-md); padding:16px; font-size:12.5px; color:var(--text-secondary); line-height:1.5;">
-                    <strong style="color:var(--accent-gold);">Instructions:</strong> Copy this prompt code and paste it directly into Lovable or Bolt to generate a complete, high converting local website draft for this business in 60 seconds.
-                </div>
-            </div>
-        `;
+            `;
+        }
     } else {
         workspaceHTML = `
             <div class="prompt-empty-state" style="text-align:center; padding:80px 20px; color:var(--text-muted); display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1;">
@@ -84,6 +124,21 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
             </div>
         `;
     }
+
+    let usageHTML = '';
+    if (limit >= 999999) {
+        usageHTML = `⚡ Usage: <span id="promptUsageCounter"><strong>${count}</strong> generations (Unlimited for Enterprise)</span>`;
+    } else {
+        const remaining = Math.max(0, limit - count);
+        usageHTML = `⚡ Usage: <span id="promptUsageCounter"><strong>${count}</strong> of <strong>${limit}</strong> generations used (${remaining} remaining)</span>`;
+    }
+
+    const usageBarHTML = `
+        <div class="usage-bar" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 16px; margin-bottom: 20px; font-size: 12.5px; color: var(--text-secondary); display: flex; align-items: center; justify-content: space-between; width: 100%; border-left: 3px solid var(--accent-gold);">
+            <span>${usageHTML}</span>
+            <span style="font-size: 11px; font-family: var(--font-mono); color: var(--accent-gold); font-weight: bold; text-transform: uppercase;">Tier: ${tier}</span>
+        </div>
+    `;
 
     return `
         <div class="prompt-workspace" style="display:grid; grid-template-columns: 260px 1fr; gap:24px; height:100%;">
@@ -103,6 +158,7 @@ export function renderPromptGenerator(savedLeads, activeLeadId = null, selectedP
                     <div style="font-size: 12.5px; color: white; line-height: 1.4;"><span style="color: var(--accent-gold); font-weight: 600;">What it is:</span> Generate customized layout prompts for Lovable, Bolt.new, or v0.dev.</div>
                     <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.4;"><span style="color: var(--accent-gold); font-weight: 600;">How to leverage:</span> Copy generated prompts to quickly build functional demo sites and wow prospects before scheduling pitches.</div>
                 </div>
+                ${usageBarHTML}
                 ${workspaceHTML}
             </div>
         </div>
@@ -135,13 +191,46 @@ export function bindPromptGeneratorEvents(onLeadSelectCallback, onPlatformSelect
     if (copyBtn) {
         copyBtn.addEventListener('click', () => {
             const text = document.getElementById('generatedPromptArea').value;
+            const tier = getUserTier();
+            const limit = PROMPT_LIMITS[tier] || 0;
+            const current = getPromptGenerationCount();
+            
+            if (current >= limit) {
+                alert(`🚫 Usage Limit Reached: Your current plan (${tier.toUpperCase()}) allows up to ${limit} prompt copies. Please upgrade to a higher plan for more access.`);
+                return;
+            }
+
             navigator.clipboard.writeText(text).then(() => {
                 const originalText = copyBtn.innerHTML;
                 copyBtn.innerHTML = '✓ Copied!';
                 copyBtn.style.color = 'var(--accent-gold)';
+                
+                // Increment usage counter
+                incrementPromptGenerationCount();
+                
+                // Dynamically update counter in DOM
+                const newCount = getPromptGenerationCount();
+                const counterEl = document.getElementById('promptUsageCounter');
+                if (counterEl) {
+                    if (limit >= 999999) {
+                        counterEl.innerHTML = `<strong>${newCount}</strong> generations (Unlimited for Enterprise)`;
+                    } else {
+                        const remaining = Math.max(0, limit - newCount);
+                        counterEl.innerHTML = `<strong>${newCount}</strong> of <strong>${limit}</strong> generations used (${remaining} remaining)`;
+                    }
+                }
+
                 setTimeout(() => {
                     copyBtn.innerHTML = originalText;
                     copyBtn.style.color = '';
+                    
+                    // If the new count reached the limit, refresh view to show the lock/limit screen
+                    if (newCount >= limit) {
+                        // Reload this route to render lock screen
+                        const activeLeadId = new URLSearchParams(window.location.hash.split('?')[1] || '').get('lead_id');
+                        const selectedPlatform = new URLSearchParams(window.location.hash.split('?')[1] || '').get('platform') || 'lovable';
+                        window.location.hash = `#/dashboard/prompts?lead_id=${activeLeadId}&platform=${selectedPlatform}&ts=${Date.now()}`;
+                    }
                 }, 2000);
             });
         });

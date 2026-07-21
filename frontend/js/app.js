@@ -1176,7 +1176,7 @@ async function renderDashboardLayout(tab) {
         lists: 'scout',
         audit: 'hunter',
         outreach: 'hunter',
-        prompts: 'agency',
+        prompts: 'scout',
         integrations: 'agency',
         team: 'agency',
         settings: 'free'

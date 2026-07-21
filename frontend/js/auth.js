@@ -110,6 +110,7 @@ export const FEATURE_GATES = {
     lead_crm: 'scout',
     lead_notes: 'scout',
     compare_modal: 'scout',
+    prompt_generator: 'scout',
 
     // Hunter+ features
     website_audit: 'hunter',
@@ -119,7 +120,6 @@ export const FEATURE_GATES = {
     follow_up_reminders: 'hunter',
 
     // Agency+ features
-    prompt_generator: 'agency',
     bulk_outreach: 'agency',
     integration_hub: 'agency',
     team_workspace: 'agency',

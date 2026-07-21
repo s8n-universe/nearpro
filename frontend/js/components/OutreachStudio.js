@@ -333,12 +333,16 @@ export function renderOutreachStudio(savedLeads, activeLeadId = null, templates 
                     <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:var(--radius-md); padding:22px; display:flex; flex-direction:column; gap:14px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
                         <h4 style="margin:0 0 4px 0; font-size:13px; font-family:var(--font-mono); color:#334155; text-transform:uppercase; font-weight:700;">Outreach Channels</h4>
                         
-                        <button class="brand-btn outreach-send-btn" id="sendOutreachWhatsAppBtn" style="background:#22c55e; border-color:#22c55e; color:white; font-weight:700; padding:12px; font-size:13px; cursor:pointer;">
+                        <button class="brand-btn outreach-send-btn" id="sendOutreachWhatsAppBtn" style="background:#22c55e; border-color:#22c55e; color:white; font-weight:700; padding:12px; font-size:13px; cursor:${lead.phone ? 'pointer' : 'not-allowed'}; opacity:${lead.phone ? 1 : 0.55};" ${lead.phone ? '' : 'disabled'}>
                             💬 Send via WhatsApp
                         </button>
-                        <button class="secondary-btn outreach-send-btn" id="sendOutreachEmailBtn" style="padding:12px; font-size:13px; font-weight:700; background:#ffffff; border-color:#cbd5e1; color:#0f172a; cursor:pointer;">
+                        ${!lead.phone ? `<div style="font-size: 11px; color: #dc2626; font-weight: 600; text-align: center; margin-top: -6px;">⚠️ No phone number available</div>` : ''}
+                        
+                        <button class="secondary-btn outreach-send-btn" id="sendOutreachEmailBtn" style="padding:12px; font-size:13px; font-weight:700; background:#ffffff; border-color:#cbd5e1; color:#0f172a; cursor:${lead.email ? 'pointer' : 'not-allowed'}; opacity:${lead.email ? 1 : 0.55};" ${lead.email ? '' : 'disabled'}>
                             📧 Send via Email
                         </button>
+                        ${!lead.email ? `<div style="font-size: 11px; color: #dc2626; font-weight: 600; text-align: center; margin-top: -6px;">⚠️ No email address available</div>` : ''}
+                        
                         <button class="secondary-btn outreach-send-btn" id="copyOutreachTextBtn" style="padding:12px; font-size:13px; font-weight:700; background:#ffffff; border-color:#cbd5e1; color:#0f172a; cursor:pointer;">
                             📋 Copy Message Text
                         </button>
