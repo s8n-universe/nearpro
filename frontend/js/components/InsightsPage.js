@@ -21,6 +21,31 @@ export function renderInsightsPage() {
         ? new Date(s.last_sync || s.last_scraped).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) 
         : 'Unavailable';
 
+    // --- Compute REAL metrics from stats data ---
+    const totalProfs = s.total_professionals || 0;
+    const withWebsite = s.with_website || 0;
+    const noWebsitePct = totalProfs > 0 ? ((totalProfs - withWebsite) / totalProfs * 100).toFixed(1) : '0.0';
+
+    // Compute top area (highest density) from area_insights if available
+    const areaInsights = State.area_insights;
+    const areaDensity = areaInsights?.area_density || [];
+    const catDist = areaInsights?.category_distribution || [];
+
+    const topArea = areaDensity.length > 0 ? areaDensity[0].area : 'N/A';
+    const bottomArea = areaDensity.length > 1 ? areaDensity[areaDensity.length - 1].area : 'N/A';
+    const lowestRatingArea = areaDensity.length > 0
+        ? [...areaDensity].sort((a, b) => (a.avg_rating || 5) - (b.avg_rating || 5))[0].area
+        : 'N/A';
+    const smallestCategory = catDist.length > 0
+        ? [...catDist].sort((a, b) => a.count - b.count)[0].category
+        : 'N/A';
+
+    // Compute real completeness/verification ratio
+    const withPhone = s.with_phone || 0;
+    const withEmail = s.with_email || 0;
+    const verificationPct = totalProfs > 0 ? ((withPhone + withEmail + withWebsite) / (totalProfs * 3) * 100).toFixed(1) : '0.0';
+    const avgRating = s.average_rating || '0.0';
+
     return `
         <div class="container" style="padding: 40px 0;">
             <div class="feed-header" style="margin-bottom: 40px;">
@@ -33,37 +58,37 @@ export function renderInsightsPage() {
                 </div>
             </div>
             
-            <!-- Key Metric Grid -->
+            <!-- Key Metric Grid (Computed from real Supabase data) -->
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 48px;">
                 <div class="feature-panel" style="padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid var(--accent-gold);">
                     <div style="text-align: left;">
                         <div style="font-size: 12px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Outreach Opportunities</div>
-                        <div style="font-size: 32px; font-weight: 700; color: var(--text-primary); margin-top: 4px;">54.8%</div>
-                        <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Leads missing verified websites</div>
+                        <div style="font-size: 32px; font-weight: 700; color: var(--text-primary); margin-top: 4px;">${noWebsitePct}%</div>
+                        <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Leads missing verified websites (${totalProfs - withWebsite} of ${totalProfs})</div>
                     </div>
                     <div style="font-size: 28px; opacity: 0.8;">🌐</div>
                 </div>
                 <div class="feature-panel" style="padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid var(--accent-pink);">
                     <div style="text-align: left;">
-                        <div style="font-size: 12px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">High-Demand Suburb</div>
-                        <div style="font-size: 28px; font-weight: 700; color: var(--accent-pink); margin-top: 4px;">Bandra</div>
-                        <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Highest review velocity area</div>
+                        <div style="font-size: 12px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Highest Density Suburb</div>
+                        <div style="font-size: 28px; font-weight: 700; color: var(--accent-pink); margin-top: 4px;">${topArea}</div>
+                        <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Most listings concentrated area</div>
                     </div>
                     <div style="font-size: 28px; opacity: 0.8;">🔥</div>
                 </div>
                 <div class="feature-panel" style="padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid #3b82f6;">
                     <div style="text-align: left;">
-                        <div style="font-size: 12px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Most Underserved Niche</div>
-                        <div style="font-size: 28px; font-weight: 700; color: var(--text-primary); margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 170px;">Interior Designer</div>
+                        <div style="font-size: 12px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Smallest Category</div>
+                        <div style="font-size: 28px; font-weight: 700; color: var(--text-primary); margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 170px;">${smallestCategory}</div>
                         <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Lowest listings concentration</div>
                     </div>
                     <div style="font-size: 28px; opacity: 0.8;">🛠️</div>
                 </div>
                 <div class="feature-panel" style="padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid #10b981;">
                     <div style="text-align: left;">
-                        <div style="font-size: 12px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Review Boost Suburb</div>
-                        <div style="font-size: 28px; font-weight: 700; color: var(--text-primary); margin-top: 4px;">Colaba</div>
-                        <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Lowest avg ratings (needs SEO)</div>
+                        <div style="font-size: 12px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Needs Review Boost</div>
+                        <div style="font-size: 28px; font-weight: 700; color: var(--text-primary); margin-top: 4px;">${lowestRatingArea}</div>
+                        <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Lowest avg rating suburb (avg: ${avgRating})</div>
                     </div>
                     <div style="font-size: 28px; opacity: 0.8;">📈</div>
                 </div>
@@ -143,14 +168,14 @@ export function renderInsightsPage() {
                     <div style="${!isPro ? 'filter: blur(8px); pointer-events: none; user-select: none;' : ''}">
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                             <div style="padding: 16px; border: 1px solid var(--border); border-radius: var(--radius-sm); text-align: center; background: var(--bg-base);">
-                                <h4 style="font-size: 14px; margin-bottom: 8px;">Verification Ratios</h4>
-                                <div style="font-size: 28px; font-weight: 700; color: var(--accent-gold);">94.8%</div>
-                                <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Completeness stars > 3.0</p>
+                                <h4 style="font-size: 14px; margin-bottom: 8px;">Data Completeness</h4>
+                                <div style="font-size: 28px; font-weight: 700; color: var(--accent-gold);">${verificationPct}%</div>
+                                <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Avg phone + email + website fill rate</p>
                             </div>
                             <div style="padding: 16px; border: 1px solid var(--border); border-radius: var(--radius-sm); text-align: center; background: var(--bg-base);">
-                                <h4 style="font-size: 14px; margin-bottom: 8px;">Competitor Match</h4>
-                                <div style="font-size: 28px; font-weight: 700; color: var(--accent-pink);">18.2%</div>
-                                <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Shared listings ratio</p>
+                                <h4 style="font-size: 14px; margin-bottom: 8px;">Category Coverage</h4>
+                                <div style="font-size: 28px; font-weight: 700; color: var(--accent-pink);">${s.total_categories || 0}</div>
+                                <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Unique business categories indexed</p>
                             </div>
                         </div>
                     </div>
@@ -238,35 +263,27 @@ export function initInsightsCharts(insightsData) {
         });
     }
 
-    // 3. Gap Analysis Mock Generator (from real stats counts)
+    // 3. Gap Analysis — Computed from real area_density data (no Math.random)
     const gapBody = document.getElementById('gapAnalysisBody');
     if (gapBody && insightsData.area_density) {
-        // Determine areas with low category counts
-        // Simulating opportunity checks based on categories count per area
-        const gaps = [];
-        const targetCategories = ["Dentist", "Plumber", "Interior Designer", "Chartered Accountant", "Software Developer"];
-        
-        // Take areas with lower overall count
-        const lowDensityAreas = insightsData.area_density
-            .filter(a => a.count < 150)
-            .slice(0, 5);
-
-        lowDensityAreas.forEach(a => {
-            const randomCategory = targetCategories[Math.floor(Math.random() * targetCategories.length)];
-            const currentCount = Math.floor(Math.random() * 8) + 1; // 1-8 current listings
-            gaps.push({
+        // Use real data: find areas with low category diversity and low listing counts
+        const gaps = insightsData.area_density
+            .filter(a => a.count < 150 && a.categories)
+            .sort((a, b) => a.categories - b.categories) // Sort by fewest unique categories
+            .slice(0, 5)
+            .map(a => ({
                 area: a.area,
-                category: randomCategory,
-                count: currentCount,
-                score: currentCount < 4 ? "HIGH OPPORTUNITY" : "MODERATE"
-            });
-        });
+                categories: a.categories,
+                count: a.count,
+                avgRating: a.avg_rating || 0,
+                score: a.categories < 10 ? "HIGH OPPORTUNITY" : (a.categories < 20 ? "MODERATE" : "LOW")
+            }));
 
         if (gaps.length > 0) {
             gapBody.innerHTML = gaps.map(g => `
                 <tr>
                     <td style="text-align: left;"><strong>${g.area}</strong></td>
-                    <td style="text-align: left;">${g.category}</td>
+                    <td style="text-align: left;">${g.categories} unique categories (avg ★${g.avgRating})</td>
                     <td>${g.count} listings</td>
                     <td>
                         <span class="status-tag ${g.score === 'HIGH OPPORTUNITY' ? 'closed' : 'open'}" style="font-size: 10px;">

@@ -1982,7 +1982,8 @@ async function renderDashboardLayout(tab) {
             const searchParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
             const activeSubTab = searchParams.get('sub') || 'seats';
 
-            let members = JSON.parse(localStorage.getItem('nearpro_team_members') || '[]');
+            // Fetch real team members from Supabase (not localStorage)
+            let members = await Api.getTeamMembers();
             const dataRequests = await loadDataRequests();
 
             if (content) {
@@ -1991,26 +1992,32 @@ async function renderDashboardLayout(tab) {
                     (newSub) => {
                         window.location.hash = `#/dashboard/team?sub=${newSub}`;
                     },
-                    (email, role) => {
-                        members.push({ email, role });
-                        localStorage.setItem('nearpro_team_members', JSON.stringify(members));
-                        alert(`Invited ${email} successfully!`);
-                        renderDashboardLayout('team');
+                    async (email, role) => {
+                        try {
+                            await Api.inviteTeamMember(email, role);
+                            if (window.showToast) window.showToast(`✨ Invitation sent to ${email}`, "success");
+                            renderDashboardLayout('team');
+                        } catch (err) {
+                            if (window.showToast) window.showToast(`Invite failed: ${err.message}`, "error");
+                        }
                     },
-                    (email) => {
-                        members = members.filter(m => m.email !== email);
-                        localStorage.setItem('nearpro_team_members', JSON.stringify(members));
-                        alert(`Removed member ${email}.`);
-                        renderDashboardLayout('team');
+                    async (email) => {
+                        try {
+                            await Api.removeTeamMember(email);
+                            if (window.showToast) window.showToast(`Removed ${email} from workspace`, "info");
+                            renderDashboardLayout('team');
+                        } catch (err) {
+                            if (window.showToast) window.showToast(`Remove failed: ${err.message}`, "error");
+                        }
                     },
                     async (niche, city, notes) => {
                         try {
-                            await createDataRequest(niche, city, notes);
-                            alert("Data extraction request submitted successfully!");
+                            await Api.requestCustomData(niche, city, notes);
+                            if (window.showToast) window.showToast("✨ Data extraction request submitted!", "success");
                             renderDashboardLayout('team');
                         } catch (err) {
                             console.error("Extraction request failed: ", err);
-                            alert("Failed to submit request.");
+                            if (window.showToast) window.showToast(`Request failed: ${err.message}`, "error");
                         }
                     }
                 );
@@ -2019,6 +2026,7 @@ async function renderDashboardLayout(tab) {
             console.error("Failed to load Team Workspace: ", err);
             if (content) content.innerHTML = `<p style="color: var(--accent-pink);">Error loading Team Workspace.</p>`;
         }
+
     } else if (tab === 'settings') {
         if (titleEl) titleEl.innerText = 'Workspace Settings';
         if (content) {

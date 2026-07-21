@@ -932,5 +932,159 @@ export const Api = {
         }
 
         return data;
+    },
+
+    // --- Missing Production API Methods (Audit Fix) ---
+
+    /**
+     * Generic profile field updater.
+     * Used by Connection Hub to save integration tokens/URLs.
+     */
+    async updateProfile(fields) {
+        const { data: userSession } = await supabase.auth.getSession();
+        const userId = userSession?.session?.user?.id;
+        if (!userId) throw new Error("User session not found");
+
+        const { data, error } = await supabase
+            .from('profiles')
+            .update({ ...fields, updated_at: new Date().toISOString() })
+            .eq('id', userId)
+            .select()
+            .single();
+        if (error) throw error;
+
+        // Sync local state
+        if (State.profile) {
+            Object.assign(State.profile, data);
+        }
+        return data;
+    },
+
+    /**
+     * Invite a team member to the workspace.
+     * Persists to team_members table in Supabase.
+     */
+    async inviteTeamMember(email, role = 'sales') {
+        const { data: userSession } = await supabase.auth.getSession();
+        const userId = userSession?.session?.user?.id;
+        if (!userId) throw new Error("User session not found");
+
+        const { data, error } = await supabase
+            .from('team_members')
+            .insert([{
+                workspace_owner_id: userId,
+                email: email,
+                role: role,
+                status: 'invited'
+            }])
+            .select()
+            .single();
+
+        if (error) {
+            // Handle duplicate invitation gracefully
+            if (error.code === '23505') {
+                throw new Error(`${email} has already been invited to your workspace.`);
+            }
+            throw error;
+        }
+        return data;
+    },
+
+    /**
+     * Remove a team member from the workspace.
+     */
+    async removeTeamMember(email) {
+        const { data: userSession } = await supabase.auth.getSession();
+        const userId = userSession?.session?.user?.id;
+        if (!userId) throw new Error("User session not found");
+
+        const { error } = await supabase
+            .from('team_members')
+            .delete()
+            .eq('workspace_owner_id', userId)
+            .eq('email', email);
+        if (error) throw error;
+        return true;
+    },
+
+    /**
+     * Fetch all team members for the current workspace owner.
+     */
+    async getTeamMembers() {
+        const { data: userSession } = await supabase.auth.getSession();
+        const userId = userSession?.session?.user?.id;
+        if (!userId) throw new Error("User session not found");
+
+        const { data, error } = await supabase
+            .from('team_members')
+            .select('*')
+            .eq('workspace_owner_id', userId)
+            .order('invited_at', { ascending: false });
+
+        if (error) {
+            // Table may not exist yet if migration hasn't been run
+            if (error.code === '42P01' || error.message?.includes('does not exist')) {
+                console.warn("team_members table not found. Run v3_team_members_migration.sql.");
+                return [];
+            }
+            throw error;
+        }
+        return data || [];
+    },
+
+    /**
+     * Submit a custom niche data extraction request.
+     * Persists to data_requests table in Supabase.
+     */
+    async requestCustomData(niche, city, notes = '') {
+        const { data: userSession } = await supabase.auth.getSession();
+        const userId = userSession?.session?.user?.id;
+        if (!userId) throw new Error("User session not found");
+
+        const { data, error } = await supabase
+            .from('data_requests')
+            .insert([{
+                user_id: userId,
+                request_type: 'niche',
+                requested_niche: niche,
+                requested_city: city,
+                notes: notes,
+                status: 'pending'
+            }])
+            .select()
+            .single();
+        if (error) {
+            // Table may not exist yet
+            if (error.code === '42P01' || error.message?.includes('does not exist')) {
+                console.warn("data_requests table not found. Run v3_complete_migration.sql.");
+                throw new Error("Data requests feature is not yet configured. Please contact support.");
+            }
+            throw error;
+        }
+        return data;
+    },
+
+    /**
+     * Fetch all data extraction requests for the current user.
+     */
+    async getDataRequests() {
+        const { data: userSession } = await supabase.auth.getSession();
+        const userId = userSession?.session?.user?.id;
+        if (!userId) throw new Error("User session not found");
+
+        const { data, error } = await supabase
+            .from('data_requests')
+            .select('*')
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            if (error.code === '42P01' || error.message?.includes('does not exist')) {
+                console.warn("data_requests table not found. Run v3_complete_migration.sql.");
+                return [];
+            }
+            throw error;
+        }
+        return data || [];
     }
 };

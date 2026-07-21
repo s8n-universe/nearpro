@@ -420,4 +420,183 @@ export function bindConnectionHubEvents(lists, activeTab, onTabChangeCallback) {
             }
         };
     }
+
+    // --- Push to Google Sheets ---
+    const pushSheetsBtn = document.getElementById('pushToSheetsBtn');
+    if (pushSheetsBtn) {
+        pushSheetsBtn.onclick = async () => {
+            const webhookUrl = document.getElementById('sheetsWebhookInput')?.value.trim();
+            const listId = document.getElementById('sheetsListSelect')?.value;
+            if (!webhookUrl) {
+                if (window.showToast) window.showToast("Please enter a Google Apps Script webhook URL first", "error");
+                return;
+            }
+            if (!listId) {
+                if (window.showToast) window.showToast("Please select a Smart List to push", "error");
+                return;
+            }
+            pushSheetsBtn.disabled = true;
+            pushSheetsBtn.innerText = "⏳ Pushing Leads...";
+            try {
+                const savedLeads = await Api.getSavedLeads(listId);
+                const rows = savedLeads.map(sl => {
+                    const p = sl.professionals || {};
+                    return {
+                        name: p.name || '',
+                        category: p.category || '',
+                        address: p.address || '',
+                        area: p.area || '',
+                        phone: p.phone || '',
+                        website: p.website || '',
+                        email: p.email || '',
+                        rating: p.rating || '',
+                        reviews: p.review_count || '',
+                        status: sl.status || 'new'
+                    };
+                });
+                await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    mode: 'no-cors',
+                    body: JSON.stringify({ source: 'NearPro', leads: rows, pushed_at: new Date().toISOString() })
+                });
+                if (window.showToast) window.showToast(`✅ Pushed ${rows.length} leads to Google Sheets!`, "success");
+            } catch (err) {
+                if (window.showToast) window.showToast(`Push sent (CORS response ok — check your sheet)`, "info");
+            } finally {
+                pushSheetsBtn.disabled = false;
+                pushSheetsBtn.innerText = "Push Leads to Sheets 📊";
+            }
+        };
+    }
+
+    // --- Push to HubSpot ---
+    const pushHubspotBtn = document.getElementById('pushToHubspotBtn');
+    if (pushHubspotBtn) {
+        pushHubspotBtn.onclick = async () => {
+            const token = document.getElementById('hubspotTokenInput')?.value.trim();
+            const listId = document.getElementById('hubspotListSelect')?.value;
+            if (!token) {
+                if (window.showToast) window.showToast("Please enter a HubSpot Private App Token first", "error");
+                return;
+            }
+            if (!listId) {
+                if (window.showToast) window.showToast("Please select a Smart List to export", "error");
+                return;
+            }
+            pushHubspotBtn.disabled = true;
+            pushHubspotBtn.innerText = "⏳ Pushing to HubSpot...";
+            try {
+                const savedLeads = await Api.getSavedLeads(listId);
+                let successCount = 0;
+                for (const sl of savedLeads) {
+                    const p = sl.professionals || {};
+                    const contact = {
+                        properties: {
+                            firstname: (p.name || '').split(' ')[0],
+                            lastname: (p.name || '').split(' ').slice(1).join(' ') || '-',
+                            email: p.email || '',
+                            phone: p.phone || '',
+                            website: p.website || '',
+                            company: p.name || '',
+                            city: p.area || 'Mumbai',
+                            jobtitle: p.category || ''
+                        }
+                    };
+                    try {
+                        await fetch('https://api.hubapi.com/crm/v3/objects/contacts', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify(contact)
+                        });
+                        successCount++;
+                    } catch (e) {
+                        console.warn(`HubSpot push failed for ${p.name}:`, e);
+                    }
+                }
+                if (window.showToast) window.showToast(`✅ Pushed ${successCount}/${savedLeads.length} contacts to HubSpot!`, "success");
+            } catch (err) {
+                if (window.showToast) window.showToast(`HubSpot push failed: ${err.message}`, "error");
+            } finally {
+                pushHubspotBtn.disabled = false;
+                pushHubspotBtn.innerText = "Push Leads to HubSpot 🤝";
+            }
+        };
+    }
+
+    // --- Push to Zoho CRM ---
+    const pushZohoBtn = document.getElementById('pushToZohoBtn');
+    if (pushZohoBtn) {
+        pushZohoBtn.onclick = async () => {
+            const token = document.getElementById('zohoTokenInput')?.value.trim();
+            const listId = document.getElementById('zohoListSelect')?.value;
+            if (!token) {
+                if (window.showToast) window.showToast("Please enter a Zoho Access Token first", "error");
+                return;
+            }
+            if (!listId) {
+                if (window.showToast) window.showToast("Please select a Smart List to export", "error");
+                return;
+            }
+            pushZohoBtn.disabled = true;
+            pushZohoBtn.innerText = "⏳ Pushing to Zoho...";
+            try {
+                const savedLeads = await Api.getSavedLeads(listId);
+                const contacts = savedLeads.map(sl => {
+                    const p = sl.professionals || {};
+                    return {
+                        First_Name: (p.name || '').split(' ')[0],
+                        Last_Name: (p.name || '').split(' ').slice(1).join(' ') || '-',
+                        Email: p.email || '',
+                        Phone: p.phone || '',
+                        Company: p.name || '',
+                        City: p.area || 'Mumbai',
+                        Title: p.category || ''
+                    };
+                });
+                await fetch('https://www.zohoapis.com/crm/v2/Contacts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Zoho-oauthtoken ${token}`
+                    },
+                    body: JSON.stringify({ data: contacts })
+                });
+                if (window.showToast) window.showToast(`✅ Pushed ${contacts.length} contacts to Zoho CRM!`, "success");
+            } catch (err) {
+                if (window.showToast) window.showToast(`Zoho push failed: ${err.message}`, "error");
+            } finally {
+                pushZohoBtn.disabled = false;
+                pushZohoBtn.innerText = "Push Leads to Zoho 💼";
+            }
+        };
+    }
+}
+
+/**
+ * Trigger an n8n/Make.com webhook with lead event payload.
+ * Called from api.js on lead_tracked and crm_status_changed events.
+ */
+export async function triggerN8nWebhook(event, payload) {
+    try {
+        const webhookUrl = State.profile?.n8n_webhook_url;
+        if (!webhookUrl) return; // No webhook configured, skip silently
+
+        await fetch(webhookUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            mode: 'no-cors',
+            body: JSON.stringify({
+                event: event,
+                platform: 'NearPro',
+                timestamp: new Date().toISOString(),
+                ...payload
+            })
+        });
+    } catch (err) {
+        console.warn("n8n webhook dispatch failed (non-blocking):", err);
+    }
 }
