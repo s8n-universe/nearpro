@@ -17,8 +17,8 @@ export function renderCheckoutPage(planId = 'hunter', cycle = 'monthly') {
             features: [
                 'Unlocked Phone Numbers & Websites',
                 'Export 100 Leads per Month',
-                'Track 5 Custom Lead Lists',
-                'Interactive Map & Notes Access'
+                'Website Prompt Engine (30 runs/month)',
+                'Interactive Map & Suburb Radar'
             ]
         },
         hunter: {
@@ -26,10 +26,10 @@ export function renderCheckoutPage(planId = 'hunter', cycle = 'monthly') {
             monthlyPrice: 999,
             yearlyPrice: 9999,
             features: [
-                '500 WhatsApp AI Pitches (Hinglish/English)',
+                'Website Prompt Engine (60 runs/month)',
+                '500 AI Outreach runs (Hinglish/English)',
                 'Business Health Check & Lead Scores',
-                'Unlimited Lead Exports',
-                'Geospatial Metrics & Opportunity Radar'
+                'Unlimited Lead Exports'
             ]
         },
         agency: {
@@ -37,8 +37,8 @@ export function renderCheckoutPage(planId = 'hunter', cycle = 'monthly') {
             monthlyPrice: 2499,
             yearlyPrice: 24999,
             features: [
-                'Unlimited WhatsApp AI Pitches',
-                'Website Prompt Engine',
+                'Website Prompt Engine (100 runs/month)',
+                'Unlimited AI Outreach runs',
                 'n8n Webhook & Google Sheets Integration',
                 '3 Workspace Seats & Density Heatmaps'
             ]

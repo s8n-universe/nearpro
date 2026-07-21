@@ -21,9 +21,9 @@ export function renderPricingModal() {
             badge: userTier === 'free' ? 'CURRENT ACTIVE PLAN' : null,
             features: [
                 'Browse 12 verified leads per search',
+                'Website Prompt Engine (3 trial runs)',
                 'Masked contact phone & email details',
-                'Create 1 custom list (up to 5 leads)',
-                'Basic category & area filtering'
+                'Create 1 custom list (up to 5 leads)'
             ]
         },
         scout: {
@@ -38,9 +38,9 @@ export function renderPricingModal() {
             features: [
                 'Unlocked Phone Numbers & Websites',
                 'Export 100 Verified Leads per month',
+                'Website Prompt Engine (30 runs/month)',
                 'Track 5 Custom Lead Lists (50 leads each)',
                 'Interactive Map Views & Suburb Radar',
-                'Notes & Status Tagging',
                 'Rating & Completeness Score Filters'
             ]
         },
@@ -54,11 +54,11 @@ export function renderPricingModal() {
             subtext: cycle === 'monthly' ? 'Billed monthly' : 'Billed yearly (Save ₹1,989)',
             badge: userTier === 'hunter' ? 'CURRENT ACTIVE PLAN' : 'BEST VALUE',
             features: [
+                'Website Prompt Engine (60 runs/month)',
                 'Business Health Check & Lead Scores',
-                '500 WhatsApp AI Pitches (Hinglish/English)',
+                '500 AI Outreach runs (Hinglish/English)',
                 'Unlimited Lead CSV & Excel Exports',
                 '20 Custom Lead Lists & Pipeline Tracking',
-                'Geospatial Metrics & Opportunity Radar',
                 'All Scout Plan Features Included'
             ]
         },
@@ -72,8 +72,8 @@ export function renderPricingModal() {
             subtext: cycle === 'monthly' ? 'Billed monthly' : 'Billed yearly (Save ₹4,989)',
             badge: userTier === 'agency' ? 'CURRENT ACTIVE PLAN' : 'MAXIMUM POWER',
             features: [
-                'Website Prompt Engine (AI Web Redesign)',
-                'Unlimited WhatsApp AI Pitch Generation',
+                'Website Prompt Engine (100 runs/month)',
+                'Unlimited AI Outreach runs',
                 'n8n Webhooks & Google Sheets Live Sync',
                 '3 Workspace Seats & Density Heatmaps',
                 'Niche Gap Analysis & Lead Scoring',
