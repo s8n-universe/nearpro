@@ -16,7 +16,7 @@ export function renderDocumentsLibrary(documentsList = [], loading = false) {
     const isAtLimit = used >= limit;
     const capacityPct = limit > 0 ? Math.min(100, (used / limit) * 100) : 0;
 
-    // Build the grid list of files
+    // Build MNC-grade enterprise list of document rows
     const fileItemsHTML = documentsList.map(doc => {
         const uploadDate = new Date(doc.created_at).toLocaleDateString('en-IN', {
             day: 'numeric',
@@ -30,51 +30,61 @@ export function renderDocumentsLibrary(documentsList = [], loading = false) {
             ? `${(sizeKB / 1024).toFixed(1)} MB` 
             : `${Math.round(sizeKB)} KB`;
 
+        const publicUrl = `${window.location.origin}${window.location.pathname}#/d/${doc.slug || doc.id}`;
+
         return `
-            <div class="document-card" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 18px; display: flex; align-items: center; gap: 16px; transition: all 0.2s ease;">
-                <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: var(--radius-sm); background: rgba(255,255,255,0.02); border: 1px solid var(--border);">
-                    <i data-lucide="file-text" style="width: 20px; height: 20px; color: var(--text-secondary); stroke-width: 2px;"></i>
-                </div>
-                <div style="flex: 1; min-width: 0;">
-                    <h5 style="margin: 0 0 4px 0; color: white; font-size: 13.5px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                        ${doc.name}
-                    </h5>
-                    <div style="display: flex; gap: 12px; font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">
-                        <span>${sizeLabel}</span>
-                        <span>•</span>
-                        <span>Uploaded ${uploadDate}</span>
+            <div class="document-row-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; gap: 20px; box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.04); transition: all 0.2s ease; flex-wrap: wrap;">
+                
+                <!-- Left: File Metadata -->
+                <div style="display: flex; align-items: center; gap: 16px; min-width: 240px; flex: 1;">
+                    <div style="width: 44px; height: 44px; border-radius: 10px; background: #eff6ff; border: 1px solid #bfdbfe; color: #2563eb; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 800; font-size: 12px; font-family: var(--font-mono);">
+                        PDF
+                    </div>
+                    
+                    <div style="min-width: 0; flex: 1;">
+                        <h5 style="margin: 0 0 4px 0; color: #0f172a; font-size: 14.5px; font-weight: 700; font-family: var(--font-heading); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            ${doc.name}
+                        </h5>
+                        <div style="display: flex; align-items: center; gap: 10px; font-size: 12px; color: #64748b; font-family: var(--font-mono);">
+                            <span style="font-weight: 600; color: #334155;">${sizeLabel}</span>
+                            <span>•</span>
+                            <span>Uploaded ${uploadDate}</span>
+                        </div>
                     </div>
                 </div>
-                <!-- Branded Short URL Slug Customizer -->
-                <div style="display: flex; flex-direction: column; gap: 4px; margin-right: 8px;">
-                    <span style="font-size: 9px; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase;">Short link name:</span>
-                    <div style="display: flex; gap: 4px; align-items: center;">
-                        <span style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">#/d/</span>
-                        <input type="text" class="doc-slug-input" data-id="${doc.id}" placeholder="e.g. vinayak" value="${doc.slug || ''}" style="width: 110px; padding: 4px 8px; background: rgba(0,0,0,0.25); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 11.5px; outline: none; font-family: var(--font-mono);">
-                        <button class="secondary-btn save-doc-slug-btn" data-id="${doc.id}" style="padding: 4px; display: flex; align-items: center; justify-content: center; height: 26px; width: 26px; border-radius: var(--radius-sm);" title="Save custom shortname">
-                            <i data-lucide="save" style="width: 12px; height: 12px;"></i>
-                        </button>
-                    </div>
-                </div>
-                <div style="display: flex; gap: 8px;">
-                    <button class="secondary-btn copy-doc-link-btn" data-url="${window.location.origin}${window.location.pathname}#/d/${doc.slug || doc.id}" style="padding: 8px 12px; font-size: 12px; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 6px;" title="Copy branded short link">
-                        <i data-lucide="link" style="width: 13px; height: 13px;"></i> Copy Link
+
+                <!-- Center: Branded Short Link Slug Customizer -->
+                <div style="display: flex; align-items: center; gap: 8px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 6px 12px; flex-shrink: 0;">
+                    <span style="font-size: 11px; color: #64748b; font-family: var(--font-mono); font-weight: 700;">SHORTNAME:</span>
+                    <span style="font-size: 12px; color: #2563eb; font-family: var(--font-mono); font-weight: 700;">#/d/</span>
+                    <input type="text" class="doc-slug-input" data-id="${doc.id}" placeholder="my_slug" value="${doc.slug || ''}" style="width: 120px; padding: 6px 10px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; color: #0f172a; font-size: 12px; outline: none; font-family: var(--font-mono); font-weight: 600;">
+                    <button class="secondary-btn save-doc-slug-btn" data-id="${doc.id}" style="padding: 6px 10px; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 11.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;" title="Save Custom Slug">
+                        <i data-lucide="check" style="width: 12px; height: 12px;"></i> Save
                     </button>
-                    <button class="secondary-btn delete-doc-btn" data-id="${doc.id}" data-path="${doc.file_path}" style="padding: 8px 12px; font-size: 12px; border-radius: var(--radius-sm); border-color: rgba(239, 68, 68, 0.2); color: #ef4444; background: rgba(239, 68, 68, 0.05); display: flex; align-items: center; gap: 6px;" title="Delete brochure">
+                </div>
+
+                <!-- Right: Action Buttons -->
+                <div style="display: flex; align-items: center; gap: 10px; flex-shrink: 0;">
+                    <button class="copy-doc-link-btn" data-url="${publicUrl}" style="background: #2563eb; color: white; border: none; padding: 8px 16px; font-size: 12.5px; font-weight: 700; border-radius: 6px; display: flex; align-items: center; gap: 6px; cursor: pointer; box-shadow: 0 2px 6px rgba(37, 99, 235, 0.2);" title="Copy Public Short Link">
+                        <i data-lucide="copy" style="width: 13px; height: 13px;"></i> Copy Link
+                    </button>
+
+                    <button class="delete-doc-btn" data-id="${doc.id}" data-path="${doc.file_path}" style="background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; padding: 8px 14px; font-size: 12.5px; font-weight: 700; border-radius: 6px; display: flex; align-items: center; gap: 6px; cursor: pointer;" title="Delete Document">
                         <i data-lucide="trash-2" style="width: 13px; height: 13px;"></i> Delete
                     </button>
                 </div>
+
             </div>
         `;
     }).join('');
 
     const emptyHTML = documentsList.length === 0 ? `
-        <div style="grid-column: 1 / -1; padding: 60px 24px; text-align: center; color: var(--text-muted); border: 1px dashed var(--border); border-radius: var(--radius-md); background: rgba(0,0,0,0.15);">
+        <div style="padding: 60px 24px; text-align: center; color: #64748b; border: 1px dashed #cbd5e1; border-radius: 12px; background: #ffffff;">
             <div style="margin-bottom: 12px; display: flex; justify-content: center;">
-                <i data-lucide="folder-open" style="width: 40px; height: 40px; color: var(--text-muted); stroke-width: 1.5px;"></i>
+                <i data-lucide="folder-open" style="width: 40px; height: 40px; color: #94a3b8; stroke-width: 1.5px;"></i>
             </div>
-            <h4 style="margin: 0 0 6px 0; color: white; font-family: var(--font-heading);">No Documents Uploaded</h4>
-            <p style="margin: 0; font-size: 13px;">Upload your business PDFs, pamphlets, or catalogs to attach them in outreach campaigns.</p>
+            <h4 style="margin: 0 0 6px 0; color: #0f172a; font-family: var(--font-heading); font-weight: 700;">No Documents Uploaded</h4>
+            <p style="margin: 0; font-size: 13.5px; color: #475569;">Upload your business PDFs, pamphlets, or catalogs to attach them in outreach campaigns.</p>
         </div>
     ` : '';
 
@@ -85,7 +95,7 @@ export function renderDocumentsLibrary(documentsList = [], loading = false) {
                 <!-- Header capacity widget -->
                 <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; display: flex; justify-content: space-between; align-items: center; gap: 32px; flex-wrap: wrap; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
                     <div style="flex: 1; min-width: 250px;">
-                        <h3 style="margin: 0 0 6px 0; font-size: 18px; font-weight: 800; color: #0f172a; font-family: var(--font-heading);">Brochures & Collateral Storage</h3>
+                        <h3 style="margin: 0 0 6px 0; font-size: 20px; font-weight: 800; color: #0f172a; font-family: var(--font-heading);">Brochures & Collateral Storage</h3>
                         <p style="margin: 0; font-size: 13.5px; color: #475569; line-height: 1.5;">
                             Upload marketing PDFs and catalogs. Your attachments will be securely hosted online for quick selection inside WhatsApp and Email templates.
                         </p>
@@ -132,10 +142,15 @@ export function renderDocumentsLibrary(documentsList = [], loading = false) {
                     </div>
                 </div>
 
-                <!-- List Grid -->
+                <!-- List Grid / Enterprise Row View -->
                 <div style="flex: 1;">
-                    <h4 style="margin: 0 0 16px 0; font-size: 12px; font-family: var(--font-mono); color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700;">Your Document Library</h4>
-                    <div class="documents-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <h4 style="margin: 0; font-size: 12px; font-family: var(--font-mono); color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700;">
+                            Your Document Library (${documentsList.length})
+                        </h4>
+                    </div>
+
+                    <div class="documents-list-container" style="display: flex; flex-direction: column; gap: 12px; width: 100%;">
                         ${fileItemsHTML}
                         ${emptyHTML}
                     </div>
@@ -147,162 +162,105 @@ export function renderDocumentsLibrary(documentsList = [], loading = false) {
 }
 
 export function bindDocumentsLibraryEvents(onUploadStart, onUploadSuccess, onUploadError, onDeleteSuccess) {
-    // Process Lucide Icons
-    if (window.lucide) {
-        window.lucide.createIcons();
-    }
+    if (window.refreshLucideIcons) window.refreshLucideIcons();
 
     const fileInput = document.getElementById('docFileInput');
     const dropzone = document.getElementById('documentUploadDropzone');
     const loader = document.getElementById('uploadLoader');
 
     if (fileInput && dropzone) {
-        // Drag Over highlight effects
-        fileInput.addEventListener('dragenter', () => {
-            dropzone.style.background = 'rgba(255, 160, 0, 0.06)';
-            dropzone.style.borderColor = 'white';
-        });
-        
-        fileInput.addEventListener('dragleave', () => {
-            dropzone.style.background = 'rgba(255, 160, 0, 0.02)';
-            dropzone.style.borderColor = 'var(--accent-gold)';
-        });
-
         fileInput.addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (!file) return;
 
-            // Validate PDF format
             if (file.type !== 'application/pdf') {
-                alert("Only PDF brochure files are allowed.");
+                if (window.showToast) window.showToast("Only PDF documents are allowed", "error");
                 return;
             }
 
-            // Validate file size limit (5MB)
             if (file.size > 5 * 1024 * 1024) {
-                alert("File size exceeds the 5MB limit.");
+                if (window.showToast) window.showToast("File size exceeds 5MB limit", "error");
                 return;
             }
 
-            // Start upload loaders
             if (loader) loader.style.display = 'flex';
             if (onUploadStart) onUploadStart();
 
             try {
-                const name = file.name.replace('.pdf', '');
-                const result = await Api.uploadDocument(file, name);
-                
+                const result = await Api.uploadDocument(file);
                 if (loader) loader.style.display = 'none';
+                if (window.showToast) window.showToast("✨ Brochure uploaded successfully!", "success");
                 if (onUploadSuccess) onUploadSuccess(result);
             } catch (err) {
                 if (loader) loader.style.display = 'none';
-                console.error("Brochure upload failed:", err);
-                alert(err.message || "Failed to upload brochure to Supabase storage. Please try again.");
+                console.error("Upload error:", err);
+                if (window.showToast) window.showToast(`Upload failed: ${err.message}`, "error");
                 if (onUploadError) onUploadError(err);
             }
         });
     }
 
-    // Bind link copy buttons
-    document.querySelectorAll('.copy-doc-link-btn').forEach(btn => {
+    // Bind copy link buttons
+    const copyBtns = document.querySelectorAll('.copy-doc-link-btn');
+    copyBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            const url = btn.getAttribute('data-url');
+            const url = btn.dataset.url;
             navigator.clipboard.writeText(url).then(() => {
-                const originalText = btn.innerHTML;
-                btn.innerHTML = '✓ Copied!';
-                btn.style.color = 'var(--accent-gold)';
-                setTimeout(() => {
-                    btn.innerHTML = originalText;
-                    btn.style.color = '';
-                }, 2000);
+                if (window.showToast) window.showToast("📋 Public Short Link copied to clipboard!", "success");
             });
         });
     });
 
-    // Bind deletion actions
-    document.querySelectorAll('.delete-doc-btn').forEach(btn => {
+    // Bind save slug buttons
+    const saveSlugBtns = document.querySelectorAll('.save-doc-slug-btn');
+    saveSlugBtns.forEach(btn => {
         btn.addEventListener('click', async () => {
-            const id = btn.getAttribute('data-id');
-            const path = btn.getAttribute('data-path');
-
-            const confirmDelete = confirm("Are you sure you want to permanently delete this brochure collateral?");
-            if (!confirmDelete) return;
-
-            btn.innerText = 'Deleting...';
+            const id = btn.dataset.id;
+            const input = document.querySelector(`.doc-slug-input[data-id="${id}"]`);
+            if (!input) return;
+            const rawSlug = input.value.trim().toLowerCase().replace(/[^a-z0-9_-]/g, '');
+            
             btn.disabled = true;
-
             try {
-                await Api.deleteDocument(id, path);
-                if (onDeleteSuccess) onDeleteSuccess(id);
+                await Api.supabase
+                    .from('documents')
+                    .update({ slug: rawSlug || null })
+                    .eq('id', id);
+
+                if (window.showToast) window.showToast(`✨ Custom slug updated to: ${rawSlug || id}`, "success");
+                
+                // Update copy button dataset URL
+                const copyBtn = document.querySelector(`.copy-doc-link-btn[data-id="${id}"]`);
+                if (copyBtn) {
+                    copyBtn.dataset.url = `${window.location.origin}${window.location.pathname}#/d/${rawSlug || id}`;
+                }
             } catch (err) {
-                btn.innerHTML = '<i data-lucide="trash-2" style="width: 13px; height: 13px;"></i> Delete';
-                if (window.lucide) window.lucide.createIcons();
+                console.error("Failed to update slug:", err);
+                if (window.showToast) window.showToast(`Failed to update shortlink: ${err.message}`, "error");
+            } finally {
                 btn.disabled = false;
-                console.error("Deletion failed:", err);
-                alert("Failed to delete document from library.");
             }
         });
     });
 
-    // Bind custom shortlink slug save buttons
-    document.querySelectorAll('.save-doc-slug-btn').forEach(btn => {
+    // Bind delete buttons
+    const deleteBtns = document.querySelectorAll('.delete-doc-btn');
+    deleteBtns.forEach(btn => {
         btn.addEventListener('click', async () => {
-            const id = btn.getAttribute('data-id');
-            const input = document.querySelector(`.doc-slug-input[data-id="${id}"]`);
-            if (!input) return;
-
-            let slug = input.value.trim().toLowerCase();
-            if (slug && !/^[a-z0-9-_]+$/i.test(slug)) {
-                alert("Custom short link names can only contain letters, numbers, hyphens, and underscores.");
-                return;
-            }
+            const id = btn.dataset.id;
+            const filePath = btn.dataset.path;
+            
+            if (!confirm("Are you sure you want to delete this document brochure?")) return;
 
             btn.disabled = true;
-            const originalHTML = btn.innerHTML;
-            btn.innerHTML = '...';
-
             try {
-                // Update slug column in Supabase
-                const { error } = await Api.supabase
-                    .from('documents')
-                    .update({ slug: slug || null })
-                    .eq('id', id);
-
-                if (error) {
-                    if (error.message && error.message.includes('unique')) {
-                        throw new Error("This custom short link name is already taken. Please choose another.");
-                    }
-                    throw error;
-                }
-
-                btn.innerHTML = '<i data-lucide="check" style="width: 12px; height: 12px; color: var(--accent-gold);"></i>';
-                if (window.lucide) window.lucide.createIcons();
-                
-                // Update local cache
-                if (window._userDocuments) {
-                    const doc = window._userDocuments.find(d => d.id === id);
-                    if (doc) doc.slug = slug || null;
-                }
-                
-                // Update copy buttons URL dynamically
-                const copyBtn = btn.closest('.document-card')?.querySelector('.copy-doc-link-btn');
-                if (copyBtn) {
-                    const code = slug || id;
-                    copyBtn.setAttribute('data-url', `${window.location.origin}${window.location.pathname}#/d/${code}`);
-                }
-
-                setTimeout(() => {
-                    btn.innerHTML = originalHTML;
-                    if (window.lucide) window.lucide.createIcons();
-                    btn.disabled = false;
-                }, 1500);
-
+                await Api.deleteDocument(id, filePath);
+                if (window.showToast) window.showToast("Document deleted.", "info");
+                if (onDeleteSuccess) onDeleteSuccess(id);
             } catch (err) {
-                btn.innerHTML = originalHTML;
-                if (window.lucide) window.lucide.createIcons();
                 btn.disabled = false;
-                console.error("Failed to save custom short link:", err);
-                alert(err.message || "Failed to save custom short link.");
+                console.error("Delete document failed:", err);
+                if (window.showToast) window.showToast(`Delete failed: ${err.message}`, "error");
             }
         });
     });
