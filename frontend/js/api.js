@@ -1,5 +1,6 @@
 import { supabase } from './supabase.js';
 import { State } from './state.js';
+import { calculateRelevanceScore, expandSearchTerms } from './searchEngine.js';
 
 export function generateBrowserFingerprint() {
     try {
@@ -185,7 +186,11 @@ export const Api = {
         }
         if (filters.search && filters.search.trim()) {
             const s = filters.search.trim();
-            countQuery = countQuery.or(`name.ilike.%${s}%,address.ilike.%${s}%,category.ilike.%${s}%`);
+            const expandedTerms = expandSearchTerms(s);
+            const orConditions = expandedTerms.slice(0, 6).map(t => 
+                `name.ilike.%${t}%,address.ilike.%${t}%,category.ilike.%${t}%,parent_category.ilike.%${t}%,area.ilike.%${t}%`
+            ).join(',');
+            countQuery = countQuery.or(orConditions);
         }
         
         const { error: countErr, count } = await countQuery;
@@ -277,7 +282,11 @@ export const Api = {
             
             if (filters.search && filters.search.trim()) {
                 const s = filters.search.trim();
-                fallbackQuery = fallbackQuery.or(`name.ilike.%${s}%,address.ilike.%${s}%,category.ilike.%${s}%`);
+                const expandedTerms = expandSearchTerms(s);
+                const orConditions = expandedTerms.slice(0, 6).map(t => 
+                    `name.ilike.%${t}%,address.ilike.%${t}%,category.ilike.%${t}%,parent_category.ilike.%${t}%,area.ilike.%${t}%`
+                ).join(',');
+                fallbackQuery = fallbackQuery.or(orConditions);
             }
             
             if (filters.sort_by === 'rating_desc') {
@@ -298,6 +307,12 @@ export const Api = {
 
         if (filters.open_now) {
             items = items.filter(p => isOpenNow(p.hours) === true);
+        }
+
+        // Deep weighted relevance ranking algorithm
+        if (filters.search && filters.search.trim() && items.length > 0) {
+            const searchTerm = filters.search.trim();
+            items.sort((a, b) => calculateRelevanceScore(b, searchTerm) - calculateRelevanceScore(a, searchTerm));
         }
 
         if (requestId !== this._latestSearchRequestId) {
