@@ -241,7 +241,7 @@ serve(async (req) => {
     // 3. Load user profile personalization settings
     const { data: profile, error: profileErr } = await supabase
       .from('profiles')
-      .select('subscription_tier, monthly_ai_generations_used, monthly_ai_generations_limit, full_name, company_name, portfolio_url, booking_url, website_url, linkedin_url, role, survey_role, sender_service_blurb')
+      .select('subscription_tier, monthly_ai_generations_used, monthly_ai_generations_limit, full_name, company_name, portfolio_url, booking_url, role, survey_role, sender_service_blurb')
       .eq('id', user.id)
       .single();
 
@@ -337,8 +337,8 @@ serve(async (req) => {
       senderService: senderService,
       portfolioUrl: profile.portfolio_url || null,
       bookingUrl: profile.booking_url || null,
-      websiteUrl: profile.website_url || null,
-      linkedinUrl: profile.linkedin_url || null,
+      websiteUrl: (profile as any).website_url || null,
+      linkedinUrl: (profile as any).linkedin_url || null,
       channel: channel || 'whatsapp',
       language: language || 'hinglish',
       tone: tone || 'friendly',
