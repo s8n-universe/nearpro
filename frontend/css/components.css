@@ -1516,4 +1516,163 @@ input:-webkit-autofill:active {
     }
 }
 
+/* Custom Select Premium Styling */
+.custom-select-wrapper {
+    position: relative;
+    width: 100%;
+    user-select: none;
+    font-family: var(--font-body);
+}
+
+.custom-select-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    cursor: pointer;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #ffffff;
+    transition: var(--transition);
+}
+
+.custom-select-trigger-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.custom-select-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    color: rgba(255, 255, 255, 0.5);
+    margin-left: 6px;
+    flex-shrink: 0;
+}
+
+.custom-select-wrapper.open .custom-select-arrow {
+    transform: rotate(180deg);
+}
+
+.custom-select-dropdown {
+    position: absolute;
+    top: calc(100% + 12px);
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(13, 13, 16, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04);
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+    pointer-events: none;
+    visibility: hidden;
+    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.2s;
+    overflow-y: auto;
+    max-height: 250px;
+    padding: 6px;
+}
+
+.custom-select-wrapper.open .custom-select-dropdown {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+    visibility: visible;
+}
+
+.custom-select-option {
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 2px;
+}
+
+.custom-select-option:last-child {
+    margin-bottom: 0;
+}
+
+.custom-select-option:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #ffffff;
+}
+
+.custom-select-option.selected {
+    background: linear-gradient(90deg, rgba(255, 160, 0, 0.15) 0%, rgba(236, 72, 153, 0.05) 100%);
+    color: var(--accent-gold);
+    font-weight: 600;
+    box-shadow: inset 2px 0 0 var(--accent-gold);
+}
+
+/* Light theme overrides for Dashboard filters */
+.custom-select-wrapper.dashboard-filter-dropdown {
+    background: #ffffff;
+    border: 1.5px solid #cbd5e1;
+    border-radius: var(--radius-md);
+    padding: 6px 12px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    transition: var(--transition);
+}
+
+.custom-select-wrapper.dashboard-filter-dropdown:hover,
+.custom-select-wrapper.dashboard-filter-dropdown.open {
+    border-color: #2563eb;
+}
+
+.custom-select-wrapper.dashboard-filter-dropdown .custom-select-trigger {
+    color: #0f172a;
+    font-size: 12.5px;
+    font-weight: 600;
+    width: 100%;
+}
+
+.custom-select-wrapper.dashboard-filter-dropdown .custom-select-arrow {
+    color: #64748b;
+}
+
+.custom-select-wrapper.dashboard-filter-dropdown .custom-select-dropdown {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1);
+    top: calc(100% + 6px);
+    border-radius: 8px;
+}
+
+.custom-select-wrapper.dashboard-filter-dropdown .custom-select-option {
+    color: #475569;
+}
+
+.custom-select-wrapper.dashboard-filter-dropdown .custom-select-option:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+.custom-select-wrapper.dashboard-filter-dropdown .custom-select-option.selected {
+    background: #eff6ff;
+    color: #2563eb;
+    box-shadow: inset 2px 0 0 #2563eb;
+}
+
+#custom-select-areaFilter { width: 145px; }
+#custom-select-ratingFilter { width: 130px; }
+#custom-select-sortFilter { width: 170px; }
+
+
 

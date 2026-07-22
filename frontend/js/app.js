@@ -45,6 +45,7 @@ import { renderProposalGeneratorLayout, bindProposalGeneratorEvents } from './co
 import { renderCallScriptGeneratorLayout, bindCallScriptGeneratorEvents } from './components/CallScriptGenerator.js';
 import { renderPlatformOverviewLayout, bindPlatformOverviewEvents } from './components/PlatformOverview.js';
 import { renderExplorerPlanModal, bindExplorerPlanModalEvents } from './components/ExplorerPlanModal.js';
+import { initCustomSelect } from './components/CustomSelect.js';
 
 // Main Application shell reference
 const appShell = document.getElementById('app');
@@ -348,6 +349,12 @@ function renderMarketingLayout() {
     
     bindFeatureShowcaseEvents();
     refreshLucideIcons();
+
+    // Initialize premium custom select dropdowns for Hero widget
+    const heroSectorSelect = document.getElementById('heroSectorSelect');
+    const heroAreaSelect = document.getElementById('heroAreaSelect');
+    if (heroSectorSelect) initCustomSelect(heroSectorSelect, 'hero-dropdown');
+    if (heroAreaSelect) initCustomSelect(heroAreaSelect, 'hero-dropdown');
 }
 
 // Layer 2: Deployed Directory layout shell
