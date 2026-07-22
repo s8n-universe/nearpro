@@ -111,7 +111,7 @@ export function renderPricingModal() {
     if (plansToRender.length === 0) {
         return `
             <div class="modal-overlay open" id="pricingModalOverlay" style="z-index: 10000;">
-                <div class="modal-card pricing-modal-inner" style="max-width: 500px; width: 95%; padding: 36px; text-align: center; position: relative;">
+                <div class="modal-card pricing-modal-inner" style="max-width: 500px; width: 95%; padding: 36px; text-align: center; position: relative; background: var(--bg-surface) !important; color: var(--text-primary) !important; border: 1px solid var(--border) !important;">
                     <button class="modal-close-btn" id="closePricingModalBtn" style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer;">&times;</button>
                     <div style="font-size: 40px; margin-bottom: 12px;">👑</div>
                     <h2 style="font-size: 24px; margin-bottom: 12px; font-family: var(--font-heading); color: white; font-weight: 700;">
@@ -153,7 +153,7 @@ export function renderPricingModal() {
                     }
                 }
             </style>
-            <div class="modal-card pricing-modal-inner" style="max-width: 1200px; width: 95%; padding: 36px; text-align: center; position: relative; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-card pricing-modal-inner" style="max-width: 1200px; width: 95%; padding: 36px; text-align: center; position: relative; max-height: 90vh; overflow-y: auto; background: var(--bg-surface) !important; color: var(--text-primary) !important; border: 1px solid var(--border) !important;">
                 <button class="modal-close-btn" id="closePricingModalBtn" style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">&times;</button>
                 
                 <div style="font-size: 40px; margin-bottom: 12px;">🚀</div>
@@ -189,16 +189,16 @@ export function renderPricingModal() {
 
                         if (isCurrentActive) {
                             borderColor = 'rgba(16, 185, 129, 0.5)';
-                            bgGradient = 'rgba(16, 185, 129, 0.03)';
+                            bgGradient = 'rgba(16, 185, 129, 0.08)';
                         } else if (isHunter) {
                             borderColor = 'var(--accent-gold)';
-                            bgGradient = 'rgba(255, 160, 0, 0.04)';
+                            bgGradient = 'rgba(255, 160, 0, 0.06)';
                         } else if (plan.id === 'agency') {
-                            borderColor = 'rgba(236, 72, 153, 0.3)';
-                            bgGradient = 'rgba(236, 72, 153, 0.03)';
+                            borderColor = 'rgba(236, 72, 153, 0.5)';
+                            bgGradient = 'rgba(236, 72, 153, 0.06)';
                         } else if (plan.id === 'enterprise') {
                             borderColor = 'rgba(255, 255, 255, 0.3)';
-                            bgGradient = 'rgba(255, 255, 255, 0.02)';
+                            bgGradient = 'rgba(255, 255, 255, 0.03)';
                         }
 
                         return `

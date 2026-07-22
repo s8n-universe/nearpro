@@ -236,8 +236,10 @@ export const State = {
             return;
         }
 
-        // Navigate to dedicated full-screen checkout page
+        // Open checkout consent modal on top of profile dashboard instead of full page redirect
         this.setPricingModal(false);
-        window.location.hash = `#/checkout?plan=${planId}&cycle=${interval}`;
+        this.pending_checkout_plan = { planId, interval };
+        this.checkout_consent_modal_open = true;
+        this.notify();
     }
 };

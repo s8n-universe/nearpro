@@ -6,7 +6,7 @@ export function renderAuthModal() {
 
     return `
         <div class="modal-overlay open" id="authModalOverlay">
-            <div class="modal-card" style="max-width: 400px; padding: 32px;">
+            <div class="modal-card auth-modal-card" style="max-width: 400px; padding: 32px;">
                 <button class="modal-close-btn" id="closeAuthModalBtn">&times;</button>
                 
                 <h2 style="font-size: 24px; margin-bottom: 24px; text-align: center; font-family: var(--font-heading);">
@@ -44,12 +44,12 @@ export function renderAuthModal() {
                 <form id="authForm">
                     <div style="margin-bottom: 16px;">
                         <label style="display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; font-family: var(--font-mono);">Email Address</label>
-                        <input type="email" id="authEmailInput" required placeholder="name@domain.com" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-base); color: white; outline: none; font-size: 14px;">
+                        <input type="email" id="authEmailInput" class="auth-input" required placeholder="name@domain.com">
                     </div>
                     
                     <div style="margin-bottom: 24px;">
                         <label style="display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; font-family: var(--font-mono);">Password</label>
-                        <input type="password" id="authPasswordInput" required placeholder="••••••••" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-base); color: white; outline: none; font-size: 14px;">
+                        <input type="password" id="authPasswordInput" class="auth-input" required placeholder="••••••••">
                     </div>
 
                     <!-- Registration Agreement Checkbox -->
@@ -228,7 +228,9 @@ export function bindAuthModalEvents() {
                     State.setAuthModal(false);
 
                     if (queuedTier && queuedTier !== 'free') {
-                        window.location.hash = `#/checkout?plan=${queuedTier}&cycle=${queuedInterval}`;
+                        State.pending_checkout_plan = { planId: queuedTier, interval: queuedInterval };
+                        State.checkout_consent_modal_open = true;
+                        window.location.hash = '#/dashboard/settings';
                     } else {
                         window.location.hash = '#/dashboard/overview';
                     }
@@ -239,7 +241,9 @@ export function bindAuthModalEvents() {
                     State.setAuthModal(false);
 
                     if (queuedTier && queuedTier !== 'free') {
-                        window.location.hash = `#/checkout?plan=${queuedTier}&cycle=${queuedInterval}`;
+                        State.pending_checkout_plan = { planId: queuedTier, interval: queuedInterval };
+                        State.checkout_consent_modal_open = true;
+                        window.location.hash = '#/dashboard/settings';
                     } else {
                         window.location.hash = '#/dashboard/overview';
                     }

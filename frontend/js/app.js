@@ -2568,7 +2568,11 @@ async function initApp() {
                     const queuedTier = localStorage.getItem('selected_nearpro_tier');
                     const queuedInterval = localStorage.getItem('selected_nearpro_interval') || 'monthly';
                     if (queuedTier && queuedTier !== 'free') {
-                        window.location.hash = `#/checkout?plan=${queuedTier}&cycle=${queuedInterval}`;
+                        localStorage.removeItem('selected_nearpro_tier');
+                        localStorage.removeItem('selected_nearpro_interval');
+                        State.pending_checkout_plan = { planId: queuedTier, interval: queuedInterval };
+                        State.checkout_consent_modal_open = true;
+                        window.location.hash = '#/dashboard/settings';
                     } else if (window.location.hash === '#/' || !window.location.hash) {
                         window.location.hash = '#/dashboard/directory';
                     }

@@ -265,6 +265,28 @@ export function bindCheckoutPageEvents(planId = 'hunter', cycle = 'monthly') {
     const consentCb = document.getElementById('checkoutTermsConsentCb');
     const payBtn = document.getElementById('startRazorpayCheckoutBtn');
 
+    // Calculate netPayable for fallback text on error
+    const userTier = getUserTier();
+    const userLevel = TIER_LEVELS[userTier] || 0;
+    const targetLevel = TIER_LEVELS[planId] || 2;
+    const isUpgrade = targetLevel > userLevel && userLevel > 0;
+    const planInfo = {
+        scout: { monthlyPrice: 499, yearlyPrice: 4999 },
+        hunter: { monthlyPrice: 999, yearlyPrice: 9999 },
+        agency: { monthlyPrice: 2499, yearlyPrice: 24999 }
+    };
+    const details = planInfo[planId] || planInfo.hunter;
+    const basePrice = cycle === 'yearly' ? details.yearlyPrice : details.monthlyPrice;
+    let prorationCredit = 0;
+    if (isUpgrade) {
+        const prevInfo = planInfo[userTier];
+        if (prevInfo) {
+            const prevPrice = cycle === 'yearly' ? prevInfo.yearlyPrice : prevInfo.monthlyPrice;
+            prorationCredit = Math.round((prevPrice / 30) * 20);
+        }
+    }
+    const netPayable = Math.max(0, basePrice - prorationCredit);
+
     if (consentCb && payBtn) {
         consentCb.addEventListener('change', () => {
             if (consentCb.checked) {

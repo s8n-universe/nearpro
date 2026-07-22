@@ -966,16 +966,16 @@
     display: flex;
 }
 .modal-card {
-    background: #ffffff;
-    border: 1.5px solid #cbd5e1;
-    color: #0f172a;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
     border-radius: var(--radius-lg);
     width: 100%;
     max-width: 680px;
     max-height: 90vh;
     overflow-y: auto;
     position: relative;
-    box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.25);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     animation: modalSlide 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 @keyframes modalSlide {
@@ -987,13 +987,61 @@
     top: 16px;
     right: 20px;
     cursor: pointer;
-    color: #64748b;
+    color: var(--text-muted);
     font-size: 26px;
     font-weight: 700;
     transition: color 0.2s ease;
 }
 .modal-close-btn:hover {
-    color: #0f172a;
+    color: var(--text-primary);
+}
+
+/* Close button hover state for light/white modals */
+.modal-card[style*="background: #ffffff"] .modal-close-btn,
+.modal-card[style*="background:#ffffff"] .modal-close-btn,
+.modal-card[style*="background: rgb(255, 255, 255)"] .modal-close-btn {
+    color: #64748b !important;
+}
+.modal-card[style*="background: #ffffff"] .modal-close-btn:hover,
+.modal-card[style*="background:#ffffff"] .modal-close-btn:hover,
+.modal-card[style*="background: rgb(255, 255, 255)"] .modal-close-btn:hover {
+    color: #0f172a !important;
+}
+
+/* Autofill styling overrides for a premium dark experience */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: var(--text-primary) !important;
+    transition: background-color 5000s ease-in-out 0s;
+    box-shadow: inset 0 0 20px 20px var(--bg-surface) !important;
+}
+
+/* Premium input styling and focus glow for authentication modal */
+.auth-input {
+    width: 100%;
+    padding: 10px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border) !important;
+    background: var(--bg-base) !important;
+    color: white !important;
+    outline: none;
+    font-size: 14px;
+    transition: var(--transition);
+}
+.auth-input:focus {
+    border-color: var(--accent-gold) !important;
+    box-shadow: 0 0 0 2px rgba(255, 160, 0, 0.15) !important;
+}
+
+/* Interactive tab header hover transitions */
+.tab-header-btn {
+    transition: var(--transition);
+}
+.tab-header-btn:hover {
+    color: var(--text-primary) !important;
 }
 
 .modal-content {

@@ -1,5 +1,6 @@
 import { State } from '../state.js';
 import { Api } from '../api.js';
+import { getUserTier, TIER_LEVELS } from '../auth.js';
 
 export function renderCheckoutConsentModal() {
     if (!State.checkout_consent_modal_open || !State.pending_checkout_plan) return '';
@@ -48,6 +49,29 @@ export function renderCheckoutConsentModal() {
     };
 
     const details = planDetails[planId] || planDetails.hunter;
+
+    const userTier = getUserTier();
+    const userLevel = TIER_LEVELS[userTier] || 0;
+    const targetLevel = TIER_LEVELS[planId] || 2;
+    const isUpgrade = targetLevel > userLevel && userLevel > 0;
+
+    const pricingInfo = {
+        scout: { monthly: 499, yearly: 4999 },
+        hunter: { monthly: 999, yearly: 9999 },
+        agency: { monthly: 2499, yearly: 24999 }
+    };
+    const planPricing = pricingInfo[planId] || pricingInfo.hunter;
+    const basePrice = cycle === 'yearly' ? planPricing.yearly : planPricing.monthly;
+
+    let prorationCredit = 0;
+    if (isUpgrade) {
+        const prevPricing = pricingInfo[userTier];
+        if (prevPricing) {
+            const prevPrice = cycle === 'yearly' ? prevPricing.yearly : prevPricing.monthly;
+            prorationCredit = Math.round((prevPrice / 30) * 20); // Simulating ~66% unused credit
+        }
+    }
+    const netPayable = Math.max(0, basePrice - prorationCredit);
 
     return `
         <style>
@@ -99,11 +123,24 @@ export function renderCheckoutConsentModal() {
                             </h3>
                             
                             <div style="font-size: 22px; color: var(--accent-gold); font-weight: 700; margin-bottom: 4px; font-family: var(--font-heading);">
-                                ${details.price}<span style="font-size: 13px; color: var(--text-muted); font-weight: normal;">/${details.period}</span>
+                                ₹${netPayable.toLocaleString('en-IN')}<span style="font-size: 13px; color: var(--text-muted); font-weight: normal;">/${details.period}</span>
                             </div>
                             
                             <div style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); margin-bottom: 16px;">
                                 ${details.cycleLabel}
+                            </div>
+                            
+                            <div style="margin-top: 10px; font-size: 11.5px; color: var(--text-secondary); border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 10px; display: flex; flex-direction: column; gap: 4px; margin-bottom: 16px;">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Base Price:</span>
+                                    <span style="color: white; font-weight: 600;">₹${basePrice.toLocaleString('en-IN')}</span>
+                                </div>
+                                ${isUpgrade ? `
+                                <div style="display: flex; justify-content: space-between; color: #10b981;">
+                                    <span>Unused ${userTier.toUpperCase()} Credit:</span>
+                                    <span style="font-weight: 600;">-₹${prorationCredit.toLocaleString('en-IN')}</span>
+                                </div>
+                                ` : ''}
                             </div>
                             
                             <ul style="list-style: none; padding: 0; margin: 0; font-size: 11.5px; color: var(--text-secondary); display: flex; flex-direction: column; gap: 8px;">
@@ -178,7 +215,7 @@ export function renderCheckoutConsentModal() {
                         Return to Plans
                     </button>
                     <button id="proceedToPaymentBtn" class="brand-btn" disabled style="flex: 1.5; padding: 12px; font-size: 13.5px; opacity: 0.5; cursor: not-allowed; transition: all 0.2s ease;">
-                        Proceed to Payment (${details.price})
+                        Proceed to Payment (₹${netPayable.toLocaleString('en-IN')})
                     </button>
                 </div>
 
