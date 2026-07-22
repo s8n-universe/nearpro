@@ -64,31 +64,31 @@ export function renderProfessionalModal(lead) {
     const hasConnectAccess = currentUserHasAccess('scout');
 
     const phoneDisplay = !hasConnectAccess 
-        ? `<span onclick="window.State.setPricingModal(true);" style="color: var(--accent-gold); cursor: pointer; text-decoration: underline; font-size: 13px;"><i data-lucide="lock" style="width:11px; height:11px;"></i> Locked</span>`
-        : (lead.phone || '<span style="color: var(--text-muted);">Not available</span>');
+        ? `<span onclick="window.State.setPricingModal(true);" style="color: #d97706; cursor: pointer; text-decoration: underline; font-weight: 700; font-size: 13px;"><i data-lucide="lock" style="width:11px; height:11px;"></i> Locked</span>`
+        : (lead.phone ? `<a href="tel:${lead.phone}" style="color: #059669; font-weight: 700; text-decoration: none;">${lead.phone}</a>` : '<span style="color: #64748b; font-weight: 500;">Not available</span>');
 
     const emailDisplay = !hasConnectAccess
-        ? `<span onclick="window.State.setPricingModal(true);" style="color: var(--accent-gold); cursor: pointer; text-decoration: underline; font-size: 13px;"><i data-lucide="lock" style="width:11px; height:11px;"></i> Locked</span>`
-        : (lead.email || '<span style="color: var(--text-muted);">Not available</span>');
+        ? `<span onclick="window.State.setPricingModal(true);" style="color: #d97706; cursor: pointer; text-decoration: underline; font-weight: 700; font-size: 13px;"><i data-lucide="lock" style="width:11px; height:11px;"></i> Locked</span>`
+        : (lead.email ? `<a href="mailto:${lead.email}" style="color: #2563eb; font-weight: 700; text-decoration: none;">${lead.email}</a>` : '<span style="color: #64748b; font-weight: 500;">Not available</span>');
 
     const websiteDisplay = !hasConnectAccess
-        ? `<span onclick="window.State.setPricingModal(true);" style="color: var(--accent-gold); cursor: pointer; text-decoration: underline; font-size: 13px;"><i data-lucide="lock" style="width:11px; height:11px;"></i> Locked</span>`
-        : (lead.website ? `<a href="${lead.website}" target="_blank" style="color: var(--accent-gold); text-decoration: underline;">Visit Site</a>` : '<span style="color: var(--text-muted);">Not available</span>');
+        ? `<span onclick="window.State.setPricingModal(true);" style="color: #d97706; cursor: pointer; text-decoration: underline; font-weight: 700; font-size: 13px;"><i data-lucide="lock" style="width:11px; height:11px;"></i> Locked</span>`
+        : (lead.website ? `<a href="${lead.website}" target="_blank" style="color: #2563eb; font-weight: 700; text-decoration: underline;">Visit Site</a>` : '<span style="color: #64748b; font-weight: 500;">Not available</span>');
 
     const mapHTML = lead.latitude && lead.longitude
         ? (hasConnectAccess 
             ? `
-                <div class="sidebar-title">Location Map</div>
-                <div id="modalMapElement" class="modal-map"></div>
+                <div class="sidebar-title" style="color: #475569; font-weight: 800; font-size: 12px; font-family: var(--font-mono); text-transform: uppercase; margin-top: 20px; margin-bottom: 8px;">Location Map</div>
+                <div id="modalMapElement" class="modal-map" style="border-radius: var(--radius-md); border: 1.5px solid #cbd5e1; overflow: hidden; height: 180px;"></div>
               `
             : `
-                <div class="sidebar-title">Location Map</div>
-                <div class="modal-map" style="display: flex; align-items: center; justify-content: center; background: rgba(9, 9, 11, 0.4); border: 1px dashed var(--border); height: 180px; border-radius: var(--radius-md); flex-direction: column;">
-                    <div style="margin-bottom: 8px; color: var(--text-muted);"><i data-lucide="lock" style="width:24px; height:24px;"></i></div>
-                    <span style="font-size: 12px; color: var(--text-muted); text-align: center; max-width: 240px; line-height: 1.4;">
+                <div class="sidebar-title" style="color: #475569; font-weight: 800; font-size: 12px; font-family: var(--font-mono); text-transform: uppercase; margin-top: 20px; margin-bottom: 8px;">Location Map</div>
+                <div class="modal-map" style="display: flex; align-items: center; justify-content: center; background: #f8fafc; border: 1.5px dashed #cbd5e1; height: 180px; border-radius: var(--radius-md); flex-direction: column;">
+                    <div style="margin-bottom: 8px; color: #64748b;"><i data-lucide="lock" style="width:24px; height:24px;"></i></div>
+                    <span style="font-size: 12px; color: #475569; font-weight: 600; text-align: center; max-width: 240px; line-height: 1.4;">
                         Location maps are locked. Upgrade to Scout Plan to view professional map locations.
                     </span>
-                    <button class="brand-btn" style="padding: 6px 12px; font-size: 11px; margin-top: 12px;" onclick="window.State.setPricingModal(true);">Upgrade Plan</button>
+                    <button class="brand-btn" style="padding: 6px 14px; font-size: 11.5px; font-weight: 700; margin-top: 12px;" onclick="window.State.setPricingModal(true);">Upgrade Plan</button>
                 </div>
               `
           )
@@ -96,59 +96,59 @@ export function renderProfessionalModal(lead) {
 
     const bottomCtaHTML = !hasConnectAccess
         ? `
-            <button class="brand-btn" style="width: 100%;" onclick="window.State.setPricingModal(true);">
+            <button class="brand-btn" style="width: 100%; padding: 10px; font-size: 13px; font-weight: 700;" onclick="window.State.setPricingModal(true);">
                 <i data-lucide="lock" style="width:14px; height:14px;"></i> Unlock Contact Details
             </button>
           `
         : '';
 
     return `
-        <div class="modal-card">
-            <button class="modal-close-btn" id="closeModalBtn">&times;</button>
-            <div class="modal-content">
-                <div class="modal-header-section">
-                    <div class="avatar-wrap">${initials}</div>
-                    <div class="card-title-wrap">
-                        <span class="category-badge">${displayCategory}</span>
-                        <h2 style="font-size: 22px; margin-bottom: 6px;">${lead.name}</h2>
+        <div class="modal-card" style="background: #ffffff; color: #0f172a; border: 1.5px solid #cbd5e1; box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.25); border-radius: var(--radius-lg);">
+            <button class="modal-close-btn" id="closeModalBtn" style="color: #64748b; font-size: 26px; top: 16px; right: 20px;">&times;</button>
+            <div class="modal-content" style="padding: 32px 36px;">
+                <div class="modal-header-section" style="display: flex; gap: 20px; margin-bottom: 24px; align-items: center;">
+                    <div class="avatar-wrap" style="width: 72px; height: 72px; font-size: 26px; font-weight: 800; background: #f1f5f9; color: #0f172a; border: 2px solid #2563eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">${initials}</div>
+                    <div class="card-title-wrap" style="flex: 1; min-width: 0;">
+                        <span class="category-badge" style="background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; font-weight: 700; font-size: 11px; padding: 2px 10px; border-radius: 100px; text-transform: uppercase; font-family: var(--font-mono); display: inline-block; margin-bottom: 6px;">${displayCategory}</span>
+                        <h2 style="font-size: 20px; font-family: var(--font-heading); color: #0f172a; font-weight: 800; margin: 0 0 6px 0; line-height: 1.3;">${lead.name}</h2>
                         <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                            <span class="star-rating" style="color: var(--accent-gold);">${starsHTML}</span>
-                            <span style="font-size: 13px; color: var(--text-muted);">(${reviewCount} reviews)</span>
+                            <span class="star-rating" style="color: #d97706; font-size: 14px; font-weight: bold;">${starsHTML}</span>
+                            <span style="font-size: 13px; color: #475569; font-weight: 600;">(${reviewCount} reviews)</span>
                             <div class="completeness-dots" title="Data completeness: ${score}/5" style="margin-top: 0;">${dotsHTML}</div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="modal-meta-grid">
+                <div class="modal-meta-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
                     <div>
-                        <div class="sidebar-title">Contact Info</div>
-                        <div class="contact-icon-grid">
+                        <div class="sidebar-title" style="color: #475569; font-weight: 800; font-size: 12px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px;">Contact Info</div>
+                        <div class="contact-icon-grid" style="display: flex; flex-direction: column; gap: 12px;">
                             <div class="contact-icon-row" style="display: flex; align-items: center; gap: 8px;">
-                                <i data-lucide="phone" style="width:14px; height:14px; color: var(--text-muted); flex-shrink:0;"></i>
-                                <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); width: 60px; text-transform: uppercase;">Phone:</span>
-                                <span>${phoneDisplay}</span>
+                                <i data-lucide="phone" style="width:14px; height:14px; color: #64748b; flex-shrink:0;"></i>
+                                <span style="font-size: 11px; font-family: var(--font-mono); color: #475569; font-weight: 800; width: 65px; text-transform: uppercase;">PHONE:</span>
+                                <span style="color: #0f172a; font-weight: 700;">${phoneDisplay}</span>
                             </div>
                             <div class="contact-icon-row" style="display: flex; align-items: center; gap: 8px;">
-                                <i data-lucide="mail" style="width:14px; height:14px; color: var(--text-muted); flex-shrink:0;"></i>
-                                <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); width: 60px; text-transform: uppercase;">Email:</span>
-                                <span>${emailDisplay}</span>
+                                <i data-lucide="mail" style="width:14px; height:14px; color: #64748b; flex-shrink:0;"></i>
+                                <span style="font-size: 11px; font-family: var(--font-mono); color: #475569; font-weight: 800; width: 65px; text-transform: uppercase;">EMAIL:</span>
+                                <span style="color: #0f172a; font-weight: 700;">${emailDisplay}</span>
                             </div>
                             <div class="contact-icon-row" style="display: flex; align-items: center; gap: 8px;">
-                                <i data-lucide="globe" style="width:14px; height:14px; color: var(--text-muted); flex-shrink:0;"></i>
-                                <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); width: 60px; text-transform: uppercase;">Website:</span>
-                                <span>${websiteDisplay}</span>
+                                <i data-lucide="globe" style="width:14px; height:14px; color: #64748b; flex-shrink:0;"></i>
+                                <span style="font-size: 11px; font-family: var(--font-mono); color: #475569; font-weight: 800; width: 65px; text-transform: uppercase;">WEBSITE:</span>
+                                <span style="color: #0f172a; font-weight: 700;">${websiteDisplay}</span>
                             </div>
                             <div class="contact-icon-row" style="display: flex; align-items: center; gap: 8px;">
-                                <i data-lucide="map-pin" style="width:14px; height:14px; color: var(--text-muted); flex-shrink:0;"></i>
-                                <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); width: 60px; text-transform: uppercase;">Area:</span>
-                                <span>${lead.area || "Mumbai"}</span>
+                                <i data-lucide="map-pin" style="width:14px; height:14px; color: #64748b; flex-shrink:0;"></i>
+                                <span style="font-size: 11px; font-family: var(--font-mono); color: #475569; font-weight: 800; width: 65px; text-transform: uppercase;">AREA:</span>
+                                <span style="color: #0f172a; font-weight: 700;">${lead.area || "Mumbai"}</span>
                             </div>
                         </div>
                     </div>
                     
                     <div>
-                        <div class="sidebar-title">Business Hours</div>
-                        <table class="hours-table">
+                        <div class="sidebar-title" style="color: #475569; font-weight: 800; font-size: 12px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px;">Business Hours</div>
+                        <table class="hours-table" style="width: 100%; border-collapse: collapse;">
                             <tbody>
                                 ${hoursRowsHTML}
                             </tbody>
@@ -188,17 +188,17 @@ export function renderProfessionalModal(lead) {
                     }
 
                     return `
-                        <div class="feature-panel outreach-assistant-panel" style="margin-top: 24px; padding: 20px; border: 1px solid rgba(255, 160, 0, 0.2); background: rgba(255, 160, 0, 0.02); border-radius: var(--radius-md);">
-                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
-                                <div style="font-size: 11px; font-family: var(--font-mono); color: var(--accent-gold); font-weight: bold; text-transform: uppercase;">
+                        <div class="feature-panel outreach-assistant-panel" style="margin-top: 24px; padding: 18px; border: 1.5px solid #fde68a; background: #fffbeb; border-radius: var(--radius-md);">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+                                <div style="font-size: 11px; font-family: var(--font-mono); color: #b45309; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
                                     Outreach Assistant — ${strategyTitle}
                                 </div>
-                                <button id="copyPitchBtn" class="secondary-btn" style="padding: 4px 8px; font-size: 11px; border-radius: var(--radius-sm); cursor: pointer;" data-pitch="${encodeURIComponent(pitchText)}">
+                                <button id="copyPitchBtn" class="secondary-btn" style="padding: 5px 12px; font-size: 11px; font-weight: 700; border-radius: 6px; cursor: pointer; background: #2563eb; color: #ffffff; border: none; box-shadow: 0 2px 6px rgba(37,99,235,0.2);" data-pitch="${encodeURIComponent(pitchText)}">
                                     Copy Pitch Template
                                 </button>
                             </div>
                             <div style="position: relative;">
-                                <textarea readonly style="width: 100%; height: 110px; background: rgba(0,0,0,0.25); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px; font-size: 12px; color: var(--text-secondary); font-family: sans-serif; resize: none; line-height: 1.4; outline: none; border-color: rgba(255, 160, 0, 0.15);">${pitchText}</textarea>
+                                <textarea readonly style="width: 100%; height: 110px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); padding: 10px; font-size: 12.5px; color: #0f172a; font-family: sans-serif; resize: none; line-height: 1.4; outline: none; font-weight: 500;">${pitchText}</textarea>
                             </div>
                         </div>
                     `;
@@ -206,25 +206,25 @@ export function renderProfessionalModal(lead) {
                 
                 ${mapHTML}
                 
-                <div class="modal-ctas">
-                    <div style="display: flex; gap: 10px; width: 100%; margin-bottom: 12px; flex-wrap: wrap;">
-                        <a href="#/dashboard/proposals?lead_id=${lead.id}" onclick="document.getElementById('modalBackdrop')?.remove();" class="brand-btn" style="flex: 1; min-width: 160px; text-decoration: none; padding: 10px; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 600;">
+                <div class="modal-ctas" style="margin-top: 24px; display: flex; flex-direction: column; gap: 10px;">
+                    <div style="display: flex; gap: 10px; width: 100%; flex-wrap: wrap;">
+                        <a href="#/dashboard/proposals?lead_id=${lead.id}" onclick="document.getElementById('modalBackdrop')?.remove();" class="brand-btn" style="flex: 1; min-width: 160px; text-decoration: none; padding: 10px; font-size: 12.5px; display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 700; background: #2563eb; color: #ffffff; border-radius: var(--radius-md);">
                             <i data-lucide="sparkles" style="width:14px; height:14px;"></i> 📄 Generate PDF Proposal
                         </a>
-                        <a href="#/dashboard/call-scripts?lead_id=${lead.id}" onclick="document.getElementById('modalBackdrop')?.remove();" class="secondary-btn" style="flex: 1; min-width: 160px; text-decoration: none; padding: 10px; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 6px; border-color: rgba(16, 185, 129, 0.4); color: #10b981; font-weight: 600;">
+                        <a href="#/dashboard/call-scripts?lead_id=${lead.id}" onclick="document.getElementById('modalBackdrop')?.remove();" class="secondary-btn" style="flex: 1; min-width: 160px; text-decoration: none; padding: 10px; font-size: 12.5px; display: flex; align-items: center; justify-content: center; gap: 6px; border: 1.5px solid #10b981; background: #ecfdf5; color: #047857; font-weight: 700; border-radius: var(--radius-md);">
                             <i data-lucide="phone-call" style="width:14px; height:14px;"></i> 📞 Generate Call Script
                         </a>
                     </div>
 
                     ${bottomCtaHTML}
                     
-                    <div style="display: flex; gap: 12px; width: 100%; margin-bottom: 12px;">
-                        <button id="modalTrackLeadBtn" class="secondary-btn ${isTracked ? 'active' : ''}" style="flex: 1; border-color: ${isTracked ? 'var(--accent-gold)' : ''}; color: ${isTracked ? 'var(--accent-gold)' : ''};">
+                    <div style="display: flex; gap: 12px; width: 100%;">
+                        <button id="modalTrackLeadBtn" class="secondary-btn ${isTracked ? 'active' : ''}" style="flex: 1; padding: 9px; font-size: 12.5px; font-weight: 700; border-radius: var(--radius-md); border: 1.5px solid ${isTracked ? '#059669' : '#cbd5e1'}; background: ${isTracked ? '#ecfdf5' : '#f1f5f9'}; color: ${isTracked ? '#047857' : '#0f172a'};">
                             <i data-lucide="${isTracked ? 'bookmark-check' : 'bookmark'}" style="width:13px; height:13px;"></i> ${isTracked ? 'Tracked' : 'Track This Lead'}
                         </button>
                     </div>
                     ${lead.source_url && hasConnectAccess ? `
-                        <a href="${lead.source_url}" target="_blank" class="secondary-btn" style="width: 100%; text-align: center; justify-content: center; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+                        <a href="${lead.source_url}" target="_blank" class="secondary-btn" style="width: 100%; text-align: center; justify-content: center; display: inline-flex; align-items: center; gap: 6px; padding: 9px; font-size: 12.5px; font-weight: 700; border: 1.5px solid #cbd5e1; background: #ffffff; color: #0f172a; border-radius: var(--radius-md);">
                             View on Google Maps
                         </a>
                     ` : ''}
