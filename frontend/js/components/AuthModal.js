@@ -112,7 +112,7 @@ export function renderAuthModal() {
                                 <label style="display: flex; align-items: flex-start; gap: 6px; font-size: 11px; color: #475569; line-height: 1.4; cursor: pointer;">
                                     <input type="checkbox" id="authTermsConsentCb" checked style="margin-top: 2px; cursor: pointer;">
                                     <span>
-                                        I agree to NearPro's Terms of Service and Privacy Policy.
+                                        I agree to NearPro's <a href="#/terms" target="_blank" style="color: var(--accent-gold); text-decoration: underline; font-weight: 600;">Terms of Service</a> and <a href="#/privacy" target="_blank" style="color: var(--accent-gold); text-decoration: underline; font-weight: 600;">Privacy Policy</a>.
                                     </span>
                                 </label>
                             </div>
