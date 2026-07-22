@@ -431,7 +431,14 @@ export function bindFeatureShowcaseEvents() {
     }
 
     // 3. Floating Social Proof Notification Ticker (slides up/down from bottom-left corner)
-    if (window._socialProofInterval) clearInterval(window._socialProofInterval);
+    if (window._socialProofInterval) {
+        clearInterval(window._socialProofInterval);
+        window._socialProofInterval = null;
+    }
+    if (window._socialProofTimeout) {
+        clearTimeout(window._socialProofTimeout);
+        window._socialProofTimeout = null;
+    }
     
     let toast = document.getElementById('socialProofToast');
     if (!toast) {
@@ -459,15 +466,18 @@ export function bindFeatureShowcaseEvents() {
         document.body.appendChild(toast);
     }
     
-    const messages = [
-        { emoji: "🔥", text: "CA Rahul from Bandra just upgraded to <strong>Hunter Tier</strong>!" },
-        { emoji: "🚀", text: "Agency Growth upgraded to <strong>Agency Tier</strong> to unlock Google Sheets sync!" },
-        { emoji: "💸", text: "Freelancer Rohan closed a <strong>₹30,000 contract</strong> using a NearPro Gap Lead!" },
-        { emoji: "⭐", text: "Dr. Nair's clinic optimized their ratings and reviews using the PDF audit!" },
-        { emoji: "📞", text: "Sales agent Priya secured 3 client meetings today using the warm opener scripts!" }
+    const names = ["CA Rahul", "Freelancer Priya", "Agency Head Amit", "Sales Rep Sneha", "Designer Rohit", "Developer Kiara", "Consultant Vivek", "Marketer Arjun", "Growth Hacker Riya"];
+    const suburbs = ["Bandra", "Andheri", "Worli", "Dadar", "Juhu", "Thane", "Powai", "Chembur"];
+    const tiers = ["Scout Tier", "Hunter Tier", "Agency Tier"];
+    
+    const templates = [
+        { emoji: "🔥", text: (name, sub, tier) => `<strong>${name}</strong> from ${sub} just upgraded to <strong>${tier}</strong>!` },
+        { emoji: "🚀", text: (name, sub) => `<strong>${name}</strong> synced 150 local leads to Google Sheets automatically!` },
+        { emoji: "💸", text: (name, sub) => `<strong>${name}</strong> from ${sub} closed a <strong>₹45,000 project</strong> using a NearPro Gap Lead!` },
+        { emoji: "⭐", text: (name) => `<strong>${name}</strong> created a custom branded PDF audit proposal in under 30 seconds!` },
+        { emoji: "📞", text: (name) => `<strong>${name}</strong> secured 3 new client meetings using the AI Call Teleprompter!` }
     ];
     
-    let msgIndex = 0;
     const showNextProof = () => {
         // Only trigger if we are currently on the homepage (marketing layout visible)
         if (!document.querySelector('.marketing-hero')) {
@@ -475,24 +485,29 @@ export function bindFeatureShowcaseEvents() {
             return;
         }
         toast.style.display = 'flex';
-        const msg = messages[msgIndex];
+        
+        const randName = names[Math.floor(Math.random() * names.length)];
+        const randSub = suburbs[Math.floor(Math.random() * suburbs.length)];
+        const randTier = tiers[Math.floor(Math.random() * tiers.length)];
+        const template = templates[Math.floor(Math.random() * templates.length)];
+        
+        const generatedText = template.text(randName, randSub, randTier);
+        
         toast.innerHTML = `
-            <span style="font-size: 20px; background: rgba(255,255,255,0.04); width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.06); flex-shrink: 0;">${msg.emoji}</span>
-            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.4; font-family: var(--font-body);">${msg.text}</div>
+            <span style="font-size: 20px; background: rgba(255,255,255,0.04); width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.06); flex-shrink: 0;">${template.emoji}</span>
+            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.4; font-family: var(--font-body);">${generatedText}</div>
         `;
         
         toast.style.transform = 'translateY(0)';
         toast.style.opacity = '1';
         
-        setTimeout(() => {
+        window._socialProofTimeout = setTimeout(() => {
             toast.style.transform = 'translateY(120px)';
             toast.style.opacity = '0';
         }, 4500);
-        
-        msgIndex = (msgIndex + 1) % messages.length;
     };
     
-    setTimeout(showNextProof, 3000);
+    window._socialProofTimeout = setTimeout(showNextProof, 3000);
     window._socialProofInterval = setInterval(showNextProof, 9500);
 }
 
