@@ -14,7 +14,7 @@ export function renderAuthModal() {
                 </h2>
                 
                 <!-- Google Authentication -->
-                <button id="googleAuthBtn" class="secondary-btn" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; padding: 12px; border-radius: var(--radius-sm);">
+                <button id="googleAuthBtn" class="secondary-btn" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 24px; padding: 12px; border-radius: var(--radius-sm);">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M21.35,11.1H12v2.7h5.3c-0.22,1.2 -0.9,2.2 -1.9,2.9v2.4h3.1c1.8,-1.7 2.9,-4.1 2.9,-7c0,-0.3 -0.03,-0.7 -0.05,-1z" fill="#4285F4"/>
                         <path d="M12,20.5c2.3,0 4.2,-0.8 5.6,-2.1l-3.1,-2.4c-0.9,0.6 -2,0.9 -2.5,0.9 -2.1,0 -3.9,-1.4 -4.5,-3.3H4.3v2.5C5.7,18.8 8.6,20.5 12,20.5z" fill="#34A853"/>
@@ -22,12 +22,6 @@ export function renderAuthModal() {
                         <path d="M12,6.5c1.2,0 2.3,0.4 3.2,1.2l2.4,-2.4C16.1,4 14.2,3.1 12,3.1c-3.4,0 -6.3,1.7 -7.7,4.6l3.2,2.5c0.6,-1.9 2.4,-3.3 4.5,-3.3z" fill="#EA4335"/>
                     </svg>
                     <span>Login with Google</span>
-                </button>
-
-                <!-- Zoho Authentication -->
-                <button id="zohoAuthBtn" class="secondary-btn" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 24px; padding: 12px; border-radius: var(--radius-sm);">
-                    <img src="https://cdn.brandfetch.io/idssig0_jY/w/800/h/344/theme/dark/logo.png?c=1bxid64Mup7aczewSAYMX&t=1687855848599" alt="Zoho Logo" style="height: 18px; width: auto; object-fit: contain; margin-right: 4px;">
-                    <span>Login with Zoho</span>
                 </button>
                 
                 <div style="display: flex; align-items: center; margin-bottom: 24px;">
@@ -183,21 +177,7 @@ export function bindAuthModalEvents() {
         });
     }
 
-    // Zoho Sign In
-    const zohoBtn = document.getElementById('zohoAuthBtn');
-    if (zohoBtn) {
-        zohoBtn.addEventListener('click', async () => {
-            try {
-                await Api.signInWithZoho();
-            } catch (err) {
-                console.error("Zoho Auth failed: ", err);
-                if (errorMsg) {
-                    errorMsg.innerText = err.message || "Zoho authentication failed";
-                    errorMsg.style.display = 'block';
-                }
-            }
-        });
-    }
+
 
     // Tab toggles
     if (signInTab) {
