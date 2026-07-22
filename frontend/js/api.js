@@ -447,7 +447,7 @@ export const Api = {
 
     async signInWithZoho() {
         const { data, error } = await supabase.auth.signInWithOAuth({
-            provider: 'zoho',
+            provider: 'custom:zoho',
             options: {
                 scopes: 'openid email profile',
                 redirectTo: window.location.origin
