@@ -117,7 +117,7 @@ export function renderDashboardShell(activeTab = 'crm') {
                     </div>
                     <div class="topbar-right" style="display: flex; align-items: center; gap: 16px;">
                         <!-- Prominent Topbar Quick Launch to 360° AI Deal Workstation -->
-                        <a href="#/dashboard/crm" class="brand-btn" style="padding: 8px 18px; font-size: 12.5px; font-weight: 800; background: #2563eb; color: white; border: none; border-radius: 6px; text-decoration: none; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);">
+                        <a href="${State.user ? '#/dashboard/crm' : '#/dashboard/overview'}" id="topbarWorkstationLink" class="brand-btn" style="padding: 8px 18px; font-size: 12.5px; font-weight: 800; background: #2563eb; color: white; border: none; border-radius: 6px; text-decoration: none; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);">
                             <i data-lucide="zap" style="width: 14px; height: 14px;"></i> Open 360° AI Workstation ➔
                         </a>
 
@@ -189,11 +189,11 @@ export function bindDashboardShellEvents() {
     }
 
     if (!State.user) {
-        // Guest user override: Clicking any sidebar tab except Browse Directory shows the Explorer Plan Modal
+        // Guest user override: Clicking any sidebar tab except Browse Directory & Getting Started shows the Explorer Plan Modal
         const allItems = document.querySelectorAll('.dashboard-nav-item');
         allItems.forEach(item => {
             const tabId = item.getAttribute('data-id');
-            if (tabId !== 'directory') {
+            if (tabId !== 'directory' && tabId !== 'overview') {
                 item.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();

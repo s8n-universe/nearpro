@@ -220,7 +220,7 @@ function initRoutes() {
     });
 
     Router.on('#/dashboard/:tab', (tab) => {
-        const isPublicTab = tab === 'directory';
+        const isPublicTab = tab === 'directory' || tab === 'overview';
         if (!State.user && !isPublicTab) {
             if (!window._isSigningOut) {
                 State.setExplorerPlanModal(true);
@@ -1216,7 +1216,7 @@ function setupCategorySidebarHover() {
 }
 
 async function renderDashboardLayout(tab) {
-    const isPublicTab = tab === 'directory';
+    const isPublicTab = tab === 'directory' || tab === 'overview';
     if (!State.user && !isPublicTab) {
         State.setExplorerPlanModal(true);
         Router.navigate('#/dashboard/directory');
