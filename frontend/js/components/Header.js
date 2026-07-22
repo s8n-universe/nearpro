@@ -78,7 +78,7 @@ export function renderHeader() {
     }
  
     return `
-        <header class="main-header">
+        <header class="main-header" style="border-bottom: none;">
             <div class="container header-wrap">
                 <a href="#/" class="header-brand">
                     <img src="/NearPro_logo_nobg.png" alt="NearPro Logo" style="height: 32px; width: auto; object-fit: contain; margin-right: 4px;">
@@ -88,16 +88,7 @@ export function renderHeader() {
                 <nav class="header-nav">
                     ${State.user ? `
                         <a href="#/dashboard/directory" class="nav-link ${isDashboardActive ? 'active' : ''}">Dashboard Workspace</a>
-                    ` : `
-                        <div class="navbar-ticker" style="overflow: hidden; white-space: nowrap; max-width: 350px; font-size: 11.5px; font-weight: 700; color: var(--accent-gold); display: flex; align-items: center; gap: 8px; border: 1px solid rgba(255,160,0,0.2); padding: 4px 12px; border-radius: 20px; background: rgba(255,160,0,0.03);">
-                            <span class="ticker-badge" style="background: rgba(255, 160, 0, 0.15); color: var(--accent-gold); padding: 1px 6px; border-radius: 12px; font-size: 9.5px; font-family: var(--font-mono); text-transform: uppercase; display: inline-block; animation: pulse 2s infinite; flex-shrink: 0;">HOT 🔥</span>
-                            <div class="ticker-viewport" style="overflow: hidden; width: 100%; position: relative; height: 16px;">
-                                <div class="ticker-track" style="display: inline-block; white-space: nowrap; position: absolute; animation: marquee 25s linear infinite; width: max-content;">
-                                    🔥 <span class="dynamic-ticker-name">CA Rahul</span> just closed a <span class="dynamic-ticker-deal">₹30,000 retainer</span> using NearPro! &bull; ⚡ Unlocking 12 premium verified leads with direct numbers today! &bull; 💸 Pitch ₹30,000 mobile layout packages to target gap leads! &bull; 🚀 Find local clients with 100% verified street-address data! &bull; 🔥 <span class="dynamic-ticker-name">CA Rahul</span> just closed a <span class="dynamic-ticker-deal">₹30,000 retainer</span> using NearPro! &bull; ⚡ Unlocking 12 premium verified leads with direct numbers today! &bull; 💸 Pitch ₹30,000 mobile layout packages to target gap leads! &bull; 🚀 Find local clients with 100% verified street-address data!
-                                </div>
-                            </div>
-                        </div>
-                    `}
+                    ` : ''}
                 </nav>
                 
                 <div class="header-actions" style="display: flex; align-items: center; gap: 12px;">
@@ -106,8 +97,20 @@ export function renderHeader() {
                 </div>
             </div>
         </header>
+        ${!State.user ? `
+            <div class="navbar-ticker-bar" style="background: rgba(255, 160, 0, 0.04); border-top: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 160, 0, 0.15); padding: 5px 0; overflow: hidden; width: 100%;">
+                <div class="container" style="display: flex; align-items: center; gap: 12px; max-width: var(--container-width); margin: 0 auto; padding: 0 16px;">
+                    <span class="ticker-badge" style="background: rgba(255, 160, 0, 0.15); color: var(--accent-gold); padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 800; font-family: var(--font-mono); text-transform: uppercase; display: inline-block; animation: pulse 2s infinite; flex-shrink: 0; letter-spacing: 0.5px;">HOT 🔥</span>
+                    <div class="ticker-viewport" style="overflow: hidden; width: 100%; position: relative; height: 16px; display: flex; align-items: center;">
+                        <div class="ticker-track" style="display: inline-block; white-space: nowrap; position: absolute; animation: marquee-bar 32s linear infinite; width: max-content; font-size: 12px; font-weight: 700; color: #475569;">
+                            🔥 <span class="dynamic-ticker-name" style="color: var(--accent-gold);">CA Rahul</span> just closed a <span class="dynamic-ticker-deal" style="color: #3b82f6;">₹30,000 retainer</span> using NearPro! &bull; ⚡ Unlocking 12 premium verified leads with direct numbers today! &bull; 💸 Pitch ₹30,000 mobile layout packages to target gap leads! &bull; 🚀 Find local clients with 100% verified street-address data! &bull; 🔥 <span class="dynamic-ticker-name" style="color: var(--accent-gold);">CA Rahul</span> just closed a <span class="dynamic-ticker-deal" style="color: #3b82f6;">₹30,000 retainer</span> using NearPro! &bull; ⚡ Unlocking 12 premium verified leads with direct numbers today! &bull; 💸 Pitch ₹30,000 mobile layout packages to target gap leads! &bull; 🚀 Find local clients with 100% verified street-address data!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        ` : ''}
         <style>
-            @keyframes marquee {
+            @keyframes marquee-bar {
                 0% { transform: translateX(-50%); }
                 100% { transform: translateX(0%); }
             }
