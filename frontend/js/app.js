@@ -20,7 +20,7 @@ import { renderProfessionalModal, bindProfessionalModalEvents } from './componen
 import { renderComparePanel, renderCompareModalContent, bindComparePanelEvents } from './components/CompareModal.js';
 import { renderMapView, initFullMap } from './components/MapView.js';
 import { renderMarketingHero } from './components/MarketingHero.js';
-import { renderFeatureShowcase } from './components/FeatureShowcase.js';
+import { renderFeatureShowcase, bindFeatureShowcaseEvents } from './components/FeatureShowcase.js';
 import { renderFeatureDetailPage, bindFeatureDetailPageEvents } from './components/FeatureDetail.js';
 import { renderAuthModal, bindAuthModalEvents } from './components/AuthModal.js';
 import { renderPricingModal, bindPricingModalEvents } from './components/PricingModal.js';
@@ -324,6 +324,31 @@ function renderMarketingLayout() {
         </div>
     `;
     bindHeaderEvents();
+    
+    const heroSearchBtn = document.getElementById('heroSearchBtn');
+    if (heroSearchBtn) {
+        heroSearchBtn.addEventListener('click', () => {
+            const sector = document.getElementById('heroSectorSelect').value;
+            const area = document.getElementById('heroAreaSelect').value;
+            Router.navigate('#/dashboard/directory');
+            setTimeout(() => {
+                State.updateFilters({
+                    parentCategory: sector,
+                    category: null,
+                    area: area,
+                    min_rating: "4.0",
+                    has_email: true,
+                    has_phone: true,
+                    has_website: true,
+                    website_filter: "has_website",
+                    no_website: false,
+                    search: ""
+                });
+            }, 100);
+        });
+    }
+    
+    bindFeatureShowcaseEvents();
     refreshLucideIcons();
 }
 

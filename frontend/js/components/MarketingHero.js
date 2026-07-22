@@ -18,12 +18,51 @@ export function renderMarketingHero(stats = null) {
                 <p class="hero-desc" style="max-width: 680px; margin: 0 auto 32px; line-height: 1.6;">
                     India's first trusted lead intelligence platform. While US tools guess Indian business details, NearPro maps every suburb, street, and pin code with 100% verified data.
                 </p>
-                <div class="hero-ctas">
-                    <a href="#/browse" class="brand-btn">
-                        Browse Professional Directory
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                    </a>
+                <div class="hero-search-widget" style="max-width: 580px; margin: 0 auto 36px; padding: 6px; background: rgba(10, 10, 12, 0.65); border: 1.5px solid var(--border); border-radius: 100px; backdrop-filter: blur(12px); box-shadow: 0 16px 40px rgba(0,0,0,0.5); display: flex; gap: 4px; align-items: center;">
+                    <div style="flex: 1.2; padding-left: 16px; display: flex; align-items: center; gap: 8px; border-right: 1px solid rgba(255,255,255,0.08);">
+                        <span style="font-size: 14px;">🎯</span>
+                        <select id="heroSectorSelect" style="width: 100%; background: transparent; border: none; color: white; font-size: 13.5px; font-weight: 600; outline: none; cursor: pointer;">
+                            <option value="Healthcare" style="background:#0a0a0c;">🩺 Healthcare / Doctors</option>
+                            <option value="Beauty & Wellness" style="background:#0a0a0c;">💅 Beauty &amp; Wellness</option>
+                            <option value="Real Estate" style="background:#0a0a0c;">🏢 Real Estate Agents</option>
+                            <option value="Food & Dining" style="background:#0a0a0c;">🍕 Food &amp; Dining</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1; padding-left: 12px; display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 14px;">📍</span>
+                        <select id="heroAreaSelect" style="width: 100%; background: transparent; border: none; color: white; font-size: 13.5px; font-weight: 600; outline: none; cursor: pointer;">
+                            <option value="Bandra" style="background:#0a0a0c;">Bandra West</option>
+                            <option value="Andheri" style="background:#0a0a0c;">Andheri East</option>
+                            <option value="Worli" style="background:#0a0a0c;">Worli Suburb</option>
+                            <option value="Dadar" style="background:#0a0a0c;">Dadar Central</option>
+                            <option value="Juhu" style="background:#0a0a0c;">Juhu Beach</option>
+                        </select>
+                    </div>
+                    <button id="heroSearchBtn" class="brand-btn" style="padding: 12px 28px; font-size: 13.5px; font-weight: 700; border-radius: 100px; white-space: nowrap; box-shadow: 0 4px 15px rgba(255, 160, 0, 0.35);">
+                        Find Free Leads ➔
+                    </button>
                 </div>
+                <script>
+                    setTimeout(() => {
+                        const btn = document.getElementById('heroSearchBtn');
+                        if (btn) {
+                            btn.addEventListener('click', () => {
+                                const sector = document.getElementById('heroSectorSelect').value;
+                                const area = document.getElementById('heroAreaSelect').value;
+                                window.State.updateFilters({
+                                    parentCategory: sector,
+                                    area: area,
+                                    min_rating: "4.0",
+                                    has_email: true,
+                                    has_phone: true,
+                                    has_website: true,
+                                    website_filter: "has_website"
+                                });
+                                window.location.hash = '#/dashboard/directory';
+                            });
+                        }
+                    }, 100);
+                </script>
                 <div class="hero-bullets">
                     <span id="heroTotalLeads">${totalLeads} Verified Leads</span>
                     <span id="heroTotalCategories">${totalCategories} Sub Categories</span>
