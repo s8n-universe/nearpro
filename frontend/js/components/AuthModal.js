@@ -15,8 +15,9 @@ export function renderAuthModal() {
                     <button class="modal-close-btn" id="closeAuthModalBtn" style="position: absolute; top: 20px; right: 20px; font-size: 24px; color: #64748b; background: none; border: none; cursor: pointer; transition: color 0.2s; z-index: 10;">&times;</button>
                     
                     <div style="width: 100%; max-width: 360px; margin: 0 auto;">
-                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 24px;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 24px;">
                             <img src="/NearPro_logo_nobg.png" alt="NearPro Logo" style="height: 36px; width: auto; object-fit: contain;">
+                            <span style="font-family: var(--font-heading); font-size: 20px; font-weight: 800; color: #0f172a; letter-spacing: -0.5px;">NearPro</span>
                         </div>
                         <h2 style="font-size: 32px; font-weight: 800; margin-bottom: 8px; text-align: left; font-family: var(--font-heading); color: #0f172a; letter-spacing: -0.5px;">
                             Welcome back
@@ -285,8 +286,7 @@ export function renderAuthModal() {
                     </div>
 
                     <!-- Bottom Footer Context -->
-                    <div style="z-index: 2; font-size: 11.5px; color: rgba(255,255,255,0.4); display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                        <span>&copy; 2026 S8N</span>
+                    <div style="z-index: 2; font-size: 11.5px; color: rgba(255,255,255,0.4); display: flex; justify-content: flex-end; align-items: center; width: 100%;">
                         <div style="display: flex; gap: 12px; align-items: center;">
                             <a href="#/terms" style="color: rgba(255,255,255,0.4); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Terms of Service</a>
                             <span>&bull;</span>
@@ -314,7 +314,6 @@ export function renderAuthModal() {
                 justify-content: center;
                 background: #ffffff;
                 position: relative;
-                overflow-y: auto;
             }
             .auth-right-pane {
                 flex: 1;
