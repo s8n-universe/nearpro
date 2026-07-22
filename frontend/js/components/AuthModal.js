@@ -201,83 +201,53 @@ export function renderAuthModal() {
                             <!-- Browser Body Layout -->
                             <div style="display: flex; flex: 1; overflow: hidden; height: 100%;">
                                 <!-- Sidebar -->
-                                <div style="width: 120px; background: rgba(30, 41, 59, 0.3); border-right: 1px solid rgba(255,255,255,0.06); padding: 16px 8px; display: flex; flex-direction: column; gap: 8px;">
-                                    <!-- active item -->
-                                    <div style="background: rgba(245, 158, 11, 0.1); border-left: 2px solid var(--accent-gold); color: white; padding: 6px 8px; border-radius: 0 4px 4px 0; font-size: 11px; font-weight: 700; cursor: pointer;">
+                                <div style="width: 110px; background: rgba(30, 41, 59, 0.3); border-right: 1px solid rgba(255,255,255,0.06); padding: 14px 6px; display: flex; flex-direction: column; gap: 6px; flex-shrink: 0;">
+                                    <div style="background: rgba(245, 158, 11, 0.1); border-left: 2px solid var(--accent-gold); color: white; padding: 5px 6px; border-radius: 0 4px 4px 0; font-size: 10px; font-weight: 700;">
                                         Overview
                                     </div>
-                                    <div style="color: rgba(255,255,255,0.5); padding: 6px 8px; font-size: 11px; font-weight: 600; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">
+                                    <div style="color: rgba(255,255,255,0.5); padding: 5px 6px; font-size: 10px; font-weight: 600;">
                                         Lead Map
                                     </div>
-                                    <div style="color: rgba(255,255,255,0.5); padding: 6px 8px; font-size: 11px; font-weight: 600; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">
+                                    <div style="color: rgba(255,255,255,0.5); padding: 5px 6px; font-size: 10px; font-weight: 600;">
                                         Outreach
-                                    </div>
-                                    <div style="color: rgba(255,255,255,0.5); padding: 6px 8px; font-size: 11px; font-weight: 600; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">
-                                        Zoho Sync
-                                    </div>
-                                    <div style="color: rgba(255,255,255,0.5); padding: 6px 8px; font-size: 11px; font-weight: 600; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">
-                                        Settings
                                     </div>
                                 </div>
 
                                 <!-- Main Panel Content -->
-                                <div style="flex: 1; padding: 16px; display: flex; flex-direction: column; gap: 16px; overflow-y: auto;">
-                                    <!-- Header Greeting inside panel -->
+                                <div style="flex: 1; padding: 14px; display: flex; flex-direction: column; gap: 12px; justify-content: center; overflow: hidden;">
                                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                                        <div style="font-size: 14px; font-weight: 700; color: white;">Pipeline Status</div>
-                                        <span style="background: rgba(16, 185, 129, 0.15); color: #10b981; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: 700; border: 1px solid rgba(16, 185, 129, 0.3);">Zoho Synced</span>
+                                        <div style="font-size: 12.5px; font-weight: 700; color: white;">Pipeline Status</div>
+                                        <span style="background: rgba(16, 185, 129, 0.15); color: #10b981; padding: 1px 6px; border-radius: 12px; font-size: 9.5px; font-weight: 700; border: 1px solid rgba(16, 185, 129, 0.3);">System Active</span>
                                     </div>
 
                                     <!-- Stats Grid Row -->
-                                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
-                                        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px; border-radius: 8px;">
-                                            <div style="font-size: 10px; color: rgba(255,255,255,0.4); margin-bottom: 2px;">Leads Mapped</div>
-                                            <div style="font-size: 15px; font-weight: 800; color: white;">1,248</div>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 8px 10px; border-radius: 6px;">
+                                            <div style="font-size: 9px; color: rgba(255,255,255,0.4); margin-bottom: 1px;">Leads Mapped</div>
+                                            <div style="font-size: 14px; font-weight: 800; color: white;">1,248</div>
                                         </div>
-                                        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px; border-radius: 8px;">
-                                            <div style="font-size: 10px; color: rgba(255,255,255,0.4); margin-bottom: 2px;">Audits Run</div>
-                                            <div style="font-size: 15px; font-weight: 800; color: white;">480</div>
-                                        </div>
-                                        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px; border-radius: 8px;">
-                                            <div style="font-size: 10px; color: rgba(255,255,255,0.4); margin-bottom: 2px;">PageSpeed Alert</div>
-                                            <div style="font-size: 15px; font-weight: 800; color: #ef4444;">92 Critical</div>
+                                        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 8px 10px; border-radius: 6px;">
+                                            <div style="font-size: 9px; color: rgba(255,255,255,0.4); margin-bottom: 1px;">CRM Auto-Sync</div>
+                                            <div style="font-size: 14px; font-weight: 800; color: #22c55e;">100% Active</div>
                                         </div>
                                     </div>
 
-                                    <!-- Preview Pipeline Data Table Mockup -->
-                                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; overflow: hidden;">
-                                        <!-- Table Header -->
-                                        <div style="display: grid; grid-template-columns: 2fr 1.5fr 1fr; padding: 8px 12px; background: rgba(255,255,255,0.04); font-size: 10px; color: rgba(255,255,255,0.4); font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                                            <span>BUSINESS NAME</span>
-                                            <span>PERFORMANCE</span>
-                                            <span>SYNC STATUS</span>
+                                    <!-- Clean Lead Cards (No Mumbai Hotel reference) -->
+                                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                                        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center;">
+                                            <div>
+                                                <div style="font-size: 11px; font-weight: 700; color: white;">Apex Web Developers</div>
+                                                <div style="font-size: 9px; color: rgba(255,255,255,0.4); margin-top: 1px;">PageSpeed Score: 42 (Critical Gap)</div>
+                                            </div>
+                                            <span style="background: rgba(245, 158, 11, 0.15); color: var(--accent-gold); padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: 700; border: 1px solid rgba(245, 158, 11, 0.3); cursor: pointer;">Sync CRM</span>
                                         </div>
-                                        <!-- Table Body Rows -->
-                                        <div style="display: flex; flex-direction: column; font-size: 11px;">
-                                            <!-- Taj Mumbai Row -->
-                                            <div style="display: grid; grid-template-columns: 2fr 1.5fr 1fr; padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.03); color: white; align-items: center;">
-                                                <span style="font-weight: 600;">Hotel Taj Mumbai</span>
-                                                <span>
-                                                    <span style="background: rgba(239, 68, 68, 0.15); color: #ef4444; padding: 2px 6px; border-radius: 4px; font-size: 9.5px; font-weight: bold; font-family: monospace;">42 PageSpeed</span>
-                                                </span>
-                                                <span style="color: var(--accent-gold); font-weight: 700; cursor: pointer; text-decoration: underline;">Sync Zoho</span>
+                                        
+                                        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center;">
+                                            <div>
+                                                <div style="font-size: 11px; font-weight: 700; color: white;">Bandra Dental Clinic</div>
+                                                <div style="font-size: 9px; color: rgba(255,255,255,0.4); margin-top: 1px;">PageSpeed Score: 95 (Optimized)</div>
                                             </div>
-                                            <!-- Bandra Clinic Row -->
-                                            <div style="display: grid; grid-template-columns: 2fr 1.5fr 1fr; padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.03); color: white; align-items: center;">
-                                                <span style="font-weight: 600;">Bandra Clinic</span>
-                                                <span>
-                                                    <span style="background: rgba(16, 185, 129, 0.15); color: #10b981; padding: 2px 6px; border-radius: 4px; font-size: 9.5px; font-weight: bold; font-family: monospace;">95 PageSpeed</span>
-                                                </span>
-                                                <span style="color: rgba(255,255,255,0.4); font-weight: 600;">Synced</span>
-                                            </div>
-                                            <!-- Delhi Cafe Row -->
-                                            <div style="display: grid; grid-template-columns: 2fr 1.5fr 1fr; padding: 10px 12px; color: white; align-items: center;">
-                                                <span style="font-weight: 600;">Delhi Cafe</span>
-                                                <span>
-                                                    <span style="background: rgba(239, 68, 68, 0.15); color: #ef4444; padding: 2px 6px; border-radius: 4px; font-size: 9.5px; font-weight: bold; font-family: monospace;">38 PageSpeed</span>
-                                                </span>
-                                                <span style="color: var(--accent-gold); font-weight: 700; cursor: pointer; text-decoration: underline;">Sync Zoho</span>
-                                            </div>
+                                            <span style="color: rgba(255,255,255,0.4); font-size: 9.5px; font-weight: 600;">Synced</span>
                                         </div>
                                     </div>
                                 </div>
