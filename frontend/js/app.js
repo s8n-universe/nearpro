@@ -699,26 +699,26 @@ function renderFeedContent(hasMore) {
         const allVisibleSelected = displayedLeads.length > 0 && displayedLeads.every(p => State.selected_ids.includes(p.id));
 
         feed.innerHTML = `
-            <div class="feed-header" style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 20px; flex-wrap: wrap;">
+            ${auditGapTriggerHTML}
+
+            <div class="feed-header" style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 4px; margin-bottom: 16px; flex-wrap: wrap;">
                 <div class="feed-title-wrap">
-                    <h2 style="font-size: 20px; color: white; font-family: var(--font-heading); margin-bottom: 2px;">Verified Business Leads</h2>
-                    <span class="feed-subtitle" style="font-size: 13px; color: var(--text-muted);">${State.total} verified listing${State.total !== 1 ? 's' : ''} found ${State.filters.area ? `in <strong>${State.filters.area}</strong>` : 'across Mumbai'}</span>
+                    <h2 style="font-size: 20px; color: #0f172a; font-family: var(--font-heading); font-weight: 700; margin-bottom: 2px;">Verified Business Leads</h2>
+                    <span class="feed-subtitle" style="font-size: 13px; color: #64748b; font-weight: 500;">${State.total} verified listing${State.total !== 1 ? 's' : ''} found ${State.filters.area ? `in <strong>${State.filters.area}</strong>` : 'across Mumbai'}</span>
                 </div>
                 <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
-                    <label class="toggle-switch" style="font-size: 12.5px; background: rgba(255,160,0,0.05); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(255,160,0,0.2);">
+                    <label class="toggle-switch" style="font-size: 12.5px; background: rgba(37,99,235,0.06); padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(37,99,235,0.25);">
                         <input type="checkbox" id="selectAllVisibleLeadsCheckbox" ${allVisibleSelected ? 'checked' : ''}>
                         <div class="toggle-switch-track">
                             <div class="toggle-switch-thumb"></div>
                         </div>
-                        <span style="color: var(--accent-gold); font-weight: 600;">Select Visible for Compare (${State.selected_ids.length})</span>
+                        <span style="color: #2563eb; font-weight: 700;">Select Visible for Compare (${State.selected_ids.length})</span>
                     </label>
-                    <button id="restartDemoBtn" class="secondary-btn" style="padding: 6px 12px; font-size: 12px; border-radius: var(--radius-sm);">
+                    <button id="restartDemoBtn" class="secondary-btn" style="padding: 6px 12px; font-size: 12px; border-radius: var(--radius-sm); border-color: #cbd5e1; color: #475569; font-weight: 600;">
                         Restart Tour
                     </button>
                 </div>
             </div>
-
-            ${auditGapTriggerHTML}
 
             <div class="prof-grid">
                 ${cardsHTML}
@@ -1298,19 +1298,18 @@ async function renderDashboardLayout(tab) {
                 const sidebarClass = State.category_sidebar_collapsed ? 'collapsed' : '';
                 content.innerHTML = `
                     <div class="dashboard-directory-layout" style="display: flex; width: 100%; height: calc(100vh - 70px); overflow: hidden;">
-                        <aside class="dashboard-category-sidebar ${sidebarClass}" id="sidebarElement" style="width: 240px; border-right: 1px solid var(--border); background: rgba(0,0,0,0.05); overflow-y: auto; padding: 20px 14px; flex-shrink: 0;"></aside>
+                        <aside class="dashboard-category-sidebar ${sidebarClass}" id="sidebarElement" style="width: 240px; border-right: 1px solid #cbd5e1; background: #ffffff; overflow-y: auto; padding: 20px 14px; flex-shrink: 0; box-shadow: 2px 0 6px rgba(15,23,42,0.02);"></aside>
                         <section class="app-content" style="flex: 1; padding: 16px 20px; display: flex; flex-direction: column; overflow-y: auto; position: relative;">
                             <!-- Directory Header Stats Bar -->
-                            <div class="directory-stats-bar" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 12px; color: var(--text-muted); font-family: var(--font-mono);">
+                            <div class="directory-stats-bar" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 12px; color: #475569; font-family: var(--font-mono); font-weight: 600;">
                                 <div style="display: flex; align-items: center; gap: 8px;">
-                                    <span style="color: var(--accent-gold); font-weight: 600;">⚡ Verified Intelligence Engine</span>
+                                    <span style="color: #d97706; font-weight: 700;">⚡ Verified Intelligence Engine</span>
                                     <span>•</span>
-                                    <span>${State.stats?.total_professionals ? State.stats.total_professionals.toLocaleString('en-IN') : '7,626'} Verified Listings</span>
+                                    <span style="color: #0f172a;">${State.stats?.total_professionals ? State.stats.total_professionals.toLocaleString('en-IN') : '7,626'} Verified Listings</span>
                                     <span>•</span>
                                     <span>Mumbai Region</span>
                                 </div>
                             </div>
-                            <div id="searchBarElement"></div>
                             <div id="filterPanelElement"></div>
                             <div class="view-container" id="feedElement"></div>
                             <div id="comparePanelPlaceholder"></div>
@@ -1328,12 +1327,18 @@ async function renderDashboardLayout(tab) {
                     setupCategorySidebarHover();
                 }
 
-                // Draw search inputs
-                document.getElementById('searchBarElement').innerHTML = renderSearchBar();
-                bindSearchBarEvents();
+                // Draw filter panel (includes top-right search bar)
+                const searchEl = document.getElementById('searchBarElement');
+                if (searchEl) {
+                    searchEl.innerHTML = renderSearchBar();
+                    bindSearchBarEvents();
+                }
 
-                document.getElementById('filterPanelElement').innerHTML = renderFilterPanel();
-                bindFilterPanelEvents();
+                const filterEl = document.getElementById('filterPanelElement');
+                if (filterEl) {
+                    filterEl.innerHTML = renderFilterPanel();
+                    bindFilterPanelEvents();
+                }
             } else {
                 // Just update sidebar selector focus state
                 const sidebar = document.getElementById('sidebarElement');

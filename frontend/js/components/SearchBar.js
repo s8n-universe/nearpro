@@ -42,15 +42,10 @@ export function parseNaturalLanguageQuery(queryText) {
 
 export function renderSearchBar() {
     return `
-        <div class="filter-wrap">
-            <div class="search-input-wrap" style="flex: 1;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                <input type="text" id="searchInput" autocomplete="off" spellcheck="false" placeholder="Search by name, category, area, or keywords (e.g. dentists in Bandra)..." value="${State.filters.search || ''}">
-            </div>
-            
-            <button id="resetSearchBtn" class="secondary-btn" style="padding: 6px 12px; font-size: 12px; color: var(--text-muted); font-weight: 600;">
-                Reset Filters ✕
-            </button>
+        <div class="search-input-wrap top-right-search" style="width: 280px; display: flex; align-items: center; gap: 8px; background: #ffffff; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: var(--radius-md); transition: all 0.2s ease;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input type="text" id="searchInput" autocomplete="off" spellcheck="false" placeholder="Search name, category, area..." value="${State.filters.search || ''}" style="width:100%; font-size:12.5px; color:#0f172a; font-weight:600; background:transparent; border:none; outline:none;">
+            ${State.filters.search ? `<button id="clearSearchInputBtn" style="background:none; border:none; color:#64748b; cursor:pointer; padding:2px; font-size:12px;" title="Clear text">&times;</button>` : ''}
         </div>
     `;
 }
@@ -96,6 +91,16 @@ export function bindSearchBarEvents() {
             applySearch(val);
         }
     });
+
+    const clearBtn = document.getElementById('clearSearchInputBtn');
+
+    if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+            clearTimeout(timer);
+            if (input) input.value = '';
+            State.updateFilters({ search: '', ai_query: null });
+        });
+    }
 
     if (resetBtn) {
         resetBtn.addEventListener('click', () => {

@@ -39,27 +39,26 @@ export function renderCategorySidebar() {
 
         return `
             <a href="#/category/${encodeURIComponent(group.name)}" 
-               class="sub-list-link ${isActive ? 'active' : ''}" 
-               style="margin-bottom: 4px; padding: 10px 12px; font-weight: 550; font-size: 13.5px; display: flex; align-items: center; justify-content: space-between; border-radius: var(--radius-sm); text-decoration: none;">
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <i data-lucide="${icon}" class="cat-icon" style="width: 15px; height: 15px; stroke-width: 2.2px; flex-shrink: 0;"></i>
+               class="sub-list-link ${isActive ? 'active' : ''}">
+                <div class="cat-link-label">
+                    <i data-lucide="${icon}" class="cat-icon"></i>
                     <span>${group.name}</span>
                 </div>
-                <span class="cat-count" style="font-size: 11px; font-family: var(--font-mono); font-weight: 600;">${group.total}</span>
+                <span class="cat-count">${group.total}</span>
             </a>
         `;
     }).join('');
 
     const isCollapsed = State.category_sidebar_collapsed;
     const toggleButtonHTML = `
-        <button id="toggleCatSidebarBtn" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 14px; padding: 4px; display: flex; align-items: center; justify-content: center; outline: none; transition: transform 0.2s;" title="${isCollapsed ? 'Expand Categories' : 'Collapse Categories'}">
+        <button id="toggleCatSidebarBtn" class="toggle-cat-btn" title="${isCollapsed ? 'Expand Categories' : 'Collapse Categories'}">
             ${isCollapsed ? '<i data-lucide="chevron-right" style="width:16px; height:16px;"></i>' : '<i data-lucide="chevron-left" style="width:16px; height:16px;"></i>'}
         </button>
     `;
 
     return `
-        <div class="sidebar-header-row" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; width: 100%;">
-            <div class="sidebar-title" style="margin: 0; font-family: var(--font-heading); font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);">Categories</div>
+        <div class="sidebar-header-row">
+            <div class="sidebar-title">Categories</div>
             ${toggleButtonHTML}
         </div>
         <div class="categories-tree">

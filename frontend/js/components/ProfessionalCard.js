@@ -148,19 +148,21 @@ export function renderProfessionalCard(lead, index = 0) {
     return `
         <div class="prof-card" data-id="${lead.id}" style="--card-accent: ${avatarColor}; border-left: 4px solid ${avatarColor};">
             <div class="card-toolbar" onclick="event.stopPropagation();">
-                <button class="track-card-btn ${isTracked ? 'tracked' : ''}" data-id="${lead.id}">
-                    <i data-lucide="${isTracked ? 'bookmark-check' : 'bookmark'}" style="width:12px; height:12px;"></i> ${isTracked ? 'Tracked' : 'Track'}
+                <button class="track-card-btn ${isTracked ? 'tracked' : ''}" data-id="${lead.id}" title="${isTracked ? 'Lead is tracked in CRM' : 'Track lead'}">
+                    <i data-lucide="${isTracked ? 'bookmark-check' : 'bookmark'}" style="width:13px; height:13px; stroke-width:2.5px;"></i> 
+                    <span>${isTracked ? 'Tracked' : 'Track'}</span>
                 </button>
                 ${isPremium ? `
-                    <label class="compare-checkbox-label ${isSelected ? 'active' : ''}">
+                    <label class="compare-checkbox-label ${isSelected ? 'active' : ''}" title="Add to comparison tray">
                         <input type="checkbox" class="compare-checkbox" data-id="${lead.id}" ${isSelected ? 'checked' : ''} style="display: none;">
                         <span class="compare-pill-dot"></span>
-                        Compare
+                        <span>Compare</span>
                     </label>
                 ` : `
-                    <span class="compare-checkbox-label" style="opacity: 0.4; cursor: not-allowed;">
+                    <span class="compare-checkbox-label locked" title="Upgrade plan to compare leads side by side">
                         <span class="compare-pill-dot"></span>
-                        <i data-lucide="lock" style="width:11px; height:11px;"></i>
+                        <span>Compare</span>
+                        <i data-lucide="lock" style="width:11px; height:11px; margin-left: 2px;"></i>
                     </span>
                 `}
             </div>

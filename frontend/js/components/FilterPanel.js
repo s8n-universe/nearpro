@@ -1,4 +1,5 @@
 import { State } from '../state.js';
+import { renderSearchBar, bindSearchBarEvents } from './SearchBar.js';
 
 export function renderFilterPanel() {
     const areas = [
@@ -35,39 +36,48 @@ export function renderFilterPanel() {
 
     return `
         <div class="filter-panel-card">
-            <!-- Top Controls Toolbar -->
+            <!-- Top Controls Toolbar: Filters Left + Top-Right Search -->
             <div class="filter-toolbar-row">
-                <div class="filter-control-group">
-                    <span class="filter-label">AREA</span>
-                    <select id="areaFilter" class="filter-select">
-                        <option value="">All Areas</option>
-                        ${areaOptions}
-                    </select>
-                </div>
-                
-                <div class="filter-control-group">
-                    <span class="filter-label">RATING</span>
-                    <select id="ratingFilter" class="filter-select">
-                        <option value="">Any Rating</option>
-                        <option value="4.5" ${State.filters.min_rating == 4.5 ? 'selected' : ''}>4.5+ Stars</option>
-                        <option value="4" ${State.filters.min_rating == 4 ? 'selected' : ''}>4.0+ Stars</option>
-                        <option value="3" ${State.filters.min_rating == 3 ? 'selected' : ''}>3.0+ Stars</option>
-                    </select>
-                </div>
-                
-                <div class="filter-control-group">
-                    <span class="filter-label">SORT BY</span>
-                    <select id="sortFilter" class="filter-select">
-                        <option value="rating_desc" ${State.filters.sort_by === 'rating_desc' ? 'selected' : ''}>Highest Rated</option>
-                        <option value="reviews_desc" ${State.filters.sort_by === 'reviews_desc' ? 'selected' : ''}>Most Reviewed</option>
-                        <option value="completeness_desc" ${State.filters.sort_by === 'completeness_desc' ? 'selected' : ''}>Most Verified Info</option>
-                        <option value="indexed_desc" ${State.filters.sort_by === 'indexed_desc' ? 'selected' : ''}>Recently Added</option>
-                    </select>
+                <div class="filter-controls-left">
+                    <div class="filter-control-group">
+                        <span class="filter-label">AREA</span>
+                        <select id="areaFilter" class="filter-select">
+                            <option value="">All Areas</option>
+                            ${areaOptions}
+                        </select>
+                    </div>
+                    
+                    <div class="filter-control-group">
+                        <span class="filter-label">RATING</span>
+                        <select id="ratingFilter" class="filter-select">
+                            <option value="">Any Rating</option>
+                            <option value="4.5" ${State.filters.min_rating == 4.5 ? 'selected' : ''}>4.5+ Stars</option>
+                            <option value="4" ${State.filters.min_rating == 4 ? 'selected' : ''}>4.0+ Stars</option>
+                            <option value="3" ${State.filters.min_rating == 3 ? 'selected' : ''}>3.0+ Stars</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-control-group">
+                        <span class="filter-label">SORT BY</span>
+                        <select id="sortFilter" class="filter-select">
+                            <option value="rating_desc" ${State.filters.sort_by === 'rating_desc' ? 'selected' : ''}>Highest Rated</option>
+                            <option value="reviews_desc" ${State.filters.sort_by === 'reviews_desc' ? 'selected' : ''}>Most Reviewed</option>
+                            <option value="completeness_desc" ${State.filters.sort_by === 'completeness_desc' ? 'selected' : ''}>Most Verified Info</option>
+                            <option value="indexed_desc" ${State.filters.sort_by === 'indexed_desc' ? 'selected' : ''}>Recently Added</option>
+                        </select>
+                    </div>
+
+                    <button id="surveySettingsBtn" class="secondary-btn profile-active-btn">
+                        🎯 ${State.user_survey ? 'Profile: Active' : 'Sales Profile'}
+                    </button>
                 </div>
 
-                <button id="surveySettingsBtn" class="secondary-btn profile-active-btn">
-                    🎯 ${State.user_survey ? 'Profile: Active' : 'Sales Profile'}
-                </button>
+                <div class="filter-controls-right">
+                    ${renderSearchBar()}
+                    <button id="resetSearchBtn" class="secondary-btn reset-filters-btn" title="Reset all filters">
+                        Reset ✕
+                    </button>
+                </div>
             </div>
 
             <!-- Quick Filter Chips Row -->
@@ -110,6 +120,8 @@ export function renderFilterPanel() {
 }
 
 export function bindFilterPanelEvents() {
+    bindSearchBarEvents();
+
     const areaFilter = document.getElementById('areaFilter');
     const ratingFilter = document.getElementById('ratingFilter');
     const sortFilter = document.getElementById('sortFilter');
