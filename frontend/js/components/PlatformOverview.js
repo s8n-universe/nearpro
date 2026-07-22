@@ -159,7 +159,7 @@ export function renderPlatformOverviewLayout() {
                         <p style="font-size: 13px; color: #475569; margin: 0 0 14px 0; line-height: 1.5;">
                             Find local Indian businesses with rating deficits, low review counts, or unoptimized websites.
                         </p>
-                        <a href="#/dashboard/directory" style="font-size: 12px; color: #2563eb; text-decoration: none; font-family: var(--font-mono); font-weight: 700;">
+                        <a href="#/dashboard/directory" class="overview-action-link" data-id="directory" style="font-size: 12px; color: #2563eb; text-decoration: none; font-family: var(--font-mono); font-weight: 700;">
                             Go to Directory ↗
                         </a>
                     </div>
@@ -171,7 +171,7 @@ export function renderPlatformOverviewLayout() {
                         <p style="font-size: 13px; color: #475569; margin: 0 0 14px 0; line-height: 1.5;">
                             Save prospects into your pipeline to view 360° audits, proposals, scripts, pitches, and notes.
                         </p>
-                        <a href="#/dashboard/crm" style="font-size: 12px; color: #059669; text-decoration: none; font-family: var(--font-mono); font-weight: 700;">
+                        <a href="#/dashboard/crm" class="overview-action-link" data-id="crm" style="font-size: 12px; color: #059669; text-decoration: none; font-family: var(--font-mono); font-weight: 700;">
                             Open 360° Deal Workstation ➔
                         </a>
                     </div>
@@ -183,7 +183,7 @@ export function renderPlatformOverviewLayout() {
                         <p style="font-size: 13px; color: #475569; margin: 0 0 14px 0; line-height: 1.5;">
                             Generate 3-page PDF proposals and cold call teleprompters with live objection handlers.
                         </p>
-                        <a href="#/dashboard/proposals" style="font-size: 12px; color: #d97706; text-decoration: none; font-family: var(--font-mono); font-weight: 700;">
+                        <a href="#/dashboard/proposals" class="overview-action-link" data-id="proposals" style="font-size: 12px; color: #d97706; text-decoration: none; font-family: var(--font-mono); font-weight: 700;">
                             Create Proposal ↗
                         </a>
                     </div>
@@ -195,7 +195,7 @@ export function renderPlatformOverviewLayout() {
                         <p style="font-size: 13px; color: #475569; margin: 0 0 14px 0; line-height: 1.5;">
                             Dispatch 1-click WhatsApp proposal links and lock in paid strategy consultation calls.
                         </p>
-                        <a href="#/dashboard/call-scripts" style="font-size: 12px; color: #7c3aed; text-decoration: none; font-family: var(--font-mono); font-weight: 700;">
+                        <a href="#/dashboard/call-scripts" class="overview-action-link" data-id="call-scripts" style="font-size: 12px; color: #7c3aed; text-decoration: none; font-family: var(--font-mono); font-weight: 700;">
                             Open Teleprompter ↗
                         </a>
                     </div>
@@ -233,11 +233,11 @@ export function renderPlatformOverviewLayout() {
 
                                 <div style="border-top: 1px solid #f1f5f9; padding-top: 16px; display: flex; justify-content: space-between; align-items: center;">
                                     ${isUnlocked ? `
-                                        <a href="#/dashboard/${f.id}" style="background: #0f172a; color: white; padding: 8px 18px; font-size: 12.5px; font-weight: 600; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: background 0.2s ease;">
+                                        <a href="#/dashboard/${f.id}" class="overview-action-link" data-id="${f.id}" style="background: #0f172a; color: white; padding: 8px 18px; font-size: 12.5px; font-weight: 600; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: background 0.2s ease;">
                                             ${f.cta}
                                         </a>
                                     ` : `
-                                        <a href="#/checkout" style="font-size: 12.5px; color: #d97706; text-decoration: underline; font-family: var(--font-mono); font-weight: 700; display: flex; align-items: center; gap: 4px;">
+                                        <a href="#/checkout" class="overview-upgrade-link" style="font-size: 12.5px; color: #d97706; text-decoration: underline; font-family: var(--font-mono); font-weight: 700; display: flex; align-items: center; gap: 4px;">
                                             <i data-lucide="lock" style="width: 13px; height: 13px;"></i> Upgrade to Access ↗
                                         </a>
                                     `}
@@ -289,4 +289,29 @@ export function renderPlatformOverviewLayout() {
 export function bindPlatformOverviewEvents() {
     localStorage.setItem('nearpro_onboarding_completed', 'true');
     if (window.refreshLucideIcons) window.refreshLucideIcons();
+
+    if (!State.user) {
+        // Intercept all workflow action links except directory
+        const actionLinks = document.querySelectorAll('.overview-action-link');
+        actionLinks.forEach(link => {
+            const dest = link.getAttribute('data-id');
+            if (dest !== 'directory') {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    State.setExplorerPlanModal(true);
+                });
+            }
+        });
+
+        // Intercept all Upgrade to Access links
+        const upgradeLinks = document.querySelectorAll('.overview-upgrade-link');
+        upgradeLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                State.setExplorerPlanModal(true);
+            });
+        });
+    }
 }
