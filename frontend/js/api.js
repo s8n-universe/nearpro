@@ -457,6 +457,28 @@ export const Api = {
         return data;
     },
 
+    async signInWithLinkedIn() {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: 'linkedin',
+            options: {
+                redirectTo: window.location.origin
+            }
+        });
+        if (error) throw error;
+        return data;
+    },
+
+    async signInWithHubspot() {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: 'hubspot',
+            options: {
+                redirectTo: window.location.origin
+            }
+        });
+        if (error) throw error;
+        return data;
+    },
+
     // --- v3 Dashboard & CRM API Methods ---
 
     async getDashboardStats(userId) {

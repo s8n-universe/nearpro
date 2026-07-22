@@ -24,6 +24,22 @@ export function renderAuthModal() {
                     <span>Login with Google</span>
                 </button>
 
+                <!-- LinkedIn Authentication -->
+                <button id="linkedinAuthBtn" class="secondary-btn" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; padding: 12px; border-radius: var(--radius-sm);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#0a66c2">
+                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                    </svg>
+                    <span>Login with LinkedIn</span>
+                </button>
+
+                <!-- HubSpot Authentication -->
+                <button id="hubspotAuthBtn" class="secondary-btn" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; padding: 12px; border-radius: var(--radius-sm);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#ff7a59">
+                        <path d="M19.9 12.4c-.4-.4-.9-.6-1.5-.7v-3c.8-.4 1.3-1.3 1.3-2.3 0-1.5-1.2-2.7-2.7-2.7S14.3 4.9 14.3 6.4c0 1 .5 1.9 1.3 2.3v3c-.6.1-1.1.3-1.5.7l-4.5-4.5c.3-.5.4-1.1.4-1.8 0-1.9-1.5-3.4-3.4-3.4S3.2 4.1 3.2 6c0 1.9 1.5 3.4 3.4 3.4.7 0 1.3-.2 1.8-.5l4.5 4.5c-.4.4-.6.9-.7 1.5H9.3c-.4-.8-1.3-1.3-2.3-1.3-1.5 0-2.7 1.2-2.7 2.7S5.5 19 7 19c1 0 1.9-.5 2.3-1.3h2.9c.1.6.3 1.1.7 1.5l-3.3 3.3c-.3-.1-.6-.2-.9-.2-1.3 0-2.3 1-2.3 2.3s1 2.3 2.3 2.3 2.3-1 2.3-2.3c0-.3-.1-.6-.2-.9l3.3-3.3c.4.4.9.6 1.5.7v2.9c-.8.4-1.3 1.3-1.3 2.3 0 1.5 1.2 2.7 2.7 2.7s2.7-1.2 2.7-2.7c0-1-.5-1.9-1.3-2.3v-2.9c.6-.1 1.1-.3 1.5-.7l3.3 3.3c-.1.3-.2.6-.2.9 0 1.3 1 2.3 2.3 2.3s2.3-1 2.3-2.3-1-2.3-2.3-2.3c-.3 0-.6.1-.9.2l-3.3-3.3c.4-.4.6-.9.7-1.5h3c.4.8 1.3 1.3 2.3 1.3 1.5 0 2.7-1.2 2.7-2.7s-1.2-2.7-2.7-2.7c-1 0-1.9.5-2.3 1.3h-3c-.1-.6-.3-1.1-.7-1.5l4.5-4.5zm-2.9-6c0-.8.6-1.4 1.4-1.4.8 0 1.4.6 1.4 1.4 0 .8-.6 1.4-1.4 1.4-.8 0-1.4-.6-1.4-1.4zM6.6 7.4c-.8 0-1.4-.6-1.4-1.4 0-.8.6-1.4 1.4-1.4.8 0 1.4.6 1.4 1.4 0 .8-.6 1.4-1.4 1.4zm.4 10.2c-.8 0-1.4-.6-1.4-1.4 0-.8.6-1.4 1.4-1.4.8 0 1.4.6 1.4 1.4 0 .8-.6 1.4-1.4 1.4zm10.9-4.2c-.8 0-1.4-.6-1.4-1.4s.6-1.4 1.4-1.4 1.4.6 1.4 1.4-.6 1.4-1.4 1.4zm.5 5.2c-.8 0-1.4-.6-1.4-1.4 0-.8.6-1.4 1.4-1.4.8 0 1.4.6 1.4 1.4 0 .8-.6 1.4-1.4 1.4z"/>
+                    </svg>
+                    <span>Login with HubSpot</span>
+                </button>
+
                 <!-- Zoho Authentication -->
                 <button id="zohoAuthBtn" class="secondary-btn" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 24px; padding: 12px; border-radius: var(--radius-sm);">
                     <img src="https://cdn.brandfetch.io/idssig0_jY/w/800/h/344/theme/dark/logo.png?c=1bxid64Mup7aczewSAYMX&t=1687855848599" alt="Zoho Logo" style="height: 18px; width: auto; object-fit: contain; margin-right: 4px;">
@@ -192,6 +208,38 @@ export function bindAuthModalEvents() {
                 console.error("Zoho Auth failed: ", err);
                 if (errorMsg) {
                     errorMsg.innerText = err.message || "Zoho authentication failed";
+                    errorMsg.style.display = 'block';
+                }
+            }
+        });
+    }
+
+    // LinkedIn Sign In
+    const linkedinBtn = document.getElementById('linkedinAuthBtn');
+    if (linkedinBtn) {
+        linkedinBtn.addEventListener('click', async () => {
+            try {
+                await Api.signInWithLinkedIn();
+            } catch (err) {
+                console.error("LinkedIn Auth failed: ", err);
+                if (errorMsg) {
+                    errorMsg.innerText = err.message || "LinkedIn authentication failed";
+                    errorMsg.style.display = 'block';
+                }
+            }
+        });
+    }
+
+    // HubSpot Sign In
+    const hubspotBtn = document.getElementById('hubspotAuthBtn');
+    if (hubspotBtn) {
+        hubspotBtn.addEventListener('click', async () => {
+            try {
+                await Api.signInWithHubspot();
+            } catch (err) {
+                console.error("HubSpot Auth failed: ", err);
+                if (errorMsg) {
+                    errorMsg.innerText = err.message || "HubSpot authentication failed";
                     errorMsg.style.display = 'block';
                 }
             }
