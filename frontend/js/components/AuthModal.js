@@ -11,19 +11,21 @@ export function renderAuthModal() {
                 <!-- Left Pane Concise Light Theme Login Form -->
                 <div class="auth-left-pane">
                     
-                    <!-- Back Button -->
-                    <button class="modal-close-btn" id="closeAuthModalBtn" style="position: absolute; top: 24px; left: 24px; font-size: 13px; font-weight: 700; color: #475569; background: rgba(0, 0, 0, 0.03); border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 12px; cursor: pointer; transition: all 0.2s; z-index: 10; display: flex; align-items: center; gap: 6px; outline: none; font-family: inherit;" onmouseover="this.style.background='rgba(0,0,0,0.06)'; this.style.color='#0f172a';" onmouseout="this.style.background='rgba(0,0,0,0.03)'; this.style.color='#475569';">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="19" y1="12" x2="5" y2="12"></line>
-                            <polyline points="12 19 5 12 12 5"></polyline>
-                        </svg>
-                        <span>Back</span>
-                    </button>
-                    
                     <div style="width: 100%; max-width: 360px; margin: 0 auto;">
-                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 24px;">
-                            <img src="/NearPro_logo_nobg.png" alt="NearPro Logo" style="height: 36px; width: auto; object-fit: contain;">
-                            <span style="font-family: var(--font-heading); font-size: 20px; font-weight: 800; color: #0f172a; letter-spacing: -0.5px;">NearPro</span>
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+                            <!-- Inline Back Arrow Button -->
+                            <button class="modal-close-btn" id="closeAuthModalBtn" style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; border: 1px solid #cbd5e1; background: rgba(0, 0, 0, 0.03); color: #475569; cursor: pointer; transition: all 0.2s; outline: none; padding: 0; flex-shrink: 0;" onmouseover="this.style.background='rgba(0,0,0,0.06)'; this.style.color='#0f172a';" onmouseout="this.style.background='rgba(0,0,0,0.03)'; this.style.color='#475569';">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                                    <polyline points="12 19 5 12 12 5"></polyline>
+                                </svg>
+                            </button>
+                            
+                            <!-- Logo and Title -->
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <img src="/NearPro_logo_nobg.png" alt="NearPro Logo" style="height: 32px; width: auto; object-fit: contain;">
+                                <span style="font-family: var(--font-heading); font-size: 20px; font-weight: 800; color: #0f172a; letter-spacing: -0.5px;">NearPro</span>
+                            </div>
                         </div>
                         <h2 style="font-size: 32px; font-weight: 800; margin-bottom: 8px; text-align: left; font-family: var(--font-heading); color: #0f172a; letter-spacing: -0.5px;">
                             Welcome back
