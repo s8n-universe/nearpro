@@ -181,6 +181,13 @@ function initRoutes() {
         if (!document.querySelector('.marketing-hero')) {
             renderMarketingLayout();
         }
+        if (window._scrollToFeatures) {
+            setTimeout(() => {
+                const el = document.getElementById('features-section');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+                window._scrollToFeatures = false;
+            }, 100);
+        }
         if (!State.stats) {
             try {
                 State.stats = await Api.getStats();

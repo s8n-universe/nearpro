@@ -661,7 +661,7 @@ Include structured JSON-LD schema markup, direct WhatsApp button. Follow a premi
                     
                     <!-- Back navigation link -->
                     <div style="margin-bottom: 32px;">
-                        <a href="#/" class="back-link" style="display: inline-flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 13.5px; font-weight: 600; text-decoration: none; transition: var(--transition);">
+                        <a href="#/" class="back-link" onclick="window._scrollToFeatures = true;" style="display: inline-flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 13.5px; font-weight: 600; text-decoration: none; transition: var(--transition);">
                             <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i> Back to Feature Grid
                         </a>
                     </div>
