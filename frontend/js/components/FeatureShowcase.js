@@ -1,6 +1,7 @@
 export function renderFeatureShowcase() {
     const features = [
         {
+            id: 'pipelines',
             num: '01',
             tag: 'Pipelines',
             icon: 'map-pin',
@@ -15,6 +16,7 @@ export function renderFeatureShowcase() {
             isNew: false
         },
         {
+            id: 'crm',
             num: '02',
             tag: 'CRM Hub',
             icon: 'cpu',
@@ -22,62 +24,66 @@ export function renderFeatureShowcase() {
             desc: 'The command center where every lead\'s proposal, script, pitch, and audit lives in one place.',
             highlights: [
                 'Kanban board + 360° Feature Matrix view',
-                'Pipeline value calculator (₹30k/lead avg)',
+                'Pipeline value calculator (₹30k/lead average)',
                 'Activity heatmap & lead intake trend charts'
             ],
             color: 'pink',
             isNew: true
         },
         {
+            id: 'audit',
             num: '03',
             tag: 'Audit',
             icon: 'zap',
             title: 'Instant Website Audits',
-            desc: 'Run a full website health check in 10 seconds — and show prospects exactly how much money they\'re losing.',
+            desc: 'Run a full website health check in 10 seconds and show prospects exactly how much money they are losing.',
             highlights: [
                 'PageSpeed, mobile & SSL status checks',
                 'Lost monthly revenue estimator per prospect',
-                'One-click audit launch from any lead card'
+                'One click audit launch from any lead card'
             ],
             color: 'gold',
             isNew: false
         },
         {
+            id: 'proposals',
             num: '04',
             tag: 'Proposals',
             icon: 'file-text',
-            title: '1-Click PDF Proposals',
-            desc: 'Generate a branded 3-page client audit proposal — ready to send over WhatsApp in under 30 seconds.',
+            title: 'One Click PDF Proposals',
+            desc: 'Generate a branded 3 page client audit proposal ready to send over WhatsApp in under 30 seconds.',
             highlights: [
                 'Google Maps review gap math included',
-                'PageSpeed bottlenecks + 3-tier pricing',
+                'PageSpeed bottlenecks + 3 tier pricing',
                 'Shareable PDF link or web preview'
             ],
             color: 'pink',
             isNew: true
         },
         {
+            id: 'call-scripts',
             num: '05',
             tag: 'Sales Calls',
             icon: 'phone-call',
-            title: 'AI Tele-Sales Teleprompter',
-            desc: 'Live call scripts with objection rebuttals you can click during the call — never go blank again.',
+            title: 'AI Tele Sales Teleprompter',
+            desc: 'Live call scripts with objection rebuttals you can click during the call or never go blank again.',
             highlights: [
-                '30-second pattern interrupt openers',
+                '30 second pattern interrupt openers',
                 'Live objection rebuttal cards per category',
-                '1-click WhatsApp follow-up post call'
+                '1 click WhatsApp follow up post call'
             ],
             color: 'gold',
             isNew: true
         },
         {
+            id: 'outreach',
             num: '06',
             tag: 'AI Outreach',
             icon: 'message-square',
             title: 'AI Outreach & Personalization',
-            desc: 'Generate cold pitches that convert — customized per lead, in Hinglish or English.',
+            desc: 'Generate cold pitches that convert customized per lead, in Hinglish or English.',
             highlights: [
-                'AI conversion scoring per lead (0–100)',
+                'AI conversion scoring per lead from 0 to 100',
                 'WhatsApp, Email & Instagram DM formats',
                 'Hinglish + English tone options'
             ],
@@ -85,20 +91,22 @@ export function renderFeatureShowcase() {
             isNew: false
         },
         {
+            id: 'integrations',
             num: '07',
             tag: 'Integrations',
             icon: 'link',
             title: 'Integration Connection Hub',
-            desc: 'Push leads to your favourite tools automatically — zero manual data entry required.',
+            desc: 'Push leads to your favourite tools automatically zero manual data entry required.',
             highlights: [
                 'Direct Google Sheets sync via Apps Script',
                 'Custom n8n & Make.com webhook pipelines',
-                'Auto-trigger on CRM stage changes'
+                'Auto trigger on CRM stage changes'
             ],
             color: 'gold',
             isNew: false
         },
         {
+            id: 'team',
             num: '08',
             tag: 'Team',
             icon: 'users',
@@ -107,40 +115,43 @@ export function renderFeatureShowcase() {
             highlights: [
                 'Invite team members & assign roles',
                 'Share smart lists across the workspace',
-                'White-label client reports for delivery'
+                'White label client reports for delivery'
             ],
             color: 'pink',
             isNew: false
         },
         {
+            id: 'builder',
             num: '09',
             tag: 'Builder',
             icon: 'code',
             title: 'Website Builder Prompts',
-            desc: 'Turn audit results into a ready-to-paste website brief for any AI builder — one click.',
+            desc: 'Turn audit results into a ready to paste website brief for any AI builder one click.',
             highlights: [
                 'Precision prompts for Bolt.new & Lovable',
-                'Production-ready with JSON-LD schema',
-                'Includes WhatsApp CTA & India-specific copy'
+                'Production ready with JSON LD schema',
+                'Includes WhatsApp CTA & India specific copy'
             ],
             color: 'gold',
             isNew: false
         },
         {
+            id: 'crm-sync',
             num: '10',
             tag: 'CRM Sync',
             icon: 'refresh-cw',
             title: 'Zoho & HubSpot CRM Sync',
-            desc: 'Qualified leads flow straight into your existing CRM — no copy-pasting contacts ever again.',
+            desc: 'Qualified leads flow straight into your existing CRM no copy pasting contacts ever again.',
             highlights: [
                 'Zoho CRM + HubSpot direct connectors',
-                'Auto-update deal pipeline stages',
+                'Auto update deal pipeline stages',
                 'Full sync history & error log dashboard'
             ],
             color: 'pink',
             isNew: false
         },
         {
+            id: 'vault',
             num: '11',
             tag: 'Vault',
             icon: 'folder-open',
@@ -148,8 +159,8 @@ export function renderFeatureShowcase() {
             desc: 'Upload pitch decks and brochures, then attach them to any campaign with one tap.',
             highlights: [
                 'Upload brochures, decks & catalogs (PDF)',
-                'Custom branded short-link per document',
-                '10-year permanent signed links — never expire'
+                'Custom branded short link per document',
+                '10 year permanent signed links that never expire'
             ],
             color: 'gold',
             isNew: false
@@ -157,7 +168,7 @@ export function renderFeatureShowcase() {
     ];
 
     const featureCards = features.map((f, i) => `
-        <div class="feature-card-v2 feature-card-v2--${f.color}" style="animation-delay: ${i * 0.07}s">
+        <a href="#/features/${f.id}" class="feature-card-v2 feature-card-v2--${f.color}" style="animation-delay: ${i * 0.07}s; text-decoration: none;">
             <div class="feature-card-v2__header">
                 <span class="feature-card-v2__num">${f.num}</span>
                 <span class="feature-card-v2__tag feature-card-v2__tag--${f.color}">${f.tag}</span>
@@ -178,7 +189,11 @@ export function renderFeatureShowcase() {
                         ${h}
                     </li>`).join('')}
             </ul>
-        </div>
+            
+            <div class="feature-card-v2__learn-more" style="margin-top: 14px; display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; color: ${f.color === 'gold' ? 'var(--accent-gold)' : 'var(--accent-pink)'};">
+                Learn how to leverage this feature ➔
+            </div>
+        </a>
     `).join('');
 
     return `

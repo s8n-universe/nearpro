@@ -21,6 +21,7 @@ import { renderComparePanel, renderCompareModalContent, bindComparePanelEvents }
 import { renderMapView, initFullMap } from './components/MapView.js';
 import { renderMarketingHero } from './components/MarketingHero.js';
 import { renderFeatureShowcase } from './components/FeatureShowcase.js';
+import { renderFeatureDetailPage, bindFeatureDetailPageEvents } from './components/FeatureDetail.js';
 import { renderAuthModal, bindAuthModalEvents } from './components/AuthModal.js';
 import { renderPricingModal, bindPricingModalEvents } from './components/PricingModal.js';
 import { renderSurveyModal, bindSurveyModalEvents } from './components/SurveyModal.js';
@@ -252,6 +253,11 @@ function initRoutes() {
     Router.on('#/opt-out', () => {
         appShell.innerHTML = renderOptOutPage();
         bindOptOutFormEvents();
+    });
+
+    Router.on('#/features/:id', (id) => {
+        appShell.innerHTML = renderFeatureDetailPage(id);
+        bindFeatureDetailPageEvents();
     });
 
     Router.on('#/d/:id', async (id) => {
@@ -780,6 +786,7 @@ function renderFeedContent(hasMore) {
             State.map_instance.setView([State.demo_lead_lat, State.demo_lead_lng], 16);
         }
     }
+    refreshLucideIcons();
 }
 
 /* --- Modals Handlers --- */
