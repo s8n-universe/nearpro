@@ -1304,7 +1304,7 @@ async function renderDashboardLayout(tab) {
                 const sidebarClass = State.category_sidebar_collapsed ? 'collapsed' : '';
                 content.innerHTML = `
                     <div class="dashboard-directory-layout ${isGuest ? 'guest-browse' : ''}" style="display: flex; width: 100%; height: calc(100vh - 70px); overflow: hidden;">
-                        <aside class="dashboard-category-sidebar ${sidebarClass}" id="sidebarElement" style="width: 240px; border-right: 1px solid ${isGuest ? 'var(--border)' : '#e2e8f0'}; background: ${isGuest ? 'var(--bg-surface)' : '#ffffff'}; overflow-y: auto; padding: 20px 14px; flex-shrink: 0; box-shadow: 2px 0 6px ${isGuest ? 'rgba(0,0,0,0.25)' : 'rgba(15,23,42,0.02)'};"></aside>
+                        ${isGuest ? '' : `<aside class="dashboard-category-sidebar ${sidebarClass}" id="sidebarElement" style="width: 240px; border-right: 1px solid #e2e8f0; background: #ffffff; overflow-y: auto; padding: 20px 14px; flex-shrink: 0; box-shadow: 2px 0 6px rgba(15,23,42,0.02);"></aside>`}
                         <section class="app-content" style="flex: 1; padding: 12px 20px; display: flex; flex-direction: column; overflow-y: auto; position: relative;">
                             <div id="filterPanelElement"></div>
                             <div class="view-container" id="feedElement"></div>
