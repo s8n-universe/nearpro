@@ -73,11 +73,11 @@ export function renderFeatureDetailPage(id) {
             tag: "CRM Operating Hub",
             color: "pink",
             tierAccess: "Scout Plan or Higher",
-            description: "Consolidate pipeline analytics, custom notes, call scripts, and PDF audits in a single interactive drag-and-drop workspace.",
+            description: "Consolidate pipeline analytics, custom notes, call scripts, and PDF audits in a single interactive drag and drop workspace.",
             howToUse: [
                 "Navigate to the <strong>360° AI Deal Hub</strong> tab on your dashboard sidebar.",
-                "Review new leads incoming from the directory. Drag-and-drop cards between stages to update deal progression (New ➔ Contacted ➔ Offer Sent ➔ Closed).",
-                "Use the quick shortcut buttons on each card to trigger 1-click proposals, scripts, or pitches dynamically tailored to that lead."
+                "Review new leads incoming from the directory. Drag and drop cards between stages to update deal progression (New ➔ Contacted ➔ Offer Sent ➔ Closed).",
+                "Use the quick shortcut buttons on each card to trigger 1 click proposals, scripts, or pitches dynamically tailored to that lead."
             ],
             mockup: `
                 <div class="mock-browser-window">
@@ -151,7 +151,7 @@ export function renderFeatureDetailPage(id) {
         },
         audit: {
             title: "Instant Website Audits",
-            overline: "10-Second Technical Scanner",
+            overline: "10 Second Technical Scanner",
             tag: "Automated Audit",
             color: "gold",
             tierAccess: "Hunter Plan or Higher",
@@ -159,7 +159,7 @@ export function renderFeatureDetailPage(id) {
             howToUse: [
                 "Access the <strong>Business Health Check</strong> tab in your workspace.",
                 "Select a tracked lead or paste any external business website URL, then click 'Run Scan'.",
-                "Review the color-coded issues and share the revenue leak calculation to capture your prospect's attention."
+                "Review the color coded issues and share the revenue leak calculation to capture your prospect's attention."
             ],
             mockup: `
                 <div class="mock-browser-window">
@@ -217,16 +217,16 @@ export function renderFeatureDetailPage(id) {
             `
         },
         proposals: {
-            title: "1-Click PDF Proposals",
+            title: "One Click PDF Proposals",
             overline: "Conversion Oriented Collateral",
             tag: "PDF Proposal",
             color: "pink",
             tierAccess: "Scout Plan or Higher",
-            description: "Generate customized client-ready audit proposals with Google Maps review gap calculations, PageSpeed details, and package pricing.",
+            description: "Generate customized client ready audit proposals with Google Maps review gap calculations, PageSpeed details, and package pricing.",
             howToUse: [
                 "Open the <strong>PDF Proposals</strong> tab on your dashboard sidebar.",
                 "Choose a saved lead to audit. The engine fetches GSC and Maps statistics automatically.",
-                "Click 'Generate Proposal'. Download the PDF file or copy the permanent 10-year signed link to dispatch directly over WhatsApp."
+                "Click 'Generate Proposal'. Download the PDF file or copy the permanent 10 year signed link to dispatch directly over WhatsApp."
             ],
             mockup: `
                 <div class="mock-browser-window">
@@ -280,7 +280,7 @@ export function renderFeatureDetailPage(id) {
             `
         },
         "call-scripts": {
-            title: "AI Tele-Sales Teleprompter",
+            title: "AI Tele Sales Teleprompter",
             overline: "Interactive Calling Assistant",
             tag: "Tele-Sales Scripts",
             color: "gold",
@@ -288,7 +288,7 @@ export function renderFeatureDetailPage(id) {
             description: "Access category-specific call scripts and live objection response cards. Handle gatekeepers, pricing, or busy clients with ease.",
             howToUse: [
                 "Open the <strong>Tele-Sales Scripts</strong> tab during your calling session.",
-                "Choose the lead to pull their category-specific 30-second pattern interrupt call script.",
+                "Choose the lead to pull their category-specific 30 second pattern interrupt call script.",
                 "Click on objection rebuttal tabs in real time as the client speaks to display tailored objection responses."
             ],
             mockup: `
@@ -308,7 +308,7 @@ export function renderFeatureDetailPage(id) {
                         </div>
                         <div class="script-body">
                             <div class="script-panel">
-                                <h5>Warm Opener (30-Sec Pattern Interrupt)</h5>
+                                <h5>Warm Opener (30 Second Pattern Interrupt)</h5>
                                 <p class="script-paragraph">
                                     "Hi Dr. Ritu, I know you're busy running the clinic, so I'll be brief. I noticed your Bandra clinic is losing out on online bookings because your mobile site takes 6.8 seconds to load. I actually built a demo mock layout to fix this..."
                                 </p>
@@ -416,7 +416,7 @@ export function renderFeatureDetailPage(id) {
                             </div>
 
                             <div class="triggers-group">
-                                <h6>Auto-Trigger Events</h6>
+                                <h6>Auto Trigger Events</h6>
                                 <label class="trigger-label">
                                     <input type="checkbox" checked disabled />
                                     <span>Trigger webhook when new lead is saved</span>
@@ -480,7 +480,7 @@ export function renderFeatureDetailPage(id) {
                                 </div>
                             </div>
                             <div class="scraper-panel-section">
-                                <h5>Custom Scraper Queue (SLA: 2-6h)</h5>
+                                <h5>Custom Scraper Queue (SLA: 2 to 6 hours)</h5>
                                 <div class="scraper-row done">
                                     <div>
                                         <strong>Dentists in Delhi NCR</strong>
@@ -507,7 +507,7 @@ export function renderFeatureDetailPage(id) {
             tag: "AI Code Prompts",
             color: "gold",
             tierAccess: "Scout Plan or Higher",
-            description: "Generate production-ready structured prompts tailored for Bolt.new and Lovable to rebuild outdated prospect sites with one click.",
+            description: "Generate production ready structured prompts tailored for Bolt.new and Lovable to rebuild outdated prospect sites with one click.",
             howToUse: [
                 "Navigate to the <strong>Website Prompt Engine</strong> tab.",
                 "Select the target business lead to load their rating, coordinates, and details automatically.",
@@ -598,11 +598,11 @@ Include structured JSON-LD schema markup, direct WhatsApp button. Follow a premi
             tag: "Documents Library",
             color: "gold",
             tierAccess: "Scout Plan or Higher",
-            description: "Upload B2B proposals, catalogs, and pitch decks. Customize short-link slugs and share them with permanent 10-year signed links over WhatsApp.",
+            description: "Upload B2B proposals, catalogs, and pitch decks. Customize short link slugs and share them with permanent 10 year signed links over WhatsApp.",
             howToUse: [
                 "Open the <strong>Documents Library</strong> tab from your dashboard sidebar.",
                 "Click 'Upload PDF' and select your B2B proposal presentation or service pricing brochure.",
-                "Customize the short-link slug (e.g. `bandra_clinic`) and click Save. Copy the permanent signed URL to send campaigns without dead link risks."
+                "Customize the short link slug (e.g. `bandra_clinic`) and click Save. Copy the permanent signed URL to send campaigns without dead link risks."
             ],
             mockup: `
                 <div class="mock-browser-window">
@@ -674,7 +674,7 @@ Include structured JSON-LD schema markup, direct WhatsApp button. Follow a premi
                             
                             <div class="mockup-caption-bar">
                                 <span class="caption-dot"></span>
-                                <p>High-Fidelity simulated screen preview using live sandbox database schema values.</p>
+                                <p>High Fidelity simulated screen preview using live sandbox database schema values.</p>
                             </div>
                         </div>
 
