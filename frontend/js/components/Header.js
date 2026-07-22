@@ -92,8 +92,8 @@ export function renderHeader() {
                         <div class="navbar-ticker" style="overflow: hidden; white-space: nowrap; max-width: 350px; font-size: 11.5px; font-weight: 700; color: var(--accent-gold); display: flex; align-items: center; gap: 8px; border: 1px solid rgba(255,160,0,0.2); padding: 4px 12px; border-radius: 20px; background: rgba(255,160,0,0.03);">
                             <span class="ticker-badge" style="background: rgba(255, 160, 0, 0.15); color: var(--accent-gold); padding: 1px 6px; border-radius: 12px; font-size: 9.5px; font-family: var(--font-mono); text-transform: uppercase; display: inline-block; animation: pulse 2s infinite; flex-shrink: 0;">HOT 🔥</span>
                             <div class="ticker-viewport" style="overflow: hidden; width: 100%; position: relative; height: 16px;">
-                                <div class="ticker-track" style="display: inline-block; white-space: nowrap; position: absolute; animation: marquee 20s linear infinite;">
-                                    ⚡ Unlock 12 premium leads free with contact numbers & websites! &bull; 🚀 Start targeting high-value local prospects today! &bull; 💸 Pitch ₹30,000 website packages to gap leads! &bull; ⚡ Unlock 12 premium leads free with contact numbers & websites! &bull; 🚀 Start targeting high-value local prospects today! &bull; 💸 Pitch ₹30,000 website packages to gap leads!
+                                <div class="ticker-track" style="display: inline-block; white-space: nowrap; position: absolute; animation: marquee 25s linear infinite; width: max-content;">
+                                    🔥 CA Rahul just closed a ₹30,000 retainer using NearPro! &bull; ⚡ Unlocking 12 premium verified leads with direct numbers today! &bull; 💸 Pitch ₹30,000 mobile layout packages to target gap leads! &bull; 🚀 Find local clients with 100% verified street-address data! &bull; 🔥 CA Rahul just closed a ₹30,000 retainer using NearPro! &bull; ⚡ Unlocking 12 premium verified leads with direct numbers today! &bull; 💸 Pitch ₹30,000 mobile layout packages to target gap leads! &bull; 🚀 Find local clients with 100% verified street-address data!
                                 </div>
                             </div>
                         </div>
@@ -108,8 +108,8 @@ export function renderHeader() {
         </header>
         <style>
             @keyframes marquee {
-                0% { left: 0%; }
-                100% { left: -100%; }
+                0% { transform: translateX(-50%); }
+                100% { transform: translateX(0%); }
             }
             @keyframes pulse {
                 0%, 100% { opacity: 1; }
