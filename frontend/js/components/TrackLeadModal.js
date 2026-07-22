@@ -4,8 +4,8 @@ import { currentUserHasAccess, getUserTier } from '../auth.js';
 
 // Tier-based limits per V3 spec Section 3
 const TIER_LIMITS = {
-    free:   { maxLists: 1, maxLeadsPerList: 5 },
-    scout:  { maxLists: 5, maxLeadsPerList: 50 },
+    free:   { maxLists: 1, maxLeadsPerList: 10 },
+    scout:  { maxLists: 5, maxLeadsPerList: 100 },
     hunter: { maxLists: 20, maxLeadsPerList: Infinity },
     agency: { maxLists: Infinity, maxLeadsPerList: Infinity }
 };

@@ -3,10 +3,10 @@ import { Api } from '../api.js';
 import { getUserTier } from '../auth.js';
 
 export const PROMPT_LIMITS = {
-    free: 3,
-    scout: 30,
-    hunter: 60,
-    agency: 100,
+    free: 5,
+    scout: 40,
+    hunter: 80,
+    agency: 150,
     enterprise: 999999
 };
 

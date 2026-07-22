@@ -5,8 +5,9 @@ export function renderTeamWorkspace(members = [], dataRequests = [], activeTab =
     const userTier = State.profile?.subscription_tier || State.profile?.tier || 'free';
     let seatLimit = 1;
     if (userTier === 'scout') seatLimit = 3;
-    else if (userTier === 'hunter') seatLimit = 5;
-    else if (userTier === 'agency' || userTier === 'enterprise') seatLimit = 999999;
+    else if (userTier === 'hunter') seatLimit = 6;
+    else if (userTier === 'agency') seatLimit = 15;
+    else if (userTier === 'enterprise') seatLimit = 999999;
 
     const safeMembers = Array.isArray(members) ? members : [];
     const safeRequests = Array.isArray(dataRequests) ? dataRequests : [];

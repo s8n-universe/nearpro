@@ -5,13 +5,13 @@ export function renderCallScriptGeneratorLayout(selectedLeadId = null) {
     const userTier = (State.profile?.subscription_tier || State.profile?.tier || 'free').toLowerCase();
     const used = State.profile?.monthly_call_scripts_used || 0;
     
-    let limit = 0;
-    if (userTier === 'scout') limit = 5;
-    else if (userTier === 'hunter') limit = 30;
-    else if (userTier === 'agency') limit = 100;
+    let limit = 1;
+    if (userTier === 'scout') limit = 8;
+    else if (userTier === 'hunter') limit = 45;
+    else if (userTier === 'agency') limit = 150;
     else if (userTier === 'enterprise') limit = 999999;
 
-    const isAtLimit = limit > 0 ? (used >= limit) : (userTier === 'free');
+    const isAtLimit = used >= limit;
 
     return `
         <div class="call-script-generator-container" style="display: flex; flex-direction: column; gap: 20px; width: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">

@@ -59,9 +59,16 @@ export function buildOutreach(templateText, lead, audit = null) {
 
 export function renderOutreachStudio(savedLeads, activeLeadId = null, templates = [], activeTemplateId = null, composedMessage = '', composedFollowUp = '') {
     const used = State.profile?.monthly_ai_generations_used || 0;
-    const limit = State.profile?.monthly_ai_generations_limit || 500;
-    const tier = State.profile?.subscription_tier || 'free';
-    const aiUsageLabel = tier === 'agency' ? 'Unlimited AI runs' : `AI Runs: ${used}/${limit}`;
+    const tier = (State.profile?.subscription_tier || 'free').toLowerCase();
+    const STUDIO_FALLBACK_LIMITS = {
+        free: 3,
+        scout: 20,
+        hunter: 500,
+        agency: 999999,
+        enterprise: 999999
+    };
+    const limit = State.profile?.monthly_ai_generations_limit || STUDIO_FALLBACK_LIMITS[tier] || 3;
+    const aiUsageLabel = (tier === 'agency' || tier === 'enterprise') ? 'Unlimited AI runs' : `AI Runs: ${used}/${limit}`;
 
     // 1. Render Left panel (Lead Selector)
     const leadsHTML = savedLeads.map(item => {

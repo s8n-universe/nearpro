@@ -7,10 +7,10 @@ const corsHeaders = {
 }
 
 const CALL_SCRIPT_LIMITS = {
-  free: 0,
-  scout: 5,
-  hunter: 30,
-  agency: 100,
+  free: 1,
+  scout: 8,
+  hunter: 45,
+  agency: 150,
   enterprise: 999999
 };
 

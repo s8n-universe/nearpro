@@ -3,9 +3,9 @@ import { Api } from '../api.js';
 import { getUserTier } from '../auth.js';
 
 export const AUDIT_LIMITS = {
-    free: 0,
-    scout: 10,
-    hunter: 50,
+    free: 2,
+    scout: 15,
+    hunter: 75,
     agency: 999999,
     enterprise: 999999
 };

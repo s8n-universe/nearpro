@@ -337,22 +337,26 @@ export const Api = {
         const profile = State?.profile;
         const tier = (profile?.subscription_tier || profile?.tier || 'free').toLowerCase();
 
-        if (tier === 'free') {
-            State?.setPricingModal(true);
-            return;
-        }
+        const EXPORT_LIMITS = {
+            free: 15,
+            scout: 250,
+            hunter: 1000,
+            agency: 5000,
+            enterprise: 999999
+        };
 
-        // Scout: 100 rows/month limit
-        if (tier === 'scout') {
-            const used = profile?.monthly_export_rows_used || 0;
-            const limit = profile?.monthly_export_rows_limit || 100;
+        const limit = EXPORT_LIMITS[tier] || EXPORT_LIMITS.free;
+        const used = profile?.monthly_export_rows_used || 0;
+
+        if (tier !== 'enterprise') {
             if (used + leads.length > limit) {
                 const remaining = Math.max(0, limit - used);
                 if (remaining === 0) {
+                    alert(`🚫 Monthly CSV export limit reached for ${tier.toUpperCase()} tier (${used}/${limit} rows). Please upgrade to export more leads.`);
                     State?.setPricingModal(true);
                     return;
                 }
-                // Trim to remaining allowance
+                alert(`⚠️ You only have ${remaining} row exports remaining this month. Exporting first ${remaining} leads.`);
                 leads = leads.slice(0, remaining);
             }
         }
@@ -387,7 +391,7 @@ export const Api = {
         document.body.removeChild(link);
 
         // Update usage counter in profile (best-effort, non-blocking)
-        if (profile && tier === 'scout') {
+        if (profile && tier !== 'enterprise') {
             const newUsed = (profile.monthly_export_rows_used || 0) + leads.length;
             profile.monthly_export_rows_used = newUsed;
             supabase.from('profiles')

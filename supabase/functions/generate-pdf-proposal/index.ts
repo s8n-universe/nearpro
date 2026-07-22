@@ -7,10 +7,10 @@ const corsHeaders = {
 }
 
 const PROPOSAL_LIMITS = {
-  free: 0,
-  scout: 3,
-  hunter: 25,
-  agency: 100,
+  free: 1,
+  scout: 5,
+  hunter: 30,
+  agency: 150,
   enterprise: 999999
 };
 
