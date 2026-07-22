@@ -73,6 +73,36 @@ export function renderHeader() {
             <button id="openLoginBtn" class="brand-btn" style="padding: 8px 16px; font-size: 13px; border-radius: var(--radius-sm);">Login</button>
         `;
     }
+
+    // Static marquee elements creation
+    const tickerNames = [
+        "CA Rahul", "Freelancer Priya", "Agency Head Amit", 
+        "Sales Rep Sneha", "Designer Rohit", "Developer Kiara", 
+        "Consultant Vivek", "Marketer Arjun", "Growth Hacker Riya"
+    ];
+    const tickerDeals = [
+        "₹30,000 retainer", "₹45,000 website contract", "₹75,000 SEO project", 
+        "₹20,000 consulting gig", "₹60,000 design package", "₹50,000 HubSpot migration", 
+        "₹35,000 audit deal", "₹90,000 enterprise contract", "₹40,000 WhatsApp campaign"
+    ];
+    const tickerTips = [
+        "Find local clients with 100% verified street address data!",
+        "Unlocking 12 premium verified leads with direct numbers today!",
+        "Pitch ₹30,000 mobile layout packages to target gap leads!",
+        "Sync local business profiles to Google Sheets automatically!",
+        "Create custom white-label proposal PDFs in 30 seconds!",
+        "Bypass gatekeepers with direct owner mobile numbers!"
+    ];
+
+    const tickerItems = [];
+    for (let i = 0; i < tickerNames.length; i++) {
+        const deal = tickerDeals[i % tickerDeals.length];
+        const tip = tickerTips[i % tickerTips.length];
+        tickerItems.push(`🔥 <span style="color: var(--accent-gold);">${tickerNames[i]}</span> just closed a <span style="color: #3b82f6;">${deal}</span> using NearPro!`);
+        tickerItems.push(`🚀 ${tip}`);
+    }
+    const singleSequence = tickerItems.join(' &bull; ');
+    const fullMarqueeContent = `${singleSequence} &bull; ${singleSequence} &bull;`;
  
     return `
         <header class="main-header" style="border-bottom: none;">
@@ -99,8 +129,8 @@ export function renderHeader() {
                 <div class="container" style="display: flex; align-items: center; gap: 12px; max-width: var(--container-width); margin: 0 auto; padding: 0 16px;">
                     <span class="ticker-badge" style="background: rgba(255, 160, 0, 0.15); color: var(--accent-gold); padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 800; font-family: var(--font-mono); text-transform: uppercase; display: inline-block; animation: pulse 2s infinite; flex-shrink: 0; letter-spacing: 0.5px;">HOT 🔥</span>
                     <div class="ticker-viewport" style="overflow: hidden; width: 100%; position: relative; height: 22px; display: flex; align-items: center;">
-                        <div class="ticker-track" style="display: inline-block; white-space: nowrap; position: absolute; animation: marquee-bar 22s linear infinite; width: max-content; font-size: 14.5px; font-weight: 700; color: #e2e8f0; will-change: transform; backface-visibility: hidden; transform: translate3d(0, 0, 0);">
-                            🔥 <span class="dynamic-ticker-name" style="color: var(--accent-gold);">CA Rahul</span> just closed a <span class="dynamic-ticker-deal" style="color: #3b82f6;">₹30,000 retainer</span> using NearPro! &bull; 🚀 Find local clients with 100% verified street address data! &bull; 🔥 <span class="dynamic-ticker-name" style="color: var(--accent-gold);">CA Rahul</span> just closed a <span class="dynamic-ticker-deal" style="color: #3b82f6;">₹30,000 retainer</span> using NearPro! &bull; 🚀 Find local clients with 100% verified street address data! &bull; 
+                        <div class="ticker-track" style="display: inline-block; white-space: nowrap; position: absolute; animation: marquee-bar 45s linear infinite; width: max-content; font-size: 14.5px; font-weight: 700; color: #e2e8f0; will-change: transform; backface-visibility: hidden; transform: translate3d(-50%, 0, 0);">
+                            ${fullMarqueeContent}
                         </div>
                     </div>
                 </div>
@@ -169,57 +199,6 @@ export function bindHeaderEvents() {
             if (!profileAvatarBtn.contains(e.target) && !profileDropdownMenu.contains(e.target)) {
                 profileDropdownMenu.style.display = 'none';
             }
-        });
-    }
-
-    // Dynamic rotating names & deal amounts/types for ticker social proof on animation iteration
-    if (window._tickerNameIntervalId) {
-        clearInterval(window._tickerNameIntervalId);
-        window._tickerNameIntervalId = null;
-    }
-    const dynamicNames = [
-        "CA Rahul",
-        "Freelancer Priya",
-        "Agency Head Amit",
-        "Sales Rep Sneha",
-        "Designer Rohit",
-        "Developer Kiara",
-        "Consultant Vivek",
-        "Marketer Arjun",
-        "Growth Hacker Riya"
-    ];
-    const dynamicDeals = [
-        "₹30,000 retainer",
-        "₹45,000 website contract",
-        "₹75,000 SEO project",
-        "₹20,000 consulting gig",
-        "₹60,000 design package",
-        "₹50,000 HubSpot migration",
-        "₹35,000 audit deal",
-        "₹90,000 enterprise contract"
-    ];
-    let nameIdx = 0;
-    let dealIdx = 0;
-    
-    const tickerTrack = document.querySelector('.ticker-track');
-    if (tickerTrack) {
-        // Set initial values
-        document.querySelectorAll('.dynamic-ticker-name').forEach(el => el.textContent = dynamicNames[0]);
-        document.querySelectorAll('.dynamic-ticker-deal').forEach(el => el.textContent = dynamicDeals[0]);
-
-        // Swap the content exactly when the animation completes its cycle and resets off-screen
-        tickerTrack.addEventListener('animationiteration', () => {
-            nameIdx = (nameIdx + 1) % dynamicNames.length;
-            dealIdx = (dealIdx + 1) % dynamicDeals.length;
-            const nextName = dynamicNames[nameIdx];
-            const nextDeal = dynamicDeals[dealIdx];
-            
-            document.querySelectorAll('.dynamic-ticker-name').forEach(el => {
-                el.textContent = nextName;
-            });
-            document.querySelectorAll('.dynamic-ticker-deal').forEach(el => {
-                el.textContent = nextDeal;
-            });
         });
     }
 }
