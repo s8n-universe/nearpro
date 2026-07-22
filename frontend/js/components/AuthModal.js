@@ -110,7 +110,7 @@ export function renderAuthModal() {
                             <!-- Registration Agreement Checkbox -->
                             <div id="signUpConsentWrapper" style="display: none; margin-bottom: 16px;">
                                 <label style="display: flex; align-items: flex-start; gap: 6px; font-size: 11px; color: #475569; line-height: 1.4; cursor: pointer;">
-                                    <input type="checkbox" id="authTermsConsentCb" style="margin-top: 2px; cursor: pointer;">
+                                    <input type="checkbox" id="authTermsConsentCb" checked style="margin-top: 2px; cursor: pointer;">
                                     <span>
                                         I agree to NearPro's Terms of Service and Privacy Policy.
                                     </span>
@@ -303,6 +303,7 @@ export function renderAuthModal() {
                 cursor: pointer;
                 font-weight: 700;
                 transition: all 0.2s ease;
+                border-bottom: 2px solid transparent !important;
             }
             .auth-left-pane .tab-header-btn:hover {
                 color: #0f172a !important;
@@ -405,28 +406,16 @@ export function bindAuthModalEvents() {
     const setTab = (tab) => {
         if (tab === 'signin') {
             currentTab = 'signin';
-            if (signInTab) {
-                signInTab.style.borderBottomColor = 'var(--accent-gold)';
-                signInTab.style.color = '#0f172a';
-            }
-            if (signUpTab) {
-                signUpTab.style.borderBottomColor = 'transparent';
-                signUpTab.style.color = '#64748b';
-            }
+            if (signInTab) signInTab.classList.add('active');
+            if (signUpTab) signUpTab.classList.remove('active');
             submitBtn.innerText = 'Sign In';
             toggleHint.innerText = 'New to NearPro?';
             toggleLink.innerText = 'Create an account';
             if (errorMsg) errorMsg.style.display = 'none';
         } else {
             currentTab = 'signup';
-            if (signUpTab) {
-                signUpTab.style.borderBottomColor = 'var(--accent-gold)';
-                signUpTab.style.color = '#0f172a';
-            }
-            if (signInTab) {
-                signInTab.style.borderBottomColor = 'transparent';
-                signInTab.style.color = '#64748b';
-            }
+            if (signUpTab) signUpTab.classList.add('active');
+            if (signInTab) signInTab.classList.remove('active');
             submitBtn.innerText = 'Register';
             toggleHint.innerText = 'Already using NearPro?';
             toggleLink.innerText = 'Sign In';
