@@ -43,6 +43,7 @@ import { renderDocumentViewerLayout } from './components/DocumentViewer.js';
 import { renderProposalGeneratorLayout, bindProposalGeneratorEvents } from './components/ProposalGenerator.js';
 import { renderCallScriptGeneratorLayout, bindCallScriptGeneratorEvents } from './components/CallScriptGenerator.js';
 import { renderPlatformOverviewLayout, bindPlatformOverviewEvents } from './components/PlatformOverview.js';
+import { renderExplorerPlanModal, bindExplorerPlanModalEvents } from './components/ExplorerPlanModal.js';
 
 // Main Application shell reference
 const appShell = document.getElementById('app');
@@ -98,6 +99,13 @@ State.subscribe(async (currentState) => {
     if (pricingPlaceholder) {
         pricingPlaceholder.innerHTML = renderPricingModal();
         bindPricingModalEvents();
+    }
+
+    // Dynamically render/update Explorer Plan Modal
+    const explorerPlanPlaceholder = document.getElementById('explorerPlanModalPlaceholder');
+    if (explorerPlanPlaceholder) {
+        explorerPlanPlaceholder.innerHTML = renderExplorerPlanModal();
+        bindExplorerPlanModalEvents();
     }
 
     // Dynamically render/update Survey Modal
@@ -156,6 +164,7 @@ function initRoutes() {
                 ${renderCheckoutPage(plan, cycle)}
                 <div id="authModalPlaceholder"></div>
                 <div id="pricingModalPlaceholder"></div>
+                <div id="explorerPlanModalPlaceholder"></div>
                 <div id="upgradeSuccessModalPlaceholder"></div>
             </div>
         `;
@@ -306,6 +315,7 @@ function renderMarketingLayout() {
             </main>
             <div id="authModalPlaceholder"></div>
             <div id="pricingModalPlaceholder"></div>
+            <div id="explorerPlanModalPlaceholder"></div>
             <div id="surveyModalPlaceholder"></div>
             <div id="upgradeModalPlaceholder"></div>
             <div id="checkoutConsentModalPlaceholder"></div>
@@ -344,6 +354,7 @@ async function renderDirectoryLayout() {
             <div class="modal-overlay" id="compareModalOverlay"></div>
             <div id="authModalPlaceholder"></div>
             <div id="pricingModalPlaceholder"></div>
+            <div id="explorerPlanModalPlaceholder"></div>
             <div id="surveyModalPlaceholder"></div>
             <div id="upgradeModalPlaceholder"></div>
             
@@ -378,13 +389,6 @@ async function renderDirectoryLayout() {
     State.locked = false;
     const isPremium = currentUserHasAccess('scout');
     let showWelcomeModal = false;
- 
-    if (!isPremium && !State.user) {
-        const demoCompleted = localStorage.getItem('nearpro_demo_completed') === 'true';
-        if (!demoCompleted) {
-            showWelcomeModal = true;
-        }
-    }
 
     // Trigger initial content query load after lock status is determined
     await queryProfessionals(true);
@@ -714,9 +718,6 @@ function renderFeedContent(hasMore) {
                         </div>
                         <span style="color: #2563eb; font-weight: 700;">Select Visible for Compare (${State.selected_ids.length})</span>
                     </label>
-                    <button id="restartDemoBtn" class="secondary-btn" style="padding: 6px 12px; font-size: 12px; border-radius: var(--radius-sm); border-color: #cbd5e1; color: #475569; font-weight: 600;">
-                        Restart Tour
-                    </button>
                 </div>
             </div>
 
@@ -741,22 +742,6 @@ function renderFeedContent(hasMore) {
                 } else {
                     State.deselectAll();
                 }
-            });
-        }
-
-        const restartBtn = document.getElementById('restartDemoBtn');
-        if (restartBtn) {
-            restartBtn.addEventListener('click', () => {
-                localStorage.removeItem('nearpro_demo_completed');
-                State.locked = false;
-                State.session_started = null;
-                if (timerInterval) {
-                    clearInterval(timerInterval);
-                    timerInterval = null;
-                }
-                const timerEl = document.getElementById('sessionTimer');
-                if (timerEl) timerEl.remove();
-                renderDirectoryLayout();
             });
         }
         
@@ -1222,20 +1207,19 @@ async function renderDashboardLayout(tab) {
     const { hasAccess, getUserTier } = await import('./auth.js');
     const userTier = getUserTier();
 
-    // Required tiers for each sub tab
     const requiredTiers = {
         overview: 'free',
         directory: 'free',
-        crm: 'scout',
-        lists: 'scout',
-        proposals: 'scout',
-        'call-scripts': 'scout',
-        documents: 'scout',
-        audit: 'scout',
-        outreach: 'scout',
-        prompts: 'scout',
+        crm: 'free',
+        lists: 'free',
+        proposals: 'free',
+        'call-scripts': 'free',
+        documents: 'free',
+        audit: 'free',
+        outreach: 'free',
+        prompts: 'free',
         integrations: 'scout',
-        team: 'scout',
+        team: 'free',
         settings: 'free'
     };
 

@@ -23,17 +23,17 @@ export function renderDashboardShell(activeTab = 'crm') {
     // Sidebar items configuration
     const sidebarItems = [
         { id: 'overview', label: 'Getting Started', requiredTier: 'free', icon: 'compass' },
-        { id: 'crm', label: '🤖 360° AI Deal Hub', requiredTier: 'scout', icon: 'clipboard-list' },
+        { id: 'crm', label: '🤖 360° AI Deal Hub', requiredTier: 'free', icon: 'clipboard-list' },
         { id: 'directory', label: 'Browse Directory', requiredTier: 'free', icon: 'search' },
-        { id: 'lists', label: 'Smart Lists', requiredTier: 'scout', icon: 'folder' },
-        { id: 'proposals', label: 'PDF Proposals', requiredTier: 'scout', icon: 'file-text' },
-        { id: 'call-scripts', label: 'Tele-Sales Scripts', requiredTier: 'scout', icon: 'phone-call' },
-        { id: 'documents', label: 'Documents Library', requiredTier: 'scout', icon: 'paperclip' },
-        { id: 'audit', label: 'Business Health Check', requiredTier: 'scout', icon: 'activity' },
-        { id: 'outreach', label: 'AI Outreach Studio', requiredTier: 'scout', icon: 'send' },
-        { id: 'prompts', label: 'Website Prompt Engine', requiredTier: 'scout', icon: 'zap' },
+        { id: 'lists', label: 'Smart Lists', requiredTier: 'free', icon: 'folder' },
+        { id: 'proposals', label: 'PDF Proposals', requiredTier: 'free', icon: 'file-text' },
+        { id: 'call-scripts', label: 'Tele-Sales Scripts', requiredTier: 'free', icon: 'phone-call' },
+        { id: 'documents', label: 'Documents Library', requiredTier: 'free', icon: 'paperclip' },
+        { id: 'audit', label: 'Business Health Check', requiredTier: 'free', icon: 'activity' },
+        { id: 'outreach', label: 'AI Outreach Studio', requiredTier: 'free', icon: 'send' },
+        { id: 'prompts', label: 'Website Prompt Engine', requiredTier: 'free', icon: 'zap' },
         { id: 'integrations', label: 'Connection Hub', requiredTier: 'scout', icon: 'plug' },
-        { id: 'team', label: 'Team Workspace', requiredTier: 'scout', icon: 'users' },
+        { id: 'team', label: 'Team Workspace', requiredTier: 'free', icon: 'users' },
         { id: 'settings', label: 'Settings', requiredTier: 'free', icon: 'settings' }
     ];
 
@@ -166,6 +166,7 @@ export function renderDashboardShell(activeTab = 'crm') {
             <!-- Global Upgrade Modal Overlay -->
             <div id="authModalPlaceholder"></div>
             <div id="pricingModalPlaceholder"></div>
+            <div id="explorerPlanModalPlaceholder"></div>
             <div id="surveyModalPlaceholder"></div>
             <div id="personalizationModalPlaceholder"></div>
             <div id="upgradeModalPlaceholder"></div>

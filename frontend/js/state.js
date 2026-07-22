@@ -101,7 +101,7 @@ export const State = {
             this.notify();
         } else {
             const tier = (this.profile?.subscription_tier || this.profile?.tier || 'free').toLowerCase();
-            const maxCompare = (tier === 'scout') ? 2 : (tier === 'free' ? 0 : 4);
+            const maxCompare = (tier === 'scout') ? 4 : (tier === 'free' ? 2 : 10);
             if (this.selected_ids.length >= maxCompare) {
                 alert(`You can compare a maximum of ${maxCompare} professionals on the ${tier.toUpperCase()} plan. Please upgrade to compare more.`);
                 this.setPricingModal(true);
@@ -117,7 +117,7 @@ export const State = {
 
     selectAll() {
         const tier = (this.profile?.subscription_tier || this.profile?.tier || 'free').toLowerCase();
-        const maxCompare = (tier === 'scout') ? 2 : (tier === 'free' ? 0 : 4);
+        const maxCompare = (tier === 'scout') ? 4 : (tier === 'free' ? 2 : 10);
         const ids = this.professionals.map(p => p.id).filter(id => !this.selected_ids.includes(id));
         const canAdd = maxCompare - this.selected_ids.length;
         if (canAdd <= 0) {
@@ -161,10 +161,22 @@ export const State = {
     },
 
     pricing_modal_open: false,
+    explorer_plan_modal_open: false,
     
     setPricingModal(isOpen) {
+        if (isOpen && !this.user) {
+            this.explorer_plan_modal_open = true;
+            this.notify();
+            return;
+        }
         if (this.pricing_modal_open === isOpen) return;
         this.pricing_modal_open = isOpen;
+        this.notify();
+    },
+
+    setExplorerPlanModal(isOpen) {
+        if (this.explorer_plan_modal_open === isOpen) return;
+        this.explorer_plan_modal_open = isOpen;
         this.notify();
     },
 

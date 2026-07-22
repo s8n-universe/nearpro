@@ -136,8 +136,8 @@ export function renderProfessionalCard(lead, index = 0) {
     }
 
     const isPremium = currentUserHasAccess('scout');
-    // Step 1: Freemium Hook — Free users get first 2 phone numbers unlocked as a free trial sample!
-    const isFreemiumSampleUnlocked = !isPremium && index < 2;
+    // Step 1: Freemium Hook — Free users get first 12 phone numbers unlocked as a free trial sample!
+    const isFreemiumSampleUnlocked = !isPremium && index < 12;
 
     const isSelected = State.selected_ids.includes(lead.id);
 

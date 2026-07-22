@@ -1,63 +1,155 @@
 export function renderFeatureShowcase() {
+    const features = [
+        {
+            num: '01',
+            tag: 'Pipeline',
+            icon: 'map-pin',
+            emoji: '📍',
+            title: 'Smart Pipelines & Mapping',
+            desc: 'See every lead on an interactive map and organize them into campaigns.',
+            highlights: [
+                'Coordinate maps with pin clusters',
+                'Segment leads into client campaigns',
+                'Kanban CRM board to track progress'
+            ],
+            color: 'gold'
+        },
+        {
+            num: '02',
+            tag: 'Audit',
+            icon: 'zap',
+            emoji: '⚡',
+            title: 'Instant Website Audits',
+            desc: 'Run a full website health check in 10 seconds flat.',
+            highlights: [
+                'PageSpeed, mobile & SSL checks',
+                'Lost revenue estimation per prospect',
+                'One-click audit from any lead card'
+            ],
+            color: 'pink'
+        },
+        {
+            num: '03',
+            tag: 'Outreach',
+            icon: 'message-square',
+            emoji: '💬',
+            title: 'AI Outreach & Personalization',
+            desc: 'Generate cold pitches that actually convert — in Hinglish or English.',
+            highlights: [
+                'AI conversion scoring per lead',
+                'WhatsApp, Email & Instagram DM',
+                'Hinglish + English tone options'
+            ],
+            color: 'gold'
+        },
+        {
+            num: '04',
+            tag: 'Integrations',
+            icon: 'link',
+            emoji: '🔗',
+            title: 'Integration Connection Hub',
+            desc: 'Push leads to your favorite tools — zero manual data entry.',
+            highlights: [
+                'Direct Google Sheets sync',
+                'Custom n8n webhook pipelines',
+                'Automate Slack & email workflows'
+            ],
+            color: 'pink'
+        },
+        {
+            num: '05',
+            tag: 'Team',
+            icon: 'users',
+            emoji: '👥',
+            title: 'Collaborative Team Workspace',
+            desc: 'Work together on lead lists and client deliverables.',
+            highlights: [
+                'Invite team members & assign seats',
+                'Share smart lists across the team',
+                'White-label client reports'
+            ],
+            color: 'gold'
+        },
+        {
+            num: '06',
+            tag: 'Builder',
+            icon: 'code',
+            emoji: '🛠️',
+            title: 'Website Builder Prompts',
+            desc: 'Turn audit results into a ready-to-build website brief.',
+            highlights: [
+                'Prompts for Bolt.new & Lovable',
+                'Copy-paste into any AI builder',
+                'Rebuilds outdated sites in 1 click'
+            ],
+            isNew: true,
+            color: 'pink'
+        },
+        {
+            num: '07',
+            tag: 'CRM Sync',
+            icon: 'refresh-cw',
+            emoji: '🔄',
+            title: 'Zoho & HubSpot CRM Sync',
+            desc: 'Qualified leads flow straight into your existing CRM.',
+            highlights: [
+                'Zoho CRM + HubSpot connectors',
+                'Auto-update deal pipeline stages',
+                'Full sync history & error logs'
+            ],
+            isNew: true,
+            color: 'gold'
+        },
+        {
+            num: '08',
+            tag: 'Vault',
+            icon: 'folder-open',
+            emoji: '📂',
+            title: 'Outreach Document Vault',
+            desc: 'Store pitch materials and attach them to campaigns on-the-fly.',
+            highlights: [
+                'Upload brochures, decks & catalogs',
+                'Attach files to WhatsApp & email',
+                'Organize by campaign or client'
+            ],
+            isNew: true,
+            color: 'pink'
+        }
+    ];
+
+    const featureCards = features.map((f, i) => `
+        <div class="feature-card-v2 feature-card-v2--${f.color}" style="animation-delay: ${i * 0.08}s">
+            <div class="feature-card-v2__header">
+                <span class="feature-card-v2__num">${f.num}</span>
+                <span class="feature-card-v2__tag">${f.tag}</span>
+                ${f.isNew ? '<span class="feature-card-v2__new">NEW</span>' : ''}
+            </div>
+            <div class="feature-card-v2__icon-row">
+                <div class="feature-card-v2__icon-circle feature-card-v2__icon-circle--${f.color}">
+                    <i data-lucide="${f.icon}" style="width:22px; height:22px;"></i>
+                </div>
+            </div>
+            <h3 class="feature-card-v2__title">${f.title}</h3>
+            <p class="feature-card-v2__desc">${f.desc}</p>
+            <ul class="feature-card-v2__highlights">
+                ${f.highlights.map(h => `<li><span class="feature-card-v2__bullet feature-card-v2__bullet--${f.color}">→</span>${h}</li>`).join('')}
+            </ul>
+        </div>
+    `).join('');
+
     return `
-        <section class="marketing-features">
+        <section class="marketing-features" id="features-section">
             <div class="container">
                 <div class="features-title-wrap">
+                    <span class="features-overline">What You Get</span>
                     <h2>Lead Intelligence & Outreach Features</h2>
                     <p>NearPro transforms raw business directory search results into actionable sales pipelines. Find leads, audit websites, generate AI outreach, and track conversions.</p>
                 </div>
-                <div class="features-grid">
-                    <div class="feature-panel">
-                        <div class="feature-icon-wrap"><i data-lucide="map-pin" style="width:20px; height:20px;"></i></div>
-                        <h3>Smart Pipelines & Mapping</h3>
-                        <p>Locate target leads visually on <span style="color: var(--accent-gold); font-weight: 600;">coordinate maps</span>. Segment your results into <span style="color: var(--accent-gold); font-weight: 600;">client campaigns</span>, save leads, and track progress using the <span style="color: var(--accent-gold); font-weight: 600;">Lead CRM kanban board</span>.</p>
-                    </div>
-                    
-                    <div class="feature-panel">
-                        <div class="feature-icon-wrap"><i data-lucide="zap" style="width:20px; height:20px;"></i></div>
-                        <h3>Instant Website Audits</h3>
-                        <p>Run <span style="color: var(--accent-gold); font-weight: 600;">10-second automated checks</span> on PageSpeed, mobile layouts, and SSL status. Estimate <span style="color: var(--accent-gold); font-weight: 600;">lost monthly revenue</span> for target prospects instantly to back up your pitch.</p>
-                    </div>
-                    
-                    <div class="feature-panel">
-                        <div class="feature-icon-wrap"><i data-lucide="message-square" style="width:20px; height:20px;"></i></div>
-                        <h3>AI Outreach & Personalization</h3>
-                        <p>Evaluate prospects with <span style="color: var(--accent-gold); font-weight: 600;">Conversion Scores</span>. Automatically generate customized cold pitches for <span style="color: var(--accent-gold); font-weight: 600;">WhatsApp, email, or Instagram DM</span> in Hinglish and English.</p>
-                    </div>
-
-                    <div class="feature-panel">
-                        <div class="feature-icon-wrap"><i data-lucide="link" style="width:20px; height:20px;"></i></div>
-                        <h3>Integration Connection Hub</h3>
-                        <p>Push tracked leads directly to your <span style="color: var(--accent-gold); font-weight: 600;">Google Sheets</span> or connect customized <span style="color: var(--accent-gold); font-weight: 600;">n8n webhooks</span> to automate your slack or email outreach workflows instantly.</p>
-                    </div>
-                    
-                    <div class="feature-panel">
-                        <div class="feature-icon-wrap"><i data-lucide="users" style="width:20px; height:20px;"></i></div>
-                        <h3>Collaborative Team Workspace</h3>
-                        <p>Invite colleagues to collaborate in <span style="color: var(--accent-gold); font-weight: 600;">shared team workspaces</span>. Assign seats, share <span style="color: var(--accent-gold); font-weight: 600;">smart lists</span>, and compile <span style="color: var(--accent-gold); font-weight: 600;">white-label client reports</span> together.</p>
-                    </div>
-                    
-                    <div class="feature-panel">
-                        <div class="feature-icon-wrap"><i data-lucide="code" style="width:20px; height:20px;"></i></div>
-                        <h3>Website Builder Prompts</h3>
-                        <p>Generate precise, copy-paste prompts tailored for <span style="color: var(--accent-gold); font-weight: 600;">Bolt.new and Lovable</span> to rebuild outdated prospect websites with <span style="color: var(--accent-gold); font-weight: 600;">one click</span> from your audit results.</p>
-                    </div>
-
-                    <div class="feature-panel">
-                        <div class="feature-icon-wrap"><i data-lucide="refresh-cw" style="width:20px; height:20px;"></i></div>
-                        <h3>Zoho & HubSpot CRM Sync</h3>
-                        <p>Sync qualified leads directly into <span style="color: var(--accent-gold); font-weight: 600;">Zoho CRM and HubSpot CRM</span>. Update pipeline deal stages and track sync history logs from one dashboard.</p>
-                    </div>
-
-                    <div class="feature-panel">
-                        <div class="feature-icon-wrap"><i data-lucide="folder-open" style="width:20px; height:20px;"></i></div>
-                        <h3>Outreach Document Vault</h3>
-                        <p>Store and manage brochures, pitch decks, and catalogs. <span style="color: var(--accent-gold); font-weight: 600;">Attach files dynamically</span> when sending campaigns via WhatsApp or email.</p>
-                    </div>
+                <div class="features-grid-v2">
+                    ${featureCards}
                 </div>
             </div>
         </section>
-
 
 
         <!-- Pricing Section -->
