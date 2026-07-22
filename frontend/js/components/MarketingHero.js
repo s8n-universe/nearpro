@@ -16,7 +16,7 @@ export function renderMarketingHero(stats = null) {
                 <div class="hero-tag">INTELLIGENCE, ARCHITECTED</div>
                 <h1 class="hero-title">No More Inaccurate Directories. <br>Find, Pitch, and Close <span class="brand-text">Premium B2B Clients.</span></h1>
                 <p class="hero-desc" style="max-width: 680px; margin: 0 auto 32px; line-height: 1.6;">
-                    India's first trusted lead intelligence platform. While US tools guess Indian business details, NearPro maps every suburb, street, and pin code with 100% verified data.
+                    The AI-powered sales workstation for B2B agencies. Map verified leads, run automated audits, generate customized proposals, and sync deals to your CRM on autopilot.
                 </p>
                 <div class="hero-search-widget" style="max-width: 580px; margin: 0 auto 36px; padding: 6px; background: rgba(10, 10, 12, 0.65); border: 1.5px solid var(--border); border-radius: 100px; backdrop-filter: blur(12px); box-shadow: 0 16px 40px rgba(0,0,0,0.5); display: flex; gap: 4px; align-items: center;">
                     <div style="flex: 1.2; padding-left: 16px; display: flex; align-items: center; gap: 8px; border-right: 1px solid rgba(255,255,255,0.08);">
