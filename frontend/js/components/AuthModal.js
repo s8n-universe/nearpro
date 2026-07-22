@@ -177,7 +177,7 @@ export function renderAuthModal() {
                         </div>
 
                         <!-- Unified High Fidelity Browser Mockup -->
-                        <div class="auth-browser-mockup" style="width: 100%; max-width: 680px; background: rgba(15, 23, 42, 0.65); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; box-shadow: 0 30px 60px rgba(0,0,0,0.5); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: flex; flex-direction: column; overflow: hidden; height: 280px; font-family: sans-serif; transition: transform 0.3s ease, border-color 0.3s ease;">
+                        <div class="auth-browser-mockup" style="width: 100%; max-width: 680px; background: rgba(15, 23, 42, 0.65); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; box-shadow: 0 30px 60px rgba(0,0,0,0.5); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: flex; flex-direction: column; overflow: hidden; height: 280px; font-family: sans-serif; transition: transform 0.3s ease, border-color 0.3s ease; margin-top: 18px;">
                             
                             <!-- Browser Header Bar -->
                             <div style="background: rgba(30, 41, 59, 0.5); padding: 10px 16px; display: flex; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); gap: 16px;">
