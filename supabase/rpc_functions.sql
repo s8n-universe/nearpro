@@ -116,12 +116,20 @@ RETURNS TABLE (
 DECLARE
     is_premium_user BOOLEAN := FALSE;
     is_trial_active BOOLEAN := FALSE;
+    user_tier TEXT := 'free';
 BEGIN
     -- Check if authenticated user is premium
     IF auth.uid() IS NOT NULL THEN
-        SELECT (is_premium OR tier IN ('connect', 'pro')) INTO is_premium_user
+        SELECT 
+            COALESCE(is_premium, FALSE),
+            COALESCE(subscription_tier, COALESCE(tier, 'free'))
+        INTO is_premium_user, user_tier
         FROM public.profiles
         WHERE profiles.id = auth.uid();
+
+        IF user_tier IN ('scout', 'hunter', 'agency', 'enterprise', 'connect', 'pro') THEN
+            is_premium_user := TRUE;
+        END IF;
     END IF;
     
     -- Check if anonymous 2-minute trial is active

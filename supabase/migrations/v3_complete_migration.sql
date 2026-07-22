@@ -412,6 +412,11 @@ BEGIN
         FROM public.profiles pr
         WHERE pr.id = auth.uid();
         
+        -- If user is scout, hunter, agency, or enterprise, treat as premium!
+        IF user_tier IN ('scout', 'hunter', 'agency', 'enterprise', 'connect', 'pro') THEN
+            is_premium_user := TRUE;
+        END IF;
+
         -- If is_premium is true but subscription_tier is free, treat as scout (backward compat)
         IF is_premium_user AND user_tier = 'free' THEN
             user_tier := 'scout';

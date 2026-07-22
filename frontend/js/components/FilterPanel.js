@@ -68,9 +68,9 @@ export function renderFilterPanel() {
                     </div>
                 </div>
 
-                <div class="filter-controls-right">
+                <div class="filter-controls-right" style="display: flex; align-items: center; gap: 8px;">
                     ${renderSearchBar()}
-                    <button id="resetSearchBtn" class="secondary-btn reset-filters-btn" title="Reset all filters">
+                    <button id="resetSearchBtn" class="secondary-btn reset-filters-btn" title="Reset all filters" style="padding: 0 16px; font-size: 12.5px; font-weight: 700; height: 38px; display: flex; align-items: center; justify-content: center; gap: 4px; border-radius: var(--radius-md); border: 1.5px solid #cbd5e1; background: #ffffff; color: #64748b; cursor: pointer; transition: all 0.2s; box-sizing: border-box;" onmouseover="this.style.background='#f1f5f9'; this.style.borderColor='#94a3b8'; this.style.color='#0f172a';" onmouseout="this.style.background='#ffffff'; this.style.borderColor='#cbd5e1'; this.style.color='#64748b';">
                         Reset ✕
                     </button>
                 </div>
@@ -99,10 +99,6 @@ export function renderFilterPanel() {
                         <span class="chip-icon">⏰</span> Open Now
                     </button>
                 </div>
-
-                <button id="surveySettingsBtn" class="secondary-btn profile-active-btn" style="margin-left: auto;">
-                    🎯 ${State.user_survey ? 'Profile: Active' : 'Sales Profile'}
-                </button>
             </div>
 
             <!-- Active Filters Summary Bar (Only shown when filters applied) -->
@@ -127,7 +123,6 @@ export function bindFilterPanelEvents() {
     const areaFilter = document.getElementById('areaFilter');
     const ratingFilter = document.getElementById('ratingFilter');
     const sortFilter = document.getElementById('sortFilter');
-    const surveySettingsBtn = document.getElementById('surveySettingsBtn');
     
     // Chips
     const chipHasPhone = document.getElementById('chipHasPhone');
@@ -220,10 +215,5 @@ export function bindFilterPanelEvents() {
         });
     });
 
-    if (surveySettingsBtn) {
-        surveySettingsBtn.addEventListener('click', () => {
-            State.setSurveyModal(true);
-        });
-    }
 }
 
