@@ -56,10 +56,8 @@ State.subscribe(async (currentState) => {
     // Check route types to prevent state subscribers from resetting standalone views
     const hash = window.location.hash || '';
 
-    // Redirect logged-in users away from homepage/marketing layout:
-    // New users land on Getting Started Overview (#/dashboard/overview).
-    // Returning users land directly on Browse Directory (#/dashboard/directory).
-    if (State.user && (!hash || hash === '#/' || hash === '#/browse')) {
+    // Redirect logged-in users trying to access guest directory to dashboard directory
+    if (State.user && hash === '#/browse') {
         const hasSeenOnboarding = localStorage.getItem('nearpro_onboarding_completed') === 'true' || State.profile?.onboarding_completed;
         if (!hasSeenOnboarding) {
             window.location.hash = '#/dashboard/overview';
