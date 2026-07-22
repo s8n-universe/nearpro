@@ -102,7 +102,7 @@ export function renderHeader() {
                 <div class="container" style="display: flex; align-items: center; gap: 12px; max-width: var(--container-width); margin: 0 auto; padding: 0 16px;">
                     <span class="ticker-badge" style="background: rgba(255, 160, 0, 0.15); color: var(--accent-gold); padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 800; font-family: var(--font-mono); text-transform: uppercase; display: inline-block; animation: pulse 2s infinite; flex-shrink: 0; letter-spacing: 0.5px;">HOT 🔥</span>
                     <div class="ticker-viewport" style="overflow: hidden; width: 100%; position: relative; height: 16px; display: flex; align-items: center;">
-                        <div class="ticker-track" style="display: inline-block; white-space: nowrap; position: absolute; animation: marquee-bar 32s linear infinite; width: max-content; font-size: 12px; font-weight: 700; color: #475569;">
+                        <div class="ticker-track" style="display: inline-block; white-space: nowrap; position: absolute; animation: marquee-bar 20s linear infinite; width: max-content; font-size: 12px; font-weight: 700; color: #475569;">
                             🔥 <span class="dynamic-ticker-name" style="color: var(--accent-gold);">CA Rahul</span> just closed a <span class="dynamic-ticker-deal" style="color: #3b82f6;">₹30,000 retainer</span> using NearPro! &bull; ⚡ Unlocking 12 premium verified leads with direct numbers today! &bull; 💸 Pitch ₹30,000 mobile layout packages to target gap leads! &bull; 🚀 Find local clients with 100% verified street-address data! &bull; 🔥 <span class="dynamic-ticker-name" style="color: var(--accent-gold);">CA Rahul</span> just closed a <span class="dynamic-ticker-deal" style="color: #3b82f6;">₹30,000 retainer</span> using NearPro! &bull; ⚡ Unlocking 12 premium verified leads with direct numbers today! &bull; 💸 Pitch ₹30,000 mobile layout packages to target gap leads! &bull; 🚀 Find local clients with 100% verified street-address data!
                         </div>
                     </div>
@@ -159,9 +159,10 @@ export function bindHeaderEvents() {
         });
     }
 
-    // Dynamic rotating names & deal amounts/types for ticker social proof
+    // Dynamic rotating names & deal amounts/types for ticker social proof on animation iteration
     if (window._tickerNameIntervalId) {
         clearInterval(window._tickerNameIntervalId);
+        window._tickerNameIntervalId = null;
     }
     const dynamicNames = [
         "CA Rahul",
@@ -186,9 +187,15 @@ export function bindHeaderEvents() {
     ];
     let nameIdx = 0;
     let dealIdx = 0;
-    const nameElements = document.querySelectorAll('.dynamic-ticker-name');
-    if (nameElements.length > 0) {
-        window._tickerNameIntervalId = setInterval(() => {
+    
+    const tickerTrack = document.querySelector('.ticker-track');
+    if (tickerTrack) {
+        // Set initial values
+        document.querySelectorAll('.dynamic-ticker-name').forEach(el => el.textContent = dynamicNames[0]);
+        document.querySelectorAll('.dynamic-ticker-deal').forEach(el => el.textContent = dynamicDeals[0]);
+
+        // Swap the content exactly when the animation completes its cycle and resets off-screen
+        tickerTrack.addEventListener('animationiteration', () => {
             nameIdx = (nameIdx + 1) % dynamicNames.length;
             dealIdx = (dealIdx + 1) % dynamicDeals.length;
             const nextName = dynamicNames[nameIdx];
@@ -200,6 +207,6 @@ export function bindHeaderEvents() {
             document.querySelectorAll('.dynamic-ticker-deal').forEach(el => {
                 el.textContent = nextDeal;
             });
-        }, 3000);
+        });
     }
 }
