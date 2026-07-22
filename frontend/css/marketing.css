@@ -6,7 +6,7 @@
     padding: 80px 0 85px;
     text-align: center;
     background: 
-        radial-gradient(circle at 50% 30%, rgba(255, 160, 0, 0.08) 0%, rgba(236, 72, 153, 0.05) 50%, rgba(3, 3, 3, 0) 80%),
+        radial-gradient(circle at 50% 30%, rgba(255, 160, 0, 0.22) 0%, rgba(236, 72, 153, 0.12) 55%, rgba(3, 3, 3, 0) 80%),
         linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
     background-size: 100% 100%, 48px 48px, 48px 48px;
