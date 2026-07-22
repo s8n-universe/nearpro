@@ -5,7 +5,7 @@ export function renderAuthModal() {
     if (!State.auth_modal_open || State.user) return '';
 
     return `
-        <div class="modal-overlay open" id="authModalOverlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #09090b; z-index: 100000; display: flex; align-items: center; justify-content: center; overflow: hidden; font-family: 'Space Grotesk', sans-serif;">
+        <div class="modal-overlay open" id="authModalOverlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #09090b; z-index: 100000; display: flex; align-items: center; justify-content: center; overflow: hidden; font-family: 'Space Grotesk', sans-serif; padding: 0 !important;">
             <div class="auth-split-container">
                 
                 <!-- Left Pane Concise Light Theme Login Form -->
