@@ -195,7 +195,7 @@ function initRoutes() {
                     const ratingEl = document.getElementById('heroAvgRating');
                     if (leadsEl && State.stats.total_professionals) leadsEl.innerText = `${State.stats.total_professionals.toLocaleString('en-IN')}+ Verified Leads`;
                     if (catEl && State.stats.total_categories) catEl.innerText = `${State.stats.total_categories}+ Sub Categories`;
-                    if (ratingEl && State.stats.average_rating) ratingEl.innerText = `${State.stats.average_rating}â˜… Average Rating`;
+                    if (ratingEl && State.stats.average_rating) ratingEl.innerText = `${State.stats.average_rating}★ Average Rating`;
                 }
             } catch (e) {
                 console.warn("Failed to load home page dynamic stats: ", e);
@@ -312,7 +312,7 @@ function renderMarketingLayout() {
             <div id="upgradeModalPlaceholder"></div>
             <div id="checkoutConsentModalPlaceholder"></div>
             <footer class="main-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid var(--border); font-size: 13px; color: var(--text-muted); flex-wrap: wrap; gap: 12px;">
-                <div>NearPro â€” Made with â¤ï¸ by S8N</div>
+                <div>NearPro — Made with ❤️ by S8N</div>
                 <div style="display: flex; gap: 20px;">
                     <a href="#/privacy" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Privacy Policy</a>
                     <a href="#/terms" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Terms Of Service</a>
@@ -376,7 +376,7 @@ async function renderDirectoryLayout() {
             <div id="upgradeModalPlaceholder"></div>
             
             <footer class="main-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid var(--border); font-size: 13px; color: var(--text-muted); flex-wrap: wrap; gap: 12px;">
-                <div>NearPro â€” Made with â¤ï¸ by S8N</div>
+                <div>NearPro — Made with ❤️ by S8N</div>
                 <div style="display: flex; gap: 20px;">
                     <a href="#/privacy" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Privacy Policy</a>
                     <a href="#/terms" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Terms Of Service</a>
@@ -417,7 +417,7 @@ async function renderDirectoryLayout() {
             popup.className = 'lockout_screen_overlay';
             popup.innerHTML = `
                 <div class="lockout_modal" style="max-width: 440px;">
-                    <div style="font-size: 40px; margin-bottom: 20px;">ðŸš€</div>
+                    <div style="font-size: 40px; margin-bottom: 20px;">🚀</div>
                     <h2 style="font-size: 22px; margin-bottom: 12px; font-family: var(--font-heading);">Explore NearPro</h2>
                     <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 14px; line-height: 1.5;">
                         Search and map premium verified business leads in Mumbai. <br><span style="color: var(--accent-gold); font-weight: 600; display: inline-block; margin-top: 8px;">Select your target client industry to start the walkthrough:</span>
@@ -425,19 +425,19 @@ async function renderDirectoryLayout() {
                     
                     <div class="industry-buttons-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; text-align: left; margin-bottom: 8px;">
                         <button class="industry-opt-btn" data-value="Healthcare" style="padding: 12px 10px; background: var(--bg-base); border: 1.5px solid var(--border); border-radius: var(--radius-md); color: var(--text-primary); cursor: pointer; text-align: left; font-size: 13px; font-weight: 600; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; font-family: var(--font-body);">
-                            <span style="font-size: 16px;">ðŸ©º</span> Healthcare
+                            <span style="font-size: 16px;">🩺</span> Healthcare
                         </button>
                         <button class="industry-opt-btn" data-value="Beauty & Wellness" style="padding: 12px 10px; background: var(--bg-base); border: 1.5px solid var(--border); border-radius: var(--radius-md); color: var(--text-primary); cursor: pointer; text-align: left; font-size: 13px; font-weight: 600; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; font-family: var(--font-body);">
-                            <span style="font-size: 16px;">ðŸ’…</span> Beauty & Wellness
+                            <span style="font-size: 16px;">💅</span> Beauty & Wellness
                         </button>
                         <button class="industry-opt-btn" data-value="Real Estate" style="padding: 12px 10px; background: var(--bg-base); border: 1.5px solid var(--border); border-radius: var(--radius-md); color: var(--text-primary); cursor: pointer; text-align: left; font-size: 13px; font-weight: 600; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; font-family: var(--font-body);">
-                            <span style="font-size: 16px;">ðŸ¢</span> Real Estate
+                            <span style="font-size: 16px;">🏢</span> Real Estate
                         </button>
                         <button class="industry-opt-btn" data-value="Food & Dining" style="padding: 12px 10px; background: var(--bg-base); border: 1.5px solid var(--border); border-radius: var(--radius-md); color: var(--text-primary); cursor: pointer; text-align: left; font-size: 13px; font-weight: 600; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; font-family: var(--font-body);">
-                            <span style="font-size: 16px;">ðŸ•</span> Food & Dining
+                            <span style="font-size: 16px;">🍕</span> Food & Dining
                         </button>
                         <button class="industry-opt-btn" data-value="Finance & Legal" style="padding: 12px 10px; background: var(--bg-base); border: 1.5px solid var(--border); border-radius: var(--radius-md); color: var(--text-primary); cursor: pointer; text-align: left; font-size: 13px; font-weight: 600; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; grid-column: span 2; justify-content: center; font-family: var(--font-body);">
-                            <span style="font-size: 16px;">âš–ï¸</span> Finance & Legal (CA/Law)
+                            <span style="font-size: 16px;">⚖️</span> Finance & Legal (CA/Law)
                         </button>
                     </div>
                 </div>
@@ -608,7 +608,7 @@ function renderFeedContent(hasMore) {
             overlay.className = 'lockout_screen_overlay';
             overlay.innerHTML = `
                 <div class="lockout_modal">
-                    <div class="lock_icon">ðŸ”’</div>
+                    <div class="lock_icon">🔒</div>
                     <h2 style="font-size: 24px; margin-bottom: 16px; font-family: var(--font-heading);">Free Session Expired</h2>
                     <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 15px; line-height: 1.6;">
                         You have browsed NearPro for 2 minutes. Upgrade to the premium plan to unlock unlimited search access, coordinate mapping, and full database exports.
@@ -629,7 +629,7 @@ function renderFeedContent(hasMore) {
     if (State.professionals.length === 0) {
         feed.innerHTML = `
             <div style="padding: 80px 24px; text-align: center; border: 1px dashed var(--border); border-radius: var(--radius-lg);">
-                <div style="font-size: 32px; margin-bottom: 16px;">ðŸ”</div>
+                <div style="font-size: 32px; margin-bottom: 16px;">🔍</div>
                 <h3 style="margin-bottom: 8px;">No Professionals Found</h3>
                 <p style="color: var(--text-muted); font-size: 14px;">Try resetting filters or expanding your keywords search.</p>
             </div>
@@ -641,7 +641,7 @@ function renderFeedContent(hasMore) {
         // Only show first 12 cards (spec: Explorer = 12 profiles per search) if not premium
         const isListExceeded = !isPremium && State.professionals.length > 12;
         const displayedLeads = isListExceeded ? State.professionals.slice(0, 12) : State.professionals;
-        // Step 1: Freemium Hook â€” pass card index so cards 0 and 1 get unlocked free sample phone numbers
+        // Step 1: Freemium Hook — pass card index so cards 0 and 1 get unlocked free sample phone numbers
         const cardsHTML = displayedLeads.map((p, idx) => renderProfessionalCard(p, idx)).join('');
         
         // Step 2: Audit Gap Trigger (Greed & Urgency Banner)
@@ -660,21 +660,21 @@ function renderFeedContent(hasMore) {
             auditGapTriggerHTML = `
                 <div class="audit-gap-trigger-card" style="margin-bottom: 16px; padding: 12px 18px; background: #fffbeb; border: 1.5px solid #fde68a; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; box-shadow: 0 2px 8px rgba(217,119,6,0.08); border-left: 4px solid #f59e0b;">
                     <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 260px;">
-                        <div style="font-size: 20px; background: rgba(245, 158, 11, 0.15); width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(245, 158, 11, 0.3);">âš¡</div>
+                        <div style="font-size: 20px; background: rgba(245, 158, 11, 0.15); width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(245, 158, 11, 0.3);">⚡</div>
                         <div>
                             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 2px;">
-                                <span style="font-size: 10px; font-family: var(--font-mono); font-weight: 800; color: #b45309; letter-spacing: 0.8px; text-transform: uppercase; background: #fef3c7; padding: 1px 6px; border-radius: 4px;">âš¡ REVENUE OPPORTUNITY DETECTED</span>
+                                <span style="font-size: 10px; font-family: var(--font-mono); font-weight: 800; color: #b45309; letter-spacing: 0.8px; text-transform: uppercase; background: #fef3c7; padding: 1px 6px; border-radius: 4px;">⚡ REVENUE OPPORTUNITY DETECTED</span>
                             </div>
                             <h3 style="font-size: 15px; font-family: var(--font-heading); color: #0f172a; font-weight: 700; margin: 0 0 2px 0;">
                                 ${count} ${categoryLabel} listing${count > 1 ? 's' : ''} in ${areaLabel} have NO Website!
                             </h3>
                             <p style="font-size: 12px; color: #475569; margin: 0; line-height: 1.4; font-weight: 500;">
-                                Pitching a â‚¹30,000 website package to these ${count} offices represents a <strong style="color: #c2410c; font-weight: 700;">â‚¹${potentialRevenue}+ revenue pipeline</strong> this week.
+                                Pitching a ₹30,000 website package to these ${count} offices represents a <strong style="color: #c2410c; font-weight: 700;">₹${potentialRevenue}+ revenue pipeline</strong> this week.
                             </p>
                         </div>
                     </div>
                     <button class="brand-btn" style="padding: 8px 16px; font-size: 12px; border-radius: var(--radius-md); font-weight: 700; white-space: nowrap; background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%); color: #ffffff; border: none; box-shadow: 0 2px 8px rgba(234,88,12,0.25);" onclick="window.State.updateFilters({ no_website: true, has_website: false, website_filter: 'no_website' });">
-                        Target ${count} Gap Leads ðŸŽ¯
+                        Target ${count} Gap Leads 🎯
                     </button>
                 </div>
             `;
@@ -683,21 +683,21 @@ function renderFeedContent(hasMore) {
             auditGapTriggerHTML = `
                 <div class="audit-gap-trigger-card" style="margin-bottom: 16px; padding: 12px 18px; background: #eff6ff; border: 1.5px solid #bfdbfe; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; box-shadow: 0 2px 8px rgba(37,99,235,0.08); border-left: 4px solid #3b82f6;">
                     <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 260px;">
-                        <div style="font-size: 20px; background: rgba(59, 130, 246, 0.15); width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(59, 130, 246, 0.3);">â­</div>
+                        <div style="font-size: 20px; background: rgba(59, 130, 246, 0.15); width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(59, 130, 246, 0.3);">⭐</div>
                         <div>
                             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 2px;">
-                                <span style="font-size: 10px; font-family: var(--font-mono); font-weight: 800; color: #1d4ed8; letter-spacing: 0.8px; text-transform: uppercase; background: #dbeafe; padding: 1px 6px; border-radius: 4px;">ðŸŽ¯ REPUTATION AUDIT OPPORTUNITY</span>
+                                <span style="font-size: 10px; font-family: var(--font-mono); font-weight: 800; color: #1d4ed8; letter-spacing: 0.8px; text-transform: uppercase; background: #dbeafe; padding: 1px 6px; border-radius: 4px;">🎯 REPUTATION AUDIT OPPORTUNITY</span>
                             </div>
                             <h3 style="font-size: 15px; font-family: var(--font-heading); color: #0f172a; font-weight: 700; margin: 0 0 2px 0;">
-                                ${count} ${categoryLabel} business${count > 1 ? 'es' : ''} in ${areaLabel} hold low ratings (&lt; 4.0â˜…)
+                                ${count} ${categoryLabel} business${count > 1 ? 'es' : ''} in ${areaLabel} hold low ratings (&lt; 4.0★)
                             </h3>
                             <p style="font-size: 12px; color: #475569; margin: 0; line-height: 1.4; font-weight: 500;">
-                                Pitch local review boosting and Google Business Profile optimization to secure â‚¹15,000/mo retainer clients.
+                                Pitch local review boosting and Google Business Profile optimization to secure ₹15,000/mo retainer clients.
                             </p>
                         </div>
                     </div>
                     <button class="brand-btn" style="padding: 8px 16px; font-size: 12px; border-radius: var(--radius-md); font-weight: 700; white-space: nowrap; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: #ffffff; border: none; box-shadow: 0 2px 8px rgba(37,99,235,0.25);" onclick="window.State.updateFilters({ min_rating: null });">
-                        Target ${count} Reputation Leads â­
+                        Target ${count} Reputation Leads ⭐
                     </button>
                 </div>
             `;
@@ -707,7 +707,7 @@ function renderFeedContent(hasMore) {
         const paywallHTML = isListExceeded ? `
             <div class="row_lockup_banner">
                 <div class="lockup_content">
-                    <div class="lock_icon">ðŸ”’</div>
+                    <div class="lock_icon">🔒</div>
                     <h3 style="font-size: 20px; margin-bottom: 12px; font-family: var(--font-heading);">Unlock remaining ${remainingCount} leads</h3>
                     <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.6;">
                         Access verified phone numbers, email addresses, websites, business hours, and coordinate mapping for all professionals in this niche.
@@ -1039,7 +1039,7 @@ async function runGuidedDemo(niche) {
         
         // Show Thought bubble
         const rect = searchInput.getBoundingClientRect();
-        showThoughtCloud("ðŸŒŸ Type any niche. NearPro filters leads instantly.", rect.left, rect.bottom + 15, 3000);
+        showThoughtCloud("🌟 Type any niche. NearPro filters leads instantly.", rect.left, rect.bottom + 15, 3000);
     }
 
     // Wait for search data load
@@ -1075,7 +1075,7 @@ async function runGuidedDemo(niche) {
             const compareCard = document.querySelector('#compareModalOverlay .modal-card');
             if (compareCard) {
                 const rect = compareCard.getBoundingClientRect();
-                showThoughtCloud("ðŸŒŸ Compare multiple professionals side by side on category, area, ratings, and completeness.", rect.left + 50, rect.top + 80, 3500);
+                showThoughtCloud("🌟 Compare multiple professionals side by side on category, area, ratings, and completeness.", rect.left + 50, rect.top + 80, 3500);
             }
             await new Promise(resolve => setTimeout(resolve, 3500));
 
@@ -1122,9 +1122,9 @@ async function runGuidedDemo(niche) {
     const modalContent = document.querySelector('.modal-content');
     if (modalContent) {
         const rect = modalContent.getBoundingClientRect();
-        showThoughtCloud("ðŸŒŸ Realtime verified rating. 5 completeness dots mapping quality parameters.", rect.left + 20, rect.top + 100, 3500);
+        showThoughtCloud("🌟 Realtime verified rating. 5 completeness dots mapping quality parameters.", rect.left + 20, rect.top + 100, 3500);
         await new Promise(resolve => setTimeout(resolve, 1500));
-        showThoughtCloud("ðŸ“ž Direct phone, website, maps, and offline sharing connections.", rect.left + 200, rect.bottom - 100, 3500);
+        showThoughtCloud("📞 Direct phone, website, maps, and offline sharing connections.", rect.left + 200, rect.bottom - 100, 3500);
     }
 
     // Wait in detail modal
@@ -1151,7 +1151,7 @@ async function runGuidedDemo(niche) {
         // Show thought overlay on map
         setTimeout(() => {
             const feedRect = document.getElementById('feedElement').getBoundingClientRect();
-            showThoughtCloud("ðŸ“ Coordinates verified and clustered inside Mumbai region.", feedRect.left + 50, feedRect.top + 100, 3500);
+            showThoughtCloud("📍 Coordinates verified and clustered inside Mumbai region.", feedRect.left + 50, feedRect.top + 100, 3500);
         }, 1500);
     }
 
@@ -1165,7 +1165,7 @@ async function runGuidedDemo(niche) {
     // Show premium plans explanation thought cloud
     const pricingModal = document.querySelector('#pricingModalPlaceholder');
     if (pricingModal) {
-        showThoughtCloud("ðŸ’Ž Upgrade to Scout, Hunter, or Agency plans to unlock advanced insights & outreach tools.", window.innerWidth / 2 - 200, window.innerHeight / 2 - 100, 4000);
+        showThoughtCloud("💎 Upgrade to Scout, Hunter, or Agency plans to unlock advanced insights & outreach tools.", window.innerWidth / 2 - 200, window.innerHeight / 2 - 100, 4000);
     }
     await new Promise(resolve => setTimeout(resolve, 4000));
 
@@ -1253,7 +1253,7 @@ async function renderDashboardLayout(tab) {
         if (content) {
             content.innerHTML = `
                 <div style="padding: 80px 24px; text-align: center; border: 1px dashed var(--border); border-radius: var(--radius-lg); max-width: 500px; margin: 40px auto;">
-                    <div style="font-size: 40px; margin-bottom: 16px;">ðŸ”’</div>
+                    <div style="font-size: 40px; margin-bottom: 16px;">🔒</div>
                     <h3 style="margin-bottom: 12px; color: white;">Locked Module</h3>
                     <p style="color: var(--text-muted); font-size: 13.5px; line-height: 1.5; margin-bottom: 24px;">
                         The ${tab.toUpperCase()} module requires the ${requiredTier.toUpperCase()} plan. Upgrade now to unlock this feature.
@@ -1463,7 +1463,7 @@ async function renderDashboardLayout(tab) {
             if (listId) {
                 const leads = await Api.getSavedLeads(listId);
                 const listDetail = lists.find(l => l.id === listId);
-                if (titleEl && listDetail) titleEl.innerText = `Smart Lists â€” ${listDetail.name}`;
+                if (titleEl && listDetail) titleEl.innerText = `Smart Lists — ${listDetail.name}`;
                 if (content) {
                     content.innerHTML = renderLeadLists(lists, listId, leads);
                     
@@ -1592,7 +1592,7 @@ async function renderDashboardLayout(tab) {
                     const currentUsed = State.profile?.monthly_audits_used || 0;
 
                     if (tier !== 'agency' && tier !== 'enterprise' && currentUsed >= maxLimit) {
-                        alert(`ðŸš« Limit Reached: Your current plan (${tier.toUpperCase()}) allows up to ${maxLimit} audits per month. Please upgrade to scan more websites.`);
+                        alert(`🚫 Limit Reached: Your current plan (${tier.toUpperCase()}) allows up to ${maxLimit} audits per month. Please upgrade to scan more websites.`);
                         return;
                     }
 
@@ -1701,7 +1701,7 @@ async function renderDashboardLayout(tab) {
                         if (window._attachBrochureEnabled && window._includeBrochureLink && window._selectedBrochureId) {
                             const label = window._brochureLinkLabel || defaultDocName;
                             const shortUrl = `${window.location.origin}${window.location.pathname}#/d/${window._selectedBrochureId}`;
-                            composedMessage += `\n\nðŸ“„ ${label}:\n${shortUrl}`;
+                            composedMessage += `\n\n📄 ${label}:\n${shortUrl}`;
                         }
                         composedFollowUp = buildOutreach(template.follow_up_text || '', lead, audit);
 
@@ -1844,7 +1844,7 @@ async function renderDashboardLayout(tab) {
                     const limit = PROMPT_LIMITS[tier] || 0;
 
                     if (currentCount >= limit) {
-                        alert(`ðŸš« Limit Reached: Your current plan (${tier.toUpperCase()}) allows up to ${limit} prompt generations per month. Please upgrade to scan more.`);
+                        alert(`🚫 Limit Reached: Your current plan (${tier.toUpperCase()}) allows up to ${limit} prompt generations per month. Please upgrade to scan more.`);
                         return;
                     }
 
@@ -1917,7 +1917,7 @@ async function renderDashboardLayout(tab) {
                         window._activeGeneratingLeadId = null;
 
                         if (window.showToast) {
-                            window.showToast(`âœ¨ Website Prompt ready for ${leadName}!`, 'success');
+                            window.showToast(`✨ Website Prompt ready for ${leadName}!`, 'success');
                         }
 
                         // Re-render if currently on prompts tab
@@ -1999,7 +1999,7 @@ async function renderDashboardLayout(tab) {
                     async (email, role) => {
                         try {
                             await Api.inviteTeamMember(email, role);
-                            if (window.showToast) window.showToast(`âœ¨ Invitation sent to ${email}`, "success");
+                            if (window.showToast) window.showToast(`✨ Invitation sent to ${email}`, "success");
                             renderDashboardLayout('team');
                         } catch (err) {
                             if (window.showToast) window.showToast(`Invite failed: ${err.message}`, "error");
@@ -2017,7 +2017,7 @@ async function renderDashboardLayout(tab) {
                     async (niche, city, notes) => {
                         try {
                             await Api.requestCustomData(niche, city, notes);
-                            if (window.showToast) window.showToast("âœ¨ Data extraction request submitted!", "success");
+                            if (window.showToast) window.showToast("✨ Data extraction request submitted!", "success");
                             renderDashboardLayout('team');
                         } catch (err) {
                             console.error("Extraction request failed: ", err);
@@ -2067,7 +2067,7 @@ async function renderDashboardLayout(tab) {
                                     <span>Workspace Personalization Index</span>
                                 </h3>
                                 <div id="profileGuidanceText" style="font-size: 13px; color: #475569; font-weight: 500; line-height: 1.4;">
-                                    ${initialScore >= 80 ? 'âš¡ Maximum Personalization: Your AI pitches and outreach assets are fully optimized.' : 'Complete your profile milestones to unlock automated brochure links and targeted AI outreach.'}
+                                    ${initialScore >= 80 ? '⚡ Maximum Personalization: Your AI pitches and outreach assets are fully optimized.' : 'Complete your profile milestones to unlock automated brochure links and targeted AI outreach.'}
                                 </div>
                             </div>
                             
@@ -2090,7 +2090,7 @@ async function renderDashboardLayout(tab) {
                             <div class="timeline-step-node" data-target="settingsFullName" style="background: #f8fafc; border: 1px solid ${name ? '#86efac' : '#cbd5e1'}; padding: 14px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s ease;">
                                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
                                     <span style="font-size: 11px; font-family: var(--font-mono); color: #64748b; font-weight: 800;">STEP 01</span>
-                                    <span id="step1Icon" style="font-size: 14px;">${name ? 'âœ…' : 'ðŸ‘¤'}</span>
+                                    <span id="step1Icon" style="font-size: 14px;">${name ? '✅' : '👤'}</span>
                                 </div>
                                 <div style="font-size: 13.5px; font-weight: 700; color: #0f172a; font-family: var(--font-heading); margin-bottom: 2px;">Identity & Role</div>
                                 <div style="font-size: 11.5px; color: #475569; font-weight: 500;">Unlocks AI Message Signatures</div>
@@ -2100,7 +2100,7 @@ async function renderDashboardLayout(tab) {
                             <div class="timeline-step-node" data-target="settingsCompanyName" style="background: #f8fafc; border: 1px solid ${company || serviceBlurb ? '#86efac' : '#cbd5e1'}; padding: 14px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s ease;">
                                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
                                     <span style="font-size: 11px; font-family: var(--font-mono); color: #64748b; font-weight: 800;">STEP 02</span>
-                                    <span id="step2Icon" style="font-size: 14px;">${company || serviceBlurb ? 'âœ…' : 'ðŸŽ¯'}</span>
+                                    <span id="step2Icon" style="font-size: 14px;">${company || serviceBlurb ? '✅' : '🎯'}</span>
                                 </div>
                                 <div style="font-size: 13.5px; font-weight: 700; color: #0f172a; font-family: var(--font-heading); margin-bottom: 2px;">Brand & Service</div>
                                 <div style="font-size: 11.5px; color: #475569; font-weight: 500;">Unlocks WhatsApp AI Pitching</div>
@@ -2110,7 +2110,7 @@ async function renderDashboardLayout(tab) {
                             <div class="timeline-step-node" data-target="settingsPortfolioUrl" style="background: #f8fafc; border: 1px solid ${portfolio && booking ? '#86efac' : '#cbd5e1'}; padding: 14px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s ease;">
                                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
                                     <span style="font-size: 11px; font-family: var(--font-mono); color: #64748b; font-weight: 800;">STEP 03</span>
-                                    <span id="step3Icon" style="font-size: 14px;">${portfolio && booking ? 'âœ…' : 'ðŸ”—'}</span>
+                                    <span id="step3Icon" style="font-size: 14px;">${portfolio && booking ? '✅' : '🔗'}</span>
                                 </div>
                                 <div style="font-size: 13.5px; font-weight: 700; color: #0f172a; font-family: var(--font-heading); margin-bottom: 2px;">Outreach Assets</div>
                                 <div style="font-size: 11.5px; color: #475569; font-weight: 500;">Unlocks Auto-Brochure & Scheduling</div>
@@ -2120,7 +2120,7 @@ async function renderDashboardLayout(tab) {
                             <div class="timeline-step-node" data-target="changeBillingPlanBtn" style="background: #fffbeb; border: 1px solid #fcd34d; padding: 14px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s ease;">
                                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
                                     <span style="font-size: 11px; font-family: var(--font-mono); color: #b45309; font-weight: 800;">STEP 04</span>
-                                    <span style="font-size: 14px;">ðŸ‘‘</span>
+                                    <span style="font-size: 14px;">👑</span>
                                 </div>
                                 <div style="font-size: 13.5px; font-weight: 700; color: #0f172a; font-family: var(--font-heading); margin-bottom: 2px;">Growth Tier</div>
                                 <div style="font-size: 11.5px; color: #b45309; font-weight: 700;">${userTier.toUpperCase()} Plan Active</div>
@@ -2142,11 +2142,11 @@ async function renderDashboardLayout(tab) {
                             <div>
                                 <label style="display: block; font-size: 12.5px; font-weight: 700; color: #334155; font-family: var(--font-heading); margin-bottom: 6px;">My Professional Role</label>
                                 <select id="settingsRole" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none; transition: all 0.2s ease; margin-bottom: 8px;">
-                                    <option value="freelancer" ${role === 'freelancer' ? 'selected' : ''}>ðŸ’» Freelancer</option>
-                                    <option value="agency" ${role === 'agency' ? 'selected' : ''}>ðŸ¢ Agency Owner</option>
-                                    <option value="sales_team" ${role === 'sales_team' ? 'selected' : ''}>ðŸ“ˆ Sales Representative</option>
-                                    <option value="startup" ${role === 'startup' ? 'selected' : ''}>ðŸš€ Startup Founder</option>
-                                    <option value="other" ${role && !['freelancer', 'agency', 'sales_team', 'startup'].includes(role) ? 'selected' : ''}>â“ Other...</option>
+                                    <option value="freelancer" ${role === 'freelancer' ? 'selected' : ''}>💻 Freelancer</option>
+                                    <option value="agency" ${role === 'agency' ? 'selected' : ''}>🏢 Agency Owner</option>
+                                    <option value="sales_team" ${role === 'sales_team' ? 'selected' : ''}>📈 Sales Representative</option>
+                                    <option value="startup" ${role === 'startup' ? 'selected' : ''}>🚀 Startup Founder</option>
+                                    <option value="other" ${role && !['freelancer', 'agency', 'sales_team', 'startup'].includes(role) ? 'selected' : ''}>❓ Other...</option>
                                 </select>
                                 <div id="settingsCustomRoleContainer" style="display: ${role && !['freelancer', 'agency', 'sales_team', 'startup'].includes(role) ? 'block' : 'none'};">
                                     <input type="text" id="settingsCustomRole" value="${role && !['freelancer', 'agency', 'sales_team', 'startup'].includes(role) ? role : ''}" placeholder="Enter your professional role..." style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none;" />
@@ -2170,12 +2170,12 @@ async function renderDashboardLayout(tab) {
                             <div>
                                 <label style="display: block; font-size: 12.5px; font-weight: 700; color: #334155; font-family: var(--font-heading); margin-bottom: 6px;">My Primary Service Blurb</label>
                                 <select id="settingsServiceSelect" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none; margin-bottom: 8px;">
-                                    <option value="I build websites for local businesses" ${serviceBlurb === 'I build websites for local businesses' ? 'selected' : ''}>ðŸ’» Web Design ("I build websites for local businesses")</option>
-                                    <option value="I help businesses improve their Google ranking" ${serviceBlurb === 'I help businesses improve their Google ranking' ? 'selected' : ''}>ðŸ“ˆ SEO ("I help businesses improve their Google ranking")</option>
-                                    <option value="I offer tax and accounting services to businesses" ${serviceBlurb === 'I offer tax and accounting services to businesses' ? 'selected' : ''}>âš–ï¸ CA/Finance ("I offer tax and accounting services to businesses")</option>
-                                    <option value="I help businesses get more customers through digital marketing" ${serviceBlurb === 'I help businesses get more customers through digital marketing' ? 'selected' : ''}>ðŸŽ¯ Marketing ("I help businesses get more customers through digital marketing")</option>
-                                    <option value="I'm a commercial real estate consultant" ${serviceBlurb === "I'm a commercial real estate consultant" ? 'selected' : ''}>ðŸ¢ Real Estate ("I'm a commercial real estate consultant")</option>
-                                    <option value="custom" ${!['I build websites for local businesses', 'I help businesses improve their Google ranking', 'I offer tax and accounting services to businesses', 'I help businesses get more customers through digital marketing', "I'm a commercial real estate consultant"].includes(serviceBlurb) && serviceBlurb ? 'selected' : ''}>ðŸ’¼ Custom Service...</option>
+                                    <option value="I build websites for local businesses" ${serviceBlurb === 'I build websites for local businesses' ? 'selected' : ''}>💻 Web Design ("I build websites for local businesses")</option>
+                                    <option value="I help businesses improve their Google ranking" ${serviceBlurb === 'I help businesses improve their Google ranking' ? 'selected' : ''}>📈 SEO ("I help businesses improve their Google ranking")</option>
+                                    <option value="I offer tax and accounting services to businesses" ${serviceBlurb === 'I offer tax and accounting services to businesses' ? 'selected' : ''}>⚖️ CA/Finance ("I offer tax and accounting services to businesses")</option>
+                                    <option value="I help businesses get more customers through digital marketing" ${serviceBlurb === 'I help businesses get more customers through digital marketing' ? 'selected' : ''}>🎯 Marketing ("I help businesses get more customers through digital marketing")</option>
+                                    <option value="I'm a commercial real estate consultant" ${serviceBlurb === "I'm a commercial real estate consultant" ? 'selected' : ''}>🏢 Real Estate ("I'm a commercial real estate consultant")</option>
+                                    <option value="custom" ${!['I build websites for local businesses', 'I help businesses improve their Google ranking', 'I offer tax and accounting services to businesses', 'I help businesses get more customers through digital marketing', "I'm a commercial real estate consultant"].includes(serviceBlurb) && serviceBlurb ? 'selected' : ''}>💼 Custom Service...</option>
                                 </select>
                                 <div id="settingsCustomServiceContainer" style="display: ${!['I build websites for local businesses', 'I help businesses improve their Google ranking', 'I offer tax and accounting services to businesses', 'I help businesses get more customers through digital marketing', "I'm a commercial real estate consultant"].includes(serviceBlurb) && serviceBlurb ? 'block' : 'none'};">
                                     <input type="text" id="settingsCustomService" value="${!['I build websites for local businesses', 'I help businesses improve their Google ranking', 'I offer tax and accounting services to businesses', 'I help businesses get more customers through digital marketing', "I'm a commercial real estate consultant"].includes(serviceBlurb) ? serviceBlurb : ''}" placeholder="Describe your service in one sentence..." style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none;" />
@@ -2256,7 +2256,7 @@ async function renderDashboardLayout(tab) {
                 if (progressFill) progressFill.style.width = `${score}%`;
                 if (guidanceText) {
                     if (score >= 80) {
-                        guidanceText.innerText = 'âš¡ Maximum Personalization: Your AI pitches and outreach assets are fully optimized.';
+                        guidanceText.innerText = '⚡ Maximum Personalization: Your AI pitches and outreach assets are fully optimized.';
                     } else if (!p || !b) {
                         guidanceText.innerText = 'Fill out Portfolio URL & Booking Link to unlock automated brochure and scheduling links in AI pitches.';
                     } else {
@@ -2269,9 +2269,9 @@ async function renderDashboardLayout(tab) {
                 const step2Icon = document.getElementById('step2Icon');
                 const step3Icon = document.getElementById('step3Icon');
 
-                if (step1Icon) step1Icon.innerText = n ? 'âœ…' : 'ðŸ‘¤';
-                if (step2Icon) step2Icon.innerText = (c || s) ? 'âœ…' : 'ðŸŽ¯';
-                if (step3Icon) step3Icon.innerText = (p && b) ? 'âœ…' : 'ðŸ”—';
+                if (step1Icon) step1Icon.innerText = n ? '✅' : '👤';
+                if (step2Icon) step2Icon.innerText = (c || s) ? '✅' : '🎯';
+                if (step3Icon) step3Icon.innerText = (p && b) ? '✅' : '🔗';
 
                 // Render live AI message preview
                 const previewBox = document.getElementById('liveAiPitchPreviewBox');
@@ -2289,10 +2289,10 @@ async function renderDashboardLayout(tab) {
                     let msg = `Namaste Dr. Mehta!\n\nI noticed your listing for Mehta Dental Clinic on Google Maps. I am ${senderName}, ${roleTitle} ${senderCompany}.\n\n${serviceDesc}. We help local clinics rank #1 in maps and convert inquiries into booked appointments.`;
                     
                     if (p) {
-                        msg += `\n\nðŸŒ View our portfolio:\n${p}`;
+                        msg += `\n\n🌐 View our portfolio:\n${p}`;
                     }
                     if (b) {
-                        msg += `\n\nðŸ“… Book a 10-min intro call:\n${b}`;
+                        msg += `\n\n📅 Book a 10-min intro call:\n${b}`;
                     }
 
                     previewBox.innerText = msg;
@@ -2364,7 +2364,7 @@ async function renderDashboardLayout(tab) {
             const cancelBtn = document.getElementById('cancelBillingPlanBtn');
             if (cancelBtn) {
                 cancelBtn.addEventListener('click', async () => {
-                    const confirmCancel = confirm("âš ï¸ Are you sure you want to cancel your subscription? You will lose access to premium lead intelligence features.");
+                    const confirmCancel = confirm("⚠️ Are you sure you want to cancel your subscription? You will lose access to premium lead intelligence features.");
                     if (!confirmCancel) return;
 
                     cancelBtn.innerText = 'Cancelling...';
@@ -2382,10 +2382,10 @@ async function renderDashboardLayout(tab) {
                         }
                         State.notify();
 
-                        alert("âœ… Your subscription has been cancelled successfully.");
+                        alert("✅ Your subscription has been cancelled successfully.");
                     } catch (err) {
                         console.error("Cancellation failed:", err);
-                        alert("ðŸš« Cancellation failed. Please contact support.");
+                        alert("🚫 Cancellation failed. Please contact support.");
                         cancelBtn.innerText = 'Cancel Subscription';
                         cancelBtn.disabled = false;
                         cancelBtn.style.opacity = '1';
@@ -2500,14 +2500,14 @@ function showErrorOverlay(error) {
     overlay.id = 'errorBoundaryOverlay';
     overlay.style.cssText = 'position:fixed; inset:0; background:rgba(9,9,11,0.96); backdrop-filter:blur(8px); z-index:999999; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; color:white; font-family:var(--font-sans, "Inter", sans-serif); text-align:center; padding:24px;';
     overlay.innerHTML = `
-        <div style="font-size:48px;">âš ï¸</div>
+        <div style="font-size:48px;">⚠️</div>
         <div style="display:flex; flex-direction:column; gap:8px; max-width:440px;">
             <h3 style="font-size:20px; font-weight:700; font-family:var(--font-heading, inherit); margin:0; color:white;">Application Error Occurred</h3>
             <p style="font-size:13.5px; color:var(--text-secondary, #a1a1aa); margin:0; line-height:1.5;">NearPro encountered an unexpected problem. We have logged the trace for our team to resolve.</p>
             <div style="background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.15); border-radius:6px; padding:12px; font-family:var(--font-mono, monospace); font-size:11.5px; color:#f87171; text-align:left; overflow:auto; max-height:120px; margin:12px 0; word-break:break-all;">
                 ${error?.stack || error?.message || String(error)}
             </div>
-            <button onclick="window.location.reload();" class="brand-btn" style="padding:10px 24px; font-size:13px; font-weight:600; width:fit-content; align-self:center; cursor:pointer;">Refresh Workspace ðŸš€</button>
+            <button onclick="window.location.reload();" class="brand-btn" style="padding:10px 24px; font-size:13px; font-weight:600; width:fit-content; align-self:center; cursor:pointer;">Refresh Workspace 🚀</button>
         </div>
     `;
     document.body.appendChild(overlay);
@@ -2548,7 +2548,7 @@ window.showToast = function(message, type = 'info') {
         transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     `;
 
-    const icon = type === 'success' ? 'âœ…' : type === 'error' ? 'âŒ' : 'âš¡';
+    const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : '⚡';
     toast.innerHTML = `<span>${icon}</span><span style="flex:1;">${message}</span>`;
     container.appendChild(toast);
 
