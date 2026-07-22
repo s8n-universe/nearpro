@@ -157,156 +157,201 @@ export const Api = {
     async getProfessionals(filters, offset = 0, limit = 24, fingerprint = '') {
         const requestId = ++this._latestSearchRequestId;
 
-        // 1. Query the total count matching the filters securely (selecting only ID)
-        let countQuery = supabase.from('professionals').select('id', { count: 'exact', head: true });
-        
-        if (filters.parentCategory) {
-            countQuery = countQuery.eq('parent_category', filters.parentCategory);
-        }
-        if (filters.category) {
-            countQuery = countQuery.eq('category', filters.category);
-        }
-        if (filters.area) {
-            countQuery = countQuery.eq('area', filters.area);
-        }
-        if (filters.min_rating) {
-            countQuery = countQuery.gte('rating', parseFloat(filters.min_rating));
-        }
-        if (filters.has_email) {
-            countQuery = countQuery.not('email', 'is', null).neq('email', '');
-        }
-        if (filters.has_phone) {
-            countQuery = countQuery.not('phone', 'is', null).neq('phone', '');
-        }
-        if (filters.has_website || filters.website_filter === 'has_website') {
-            countQuery = countQuery.not('website', 'is', null).neq('website', '');
-        } else if (filters.no_website || filters.website_filter === 'no_website') {
-            countQuery = countQuery.or('website.is.null,website.eq.');
-            countQuery = countQuery.or('phone.not.is.null,email.not.is.null');
-        }
-        if (filters.search && filters.search.trim()) {
-            const s = filters.search.trim();
-            const expandedTerms = expandSearchTerms(s);
-            const orConditions = expandedTerms.slice(0, 6).map(t => 
-                `name.ilike.%${t}%,address.ilike.%${t}%,category.ilike.%${t}%,parent_category.ilike.%${t}%,area.ilike.%${t}%`
-            ).join(',');
-            countQuery = countQuery.or(orConditions);
-        }
-        
-        const { error: countErr, count } = await countQuery;
-        if (countErr) throw countErr;
-
-        // 2. Fetch the paginated and masked results via get_professionals_v2 RPC
-        let items = [];
-        let errorOccurred = false;
-        let clientSideFilterNoWeb = false;
-        
-        try {
-            const rpcParams = {
-                client_fingerprint: fingerprint || '',
-                parent_cat: filters.parentCategory || null,
-                sub_cat: filters.category || null,
-                filter_area: filters.area || null,
-                min_rat: filters.min_rating ? parseFloat(filters.min_rating) : null,
-                has_em: !!filters.has_email,
-                has_ph: !!filters.has_phone,
-                has_web: filters.has_website || filters.website_filter === 'has_website',
-                search_term: filters.search && filters.search.trim() ? filters.search.trim() : null,
-                sort_col: filters.sort_by || 'rating_desc',
-                offset_val: offset,
-                limit_val: limit
-            };
+        // Dynamic query execution helper to support query retry loops
+        const runQuery = async (f) => {
+            // 1. Query the total count matching the filters securely (selecting only ID)
+            let countQuery = supabase.from('professionals').select('id', { count: 'exact', head: true });
             
-            if (filters.no_website || filters.website_filter === 'no_website') {
-                rpcParams.has_no_web = true;
+            if (f.parentCategory) countQuery = countQuery.eq('parent_category', f.parentCategory);
+            if (f.category) countQuery = countQuery.eq('category', f.category);
+            if (f.area) countQuery = countQuery.eq('area', f.area);
+            if (f.min_rating) countQuery = countQuery.gte('rating', parseFloat(f.min_rating));
+            if (f.has_email) countQuery = countQuery.not('email', 'is', null).neq('email', '');
+            if (f.has_phone) countQuery = countQuery.not('phone', 'is', null).neq('phone', '');
+            
+            if (f.has_website || f.website_filter === 'has_website') {
+                countQuery = countQuery.not('website', 'is', null).neq('website', '');
+            } else if (f.no_website || f.website_filter === 'no_website') {
+                countQuery = countQuery.or('website.is.null,website.eq.');
+                countQuery = countQuery.or('phone.not.is.null,email.not.is.null');
             }
-            
-            let { data, error } = await supabase.rpc('get_professionals_v2', rpcParams);
-            
-            if (error) {
-                if (error.code === '42883' && (filters.no_website || filters.website_filter === 'no_website')) {
-                    console.warn("⚠️ get_professionals_v2 signature mismatch for has_no_web. Retrying without has_no_web and filtering client-side.");
-                    clientSideFilterNoWeb = true;
-                    delete rpcParams.has_no_web;
-                    const retryResult = await supabase.rpc('get_professionals_v2', rpcParams);
-                    if (retryResult.error) {
-                        if (retryResult.error.code === '42883' || retryResult.error.message.includes('Could not find the function') || retryResult.error.message.includes('schema cache')) {
-                            errorOccurred = true;
-                        } else {
-                            throw retryResult.error;
-                        }
-                    } else {
-                        data = retryResult.data;
-                    }
-                } else if (error.code === '42883' || error.message.includes('Could not find the function') || error.message.includes('schema cache')) {
-                    errorOccurred = true;
-                } else {
-                    throw error;
-                }
-            }
-            
-            if (!errorOccurred) {
-                items = data || [];
-                if (clientSideFilterNoWeb || filters.no_website || filters.website_filter === 'no_website') {
-                    items = items.filter(p => 
-                        (!p.website || p.website.trim() === '') && 
-                        ((p.phone && p.phone.trim() !== '') || (p.email && p.email.trim() !== ''))
-                    );
-                }
-            }
-        } catch (e) {
-            if (e.message && (e.message.includes('Could not find') || e.message.includes('schema cache'))) {
-                errorOccurred = true;
-            } else {
-                throw e;
-            }
-        }
-        
-        if (errorOccurred) {
-            console.warn("⚠️ get_professionals_v2 RPC function not found in Supabase. Falling back to direct public table query. Please run the Supabase database migration script!");
-            
-            let fallbackQuery = supabase.from('professionals').select('*');
-            if (filters.parentCategory) fallbackQuery = fallbackQuery.eq('parent_category', filters.parentCategory);
-            if (filters.category) fallbackQuery = fallbackQuery.eq('category', filters.category);
-            if (filters.area) fallbackQuery = fallbackQuery.eq('area', filters.area);
-            if (filters.min_rating) fallbackQuery = fallbackQuery.gte('rating', parseFloat(filters.min_rating));
-            if (filters.has_email) fallbackQuery = fallbackQuery.not('email', 'is', null).neq('email', '');
-            if (filters.has_phone) fallbackQuery = fallbackQuery.not('phone', 'is', null).neq('phone', '');
-            
-            if (filters.has_website || filters.website_filter === 'has_website') {
-                fallbackQuery = fallbackQuery.not('website', 'is', null).neq('website', '');
-            } else if (filters.no_website || filters.website_filter === 'no_website') {
-                fallbackQuery = fallbackQuery.or('website.is.null,website.eq.');
-                fallbackQuery = fallbackQuery.or('phone.not.is.null,email.not.is.null');
-            }
-            
-            if (filters.search && filters.search.trim()) {
-                const s = filters.search.trim();
+            if (f.search && f.search.trim()) {
+                const s = f.search.trim();
                 const expandedTerms = expandSearchTerms(s);
                 const orConditions = expandedTerms.slice(0, 6).map(t => 
                     `name.ilike.%${t}%,address.ilike.%${t}%,category.ilike.%${t}%,parent_category.ilike.%${t}%,area.ilike.%${t}%`
                 ).join(',');
-                fallbackQuery = fallbackQuery.or(orConditions);
+                countQuery = countQuery.or(orConditions);
             }
             
-            if (filters.sort_by === 'rating_desc') {
-                fallbackQuery = fallbackQuery.order('rating', { ascending: false }).order('review_count', { ascending: false });
-            } else if (filters.sort_by === 'reviews_desc') {
-                fallbackQuery = fallbackQuery.order('review_count', { ascending: false });
-            } else if (filters.sort_by === 'scraped_desc' || filters.sort_by === 'indexed_desc') {
-                fallbackQuery = fallbackQuery.order('scraped_at', { ascending: false });
-            } else if (filters.sort_by === 'completeness_desc') {
-                fallbackQuery = fallbackQuery.order('completeness_score', { ascending: false });
-            }
-            
-            fallbackQuery = fallbackQuery.range(offset, offset + limit - 1);
-            const { data: fallbackData, error: fallbackErr } = await fallbackQuery;
-            if (fallbackErr) throw fallbackErr;
-            items = fallbackData || [];
-        }
+            const { error: countErr, count } = await countQuery;
+            if (countErr) throw countErr;
 
-        if (filters.open_now) {
-            items = items.filter(p => isOpenNow(p.hours) === true);
+            // 2. Fetch the paginated and masked results via get_professionals_v2 RPC
+            let items = [];
+            let errorOccurred = false;
+            let clientSideFilterNoWeb = false;
+            
+            try {
+                const rpcParams = {
+                    client_fingerprint: fingerprint || '',
+                    parent_cat: f.parentCategory || null,
+                    sub_cat: f.category || null,
+                    filter_area: f.area || null,
+                    min_rat: f.min_rating ? parseFloat(f.min_rating) : null,
+                    has_em: !!f.has_email,
+                    has_ph: !!f.has_phone,
+                    has_web: f.has_website || f.website_filter === 'has_website',
+                    search_term: f.search && f.search.trim() ? f.search.trim() : null,
+                    sort_col: f.sort_by || 'rating_desc',
+                    offset_val: offset,
+                    limit_val: limit
+                };
+                
+                if (f.no_website || f.website_filter === 'no_website') {
+                    rpcParams.has_no_web = true;
+                }
+                
+                let { data, error } = await supabase.rpc('get_professionals_v2', rpcParams);
+                
+                if (error) {
+                    if (error.code === '42883' && (f.no_website || f.website_filter === 'no_website')) {
+                        clientSideFilterNoWeb = true;
+                        delete rpcParams.has_no_web;
+                        const retryResult = await supabase.rpc('get_professionals_v2', rpcParams);
+                        if (retryResult.error) {
+                            if (retryResult.error.code === '42883' || retryResult.error.message.includes('Could not find the function') || retryResult.error.message.includes('schema cache')) {
+                                errorOccurred = true;
+                            } else {
+                                throw retryResult.error;
+                            }
+                        } else {
+                            data = retryResult.data;
+                        }
+                    } else if (error.code === '42883' || error.message.includes('Could not find the function') || error.message.includes('schema cache')) {
+                        errorOccurred = true;
+                    } else {
+                        throw error;
+                    }
+                }
+                
+                if (!errorOccurred) {
+                    items = data || [];
+                    if (clientSideFilterNoWeb || f.no_website || f.website_filter === 'no_website') {
+                        items = items.filter(p => 
+                            (!p.website || p.website.trim() === '') && 
+                            ((p.phone && p.phone.trim() !== '') || (p.email && p.email.trim() !== ''))
+                        );
+                    }
+                }
+            } catch (e) {
+                if (e.message && (e.message.includes('Could not find') || e.message.includes('schema cache'))) {
+                    errorOccurred = true;
+                } else {
+                    throw e;
+                }
+            }
+            
+            if (errorOccurred) {
+                let fallbackQuery = supabase.from('professionals').select('*');
+                if (f.parentCategory) fallbackQuery = fallbackQuery.eq('parent_category', f.parentCategory);
+                if (f.category) fallbackQuery = fallbackQuery.eq('category', f.category);
+                if (f.area) fallbackQuery = fallbackQuery.eq('area', f.area);
+                if (f.min_rating) fallbackQuery = fallbackQuery.gte('rating', parseFloat(f.min_rating));
+                if (f.has_email) fallbackQuery = fallbackQuery.not('email', 'is', null).neq('email', '');
+                if (f.has_phone) fallbackQuery = fallbackQuery.not('phone', 'is', null).neq('phone', '');
+                
+                if (f.has_website || f.website_filter === 'has_website') {
+                    fallbackQuery = fallbackQuery.not('website', 'is', null).neq('website', '');
+                } else if (f.no_website || f.website_filter === 'no_website') {
+                    fallbackQuery = fallbackQuery.or('website.is.null,website.eq.');
+                    fallbackQuery = fallbackQuery.or('phone.not.is.null,email.not.is.null');
+                }
+                
+                if (f.search && f.search.trim()) {
+                    const s = f.search.trim();
+                    const expandedTerms = expandSearchTerms(s);
+                    const orConditions = expandedTerms.slice(0, 6).map(t => 
+                        `name.ilike.%${t}%,address.ilike.%${t}%,category.ilike.%${t}%,parent_category.ilike.%${t}%,area.ilike.%${t}%`
+                    ).join(',');
+                    fallbackQuery = fallbackQuery.or(orConditions);
+                }
+                
+                if (f.sort_by === 'rating_desc') {
+                    fallbackQuery = fallbackQuery.order('rating', { ascending: false }).order('review_count', { ascending: false });
+                } else if (f.sort_by === 'reviews_desc') {
+                    fallbackQuery = fallbackQuery.order('review_count', { ascending: false });
+                } else if (f.sort_by === 'scraped_desc' || f.sort_by === 'indexed_desc') {
+                    fallbackQuery = fallbackQuery.order('scraped_at', { ascending: false });
+                } else if (f.sort_by === 'completeness_desc') {
+                    fallbackQuery = fallbackQuery.order('completeness_score', { ascending: false });
+                }
+                
+                fallbackQuery = fallbackQuery.range(offset, offset + limit - 1);
+                const { data: fallbackData, error: fallbackErr } = await fallbackQuery;
+                if (fallbackErr) throw fallbackErr;
+                items = fallbackData || [];
+            }
+
+            if (f.open_now) {
+                items = items.filter(p => isOpenNow(p.hours) === true);
+            }
+
+            return { items, count: count || items.length };
+        };
+
+        // 1. Initial query execution
+        let activeFilters = { ...filters };
+        let { items, count } = await runQuery(activeFilters);
+
+        // 2. Sequential query relaxation loop if we have < 12 items (guaranteeing 10-15 leads)
+        if (items.length < 12) {
+            console.log(`⚠️ Search returned only ${items.length} leads. Relaxing filters to guarantee 10-15 leads...`);
+            
+            // Phase 1: Relax "open_now" and rating requirements
+            if (activeFilters.open_now || activeFilters.min_rating) {
+                activeFilters.open_now = false;
+                activeFilters.min_rating = null;
+                const retry = await runQuery(activeFilters);
+                if (retry.items.length > items.length) {
+                    items = retry.items;
+                    count = retry.count;
+                }
+            }
+
+            // Phase 2: Relax specific contact checkbox constraints (email, phone, website flags)
+            if (items.length < 12 && (activeFilters.has_email || activeFilters.has_phone || activeFilters.has_website || activeFilters.no_website || activeFilters.website_filter)) {
+                activeFilters.has_email = false;
+                activeFilters.has_phone = false;
+                activeFilters.has_website = false;
+                activeFilters.no_website = false;
+                activeFilters.website_filter = null;
+                const retry = await runQuery(activeFilters);
+                if (retry.items.length > items.length) {
+                    items = retry.items;
+                    count = retry.count;
+                }
+            }
+
+            // Phase 3: Relax localized Area filter to search across the entire city (Mumbai/general database)
+            if (items.length < 12 && activeFilters.area) {
+                activeFilters.area = null;
+                const retry = await runQuery(activeFilters);
+                if (retry.items.length > items.length) {
+                    items = retry.items;
+                    count = retry.count;
+                }
+            }
+
+            // Phase 4: Fallback to general category leads if keyword/search matches are extremely narrow
+            if (items.length < 12 && activeFilters.search) {
+                activeFilters.search = null;
+                const retry = await runQuery(activeFilters);
+                if (retry.items.length > items.length) {
+                    items = retry.items;
+                    count = retry.count;
+                }
+            }
         }
 
         // Deep weighted relevance ranking algorithm
@@ -322,10 +367,10 @@ export const Api = {
 
         return {
             items,
-            total: count || 0,
+            total: count || items.length,
             offset,
             limit,
-            has_more: (offset + limit) < (count || 0)
+            has_more: (offset + limit) < (count || items.length)
         };
     },
     
