@@ -445,6 +445,18 @@ export const Api = {
         return data;
     },
 
+    async signInWithZoho() {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: 'zoho',
+            options: {
+                scopes: 'openid email profile',
+                redirectTo: window.location.origin
+            }
+        });
+        if (error) throw error;
+        return data;
+    },
+
     // --- v3 Dashboard & CRM API Methods ---
 
     async getDashboardStats(userId) {
@@ -622,6 +634,21 @@ export const Api = {
             }).catch(e => console.warn("Webhook dispatch warning: ", e));
         } catch (e) {
             console.warn("Webhook dispatch failed: ", e);
+        }
+
+        // Auto sync to Zoho CRM via proxy Edge Function if auto sync is enabled
+        if (State.profile?.zoho_auto_sync_enabled) {
+            try {
+                supabase.functions.invoke('zoho-proxy', {
+                    body: {
+                        action: 'push_lead',
+                        saved_lead_id: savedLeadId,
+                        status: status
+                    }
+                }).catch(e => console.warn("Zoho auto sync warning: ", e));
+            } catch (e) {
+                console.warn("Zoho auto sync failed: ", e);
+            }
         }
 
         return data;

@@ -188,9 +188,10 @@ export function renderLeadCRM(pipelineData, stats) {
                         <div style="font-size: 11.5px; color: #475569;">${lead.category || 'Local Business'} &middot; ${lead.area || 'Mumbai'}</div>
                     </div>
 
-                    <div style="display: flex; items-center; gap: 8px; font-size: 11px; color: #475569;">
+                    <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; color: #475569; flex-wrap: wrap;">
                         <span>⭐ ${rating} (${reviewCount})</span>
                         ${website ? `<span style="color: #2563eb; font-weight: 600;">🌐 Site Active</span>` : `<span style="color: #dc2626; font-weight: 600;">⚡ No Website</span>`}
+                        ${lead.zoho_lead_id ? `<span style="color: #059669; font-weight: 700; background: rgba(16,185,129,0.08); padding: 1px 4px; border-radius: 4px; font-size: 10px;">💼 Zoho Synced</span>` : ''}
                     </div>
 
                     <!-- Action Shortcut Buttons -->

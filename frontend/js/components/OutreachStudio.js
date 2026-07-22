@@ -363,8 +363,12 @@ export function renderOutreachStudio(savedLeads, activeLeadId = null, templates 
                             Track your outreach history. Mark this lead contacted to move them in the pipeline.
                         </div>
                         
-                        <button class="brand-btn" id="markOutreachContactedBtn" style="padding:12px; font-size:13px; font-weight:700; cursor:pointer;">
+                        <button class="brand-btn" id="markOutreachContactedBtn" style="padding:12px; font-size:13px; font-weight:700; cursor:pointer; margin-bottom:4px;">
                             Mark as Contacted
+                        </button>
+
+                        <button class="secondary-btn" id="exportZohoCampaignsCsvBtn" style="padding:12px; font-size:13px; font-weight:700; cursor:pointer; background:#ffffff; border-color:#cbd5e1; color:#0f172a;">
+                            📤 Export Zoho Campaigns CSV
                         </button>
                     </div>
                 </div>
@@ -893,6 +897,64 @@ export function bindOutreachStudioEvents(templates, onLeadSelectCallback, onTemp
                 }
             } catch (err) {
                 console.error("Failed to mark lead contacted: ", err);
+            }
+        });
+    }
+
+    // Export to Zoho Campaigns CSV
+    const zohoCsvBtn = document.getElementById('exportZohoCampaignsCsvBtn');
+    if (zohoCsvBtn && activeLeadId) {
+        zohoCsvBtn.addEventListener('click', async () => {
+            const mainText = document.getElementById('composerMainText').value;
+            
+            try {
+                const { data } = await Api.supabase
+                    .from('saved_leads')
+                    .select('*, professionals(*)')
+                    .eq('professional_id', activeLeadId)
+                    .single();
+
+                if (!data) {
+                    alert("Lead details not found");
+                    return;
+                }
+
+                const p = data.professionals || {};
+                const firstName = p.name ? p.name.split(' ')[0] : '';
+                const lastName = p.name ? p.name.split(' ').slice(1).join(' ') || '.' : '.';
+                const email = p.email || '';
+                const phone = p.phone || '';
+                const company = p.name || '';
+                const city = p.area || '';
+                const status = data.status || 'new';
+
+                // Format row fields and escape quotes for CSV parsing
+                const cleanText = mainText.replace(/"/g, '""');
+
+                // CSV headers & row contents
+                const headers = ["First Name", "Last Name", "Email", "Phone", "Company", "City", "Outreach Copy", "Status"];
+                const row = [firstName, lastName, email, phone, company, city, cleanText, status];
+                
+                const csvContent = [
+                    headers.map(h => `"${h}"`).join(','),
+                    row.map(r => `"${r}"`).join(',')
+                ].join('\n');
+
+                // Download the CSV file
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                const slug = p.name.toLowerCase().replace(/[^a-z0-9]/g, '_');
+                link.href = URL.createObjectURL(blob);
+                link.setAttribute('download', `zoho_campaign_lead_${slug}.csv`);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                if (window.showToast) window.showToast("✨ Zoho Campaigns CSV generated!", "success");
+
+            } catch (err) {
+                console.error("Failed to generate Zoho Campaigns CSV: ", err);
+                alert("Failed to export Zoho Campaigns CSV.");
             }
         });
     }
