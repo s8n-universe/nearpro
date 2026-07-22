@@ -2624,6 +2624,8 @@ async function initApp() {
                 State.user = null;
                 State.profile = null;
                 hideOAuthAuthLoader();
+                // Redirect to home page on sign out
+                window.location.hash = '#/';
             }
             State.notify();
         });

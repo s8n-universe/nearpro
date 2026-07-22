@@ -26,7 +26,7 @@ export function renderAuthModal() {
 
                 <!-- Zoho Authentication -->
                 <button id="zohoAuthBtn" class="secondary-btn" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 24px; padding: 12px; border-radius: var(--radius-sm);">
-                    <span style="font-weight: 800; color: #e11d48; font-size: 15px; font-family: var(--font-mono); margin-right: 4px;">Z</span>
+                    <img src="https://cdn.brandfetch.io/idssig0_jY/w/800/h/344/theme/dark/logo.png?c=1bxid64Mup7aczewSAYMX&t=1687855848599" alt="Zoho Logo" style="height: 18px; width: auto; object-fit: contain; margin-right: 4px;">
                     <span>Login with Zoho</span>
                 </button>
                 

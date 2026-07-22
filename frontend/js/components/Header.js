@@ -38,13 +38,13 @@ export function renderHeader() {
 
         authActionsHTML = `
             <div class="user-profile-dropdown-wrap" style="position: relative; display: inline-block;">
-                <div class="avatar-ring" style="width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; border: 2px solid ${tierColor}; box-shadow: ${glowShadow};">
+                <div class="avatar-ring" id="headerProfileAvatarBtn" style="width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; border: 2px solid ${tierColor}; box-shadow: ${glowShadow};">
                     <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--bg-surface, #18181b); color: white; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; text-transform: uppercase; font-family: var(--font-mono);">
                         ${initials}
                     </div>
                 </div>
-                <!-- Profile dropdown menu on hover -->
-                <div class="profile-dropdown-content" style="position: absolute; right: 0; top: 40px; width: 220px; background: #09090b; border: 1px solid var(--border, rgba(255,255,255,0.08)); border-radius: var(--radius-md, 8px); padding: 16px; display: none; flex-direction: column; gap: 12px; z-index: 10000; box-shadow: 0 10px 30px rgba(0,0,0,0.65); text-align: left;">
+                <!-- Profile dropdown menu on click -->
+                <div class="profile-dropdown-content" id="headerProfileDropdownMenu" style="position: absolute; right: 0; top: 45px; width: 220px; background: #09090b; border: 1px solid var(--border, rgba(255,255,255,0.08)); border-radius: var(--radius-md, 8px); padding: 16px; display: none; flex-direction: column; gap: 12px; z-index: 10000; box-shadow: 0 10px 30px rgba(0,0,0,0.65); text-align: left;">
                     <div style="display: flex; flex-direction: column; gap: 2px;">
                         <div style="font-size: 12px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${email}</div>
                         <div style="font-size: 11px; font-family: var(--font-mono); font-weight: bold; color: ${tierColor}; display: flex; align-items: center; gap: 4px;">
@@ -63,9 +63,6 @@ export function renderHeader() {
             </div>
             
             <style>
-                .user-profile-dropdown-wrap:hover .profile-dropdown-content {
-                    display: flex !important;
-                }
                 .avatar-ring:hover {
                     transform: scale(1.05);
                 }
@@ -155,6 +152,22 @@ export function bindHeaderEvents() {
             } catch (err) {
                 console.error("Sign out failed: ", err);
                 window._isSigningOut = false;
+            }
+        });
+    }
+
+    const profileAvatarBtn = document.getElementById('headerProfileAvatarBtn');
+    const profileDropdownMenu = document.getElementById('headerProfileDropdownMenu');
+    if (profileAvatarBtn && profileDropdownMenu) {
+        profileAvatarBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isVisible = profileDropdownMenu.style.display === 'flex';
+            profileDropdownMenu.style.display = isVisible ? 'none' : 'flex';
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!profileAvatarBtn.contains(e.target) && !profileDropdownMenu.contains(e.target)) {
+                profileDropdownMenu.style.display = 'none';
             }
         });
     }
