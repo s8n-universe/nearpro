@@ -4,11 +4,11 @@ import { hasAccess, getUserTier, TIER_NAMES } from '../auth.js';
 export function renderDashboardShell(activeTab = 'crm') {
     const userTier = getUserTier();
     const tierName = TIER_NAMES[userTier] || 'Explorer';
-    const userEmail = State.user?.email || 'user@nearpro.in';
+    const userEmail = State.user ? (State.user.email || '') : '';
 
     // Extract user's display name (Profile full_name -> Google user_metadata full_name -> Email)
-    const displayName = State.profile?.full_name?.trim() || State.user?.user_metadata?.full_name?.trim() || userEmail;
-    const initials = displayName ? displayName[0].toUpperCase() : 'U';
+    const displayName = State.user ? (State.profile?.full_name?.trim() || State.user?.user_metadata?.full_name?.trim() || userEmail) : 'Guest User';
+    const initials = State.user ? (displayName ? displayName[0].toUpperCase() : 'U') : 'G';
 
     // Tier color logic
     let tierColor = '#71717a'; // Zinc / Free
@@ -121,6 +121,7 @@ export function renderDashboardShell(activeTab = 'crm') {
                             <i data-lucide="zap" style="width: 14px; height: 14px;"></i> Open 360° AI Workstation ➔
                         </a>
 
+                        ${State.user ? `
                         <div class="user-profile-dropdown-container" style="position: relative; display: inline-block;">
                             <div class="user-profile-badge" style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
                                 <span class="user-avatar-circle" style="width: 32px; height: 32px; border-radius: 50%; background: ${tierColor}; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; text-transform: uppercase; font-family: var(--font-mono);">${initials}</span>
@@ -152,6 +153,11 @@ export function renderDashboardShell(activeTab = 'crm') {
                                 display: flex !important;
                             }
                         </style>
+                        ` : `
+                        <button class="brand-btn" onclick="window.State.setAuthModal(true);" style="padding: 8px 18px; font-size: 13px; font-weight: 700; background: linear-gradient(135deg, var(--accent-gold), #ea580c); color: white; border: none; border-radius: 6px; cursor: pointer;">
+                            Login
+                        </button>
+                        `}
                     </div>
                 </header>
                 

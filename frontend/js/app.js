@@ -198,46 +198,24 @@ function initRoutes() {
     });
 
     Router.on('#/browse', () => {
-        if (State.user) {
-            Router.navigate('#/dashboard/directory');
-            return;
-        }
-        State.updateFilters({ parentCategory: null, category: null });
+        Router.navigate('#/dashboard/directory');
     });
 
     Router.on('#/category/:parent', (parent) => {
-        if (State.user) {
-            Router.navigate(`#/dashboard/directory?parent=${parent}`);
-            return;
-        }
-        const decodedParent = decodeURIComponent(parent);
-        State.updateFilters({ parentCategory: decodedParent, category: null });
+        Router.navigate(`#/dashboard/directory?parent=${parent}`);
     });
 
     Router.on('#/category/:parent/:sub', (parent, sub) => {
-        if (State.user) {
-            Router.navigate(`#/dashboard/directory?parent=${parent}&sub=${sub}`);
-            return;
-        }
-        const decodedParent = decodeURIComponent(parent);
-        const decodedSub = decodeURIComponent(sub);
-        State.updateFilters({ parentCategory: decodedParent, category: decodedSub });
+        Router.navigate(`#/dashboard/directory?parent=${parent}&sub=${sub}`);
     });
 
     Router.on('#/dashboard', () => {
-        if (!State.user) {
-            if (!window._isSigningOut) {
-                State.setAuthModal(true);
-            }
-            window._isSigningOut = false;
-            Router.navigate('#/');
-        } else {
-            Router.navigate('#/dashboard/directory');
-        }
+        Router.navigate('#/dashboard/directory');
     });
 
     Router.on('#/dashboard/:tab', (tab) => {
-        if (!State.user) {
+        const isPublicTab = tab === 'directory';
+        if (!State.user && !isPublicTab) {
             if (!window._isSigningOut) {
                 State.setAuthModal(true);
             }
@@ -252,6 +230,9 @@ function initRoutes() {
                 if (parent) {
                     State.filters.parentCategory = decodeURIComponent(parent);
                     State.filters.category = sub ? decodeURIComponent(sub) : null;
+                } else {
+                    State.filters.parentCategory = null;
+                    State.filters.category = null;
                 }
             }
             renderDashboardLayout(tab);
@@ -1198,7 +1179,8 @@ function setupCategorySidebarHover() {
 }
 
 async function renderDashboardLayout(tab) {
-    if (!State.user) {
+    const isPublicTab = tab === 'directory';
+    if (!State.user && !isPublicTab) {
         State.setAuthModal(true);
         Router.navigate('#/');
         return;
