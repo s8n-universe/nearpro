@@ -637,7 +637,7 @@ function renderFeedContent(hasMore) {
                             </p>
                         </div>
                     </div>
-                    <button class="brand-btn" style="padding: 8px 16px; font-size: 12px; border-radius: var(--radius-md); font-weight: 700; white-space: nowrap; background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%); color: #ffffff; border: none; box-shadow: 0 2px 8px rgba(234,88,12,0.25);" onclick="window.State.updateFilters({ no_website: true });">
+                    <button class="brand-btn" style="padding: 8px 16px; font-size: 12px; border-radius: var(--radius-md); font-weight: 700; white-space: nowrap; background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%); color: #ffffff; border: none; box-shadow: 0 2px 8px rgba(234,88,12,0.25);" onclick="window.State.updateFilters({ no_website: true, has_website: false, website_filter: 'no_website' });">
                         Target ${count} Gap Leads 🎯
                     </button>
                 </div>
@@ -1264,7 +1264,7 @@ async function renderDashboardLayout(tab) {
                 const sidebarClass = State.category_sidebar_collapsed ? 'collapsed' : '';
                 content.innerHTML = `
                     <div class="dashboard-directory-layout" style="display: flex; width: 100%; height: calc(100vh - 70px); overflow: hidden;">
-                        <aside class="dashboard-category-sidebar ${sidebarClass}" id="sidebarElement" style="width: 240px; border-right: 1px solid #cbd5e1; background: #ffffff; overflow-y: auto; padding: 20px 14px; flex-shrink: 0; box-shadow: 2px 0 6px rgba(15,23,42,0.02);"></aside>
+                        <aside class="dashboard-category-sidebar ${sidebarClass}" id="sidebarElement" style="width: 240px; border-right: 1px solid var(--border); background: var(--bg-surface); overflow-y: auto; padding: 20px 14px; flex-shrink: 0; box-shadow: 2px 0 6px rgba(0,0,0,0.25);"></aside>
                         <section class="app-content" style="flex: 1; padding: 12px 20px; display: flex; flex-direction: column; overflow-y: auto; position: relative;">
                             <div id="filterPanelElement"></div>
                             <div class="view-container" id="feedElement"></div>

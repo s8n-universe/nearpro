@@ -26,12 +26,12 @@ export const State = {
         category: null,      // Raw category name
         parentCategory: null, // "Healthcare", "Beauty", etc.
         area: null,          // "Bandra", "Andheri", etc.
-        min_rating: null,
-        has_email: false,
-        has_phone: false,
-        has_website: false,
+        min_rating: "4.0",
+        has_email: true,
+        has_phone: true,
+        has_website: true,
         no_website: false,
-        website_filter: "all", // "all" | "has_website" | "no_website"
+        website_filter: "has_website", // "all" | "has_website" | "no_website"
         open_now: false,
         search: "",          // Raw search text
         sort_by: "rating_desc",
@@ -68,16 +68,17 @@ export const State = {
     },
     
     resetFilters() {
+        const isGuest = !this.user;
         this.filters = {
             category: null,
             parentCategory: null,
             area: null,
-            min_rating: null,
-            has_email: false,
-            has_phone: false,
-            has_website: false,
+            min_rating: isGuest ? "4.0" : null,
+            has_email: isGuest ? true : false,
+            has_phone: isGuest ? true : false,
+            has_website: isGuest ? true : false,
             no_website: false,
-            website_filter: "all",
+            website_filter: isGuest ? "has_website" : "all",
             open_now: false,
             search: "",
             sort_by: "rating_desc",
@@ -144,6 +145,12 @@ export const State = {
         this.profile = profile;
         if (user) {
             this.auth_modal_open = false;
+            // Clear default guest filters on login
+            this.filters.min_rating = null;
+            this.filters.has_email = false;
+            this.filters.has_phone = false;
+            this.filters.has_website = false;
+            this.filters.website_filter = "all";
         }
         this.notify();
     },
