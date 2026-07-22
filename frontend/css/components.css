@@ -492,7 +492,7 @@
     padding-top: 14px;
 }
 
-/* Call button — solid high contrast emerald */
+/* Call button — solid high contrast blue */
 .card-btn-call {
     flex: 1;
     display: inline-flex;
@@ -505,18 +505,18 @@
     border-radius: var(--radius-md);
     cursor: pointer;
     transition: var(--transition);
-    background: #059669;
-    border: 1px solid #047857;
+    background: #3b82f6;
+    border: 1px solid #2563eb;
     color: #ffffff !important;
     text-decoration: none;
-    box-shadow: 0 2px 6px rgba(5, 150, 105, 0.2);
+    box-shadow: 0 2px 6px rgba(59, 130, 246, 0.2);
 }
 .card-btn-call:hover {
-    background: #047857;
-    border-color: #065f46;
+    background: #2563eb;
+    border-color: #1d4ed8;
     color: #ffffff !important;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.35);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
 }
 
 /* Website button — solid high contrast blue */

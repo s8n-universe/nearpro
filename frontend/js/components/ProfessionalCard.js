@@ -192,7 +192,7 @@ export function renderProfessionalCard(lead, index = 0) {
             <div class="card-actions" onclick="event.stopPropagation();">
                 ${isPremium || isFreemiumSampleUnlocked ? `
                     ${lead.phone ? `
-                        <a href="tel:${lead.phone}" class="card-btn-call" style="${isFreemiumSampleUnlocked ? 'background: rgba(34, 197, 94, 0.12); border: 1px solid rgba(34, 197, 94, 0.4); color: #4ade80;' : ''}">
+                        <a href="tel:${lead.phone}" class="card-btn-call" style="${isFreemiumSampleUnlocked ? 'background: rgba(37, 99, 235, 0.08); border: 1px solid rgba(37, 99, 235, 0.4); color: #2563eb !important;' : ''}">
                             <i data-lucide="phone" style="width:13px; height:13px;"></i> ${lead.phone}
                         </a>
                     ` : ''}
