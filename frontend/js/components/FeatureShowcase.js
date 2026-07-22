@@ -382,8 +382,8 @@ export function bindFeatureShowcaseEvents() {
     ];
     
     const showNextProof = () => {
-        // Only trigger if we are currently on the homepage (marketing layout visible)
-        if (!document.querySelector('.marketing-hero')) {
+        // Only trigger if we are currently on the homepage (marketing layout visible) and login modal is not open
+        if (document.getElementById('authModalOverlay') || !document.querySelector('.marketing-hero')) {
             toast.style.display = 'none';
             return;
         }
