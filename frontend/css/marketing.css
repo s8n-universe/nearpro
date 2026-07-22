@@ -3,7 +3,7 @@
 /* Hero area container */
 .marketing-hero {
     position: relative;
-    padding: 140px 0 100px;
+    padding: 80px 0 85px;
     text-align: center;
     background: 
         radial-gradient(circle at 50% 30%, rgba(255, 160, 0, 0.08) 0%, rgba(236, 72, 153, 0.05) 50%, rgba(3, 3, 3, 0) 80%),
@@ -562,7 +562,7 @@
 /* Tablet */
 @media (max-width: 860px) {
     .marketing-hero {
-        padding: 100px 0 60px;
+        padding: 70px 0 50px;
     }
     .hero-title {
         font-size: 42px;
@@ -601,7 +601,7 @@
 /* Phone */
 @media (max-width: 640px) {
     .marketing-hero {
-        padding: 80px 0 40px;
+        padding: 55px 0 35px;
     }
     .hero-title {
         font-size: 32px;
