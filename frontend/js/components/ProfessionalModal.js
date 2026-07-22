@@ -60,8 +60,10 @@ export function renderProfessionalModal(lead) {
         `;
     }
 
-    // Scout+ required for contact access — Explorer always sees masked data per spec
-    const hasConnectAccess = currentUserHasAccess('scout');
+    const isPremium = currentUserHasAccess('scout');
+    const isLeadInFirst12 = State.professionals && State.professionals.slice(0, 12).some(p => p.id === lead.id);
+    const isFreemiumSampleUnlocked = !isPremium && isLeadInFirst12;
+    const hasConnectAccess = isPremium || isFreemiumSampleUnlocked;
 
     const phoneDisplay = !hasConnectAccess 
         ? `<span onclick="window.State.setPricingModal(true);" style="color: #d97706; cursor: pointer; text-decoration: underline; font-weight: 700; font-size: 13px;"><i data-lucide="lock" style="width:11px; height:11px;"></i> Locked</span>`

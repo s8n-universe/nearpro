@@ -142,48 +142,76 @@ BEGIN
     END IF;
     
     RETURN QUERY
+    WITH filtered_leads AS (
+        SELECT 
+            p.id,
+            p.name,
+            p.category,
+            p.parent_category,
+            p.address,
+            p.area,
+            p.phone as raw_phone,
+            p.website as raw_website,
+            p.email,
+            p.rating,
+            p.review_count,
+            p.completeness_score,
+            p.hours,
+            p.latitude,
+            p.longitude,
+            p.source,
+            p.source_url,
+            p.scraped_at,
+            p.synced_at,
+            ROW_NUMBER() OVER (
+                ORDER BY 
+                    CASE WHEN sort_col = 'rating_desc' THEN p.rating END DESC NULLS LAST,
+                    CASE WHEN sort_col = 'rating_desc' THEN p.review_count END DESC NULLS LAST,
+                    CASE WHEN sort_col = 'reviews_desc' THEN p.review_count END DESC NULLS LAST,
+                    CASE WHEN sort_col = 'completeness_desc' THEN p.completeness_score END DESC NULLS LAST,
+                    CASE WHEN sort_col = 'scraped_desc' THEN p.scraped_at END DESC NULLS LAST,
+                    p.id
+            ) as row_idx
+        FROM public.professionals p
+        WHERE 
+            (parent_cat IS NULL OR p.parent_category = parent_cat)
+            AND (sub_cat IS NULL OR p.category = sub_cat)
+            AND (filter_area IS NULL OR p.area = filter_area)
+            AND (min_rat IS NULL OR p.rating >= min_rat)
+            AND (NOT has_em OR (p.email IS NOT NULL AND p.email != ''))
+            AND (NOT has_ph OR (p.phone IS NOT NULL AND p.phone != ''))
+            AND (NOT has_web OR (p.website IS NOT NULL AND p.website != ''))
+            AND (NOT has_no_web OR (p.website IS NULL OR p.website = ''))
+            AND (search_term IS NULL OR p.name ILIKE '%' || search_term || '%' OR p.address ILIKE '%' || search_term || '%' OR p.category ILIKE '%' || search_term || '%')
+    )
     SELECT 
-        p.id,
-        p.name,
-        p.category,
-        p.parent_category,
-        p.address,
-        p.area,
+        fl.id,
+        fl.name,
+        fl.category,
+        fl.parent_category,
+        fl.address,
+        fl.area,
         CASE 
-            WHEN is_premium_user OR is_trial_active THEN p.phone
+            WHEN is_premium_user OR is_trial_active OR fl.row_idx <= 12 THEN fl.raw_phone
             ELSE NULL
         END as phone,
         CASE 
-            WHEN is_premium_user OR is_trial_active THEN p.website
+            WHEN is_premium_user OR is_trial_active OR fl.row_idx <= 12 THEN fl.raw_website
             ELSE NULL
         END as website,
-        p.email,
-        p.rating,
-        p.review_count,
-        p.completeness_score,
-        p.hours,
-        p.latitude,
-        p.longitude,
-        p.source,
-        p.source_url,
-        p.scraped_at,
-        p.synced_at
-    FROM professionals p
-    WHERE 
-        (parent_cat IS NULL OR p.parent_category = parent_cat)
-        AND (sub_cat IS NULL OR p.category = sub_cat)
-        AND (filter_area IS NULL OR p.area = filter_area)
-        AND (min_rat IS NULL OR p.rating >= min_rat)
-        AND (NOT has_em OR (p.email IS NOT NULL AND p.email != ''))
-        AND (NOT has_ph OR (p.phone IS NOT NULL AND p.phone != ''))
-        AND (NOT has_web OR (p.website IS NOT NULL AND p.website != ''))
-        AND (NOT has_no_web OR (p.website IS NULL OR p.website = ''))
-        AND (search_term IS NULL OR p.name ILIKE '%' || search_term || '%' OR p.address ILIKE '%' || search_term || '%' OR p.category ILIKE '%' || search_term || '%')
-    ORDER BY
-        CASE WHEN sort_col = 'rating_desc' THEN p.rating END DESC,
-        CASE WHEN sort_col = 'reviews_desc' THEN p.review_count END DESC,
-        CASE WHEN sort_col = 'completeness_desc' THEN p.completeness_score END DESC,
-        CASE WHEN sort_col = 'scraped_desc' THEN p.scraped_at END DESC
+        fl.email,
+        fl.rating,
+        fl.review_count,
+        fl.completeness_score,
+        fl.hours,
+        fl.latitude,
+        fl.longitude,
+        fl.source,
+        fl.source_url,
+        fl.scraped_at,
+        fl.synced_at
+    FROM filtered_leads fl
+    ORDER BY fl.row_idx
     OFFSET offset_val
     LIMIT limit_val;
 END;

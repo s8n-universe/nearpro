@@ -159,7 +159,7 @@ export function renderProfessionalCard(lead, index = 0) {
                         <span>Compare</span>
                     </label>
                 ` : `
-                    <span class="compare-checkbox-label locked" title="Upgrade plan to compare leads side by side">
+                    <span class="compare-checkbox-label locked" onclick="window.State.setPricingModal(true);" title="Upgrade plan to compare leads side by side">
                         <span class="compare-pill-dot"></span>
                         <span>Compare</span>
                         <i data-lucide="lock" style="width:11px; height:11px; margin-left: 2px;"></i>
