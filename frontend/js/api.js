@@ -470,7 +470,7 @@ export const Api = {
 
     async signInWithHubspot() {
         const { data, error } = await supabase.auth.signInWithOAuth({
-            provider: 'hubspot',
+            provider: 'custom:hubspot',
             options: {
                 redirectTo: window.location.origin
             }
