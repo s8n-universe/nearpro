@@ -324,6 +324,15 @@ export function renderAuthModal() {
                 color: #94a3b8 !important;
                 opacity: 1 !important;
             }
+            .auth-left-pane .auth-input {
+                background: #f8fafc !important;
+                border: 1px solid #cbd5e1 !important;
+                color: #0f172a !important;
+            }
+            .auth-left-pane .auth-input:focus {
+                border-color: var(--accent-gold) !important;
+                box-shadow: 0 0 0 2px rgba(255, 160, 0, 0.15) !important;
+            }
             .auth-browser-mockup:hover {
                 transform: translateY(-8px) scale(1.01);
                 border-color: rgba(255, 255, 255, 0.3) !important;
