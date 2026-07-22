@@ -93,7 +93,7 @@ export function renderHeader() {
                             <span class="ticker-badge" style="background: rgba(255, 160, 0, 0.15); color: var(--accent-gold); padding: 1px 6px; border-radius: 12px; font-size: 9.5px; font-family: var(--font-mono); text-transform: uppercase; display: inline-block; animation: pulse 2s infinite; flex-shrink: 0;">HOT 🔥</span>
                             <div class="ticker-viewport" style="overflow: hidden; width: 100%; position: relative; height: 16px;">
                                 <div class="ticker-track" style="display: inline-block; white-space: nowrap; position: absolute; animation: marquee 25s linear infinite; width: max-content;">
-                                    🔥 CA Rahul just closed a ₹30,000 retainer using NearPro! &bull; ⚡ Unlocking 12 premium verified leads with direct numbers today! &bull; 💸 Pitch ₹30,000 mobile layout packages to target gap leads! &bull; 🚀 Find local clients with 100% verified street-address data! &bull; 🔥 CA Rahul just closed a ₹30,000 retainer using NearPro! &bull; ⚡ Unlocking 12 premium verified leads with direct numbers today! &bull; 💸 Pitch ₹30,000 mobile layout packages to target gap leads! &bull; 🚀 Find local clients with 100% verified street-address data!
+                                    🔥 <span class="dynamic-ticker-name">CA Rahul</span> just closed a <span class="dynamic-ticker-deal">₹30,000 retainer</span> using NearPro! &bull; ⚡ Unlocking 12 premium verified leads with direct numbers today! &bull; 💸 Pitch ₹30,000 mobile layout packages to target gap leads! &bull; 🚀 Find local clients with 100% verified street-address data! &bull; 🔥 <span class="dynamic-ticker-name">CA Rahul</span> just closed a <span class="dynamic-ticker-deal">₹30,000 retainer</span> using NearPro! &bull; ⚡ Unlocking 12 premium verified leads with direct numbers today! &bull; 💸 Pitch ₹30,000 mobile layout packages to target gap leads! &bull; 🚀 Find local clients with 100% verified street-address data!
                                 </div>
                             </div>
                         </div>
@@ -154,5 +154,49 @@ export function bindHeaderEvents() {
                 window._isSigningOut = false;
             }
         });
+    }
+
+    // Dynamic rotating names & deal amounts/types for ticker social proof
+    if (window._tickerNameIntervalId) {
+        clearInterval(window._tickerNameIntervalId);
+    }
+    const dynamicNames = [
+        "CA Rahul",
+        "Freelancer Priya",
+        "Agency Head Amit",
+        "Sales Rep Sneha",
+        "Designer Rohit",
+        "Developer Kiara",
+        "Consultant Vivek",
+        "Marketer Arjun",
+        "Growth Hacker Riya"
+    ];
+    const dynamicDeals = [
+        "₹30,000 retainer",
+        "₹45,000 website contract",
+        "₹75,000 SEO project",
+        "₹20,000 consulting gig",
+        "₹60,000 design package",
+        "₹50,000 HubSpot migration",
+        "₹35,000 audit deal",
+        "₹90,000 enterprise contract"
+    ];
+    let nameIdx = 0;
+    let dealIdx = 0;
+    const nameElements = document.querySelectorAll('.dynamic-ticker-name');
+    if (nameElements.length > 0) {
+        window._tickerNameIntervalId = setInterval(() => {
+            nameIdx = (nameIdx + 1) % dynamicNames.length;
+            dealIdx = (dealIdx + 1) % dynamicDeals.length;
+            const nextName = dynamicNames[nameIdx];
+            const nextDeal = dynamicDeals[dealIdx];
+            
+            document.querySelectorAll('.dynamic-ticker-name').forEach(el => {
+                el.textContent = nextName;
+            });
+            document.querySelectorAll('.dynamic-ticker-deal').forEach(el => {
+                el.textContent = nextDeal;
+            });
+        }, 3000);
     }
 }
