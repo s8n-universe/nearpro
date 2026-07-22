@@ -210,6 +210,61 @@ export function renderFeatureShowcase() {
                 </div>
             </div>
         </section>
+        <!-- Interactive B2B Sales ROI Calculator -->
+        <section class="roi-calculator-section" style="padding: 60px 0; background: rgba(255,255,255,0.01); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+            <div class="container">
+                <div class="features-title-wrap" style="margin-bottom: 32px; text-align: center;">
+                    <span style="font-family: var(--font-mono); font-size: 12px; color: var(--accent-gold); text-transform: uppercase;">ROI Planner</span>
+                    <h2 style="font-size: 28px; margin-top: 8px;">Estimate Your Acquisition Revenue</h2>
+                    <p style="max-width: 600px; margin: 12px auto 0; font-size: 14.5px; color: var(--text-secondary); line-height: 1.6;">
+                        Input your target values below to see how fast a single client acquisition pays off your premium subscription.
+                    </p>
+                </div>
+                
+                <div style="max-width: 800px; margin: 0 auto; background: var(--bg-surface); border: 1.5px solid var(--border); border-radius: var(--radius-lg); padding: 32px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px; box-shadow: 0 10px 40px rgba(0,0,0,0.4);">
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13.5px; font-weight: 600; color: white;">
+                                <span>Monthly Leads Pitched</span>
+                                <span id="leadsPitchedVal" style="color: var(--accent-gold); font-family: var(--font-mono);">150 leads</span>
+                            </div>
+                            <input type="range" id="leadsPitchedRange" min="20" max="500" value="150" style="width: 100%; accent-color: var(--accent-gold); cursor: pointer;" />
+                        </div>
+                        
+                        <div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13.5px; font-weight: 600; color: white;">
+                                <span>Pitch Success Rate</span>
+                                <span id="successRateVal" style="color: var(--accent-gold); font-family: var(--font-mono);">2.0%</span>
+                            </div>
+                            <input type="range" id="successRateRange" min="0.5" max="10" step="0.5" value="2.0" style="width: 100%; accent-color: var(--accent-gold); cursor: pointer;" />
+                        </div>
+
+                        <div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13.5px; font-weight: 600; color: white;">
+                                <span>Retainer Deal Size</span>
+                                <span id="dealSizeVal" style="color: var(--accent-gold); font-family: var(--font-mono);">₹15,000 / mo</span>
+                            </div>
+                            <input type="range" id="dealSizeRange" min="5000" max="60000" step="5000" value="15000" style="width: 100%; accent-color: var(--accent-gold); cursor: pointer;" />
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.02); border: 1px dashed var(--border); border-radius: var(--radius-md); padding: 24px; display: flex; flex-direction: column; justify-content: center; text-align: center; gap: 16px;">
+                        <div>
+                            <span style="font-size: 11px; font-weight: 800; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px;">ESTIMATED NEW RETAINERS</span>
+                            <h3 id="clientsAcquired" style="font-size: 32px; color: white; font-weight: 800; margin: 4px 0;">3 clients</h3>
+                        </div>
+                        <hr style="border: none; border-top: 1px solid var(--border);">
+                        <div>
+                            <span style="font-size: 11px; font-weight: 800; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px;">ESTIMATED MONTHLY REVENUE</span>
+                            <h2 id="revenueAcquired" style="font-size: 40px; color: #22c55e; font-weight: 800; margin: 4px 0;">₹45,000</h2>
+                            <p style="font-size: 12px; color: var(--text-secondary); margin-top: 6px;">
+                                ROI on Hunter Plan (₹999): <strong style="color: var(--accent-gold);" id="roiMultiplier">45x return</strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
 
         <!-- Pricing Section -->
@@ -307,9 +362,49 @@ export function renderFeatureShowcase() {
         </section>
     `;
 }
-
 export function bindFeatureShowcaseEvents() {
+    // 1. ROI Calculator Logic
+    const pitchedRange = document.getElementById('leadsPitchedRange');
+    const successRange = document.getElementById('successRateRange');
+    const dealRange = document.getElementById('dealSizeRange');
 
+    const pitchedVal = document.getElementById('leadsPitchedVal');
+    const successVal = document.getElementById('successRateVal');
+    const dealVal = document.getElementById('dealSizeVal');
+
+    const clientsAcquired = document.getElementById('clientsAcquired');
+    const revenueAcquired = document.getElementById('revenueAcquired');
+    const roiMultiplier = document.getElementById('roiMultiplier');
+
+    function updateCalculations() {
+        if (!pitchedRange || !successRange || !dealRange) return;
+
+        const leads = parseInt(pitchedRange.value);
+        const rate = parseFloat(successRange.value);
+        const deal = parseInt(dealRange.value);
+
+        if (pitchedVal) pitchedVal.innerText = `${leads} leads`;
+        if (successVal) successVal.innerText = `${rate.toFixed(1)}%`;
+        if (dealVal) dealVal.innerText = `₹${deal.toLocaleString('en-IN')} / mo`;
+
+        // Calculate acquired clients
+        const clients = Math.round(leads * (rate / 100));
+        const finalClients = Math.max(1, clients); // Minimum 1 to show value
+        const monthlyRevenue = finalClients * deal;
+
+        if (clientsAcquired) clientsAcquired.innerText = `${finalClients} client${finalClients > 1 ? 's' : ''}`;
+        if (revenueAcquired) revenueAcquired.innerText = `₹${monthlyRevenue.toLocaleString('en-IN')}`;
+
+        // ROI Multiplier calculation (against Hunter Plan ₹999)
+        const multiplier = Math.round(monthlyRevenue / 999);
+        if (roiMultiplier) roiMultiplier.innerText = `${multiplier}x return`;
+    }
+
+    if (pitchedRange) pitchedRange.addEventListener('input', updateCalculations);
+    if (successRange) successRange.addEventListener('input', updateCalculations);
+    if (dealRange) dealRange.addEventListener('input', updateCalculations);
+
+    updateCalculations();
 
     // 2. Promotional Countdown Timer (resets or counts down to 2 hours, 45 minutes)
     let totalSeconds = 2 * 3600 + 45 * 60 + 12; // 2h 45m 12s
