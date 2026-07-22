@@ -108,8 +108,14 @@ export function showPreparationLoader(upgradeData, onCompleteCallback) {
         const container = document.getElementById('loaderCardContainer');
         if (!container) return;
 
-        let countdown = 3;
         let isNavigated = false;
+
+        // Auto-download (auto-trigger print window) the tax invoice
+        try {
+            printTaxInvoice(upgradeData);
+        } catch (e) {
+            console.error("Auto-print tax invoice failed:", e);
+        }
 
         container.innerHTML = `
             <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; animation: fadeIn 0.3s ease;">
@@ -157,7 +163,7 @@ export function showPreparationLoader(upgradeData, onCompleteCallback) {
                 </div>
 
                 <button id="enterWorkspaceModalBtn" class="brand-btn" style="width: 100%; padding: 12px; font-weight: 700; font-size: 14px; border-radius: var(--radius-md); cursor: pointer;">
-                    Enter My Workspace 🚀 (<span id="countdownSec">${countdown}</span>s)
+                    Enter My Workspace 🚀
                 </button>
             </div>
         `;
@@ -172,7 +178,6 @@ export function showPreparationLoader(upgradeData, onCompleteCallback) {
         const redirect = () => {
             if (isNavigated) return;
             isNavigated = true;
-            clearInterval(autoRedirectTimer);
             overlay.remove();
             if (onCompleteCallback) onCompleteCallback();
             window.location.hash = '#/dashboard/directory';
@@ -180,16 +185,5 @@ export function showPreparationLoader(upgradeData, onCompleteCallback) {
 
         const enterBtn = document.getElementById('enterWorkspaceModalBtn');
         if (enterBtn) enterBtn.addEventListener('click', redirect);
-
-        const autoRedirectTimer = setInterval(() => {
-            countdown -= 1;
-            const cdEl = document.getElementById('countdownSec');
-            if (cdEl) cdEl.innerText = countdown;
-
-            if (countdown <= 0) {
-                clearInterval(autoRedirectTimer);
-                redirect();
-            }
-        }, 1000);
     }
 }

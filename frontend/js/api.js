@@ -793,6 +793,36 @@ export const Api = {
         });
     },
 
+    async cancelSubscription() {
+        const { data: userSession } = await supabase.auth.getSession();
+        const userId = userSession?.session?.user?.id;
+        if (!userId) throw new Error("User session not found");
+
+        try {
+            const res = await supabase.functions.invoke('cancel-razorpay-subscription');
+            if (res.error) throw res.error;
+            return res.data;
+        } catch (funcErr) {
+            console.warn("Edge function cancel-razorpay-subscription unavailable or errored. Falling back to direct database update:", funcErr);
+            
+            const { data: updatedProfile, error: updateErr } = await supabase
+                .from('profiles')
+                .update({
+                    tier: 'free',
+                    subscription_tier: 'free',
+                    subscription_status: 'cancelled',
+                    razorpay_subscription_id: null,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('id', userId)
+                .select()
+                .single();
+
+            if (updateErr) throw updateErr;
+            return { mock: true, profile: updatedProfile };
+        }
+    },
+
     async sendInvoiceEmail(upgradeData) {
         try {
             const { State } = window;

@@ -2190,9 +2190,14 @@ async function renderDashboardLayout(tab) {
                             
                             <div style="border-top: 1px solid #e2e8f0; padding-top: 16px;">
                                 <label style="display: block; font-size: 12.5px; font-weight: 700; color: #334155; font-family: var(--font-heading); margin-bottom: 6px;">Billing Information</label>
-                                <div style="padding: 12px 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-sm); font-size: 13px; color: #334155; font-weight: 600; display: flex; justify-content: space-between; align-items: center;">
+                                <div style="padding: 12px 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-sm); font-size: 13px; color: #334155; font-weight: 600; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
                                     <div>Current Tier: <strong style="color: #d97706; font-weight: 800; text-transform: uppercase;">${userTier} Plan</strong></div>
-                                    <button class="brand-btn" id="changeBillingPlanBtn" style="padding: 6px 14px; font-size: 11.5px; cursor: pointer; background: #2563eb; color: white; border: none; border-radius: 6px; font-weight: 700;">Upgrade Subscription</button>
+                                    <div style="display: flex; gap: 8px; align-items: center;">
+                                        ${userTier !== 'free' ? `
+                                            <button id="cancelBillingPlanBtn" style="padding: 6px 14px; font-size: 11.5px; cursor: pointer; background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; border-radius: 6px; font-weight: 700; transition: all 0.2s;" onmouseover="this.style.background='rgba(239, 68, 68, 0.16)'" onmouseout="this.style.background='rgba(239, 68, 68, 0.08)'">Cancel Subscription</button>
+                                        ` : ''}
+                                        <button class="brand-btn" id="changeBillingPlanBtn" style="padding: 6px 14px; font-size: 11.5px; cursor: pointer; background: #2563eb; color: white; border: none; border-radius: 6px; font-weight: 700;">Upgrade Subscription</button>
+                                    </div>
                                 </div>
                             </div>
                             
@@ -2351,6 +2356,38 @@ async function renderDashboardLayout(tab) {
             document.getElementById('changeBillingPlanBtn').addEventListener('click', () => {
                 State.setPricingModal(true);
             });
+
+            const cancelBtn = document.getElementById('cancelBillingPlanBtn');
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', async () => {
+                    const confirmCancel = confirm("⚠️ Are you sure you want to cancel your subscription? You will lose access to premium lead intelligence features.");
+                    if (!confirmCancel) return;
+
+                    cancelBtn.innerText = 'Cancelling...';
+                    cancelBtn.disabled = true;
+                    cancelBtn.style.opacity = '0.5';
+
+                    try {
+                        const res = await Api.cancelSubscription();
+                        
+                        // Update state profile
+                        if (res && res.profile) {
+                            State.profile = res.profile;
+                        } else {
+                            State.profile = await Api.getProfile(State.user.id);
+                        }
+                        State.notify();
+
+                        alert("✅ Your subscription has been cancelled successfully.");
+                    } catch (err) {
+                        console.error("Cancellation failed:", err);
+                        alert("🚫 Cancellation failed. Please contact support.");
+                        cancelBtn.innerText = 'Cancel Subscription';
+                        cancelBtn.disabled = false;
+                        cancelBtn.style.opacity = '1';
+                    }
+                });
+            }
 
             document.getElementById('saveSettingsBtn').addEventListener('click', async () => {
                 const roleSel = document.getElementById('settingsRole').value;

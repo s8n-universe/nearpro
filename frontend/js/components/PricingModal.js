@@ -110,17 +110,17 @@ export function renderPricingModal() {
 
     if (plansToRender.length === 0) {
         return `
-            <div class="modal-overlay open" id="pricingModalOverlay" style="z-index: 10000;">
-                <div class="modal-card pricing-modal-inner" style="max-width: 500px; width: 95%; padding: 36px; text-align: center; position: relative; background: var(--bg-surface) !important; color: var(--text-primary) !important; border: 1px solid var(--border) !important;">
-                    <button class="modal-close-btn" id="closePricingModalBtn" style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer;">&times;</button>
+            <div class="modal-overlay open" id="pricingModalOverlay" style="z-index: 10000; background: rgba(0, 0, 0, 0.7) !important; backdrop-filter: blur(8px) !important; -webkit-backdrop-filter: blur(8px) !important;">
+                <div class="modal-card pricing-modal-inner" style="max-width: 500px; width: 95%; padding: 36px; text-align: center; position: relative; background: #0a0a0c !important; color: #ffffff !important; border: 1px solid rgba(255,255,255,0.08) !important;">
+                    <button class="modal-close-btn" id="closePricingModalBtn" style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: #94a3b8; font-size: 24px; cursor: pointer;">&times;</button>
                     <div style="font-size: 40px; margin-bottom: 12px;">👑</div>
                     <h2 style="font-size: 24px; margin-bottom: 12px; font-family: var(--font-heading); color: white; font-weight: 700;">
                         Enterprise Tier Active
                     </h2>
-                    <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.5; margin-bottom: 24px;">
+                    <p style="color: #cbd5e1; font-size: 14px; line-height: 1.5; margin-bottom: 24px;">
                         You are currently on the highest plan (Enterprise Plan). Thank you for using NearPro! If you need to make any changes to your subscription, please contact support.
                     </p>
-                    <a href="mailto:s8nservice@gmail.com?subject=NearPro%20Subscription%20Inquiry" class="brand-btn" style="padding: 10px 24px; text-decoration: none; display: inline-block;">
+                    <a href="mailto:s8nservice@gmail.com?subject=NearPro%20Subscription%20Inquiry" class="brand-btn" style="padding: 10px 24px; text-decoration: none; display: inline-block; background: linear-gradient(135deg, #ffa000, #ec4899); color: white; border: none; border-radius: var(--radius-sm); font-weight: 700;">
                         Contact Support
                     </a>
                 </div>
@@ -129,7 +129,7 @@ export function renderPricingModal() {
     }
 
     return `
-        <div class="modal-overlay open" id="pricingModalOverlay" style="z-index: 10000;">
+        <div class="modal-overlay open" id="pricingModalOverlay" style="z-index: 10000; background: rgba(0, 0, 0, 0.7) !important; backdrop-filter: blur(8px) !important; -webkit-backdrop-filter: blur(8px) !important;">
             <style>
                 .pricing-plans-grid {
                     display: grid;
@@ -153,8 +153,8 @@ export function renderPricingModal() {
                     }
                 }
             </style>
-            <div class="modal-card pricing-modal-inner" style="max-width: 1200px; width: 95%; padding: 36px; text-align: center; position: relative; max-height: 90vh; overflow-y: auto; background: var(--bg-surface) !important; color: var(--text-primary) !important; border: 1px solid var(--border) !important;">
-                <button class="modal-close-btn" id="closePricingModalBtn" style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">&times;</button>
+            <div class="modal-card pricing-modal-inner" style="max-width: 1200px; width: 95%; padding: 36px; text-align: center; position: relative; max-height: 90vh; overflow-y: auto; background: #0a0a0c !important; color: #ffffff !important; border: 1px solid rgba(255, 255, 255, 0.08) !important;">
+                <button class="modal-close-btn" id="closePricingModalBtn" style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: #94a3b8; font-size: 24px; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='#94a3b8'">&times;</button>
                 
                 <div style="font-size: 40px; margin-bottom: 12px;">🚀</div>
                 
@@ -162,16 +162,16 @@ export function renderPricingModal() {
                     Choose Your Growth Tier
                 </h2>
                 
-                <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 24px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.5;">
+                <p style="color: #cbd5e1; font-size: 14px; margin-bottom: 24px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.5;">
                     Access verified lead intelligence, AI outreach tools, and CRM pipelines designed for India.
                 </p>
 
                 <!-- Billing Switcher Segmented Control -->
-                <div style="display: inline-flex; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 50px; padding: 4px; margin-bottom: 32px; gap: 4px;">
-                    <button class="cycle-tab-btn ${cycle === 'monthly' ? 'active' : ''}" id="cycleMonthlyBtn" style="background:${cycle==='monthly'?'var(--accent-gold)':'none'}; color:${cycle==='monthly'?'black':'white'}; border:none; padding:8px 20px; border-radius:50px; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.2s ease;">
+                <div style="display: inline-flex; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 50px; padding: 4px; margin-bottom: 32px; gap: 4px;">
+                    <button class="cycle-tab-btn ${cycle === 'monthly' ? 'active' : ''}" id="cycleMonthlyBtn" style="background:${cycle==='monthly'?'#ffa000':'none'}; color:${cycle==='monthly'?'black':'white'}; border:none; padding:8px 20px; border-radius:50px; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.2s ease;">
                         Monthly Billing
                     </button>
-                    <button class="cycle-tab-btn ${cycle === 'yearly' ? 'active' : ''}" id="cycleYearlyBtn" style="background:${cycle==='yearly'?'var(--accent-gold)':'none'}; color:${cycle==='yearly'?'black':'white'}; border:none; padding:8px 20px; border-radius:50px; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.2s ease;">
+                    <button class="cycle-tab-btn ${cycle === 'yearly' ? 'active' : ''}" id="cycleYearlyBtn" style="background:${cycle==='yearly'?'#ffa000':'none'}; color:${cycle==='yearly'?'black':'white'}; border:none; padding:8px 20px; border-radius:50px; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.2s ease;">
                         Yearly Billing (Save 20%)
                     </button>
                 </div>
@@ -191,7 +191,7 @@ export function renderPricingModal() {
                             borderColor = 'rgba(16, 185, 129, 0.5)';
                             bgGradient = 'rgba(16, 185, 129, 0.08)';
                         } else if (isHunter) {
-                            borderColor = 'var(--accent-gold)';
+                            borderColor = '#ffa000';
                             bgGradient = 'rgba(255, 160, 0, 0.06)';
                         } else if (plan.id === 'agency') {
                             borderColor = 'rgba(236, 72, 153, 0.5)';
@@ -205,13 +205,13 @@ export function renderPricingModal() {
                             <div style="background: ${bgGradient}; border: 1.5px solid ${borderColor}; border-radius: var(--radius-md); padding: 24px; display: flex; flex-direction: column; justify-content: space-between; position: relative; backdrop-filter: blur(12px);">
                                 
                                 ${plan.badge ? `
-                                    <div style="position: absolute; top: -12px; right: 16px; background: ${isCurrentActive ? '#10b981' : (isHunter ? 'var(--accent-gold)' : (plan.id === 'agency' ? 'var(--accent-pink)' : '#64748b'))}; color: ${plan.id === 'enterprise' ? 'white' : 'black'}; font-size: 9px; font-family: var(--font-mono); padding: 3px 10px; border-radius: 50px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
+                                    <div style="position: absolute; top: -12px; right: 16px; background: ${isCurrentActive ? '#10b981' : (isHunter ? '#ffa000' : (plan.id === 'agency' ? '#ec4899' : '#64748b'))}; color: ${plan.id === 'enterprise' ? 'white' : 'black'}; font-size: 9px; font-family: var(--font-mono); padding: 3px 10px; border-radius: 50px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
                                         ${plan.badge}
                                     </div>
                                 ` : ''}
 
                                 <div>
-                                    <div style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; font-weight: bold;">
+                                    <div style="font-size: 11px; font-family: var(--font-mono); color: #94a3b8; text-transform: uppercase; margin-bottom: 4px; font-weight: bold;">
                                         ${plan.tagline}
                                     </div>
 
@@ -221,17 +221,17 @@ export function renderPricingModal() {
 
                                     <div style="margin-bottom: 16px; display: flex; align-items: baseline; gap: 4px;">
                                         <span style="font-size: 26px; font-weight: 800; color: white; font-family: var(--font-heading);">${price}</span>
-                                        <span style="font-size: 12px; color: var(--text-muted); font-family: var(--font-mono);">${period}</span>
+                                        <span style="font-size: 12px; color: #94a3b8; font-family: var(--font-mono);">${period}</span>
                                     </div>
 
-                                    <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 14px;">
+                                    <div style="font-size: 11px; color: #cbd5e1; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 14px;">
                                         ${plan.subtext}
                                     </div>
 
                                     <!-- Bullet Features Checklist -->
                                     <ul style="list-style: none; padding: 0; margin: 0 0 24px 0; display: flex; flex-direction: column; gap: 10px;">
                                         ${plan.features.map(f => `
-                                            <li style="display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--text-secondary); line-height: 1.4;">
+                                            <li style="display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: #cbd5e1; line-height: 1.4;">
                                                 <span style="color: #10b981; font-weight: bold; flex-shrink: 0; margin-top: 1px;">✓</span>
                                                 <span style="color: #e2e8f0;">${f}</span>
                                             </li>
@@ -246,11 +246,11 @@ export function renderPricingModal() {
                                             Current Active Plan
                                         </button>
                                     ` : plan.id === 'enterprise' ? `
-                                        <a href="mailto:s8nservice@gmail.com?subject=NearPro%20Enterprise%20Plan%20Inquiry" class="brand-btn" style="width: 100%; padding: 11px; font-size: 12.5px; font-weight: 700; text-decoration: none; text-align: center; display: block; box-sizing: border-box; background: var(--bg-surface); color: white; border: 1px solid var(--border);">
+                                        <a href="mailto:s8nservice@gmail.com?subject=NearPro%20Enterprise%20Plan%20Inquiry" class="brand-btn" style="width: 100%; padding: 11px; font-size: 12.5px; font-weight: 700; text-decoration: none; text-align: center; display: block; box-sizing: border-box; background: #0a0a0c; color: white; border: 1px solid rgba(255,255,255,0.08);">
                                             Contact Us
                                         </a>
                                     ` : `
-                                        <button class="brand-btn" style="width: 100%; padding: 11px; font-size: 12.5px; font-weight: 700; ${plan.id === 'agency' ? 'background: linear-gradient(135deg, var(--accent-pink), #a855f7);' : ''}" onclick="window.State.selectPlan('${plan.id}', '${cycle}');">
+                                        <button class="brand-btn" style="width: 100%; padding: 11px; font-size: 12.5px; font-weight: 700; background: ${plan.id === 'agency' ? 'linear-gradient(135deg, #ec4899, #a855f7)' : 'linear-gradient(135deg, #ffa000, #ec4899)'}; color: white; border: none; cursor: pointer;" onclick="window.State.selectPlan('${plan.id}', '${cycle}');">
                                             ${plan.level > userLevel ? `Upgrade to ${plan.name.split(' ')[0]}` : `Switch to ${plan.name.split(' ')[0]}`}
                                         </button>
                                     `}
@@ -261,7 +261,7 @@ export function renderPricingModal() {
                     }).join('')}
                 </div>
 
-                <div style="font-size: 11.5px; color: var(--text-muted); font-family: var(--font-mono);">
+                <div style="font-size: 11.5px; color: #94a3b8; font-family: var(--font-mono);">
                     🔒 Secure Encrypted Checkout • 7-Day Money-Back Guarantee • Cancel Anytime
                 </div>
             </div>
