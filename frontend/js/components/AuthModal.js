@@ -69,10 +69,10 @@ export function renderAuthModal() {
                         
                         <!-- Tab headers -->
                         <div style="display: flex; gap: 16px; border-bottom: 1px solid #f1f5f9; margin-bottom: 24px;">
-                            <button id="signInTabBtn" class="tab-header-btn active" style="flex: 1; padding-bottom: 10px; font-size: 14px; background: none; border: none; border-bottom: 2px solid var(--accent-gold); color: #0f172a; cursor: pointer; font-weight: 700;">
+                            <button id="signInTabBtn" class="tab-header-btn active" style="flex: 1; padding-bottom: 10px; font-size: 14px; background: none; border: none; cursor: pointer; font-weight: 700;">
                                 Sign In
                             </button>
-                            <button id="signUpTabBtn" class="tab-header-btn" style="flex: 1; padding-bottom: 10px; font-size: 14px; background: none; border: none; border-bottom: 2px solid transparent; color: #64748b; cursor: pointer; font-weight: 700;">
+                            <button id="signUpTabBtn" class="tab-header-btn" style="flex: 1; padding-bottom: 10px; font-size: 14px; background: none; border: none; cursor: pointer; font-weight: 700;">
                                 Register
                             </button>
                         </div>
@@ -81,13 +81,13 @@ export function renderAuthModal() {
                         <form id="authForm">
                             <div style="margin-bottom: 16px;">
                                 <label style="display: block; font-size: 13px; color: #334155; margin-bottom: 6px; font-weight: 600;">Email Address</label>
-                                <input type="email" id="authEmailInput" class="auth-input" required placeholder="name@domain.com" style="width:100%; padding:12px 14px; background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; color:#0f172a; font-size:14px; outline:none; transition: border-color 0.2s, box-shadow 0.2s;">
+                                <input type="email" id="authEmailInput" class="auth-input" required placeholder="name@domain.com" style="width:100%; padding:12px 14px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; color:#0f172a; font-size:14px; outline:none; transition: border-color 0.2s, box-shadow 0.2s;">
                             </div>
                             
                             <div style="margin-bottom: 16px;">
                                 <label style="display: block; font-size: 13px; color: #334155; margin-bottom: 6px; font-weight: 600;">Password</label>
                                 <div style="position: relative;">
-                                    <input type="password" id="authPasswordInput" class="auth-input" required placeholder="••••••••" style="width:100%; padding:12px 14px; padding-right: 40px; background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; color:#0f172a; font-size:14px; outline:none; transition: border-color 0.2s, box-shadow 0.2s;">
+                                    <input type="password" id="authPasswordInput" class="auth-input" required placeholder="••••••••" style="width:100%; padding:12px 14px; padding-right: 40px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; color:#0f172a; font-size:14px; outline:none; transition: border-color 0.2s, box-shadow 0.2s;">
                                     <button type="button" id="togglePasswordVisibilityBtn" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 4px;">
                                         <svg id="passwordVisibilityIcon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -291,7 +291,7 @@ export function renderAuthModal() {
             }
             .auth-right-pane {
                 flex: 1;
-                background: linear-gradient(135deg, #1e3a8a 0%, #0f766e 50%, #065f46 100%);
+                background: linear-gradient(135deg, #ffa000 0%, #ec4899 100%);
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
@@ -299,18 +299,43 @@ export function renderAuthModal() {
                 position: relative;
                 overflow: hidden;
             }
+            .auth-left-pane .tab-header-btn {
+                background: none;
+                border: none;
+                padding-bottom: 10px;
+                font-size: 14px;
+                cursor: pointer;
+                font-weight: 700;
+                transition: all 0.2s ease;
+            }
+            .auth-left-pane .tab-header-btn:hover {
+                color: #0f172a !important;
+                border-bottom: 2px solid #ffa000 !important;
+            }
+            .auth-left-pane .tab-header-btn.active {
+                color: #0f172a !important;
+                border-bottom: 2px solid var(--accent-gold) !important;
+            }
+            .auth-left-pane .tab-header-btn:not(.active) {
+                color: #64748b !important;
+                border-bottom: 2px solid transparent !important;
+            }
+            .auth-input::placeholder {
+                color: #94a3b8 !important;
+                opacity: 1 !important;
+            }
             .auth-browser-mockup:hover {
                 transform: translateY(-8px) scale(1.01);
-                border-color: rgba(245, 158, 11, 0.3) !important;
+                border-color: rgba(255, 255, 255, 0.3) !important;
                 box-shadow: 0 40px 80px rgba(0,0,0,0.6) !important;
             }
             #googleAuthBtn:hover, #linkedinAuthBtn:hover, #hubspotAuthBtn:hover, #zohoAuthBtn:hover {
                 background-color: #f8fafc !important;
-                border-color: #94a3b8 !important;
+                border-color: #cbd5e1 !important;
             }
             .auth-input:focus {
                 border-color: var(--accent-gold) !important;
-                box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.1) !important;
+                box-shadow: 0 0 0 2px rgba(255, 160, 0, 0.15) !important;
             }
             @media (max-width: 900px) {
                 .auth-split-container {
