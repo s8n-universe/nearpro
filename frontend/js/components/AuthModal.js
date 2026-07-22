@@ -133,27 +133,50 @@ export function renderAuthModal() {
                 <!-- Right Pane Product Showcase -->
                 <div class="auth-right-pane">
                     
-                    <div style="display: flex; justify-content: space-between; align-items: center; z-index: 2; width: 100%;">
-                        <span style="font-family: var(--font-heading); font-size: 16px; color: white; font-weight: 800; letter-spacing: 0.5px;">NearPro Preview</span>
-                        <div style="display: flex; gap: 20px;">
-                            <a href="#/features" style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Product</a>
-                            <a href="#/pricing" style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Pricing</a>
-                            <a href="#/docs" style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Resources</a>
-                        </div>
-                    </div>
-
-                    <div style="z-index: 2; margin: 40px 0 auto 0; display: flex; flex-direction: column; gap: 24px; width: 100%;">
+                    <div style="z-index: 2; margin: 0 0 auto 0; display: flex; flex-direction: column; gap: 20px; width: 100%;">
                         <div style="max-width: 580px; text-align: left;">
-                            <h1 style="font-size: 36px; font-weight: 800; font-family: var(--font-heading); color: white; line-height: 1.25; margin: 0 0 12px 0; letter-spacing: -0.5px;">
+                            <h1 style="font-size: 34px; font-weight: 800; font-family: var(--font-heading); color: white; line-height: 1.25; margin: 0 0 10px 0; letter-spacing: -0.5px;">
                                 Simplify Your Business Operations
                             </h1>
-                            <p style="color: rgba(255, 255, 255, 0.85); font-size: 15px; line-height: 1.6; margin: 0;">
+                            <p style="color: rgba(255, 255, 255, 0.9); font-size: 14px; line-height: 1.6; margin: 0 0 8px 0;">
                                 From search directory mapping to instant pipeline syncing, everything your agency needs is here.
                             </p>
                         </div>
 
+                        <!-- Highlights list / using the right side for something more -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 620px;">
+                            <div style="display: flex; gap: 10px; align-items: flex-start;">
+                                <span style="background: rgba(255,255,255,0.15); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: 800; flex-shrink: 0; margin-top: 1px;">✓</span>
+                                <div>
+                                    <div style="font-size: 13.5px; font-weight: 700; color: white;">Unlimited Lead Mapping</div>
+                                    <div style="font-size: 11.5px; color: rgba(255,255,255,0.75); margin-top: 2px; line-height: 1.4;">Extract verified local directories with direct mobile numbers.</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 10px; align-items: flex-start;">
+                                <span style="background: rgba(255,255,255,0.15); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: 800; flex-shrink: 0; margin-top: 1px;">✓</span>
+                                <div>
+                                    <div style="font-size: 13.5px; font-weight: 700; color: white;">1-Click CRM Sync</div>
+                                    <div style="font-size: 11.5px; color: rgba(255,255,255,0.75); margin-top: 2px; line-height: 1.4;">Push leads automatically to Google Sheets, Zoho, or your custom CRM.</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 10px; align-items: flex-start;">
+                                <span style="background: rgba(255,255,255,0.15); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: 800; flex-shrink: 0; margin-top: 1px;">✓</span>
+                                <div>
+                                    <div style="font-size: 13.5px; font-weight: 700; color: white;">Instant Site Audits</div>
+                                    <div style="font-size: 11.5px; color: rgba(255,255,255,0.75); margin-top: 2px; line-height: 1.4;">Generate beautiful, customized PDF proposals with performance gaps.</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 10px; align-items: flex-start;">
+                                <span style="background: rgba(255,255,255,0.15); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: 800; flex-shrink: 0; margin-top: 1px;">✓</span>
+                                <div>
+                                    <div style="font-size: 13.5px; font-weight: 700; color: white;">AI Outreach Composer</div>
+                                    <div style="font-size: 11.5px; color: rgba(255,255,255,0.75); margin-top: 2px; line-height: 1.4;">Draft custom call templates and warm openers on autopilot.</div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Unified High Fidelity Browser Mockup -->
-                        <div class="auth-browser-mockup" style="width: 100%; max-width: 680px; background: rgba(15, 23, 42, 0.65); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; box-shadow: 0 30px 60px rgba(0,0,0,0.5); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: flex; flex-direction: column; overflow: hidden; height: 360px; font-family: sans-serif; transition: transform 0.3s ease, border-color 0.3s ease;">
+                        <div class="auth-browser-mockup" style="width: 100%; max-width: 680px; background: rgba(15, 23, 42, 0.65); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; box-shadow: 0 30px 60px rgba(0,0,0,0.5); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: flex; flex-direction: column; overflow: hidden; height: 280px; font-family: sans-serif; transition: transform 0.3s ease, border-color 0.3s ease;">
                             
                             <!-- Browser Header Bar -->
                             <div style="background: rgba(30, 41, 59, 0.5); padding: 10px 16px; display: flex; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); gap: 16px;">
@@ -264,7 +287,11 @@ export function renderAuthModal() {
                     <!-- Bottom Footer Context -->
                     <div style="z-index: 2; font-size: 11.5px; color: rgba(255,255,255,0.4); display: flex; justify-content: space-between; align-items: center; width: 100%;">
                         <span>&copy; 2026 S8N</span>
-                        <a href="#/privacy" style="color: rgba(255,255,255,0.4); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Privacy Policy</a>
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <a href="#/terms" style="color: rgba(255,255,255,0.4); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Terms of Service</a>
+                            <span>&bull;</span>
+                            <a href="#/privacy" style="color: rgba(255,255,255,0.4); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Privacy Policy</a>
+                        </div>
                     </div>
                 </div>
             </div>
