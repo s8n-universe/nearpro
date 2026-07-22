@@ -192,6 +192,15 @@
     color: #64748b;
 }
 
+.prof-card:hover .compare-checkbox-label {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+.prof-card:hover .track-card-btn {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
 /* Card head: category badge + name */
 .card-head {
     display: flex;
@@ -205,7 +214,7 @@
     gap: 6px;
 }
 .card-head h3 {
-    font-size: 15.5px;
+    font-size: 16px;
     font-family: var(--font-heading);
     font-weight: 700;
     white-space: nowrap;
@@ -222,7 +231,7 @@
     align-items: center;
     gap: 6px;
     font-size: 12px;
-    color: #475569;
+    color: #334155;
     flex-wrap: wrap;
 }
 .card-info-row .star-rating {
@@ -231,22 +240,23 @@
     align-items: center;
 }
 .card-info-row .star-filled {
-    color: #f59e0b;
+    color: #d97706;
 }
 .card-info-row .star-half {
-    color: #f59e0b;
-    opacity: 0.7;
+    color: #d97706;
+    opacity: 0.85;
 }
 .card-info-row .star-empty {
     color: #cbd5e1;
 }
 .card-info-row .review-count {
-    color: #64748b;
+    color: #334155;
     font-size: 11.5px;
+    font-weight: 700;
 }
 .card-info-row .area-label {
-    color: #334155;
-    font-weight: 500;
+    color: #0f172a;
+    font-weight: 700;
     font-size: 12px;
 }
 .card-divider {
@@ -478,11 +488,11 @@
     margin-top: auto;
     display: flex;
     gap: 8px;
-    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    border-top: 1px solid #e2e8f0;
     padding-top: 14px;
 }
 
-/* Call button — teal */
+/* Call button — solid high contrast emerald */
 .card-btn-call {
     flex: 1;
     display: inline-flex;
@@ -491,23 +501,25 @@
     gap: 6px;
     padding: 9px 12px;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
     border-radius: var(--radius-md);
     cursor: pointer;
     transition: var(--transition);
-    background: rgba(20, 184, 166, 0.1);
-    border: 1px solid rgba(20, 184, 166, 0.25);
-    color: #2dd4bf;
+    background: #059669;
+    border: 1px solid #047857;
+    color: #ffffff !important;
     text-decoration: none;
+    box-shadow: 0 2px 6px rgba(5, 150, 105, 0.2);
 }
 .card-btn-call:hover {
-    background: rgba(20, 184, 166, 0.18);
-    border-color: #2dd4bf;
+    background: #047857;
+    border-color: #065f46;
+    color: #ffffff !important;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(20, 184, 166, 0.15);
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.35);
 }
 
-/* Website button — subtle outline */
+/* Website button — solid high contrast blue */
 .card-btn-site {
     flex: 1;
     display: inline-flex;
@@ -516,20 +528,22 @@
     gap: 6px;
     padding: 9px 12px;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
     border-radius: var(--radius-md);
     cursor: pointer;
     transition: var(--transition);
-    background: rgba(99, 102, 241, 0.08);
-    border: 1px solid rgba(99, 102, 241, 0.2);
-    color: #a5b4fc;
+    background: #2563eb;
+    border: 1px solid #1d4ed8;
+    color: #ffffff !important;
     text-decoration: none;
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.2);
 }
 .card-btn-site:hover {
-    background: rgba(99, 102, 241, 0.15);
-    border-color: #818cf8;
+    background: #1d4ed8;
+    border-color: #1e40af;
+    color: #ffffff !important;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.12);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
 }
 
 /* Unlock button — gold gradient */
@@ -748,56 +762,63 @@
 }
 
 .profile-active-btn {
-    padding: 4px 10px;
+    padding: 5px 12px;
     font-size: 11.5px;
     display: flex;
     align-items: center;
     gap: 6px;
-    border-radius: var(--radius-sm);
-    border: 1px solid rgba(255, 160, 0, 0.4) !important;
-    background: rgba(255, 160, 0, 0.05) !important;
-    color: var(--accent-gold) !important;
+    border-radius: 50px;
+    border: 1.5px solid #f59e0b !important;
+    background: #fffbeb !important;
+    color: #b45309 !important;
     cursor: pointer;
-    margin-left: auto;
-    font-weight: 600;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.profile-active-btn:hover {
+    background: #fef3c7 !important;
+    border-color: #d97706 !important;
+    color: #92400e !important;
 }
 
 /* Quick Filter Chips */
 .filter-chips-row {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     flex-wrap: wrap;
-    padding-top: 2px;
+    padding-top: 4px;
 }
 
 .filter-chip {
     display: flex;
     align-items: center;
-    gap: 4px;
-    padding: 4px 10px;
+    gap: 6px;
+    padding: 5px 12px;
     border-radius: 50px;
-    font-size: 11.5px;
-    font-weight: 600;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--border);
-    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 700;
+    background: #f1f5f9;
+    border: 1.5px solid #cbd5e1;
+    color: #0f172a;
     cursor: pointer;
     transition: all 0.2s ease;
     user-select: none;
 }
 
 .filter-chip:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: white;
-    border-color: rgba(255, 255, 255, 0.25);
+    background: #e2e8f0;
+    color: #2563eb;
+    border-color: #94a3b8;
 }
 
 .filter-chip.active {
-    background: rgba(255, 160, 0, 0.12);
-    border-color: var(--accent-gold);
-    color: var(--accent-gold);
-    box-shadow: 0 0 12px rgba(255, 160, 0, 0.15);
+    background: #eff6ff;
+    border-color: #2563eb;
+    color: #2563eb;
+    font-weight: 700;
+    box-shadow: 0 0 10px rgba(37, 99, 235, 0.15);
 }
 
 .chip-icon {

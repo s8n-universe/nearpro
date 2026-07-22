@@ -637,22 +637,22 @@ function renderFeedContent(hasMore) {
             const count = noWebLeads.length;
             const potentialRevenue = (count * 30000).toLocaleString('en-IN');
             auditGapTriggerHTML = `
-                <div class="audit-gap-trigger-card" style="margin-bottom: 24px; padding: 18px 24px; background: linear-gradient(135deg, rgba(255, 160, 0, 0.08) 0%, rgba(239, 68, 68, 0.06) 100%); border: 1px solid rgba(255, 160, 0, 0.3); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; box-shadow: 0 4px 20px rgba(0,0,0,0.3); border-left: 4px solid var(--accent-gold);">
-                    <div style="display: flex; align-items: flex-start; gap: 16px; flex: 1; min-width: 280px;">
-                        <div style="font-size: 26px; background: rgba(255, 160, 0, 0.15); width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(255,160,0,0.3);">⚠️</div>
+                <div class="audit-gap-trigger-card" style="margin-bottom: 16px; padding: 12px 18px; background: #fffbeb; border: 1.5px solid #fde68a; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; box-shadow: 0 2px 8px rgba(217,119,6,0.08); border-left: 4px solid #f59e0b;">
+                    <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 260px;">
+                        <div style="font-size: 20px; background: rgba(245, 158, 11, 0.15); width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(245, 158, 11, 0.3);">⚡</div>
                         <div>
-                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                                <span style="font-size: 10.5px; font-family: var(--font-mono); font-weight: 700; color: var(--accent-gold); letter-spacing: 0.8px; text-transform: uppercase; background: rgba(255,160,0,0.15); padding: 2px 8px; border-radius: 4px;">⚡ REVENUE OPPORTUNITY DETECTED</span>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 2px;">
+                                <span style="font-size: 10px; font-family: var(--font-mono); font-weight: 800; color: #b45309; letter-spacing: 0.8px; text-transform: uppercase; background: #fef3c7; padding: 1px 6px; border-radius: 4px;">⚡ REVENUE OPPORTUNITY DETECTED</span>
                             </div>
-                            <h3 style="font-size: 16.5px; font-family: var(--font-heading); color: white; margin-bottom: 4px;">
+                            <h3 style="font-size: 15px; font-family: var(--font-heading); color: #0f172a; font-weight: 700; margin: 0 0 2px 0;">
                                 ${count} ${categoryLabel} listing${count > 1 ? 's' : ''} in ${areaLabel} have NO Website!
                             </h3>
-                            <p style="font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.5;">
-                                Pitching a ₹30,000 website package to these ${count} offices represents a <strong style="color: var(--accent-gold); font-weight: 600;">₹${potentialRevenue}+ revenue pipeline</strong> this week.
+                            <p style="font-size: 12px; color: #475569; margin: 0; line-height: 1.4; font-weight: 500;">
+                                Pitching a ₹30,000 website package to these ${count} offices represents a <strong style="color: #c2410c; font-weight: 700;">₹${potentialRevenue}+ revenue pipeline</strong> this week.
                             </p>
                         </div>
                     </div>
-                    <button class="brand-btn" style="padding: 10px 18px; font-size: 12.5px; border-radius: var(--radius-md); font-weight: 600; white-space: nowrap;" onclick="window.State.updateFilters({ no_website: true });">
+                    <button class="brand-btn" style="padding: 8px 16px; font-size: 12px; border-radius: var(--radius-md); font-weight: 700; white-space: nowrap; background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%); color: #ffffff; border: none; box-shadow: 0 2px 8px rgba(234,88,12,0.25);" onclick="window.State.updateFilters({ no_website: true });">
                         Target ${count} Gap Leads 🎯
                     </button>
                 </div>
@@ -660,22 +660,22 @@ function renderFeedContent(hasMore) {
         } else if (lowRatingLeads.length > 0) {
             const count = lowRatingLeads.length;
             auditGapTriggerHTML = `
-                <div class="audit-gap-trigger-card" style="margin-bottom: 24px; padding: 18px 24px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(139, 92, 246, 0.06) 100%); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; box-shadow: 0 4px 20px rgba(0,0,0,0.3); border-left: 4px solid #3b82f6;">
-                    <div style="display: flex; align-items: flex-start; gap: 16px; flex: 1; min-width: 280px;">
-                        <div style="font-size: 26px; background: rgba(59, 130, 246, 0.15); width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(59, 130, 246, 0.3);">⭐</div>
+                <div class="audit-gap-trigger-card" style="margin-bottom: 16px; padding: 12px 18px; background: #eff6ff; border: 1.5px solid #bfdbfe; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; box-shadow: 0 2px 8px rgba(37,99,235,0.08); border-left: 4px solid #3b82f6;">
+                    <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 260px;">
+                        <div style="font-size: 20px; background: rgba(59, 130, 246, 0.15); width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(59, 130, 246, 0.3);">⭐</div>
                         <div>
-                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                                <span style="font-size: 10.5px; font-family: var(--font-mono); font-weight: 700; color: #60a5fa; letter-spacing: 0.8px; text-transform: uppercase; background: rgba(59, 130, 246, 0.15); padding: 2px 8px; border-radius: 4px;">🎯 REPUTATION AUDIT OPPORTUNITY</span>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 2px;">
+                                <span style="font-size: 10px; font-family: var(--font-mono); font-weight: 800; color: #1d4ed8; letter-spacing: 0.8px; text-transform: uppercase; background: #dbeafe; padding: 1px 6px; border-radius: 4px;">🎯 REPUTATION AUDIT OPPORTUNITY</span>
                             </div>
-                            <h3 style="font-size: 16.5px; font-family: var(--font-heading); color: white; margin-bottom: 4px;">
+                            <h3 style="font-size: 15px; font-family: var(--font-heading); color: #0f172a; font-weight: 700; margin: 0 0 2px 0;">
                                 ${count} ${categoryLabel} business${count > 1 ? 'es' : ''} in ${areaLabel} hold low ratings (&lt; 4.0★)
                             </h3>
-                            <p style="font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.5;">
+                            <p style="font-size: 12px; color: #475569; margin: 0; line-height: 1.4; font-weight: 500;">
                                 Pitch local review boosting and Google Business Profile optimization to secure ₹15,000/mo retainer clients.
                             </p>
                         </div>
                     </div>
-                    <button class="brand-btn" style="padding: 10px 18px; font-size: 12.5px; border-radius: var(--radius-md); font-weight: 600; white-space: nowrap; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);" onclick="window.State.updateFilters({ min_rating: null });">
+                    <button class="brand-btn" style="padding: 8px 16px; font-size: 12px; border-radius: var(--radius-md); font-weight: 700; white-space: nowrap; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: #ffffff; border: none; box-shadow: 0 2px 8px rgba(37,99,235,0.25);" onclick="window.State.updateFilters({ min_rating: null });">
                         Target ${count} Reputation Leads ⭐
                     </button>
                 </div>
@@ -1299,17 +1299,7 @@ async function renderDashboardLayout(tab) {
                 content.innerHTML = `
                     <div class="dashboard-directory-layout" style="display: flex; width: 100%; height: calc(100vh - 70px); overflow: hidden;">
                         <aside class="dashboard-category-sidebar ${sidebarClass}" id="sidebarElement" style="width: 240px; border-right: 1px solid #cbd5e1; background: #ffffff; overflow-y: auto; padding: 20px 14px; flex-shrink: 0; box-shadow: 2px 0 6px rgba(15,23,42,0.02);"></aside>
-                        <section class="app-content" style="flex: 1; padding: 16px 20px; display: flex; flex-direction: column; overflow-y: auto; position: relative;">
-                            <!-- Directory Header Stats Bar -->
-                            <div class="directory-stats-bar" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 12px; color: #475569; font-family: var(--font-mono); font-weight: 600;">
-                                <div style="display: flex; align-items: center; gap: 8px;">
-                                    <span style="color: #d97706; font-weight: 700;">⚡ Verified Intelligence Engine</span>
-                                    <span>•</span>
-                                    <span style="color: #0f172a;">${State.stats?.total_professionals ? State.stats.total_professionals.toLocaleString('en-IN') : '7,626'} Verified Listings</span>
-                                    <span>•</span>
-                                    <span>Mumbai Region</span>
-                                </div>
-                            </div>
+                        <section class="app-content" style="flex: 1; padding: 12px 20px; display: flex; flex-direction: column; overflow-y: auto; position: relative;">
                             <div id="filterPanelElement"></div>
                             <div class="view-container" id="feedElement"></div>
                             <div id="comparePanelPlaceholder"></div>

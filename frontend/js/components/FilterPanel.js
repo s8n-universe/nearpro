@@ -66,10 +66,6 @@ export function renderFilterPanel() {
                             <option value="indexed_desc" ${State.filters.sort_by === 'indexed_desc' ? 'selected' : ''}>Recently Added</option>
                         </select>
                     </div>
-
-                    <button id="surveySettingsBtn" class="secondary-btn profile-active-btn">
-                        🎯 ${State.user_survey ? 'Profile: Active' : 'Sales Profile'}
-                    </button>
                 </div>
 
                 <div class="filter-controls-right">
@@ -80,26 +76,32 @@ export function renderFilterPanel() {
                 </div>
             </div>
 
-            <!-- Quick Filter Chips Row -->
-            <div class="filter-chips-row">
-                <button class="filter-chip ${State.filters.has_phone ? 'active' : ''}" id="chipHasPhone">
-                    <span class="chip-icon">📱</span> Has Phone
-                </button>
+            <!-- Quick Filter Chips & Profile Active Row -->
+            <div class="filter-chips-row" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;">
+                <div class="filter-chips-group" style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                    <button class="filter-chip ${State.filters.has_phone ? 'active' : ''}" id="chipHasPhone">
+                        <span class="chip-icon">📱</span> Has Phone
+                    </button>
 
-                <button class="filter-chip ${State.filters.has_email ? 'active' : ''}" id="chipHasEmail">
-                    <span class="chip-icon">📧</span> Has Email
-                </button>
+                    <button class="filter-chip ${State.filters.has_email ? 'active' : ''}" id="chipHasEmail">
+                        <span class="chip-icon">📧</span> Has Email
+                    </button>
 
-                <button class="filter-chip ${(State.filters.has_website || State.filters.website_filter === 'has_website') ? 'active' : ''}" id="chipHasWebsite">
-                    <span class="chip-icon">🌐</span> Has Website
-                </button>
+                    <button class="filter-chip ${(State.filters.has_website || State.filters.website_filter === 'has_website') ? 'active' : ''}" id="chipHasWebsite">
+                        <span class="chip-icon">🌐</span> Has Website
+                    </button>
 
-                <button class="filter-chip ${(State.filters.no_website || State.filters.website_filter === 'no_website') ? 'active' : ''}" id="chipNoWebsite">
-                    <span class="chip-icon">⚡</span> No Website (Gap Lead)
-                </button>
+                    <button class="filter-chip ${(State.filters.no_website || State.filters.website_filter === 'no_website') ? 'active' : ''}" id="chipNoWebsite">
+                        <span class="chip-icon">⚡</span> No Website (Gap Lead)
+                    </button>
 
-                <button class="filter-chip ${State.filters.open_now ? 'active' : ''}" id="chipOpenNow">
-                    <span class="chip-icon">⏰</span> Open Now
+                    <button class="filter-chip ${State.filters.open_now ? 'active' : ''}" id="chipOpenNow">
+                        <span class="chip-icon">⏰</span> Open Now
+                    </button>
+                </div>
+
+                <button id="surveySettingsBtn" class="secondary-btn profile-active-btn" style="margin-left: auto;">
+                    🎯 ${State.user_survey ? 'Profile: Active' : 'Sales Profile'}
                 </button>
             </div>
 
