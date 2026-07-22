@@ -188,24 +188,49 @@ export function bindDashboardShellEvents() {
         window.lucide.createIcons();
     }
 
-    const navItems = document.querySelectorAll('.dashboard-nav-item.locked');
-    navItems.forEach(item => {
-        item.addEventListener('click', (e) => {
-            e.preventDefault();
-            const requiredTier = item.getAttribute('data-required');
-            const label = item.querySelector('.nav-label').innerText;
-            
-            // Trigger upgrade modal
-            import('../auth.js').then(auth => {
-                auth.showUpgradeModal({
-                    feature: label,
-                    requiredTier: requiredTier,
-                    headline: `Unlock ${label}`,
-                    description: `Get full access to the ${label} module by upgrading to the ${requiredTier.toUpperCase()} tier.`
+    if (!State.user) {
+        // Guest user override: Clicking any sidebar tab except Browse Directory shows the Explorer Plan Modal
+        const allItems = document.querySelectorAll('.dashboard-nav-item');
+        allItems.forEach(item => {
+            const tabId = item.getAttribute('data-id');
+            if (tabId !== 'directory') {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    State.setExplorerPlanModal(true);
+                });
+            }
+        });
+
+        const upgradeCta = document.querySelector('.upgrade-cta');
+        if (upgradeCta) {
+            upgradeCta.removeAttribute('onclick');
+            upgradeCta.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                State.setExplorerPlanModal(true);
+            });
+        }
+    } else {
+        const navItems = document.querySelectorAll('.dashboard-nav-item.locked');
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const requiredTier = item.getAttribute('data-required');
+                const label = item.querySelector('.nav-label').innerText;
+                
+                // Trigger upgrade modal
+                import('../auth.js').then(auth => {
+                    auth.showUpgradeModal({
+                        feature: label,
+                        requiredTier: requiredTier,
+                        headline: `Unlock ${label}`,
+                        description: `Get full access to the ${label} module by upgrading to the ${requiredTier.toUpperCase()} tier.`
+                    });
                 });
             });
         });
-    });
+    }
 
     const signOutBtn = document.getElementById('dashboardSignOutBtn');
     if (signOutBtn) {
