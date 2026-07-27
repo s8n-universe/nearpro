@@ -24,7 +24,7 @@ export function renderAuthModal() {
                             <!-- Logo and Title -->
                             <div style="display: flex; align-items: center; gap: 8px;">
                                 <img src="/NearPro_logo_nobg.png" alt="NearPro Logo" style="height: 32px; width: auto; object-fit: contain;">
-                                <span style="font-family: var(--font-heading); font-size: 20px; font-weight: 800; color: #0f172a; letter-spacing: -0.5px;">NearPro</span>
+                                <span style="font-family: var(--font-heading); font-size: 20px; font-weight: 800; color: #0f172a; letter-spacing: -0.5px;">NearPro<sup style="font-size: 11px; font-weight: bold; color: var(--accent-gold, #ffa000); margin-left: 2px;">™</sup></span>
                             </div>
                         </div>
                         <h2 style="font-size: 32px; font-weight: 800; margin-bottom: 8px; text-align: left; font-family: var(--font-heading); color: #0f172a; letter-spacing: -0.5px;">
