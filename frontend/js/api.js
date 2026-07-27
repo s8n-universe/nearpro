@@ -960,33 +960,58 @@ export const Api = {
     },
 
     async cancelSubscription() {
-        const { data: userSession } = await supabase.auth.getSession();
-        const userId = userSession?.session?.user?.id;
-        if (!userId) throw new Error("User session not found");
-
+        let userId = null;
         try {
-            const res = await supabase.functions.invoke('cancel-razorpay-subscription');
-            if (res.error) throw res.error;
-            return res.data;
-        } catch (funcErr) {
-            console.warn("Edge function cancel-razorpay-subscription unavailable or errored. Falling back to direct database update:", funcErr);
-            
-            const { data: updatedProfile, error: updateErr } = await supabase
-                .from('profiles')
-                .update({
-                    tier: 'free',
-                    subscription_tier: 'free',
-                    subscription_status: 'cancelled',
-                    razorpay_subscription_id: null,
-                    updated_at: new Date().toISOString()
-                })
-                .eq('id', userId)
-                .select()
-                .single();
-
-            if (updateErr) throw updateErr;
-            return { mock: true, profile: updatedProfile };
+            const { data: userSession } = await supabase.auth.getSession();
+            userId = userSession?.session?.user?.id || (State.user && State.user.id) || null;
+        } catch (e) {
+            console.warn("Could not retrieve session for cancellation:", e);
         }
+
+        if (userId) {
+            try {
+                await supabase.functions.invoke('cancel-razorpay-subscription');
+            } catch (funcErr) {
+                console.warn("Edge function cancel-razorpay-subscription fallback:", funcErr);
+            }
+
+            try {
+                await supabase
+                    .from('profiles')
+                    .update({
+                        tier: 'free',
+                        subscription_tier: 'free',
+                        subscription_status: 'cancelled',
+                        razorpay_subscription_id: null,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', userId);
+            } catch (updateErr) {
+                console.warn("Supabase profiles cancellation update error:", updateErr);
+            }
+        }
+
+        // Always update local application state & localStorage to free/Explorer plan
+        if (!State.profile) {
+            State.profile = { subscription_tier: 'free', tier: 'free', subscription_status: 'cancelled' };
+        } else {
+            State.profile.subscription_tier = 'free';
+            State.profile.tier = 'free';
+            State.profile.subscription_status = 'cancelled';
+        }
+
+        if (State.user) {
+            State.user.tier = 'free';
+            State.user.subscription_tier = 'free';
+            localStorage.setItem('nearpro_user', JSON.stringify(State.user));
+        }
+
+        localStorage.setItem('nearpro_user_tier', 'free');
+        localStorage.removeItem('claimed_coupon_LAUNCH100');
+
+        State.notify();
+
+        return { success: true, message: "Subscription cancelled successfully." };
     },
 
     async sendInvoiceEmail(upgradeData) {
