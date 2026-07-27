@@ -2,6 +2,70 @@ import { State } from '../state.js';
 import { Api } from '../api.js';
 import { getUserTier, TIER_LEVELS } from '../auth.js';
 
+/**
+ * Fullscreen Glassmorphic Workspace Activation Loader Overlay
+ */
+function showActivationAnimationSequence(onComplete) {
+    let loader = document.getElementById('workspaceActivationLoader');
+    if (!loader) {
+        loader = document.createElement('div');
+        loader.id = 'workspaceActivationLoader';
+        loader.style.position = 'fixed';
+        loader.style.inset = '0';
+        loader.style.zIndex = '100095';
+        loader.style.background = 'rgba(9, 9, 11, 0.96)';
+        loader.style.backdropFilter = 'blur(16px)';
+        loader.style.webkitBackdropFilter = 'blur(16px)';
+        loader.style.display = 'flex';
+        loader.style.flexDirection = 'column';
+        loader.style.alignItems = 'center';
+        loader.style.justifyContent = 'center';
+        loader.style.color = '#ffffff';
+        loader.style.fontFamily = 'var(--font-heading, Inter, sans-serif)';
+        loader.style.padding = '32px';
+        loader.style.textAlign = 'center';
+        document.body.appendChild(loader);
+    }
+
+    loader.innerHTML = `
+        <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, rgba(255, 160, 0, 0.2), rgba(236, 72, 153, 0.2)); border: 2px solid var(--accent-gold, #ffa000); display: flex; align-items: center; justify-content: center; font-size: 36px; margin-bottom: 24px; box-shadow: 0 0 30px rgba(255,160,0,0.4);">
+            ⚡
+        </div>
+        <h3 id="loaderStepTitle" style="font-size: 24px; font-weight: 800; color: #ffffff; margin: 0 0 10px 0; letter-spacing: -0.5px;">
+            Validating Coupon LAUNCH100...
+        </h3>
+        <p id="loaderStepSubtitle" style="font-size: 14px; color: var(--text-secondary, #94a3b8); max-width: 420px; margin: 0 0 28px 0; line-height: 1.5;">
+            Securing 100% OFF Free Scout Subscription for 1 Month.
+        </p>
+        <div style="width: 260px; height: 6px; background: rgba(255,255,255,0.08); border-radius: 10px; overflow: hidden; position: relative;">
+            <div id="loaderProgressBar" style="position: absolute; top:0; left:0; bottom:0; width: 18%; background: linear-gradient(90deg, #ffa000, #ec4899); border-radius: 10px; transition: width 0.6s ease;"></div>
+        </div>
+    `;
+
+    const titleEl = document.getElementById('loaderStepTitle');
+    const subEl = document.getElementById('loaderStepSubtitle');
+    const progressEl = document.getElementById('loaderProgressBar');
+
+    setTimeout(() => {
+        if (titleEl) titleEl.innerText = "🎁 Claiming 100% FREE Scout Subscription...";
+        if (subEl) subEl.innerText = "Unlocking 1-Month Unlimited Phone Numbers & Export Privileges...";
+        if (progressEl) progressEl.style.width = "65%";
+    }, 700);
+
+    setTimeout(() => {
+        if (titleEl) titleEl.innerText = "🚀 Configuring AI Agency Workspace...";
+        if (subEl) subEl.innerText = "Preparing 50,000+ Verified B2B Lead Filters & Proposal Generators!";
+        if (progressEl) progressEl.style.width = "100%";
+    }, 1400);
+
+    setTimeout(() => {
+        if (loader && loader.parentNode) {
+            loader.parentNode.removeChild(loader);
+        }
+        if (onComplete) onComplete();
+    }, 2100);
+}
+
 export function renderCheckoutConsentModal() {
     if (!State.checkout_consent_modal_open || !State.pending_checkout_plan) return '';
 
@@ -29,143 +93,92 @@ export function renderCheckoutConsentModal() {
             period: cycle === 'monthly' ? 'month' : 'year',
             cycleLabel: cycle === 'monthly' ? 'Billed Monthly' : 'Billed Yearly (Save ₹1,989)',
             features: [
-                '500 WhatsApp AI Pitches (Hinglish/English)',
-                'Lead Conversion & Health Scores',
-                'Unlimited Lead Exports',
-                'Pipeline & CRM Tracking'
+                'All Scout Plan Features',
+                'Business Health Audit & Lead Scores',
+                'WhatsApp AI Outreach Studio (Hinglish/Eng)',
+                '1-Click PDF Proposal Generator',
+                'Export 500 Leads per Month'
             ]
         },
         agency: {
-            name: 'Agency',
+            name: 'Agency OS',
             price: cycle === 'monthly' ? '₹2,499' : '₹24,999',
             period: cycle === 'monthly' ? 'month' : 'year',
             cycleLabel: cycle === 'monthly' ? 'Billed Monthly' : 'Billed Yearly (Save ₹4,989)',
             features: [
-                'Unlimited WhatsApp AI Pitches',
-                '3 Team Workspace Seats',
-                'n8n Webhook & Google Sheets Push',
-                'Density Heatmaps & Niche Gap Analysis'
+                'All Hunter Plan Features',
+                'Unlimited Lead Exports & Tele-Sales Scripts',
+                'Team Workspace & Member Seats',
+                'n8n / Make / Google Sheets Webhooks',
+                'Priority Dedicated Support'
             ]
         }
     };
 
-    const details = planDetails[planId] || planDetails.hunter;
-
-    const userTier = getUserTier();
-    const userLevel = TIER_LEVELS[userTier] || 0;
-    const targetLevel = TIER_LEVELS[planId] || 2;
-    const isUpgrade = targetLevel > userLevel && userLevel > 0;
-
-    const pricingInfo = {
-        scout: { monthly: 499, yearly: 4999 },
-        hunter: { monthly: 999, yearly: 9999 },
-        agency: { monthly: 2499, yearly: 24999 }
-    };
-    const planPricing = pricingInfo[planId] || pricingInfo.hunter;
-    const basePrice = cycle === 'yearly' ? planPricing.yearly : planPricing.monthly;
-
-    let prorationCredit = 0;
-    if (isUpgrade) {
-        const prevPricing = pricingInfo[userTier];
-        if (prevPricing) {
-            const prevPrice = cycle === 'yearly' ? prevPricing.yearly : prevPricing.monthly;
-            prorationCredit = Math.round((prevPrice / 30) * 20); // Simulating ~66% unused credit
-        }
-    }
-    const netPayable = Math.max(0, basePrice - prorationCredit);
+    const targetPlan = planDetails[planId] || planDetails.hunter;
 
     return `
-        <style>
-            .consent-grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 16px;
-                margin-bottom: 24px;
-            }
-            @media (max-width: 600px) {
-                .consent-grid {
-                    grid-template-columns: 1fr !important;
-                    gap: 12px !important;
-                }
-            }
-        </style>
-        <div class="modal-overlay open" id="checkoutConsentModalOverlay" style="z-index: 10030;">
-            <div class="modal-card" style="max-width: 620px; padding: 32px; text-align: left; position: relative; max-height: 90vh; overflow-y: auto;">
-                <button class="modal-close-btn" id="closeCheckoutConsentModalBtn" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer;">&times;</button>
+        <div class="modal-overlay open" id="checkoutConsentModalOverlay" style="z-index: 100040; background: rgba(0, 0, 0, 0.85) !important; backdrop-filter: blur(12px) !important; -webkit-backdrop-filter: blur(12px) !important;">
+            <div class="modal-card" style="max-width: 680px; width: 92%; padding: 32px; text-align: left; position: relative; background: #09090b !important; color: #ffffff !important; border: 1.5px solid var(--border) !important; box-shadow: 0 25px 60px rgba(0,0,0,0.8); border-radius: 20px; max-height: 90vh; overflow-y: auto;">
                 
-                <!-- Header -->
-                <div style="margin-bottom: 24px;">
-                    <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255, 160, 0, 0.08); border: 1px solid rgba(255, 160, 0, 0.2); color: var(--accent-gold); padding: 4px 12px; border-radius: 50px; font-size: 11px; font-family: var(--font-mono); font-weight: 600; margin-bottom: 10px;">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                        Pre-Payment Verification
-                    </div>
-                    
-                    <h2 style="font-size: 22px; color: white; margin: 0 0 6px 0; font-family: var(--font-heading); font-weight: 700;">
-                        Order Review & Consumer Guarantee
-                    </h2>
-                    
-                    <p style="color: var(--text-secondary); font-size: 13px; margin: 0; line-height: 1.5;">
-                        Review your plan summary, safety commitments, and terms before proceeding to secure payment.
-                    </p>
+                <button class="modal-close-btn" id="closeCheckoutConsentModalBtn" style="position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #94a3b8; font-size: 20px; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">&times;</button>
+                
+                <div style="font-size: 11px; font-family: var(--font-mono); color: var(--accent-gold); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">
+                    ⚡ CHECKOUT & ACTIVATION SUMMARY
                 </div>
 
-                <!-- 2-Box Column Grid -->
-                <div class="consent-grid">
+                <h3 style="font-family: var(--font-heading); font-size: 24px; font-weight: 800; color: #ffffff; margin: 0 0 8px 0;">
+                    Complete Your Workspace Activation
+                </h3>
+                <p style="font-size: 13px; color: var(--text-secondary, #94a3b8); margin: 0 0 24px 0; line-height: 1.5;">
+                    Review your plan summary, safety commitments, and terms before proceeding to secure payment.
+                </p>
+
+                <!-- Summary Grid -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 24px;">
                     
-                    <!-- Box 1: Plan Summary Card -->
-                    <div style="background: rgba(255, 160, 0, 0.03); border: 1px solid var(--accent-gold); padding: 20px; border-radius: var(--radius-md); display: flex; flex-direction: column; justify-content: space-between;">
+                    <!-- Selected Plan Card -->
+                    <div style="background: rgba(255, 160, 0, 0.04); border: 1.5px solid rgba(255, 160, 0, 0.3); border-radius: var(--radius-md); padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
                         <div>
-                            <div style="font-size: 10px; color: var(--accent-gold); font-family: var(--font-mono); text-transform: uppercase; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">
+                            <div style="font-size: 10px; font-family: var(--font-mono); color: var(--accent-gold); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">
                                 Selected Plan
                             </div>
-                            
-                            <h3 style="font-size: 18px; color: white; margin: 0 0 4px 0; font-family: var(--font-heading);">
-                                ${details.name} Plan
-                            </h3>
-                            
-                            <div style="font-size: 22px; color: var(--accent-gold); font-weight: 700; margin-bottom: 4px; font-family: var(--font-heading);">
-                                ₹${netPayable.toLocaleString('en-IN')}<span style="font-size: 13px; color: var(--text-muted); font-weight: normal;">/${details.period}</span>
+                            <h4 style="font-size: 20px; color: white; margin: 0 0 6px 0; font-family: var(--font-heading); font-weight: 800;">
+                                ${targetPlan.name} Plan
+                            </h4>
+                            <div style="font-size: 22px; font-weight: 800; color: var(--accent-gold); margin-bottom: 4px; font-family: var(--font-mono);">
+                                ${targetPlan.price} <span style="font-size: 12px; color: var(--text-muted); font-weight: 500;">/${targetPlan.period}</span>
                             </div>
-                            
-                            <div style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); margin-bottom: 16px;">
-                                ${details.cycleLabel}
+                            <div style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); margin-bottom: 14px;">
+                                ${targetPlan.cycleLabel}
                             </div>
-                            
-                            <div style="margin-top: 10px; font-size: 11.5px; color: var(--text-secondary); border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 10px; display: flex; flex-direction: column; gap: 4px; margin-bottom: 16px;">
-                                <div style="display: flex; justify-content: space-between;">
-                                    <span>Base Price:</span>
-                                    <span style="color: white; font-weight: 600;">₹${basePrice.toLocaleString('en-IN')}</span>
-                                </div>
-                                ${isUpgrade ? `
-                                <div style="display: flex; justify-content: space-between; color: #10b981;">
-                                    <span>Unused ${userTier.toUpperCase()} Credit:</span>
-                                    <span style="font-weight: 600;">-₹${prorationCredit.toLocaleString('en-IN')}</span>
-                                </div>
-                                ` : ''}
+                            <div style="border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 10px; font-size: 12px; color: var(--text-secondary); display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span>Base Price:</span>
+                                <span style="color: white; font-weight: 700;">${targetPlan.price}</span>
                             </div>
-                            
-                            <ul style="list-style: none; padding: 0; margin: 0; font-size: 11.5px; color: var(--text-secondary); display: flex; flex-direction: column; gap: 8px;">
-                                ${details.features.map(f => `
-                                    <li style="display: flex; align-items: center; gap: 8px;">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" style="flex-shrink:0;"><polyline points="20 6 9 17 4 12"/></svg>
-                                        <span>${f}</span>
-                                    </li>
-                                `).join('')}
-                            </ul>
                         </div>
+
+                        <ul style="list-style: none; padding: 0; margin: 0; font-size: 11.5px; color: var(--text-secondary); display: flex; flex-direction: column; gap: 6px;">
+                            ${targetPlan.features.map(f => `
+                                <li style="display: flex; align-items: flex-start; gap: 6px;">
+                                    <span style="color: #22c55e; font-weight: bold;">✓</span>
+                                    <span>${f}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
                     </div>
 
-                    <!-- Box 2: Consumer Guarantees Card -->
-                    <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); padding: 20px; border-radius: var(--radius-md); display: flex; flex-direction: column; justify-content: space-between;">
+                    <!-- Consumer Protections & Guarantees Card -->
+                    <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
                         <div>
-                            <div style="font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase; font-weight: bold; margin-bottom: 12px; letter-spacing: 0.5px;">
+                            <div style="font-size: 10px; font-family: var(--font-mono); color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">
                                 Consumer Protections
                             </div>
                             
                             <div style="display: flex; flex-direction: column; gap: 14px;">
                                 <!-- Item 1 -->
                                 <div style="display: flex; gap: 10px; align-items: flex-start;">
-                                    <div style="width: 28px; height: 28px; border-radius: 6px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #10b981; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                    <div style="width: 28px; height: 28px; border-radius: 6px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); color: #22c55e; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
                                     </div>
                                     <div>
@@ -216,19 +229,19 @@ export function renderCheckoutConsentModal() {
                 <!-- Agreement & Action Controls -->
                 <div style="background: rgba(255, 255, 255, 0.015); border: 1px solid var(--border); padding: 16px; border-radius: var(--radius-md); margin-bottom: 20px;">
                     <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 12px; color: var(--text-secondary); line-height: 1.5;">
-                        <input type="checkbox" id="checkoutConsentCb" style="margin-top: 2px; cursor: pointer;">
+                        <input type="checkbox" id="checkoutConsentCb" style="margin-top: 2px; cursor: pointer;" checked>
                         <span>
                             I agree to NearPro's <a href="#/terms" target="_blank" style="color: var(--accent-gold); text-decoration: underline;">Terms of Service</a> and <a href="#/privacy" target="_blank" style="color: var(--accent-gold); text-decoration: underline;">Privacy Policy</a>.
                         </span>
                     </label>
                 </div>
 
-                <div style="display: flex; gap: 12px;">
-                    <button id="cancelCheckoutConsentBtn" class="secondary-btn" style="flex: 1; padding: 12px; font-size: 13px;">
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <button id="returnToPlansBtn" class="secondary-btn" style="flex: 1; padding: 12px; font-size: 13.5px; font-weight: 600; border-radius: var(--radius-md);">
                         Return to Plans
                     </button>
-                    <button id="proceedToPaymentBtn" class="brand-btn" disabled style="flex: 1.5; padding: 12px; font-size: 13.5px; opacity: 0.5; cursor: not-allowed; transition: all 0.2s ease;">
-                        ${netPayable === 0 ? 'Activate Free Scout Plan ➔' : `Proceed to Payment (₹${netPayable.toLocaleString('en-IN')})`}
+                    <button id="proceedToPaymentBtn" class="brand-btn" style="flex: 1.6; padding: 12px; font-size: 14px; font-weight: 700; border-radius: var(--radius-md); background: linear-gradient(135deg, var(--accent-gold), #ec4899); color: white;">
+                        Proceed to Secure Checkout ➔
                     </button>
                 </div>
 
@@ -242,28 +255,33 @@ export function bindCheckoutConsentModalEvents() {
     if (!overlay) return;
 
     const closeBtn = document.getElementById('closeCheckoutConsentModalBtn');
-    const cancelBtn = document.getElementById('cancelCheckoutConsentBtn');
-    const consentCb = document.getElementById('checkoutConsentCb');
+    const returnBtn = document.getElementById('returnToPlansBtn');
     const proceedBtn = document.getElementById('proceedToPaymentBtn');
-    const applyCouponBtn = document.getElementById('applyConsentCouponBtn');
+    const consentCb = document.getElementById('checkoutConsentCb');
     const couponInput = document.getElementById('consentCouponInput');
+    const applyCouponBtn = document.getElementById('applyConsentCouponBtn');
     const couponFeedback = document.getElementById('consentCouponFeedback');
 
-    let activeCoupon = State.pending_checkout_plan?.coupon || '';
+    let activeCoupon = null;
 
     const close = () => {
         State.checkout_consent_modal_open = false;
-        State.pending_checkout_plan = null;
         State.notify();
     };
 
     if (closeBtn) closeBtn.addEventListener('click', close);
-    if (cancelBtn) cancelBtn.addEventListener('click', close);
+    if (returnBtn) {
+        returnBtn.addEventListener('click', () => {
+            close();
+            State.setPricingModal(true);
+        });
+    }
 
     if (applyCouponBtn && couponInput) {
         applyCouponBtn.addEventListener('click', async () => {
             const code = couponInput.value.trim().toUpperCase();
             if (!code) return;
+
             applyCouponBtn.disabled = true;
             applyCouponBtn.innerText = 'Validating...';
 
@@ -299,6 +317,19 @@ export function bindCheckoutConsentModalEvents() {
         });
     }
 
+    // Auto-apply pre-selected coupon code if passed in pending_checkout_plan
+    const pending = State.pending_checkout_plan;
+    if (pending && pending.coupon && applyCouponBtn) {
+        setTimeout(() => {
+            if (couponInput) couponInput.value = pending.coupon;
+            applyCouponBtn.click();
+            if (consentCb) {
+                consentCb.checked = true;
+                consentCb.dispatchEvent(new Event('change'));
+            }
+        }, 150);
+    }
+
     if (consentCb && proceedBtn) {
         consentCb.addEventListener('change', () => {
             if (consentCb.checked) {
@@ -320,60 +351,58 @@ export function bindCheckoutConsentModalEvents() {
             const pending = State.pending_checkout_plan;
             if (!pending) return;
 
-            if (activeCoupon === 'LAUNCH100') {
+            if (activeCoupon === 'LAUNCH100' || pending.coupon === 'LAUNCH100') {
                 proceedBtn.innerText = 'Activating Free Scout Plan...';
                 proceedBtn.disabled = true;
-                try {
-                    const userId = (State.user && State.user.id) ? State.user.id : null;
-                    const result = await Api.applyCouponCode(activeCoupon, userId);
-                    if (result && result.success) {
-                        if (!State.profile) {
-                            State.profile = { subscription_tier: 'scout', tier: 'scout' };
-                        } else {
-                            State.profile.subscription_tier = 'scout';
-                            State.profile.tier = 'scout';
-                        }
 
-                        if (State.user) {
-                            State.user.tier = 'scout';
-                            State.user.subscription_tier = 'scout';
-                            localStorage.setItem('nearpro_user', JSON.stringify(State.user));
-                        }
-                        localStorage.setItem('nearpro_user_tier', 'scout');
-                        localStorage.setItem('claimed_coupon_LAUNCH100', 'true');
-
-                        // Ensure pricing modal & consent modal are both closed
-                        State.pricing_modal_open = false;
-                        State.checkout_consent_modal_open = false;
-                        close();
+                showActivationAnimationSequence(async () => {
+                    try {
+                        const userId = (State.user && State.user.id) ? State.user.id : null;
+                        const result = await Api.applyCouponCode('LAUNCH100', userId);
                         
-                        // Set celebration success modal data
-                        State.upgrade_success_data = {
-                            tier: 'SCOUT PLAN (1-MONTH FREE)',
-                            netPaid: '₹0 (100% OFF Coupon Claimed)',
-                            paymentId: `claim_LAUNCH100_${Math.random().toString(36).slice(2, 8)}`,
-                            features: [
-                                'Unlocked Phone Numbers & Website Details',
-                                'Export 100 Verified Leads per month',
-                                'Track 5 Custom Lead Lists',
-                                'Interactive Map Views & Suburb Radar'
-                            ]
-                        };
-                        State.upgrade_success_modal_open = true;
-                        State.notify();
+                        if (result && result.success) {
+                            if (!State.profile) {
+                                State.profile = { subscription_tier: 'scout', tier: 'scout' };
+                            } else {
+                                State.profile.subscription_tier = 'scout';
+                                State.profile.tier = 'scout';
+                            }
 
-                        // Navigate seamlessly to dashboard directory
-                        window.location.hash = '#/dashboard/directory';
-                        return;
-                    } else {
-                        alert((result && result.message) || 'Failed to claim coupon.');
+                            if (State.user) {
+                                State.user.tier = 'scout';
+                                State.user.subscription_tier = 'scout';
+                                localStorage.setItem('nearpro_user', JSON.stringify(State.user));
+                            }
+                            localStorage.setItem('nearpro_user_tier', 'scout');
+                            localStorage.setItem('claimed_coupon_LAUNCH100', 'true');
+
+                            // Ensure pricing modal & consent modal are both closed
+                            State.pricing_modal_open = false;
+                            State.checkout_consent_modal_open = false;
+                            close();
+                            
+                            // Set celebration success modal data
+                            State.upgrade_success_data = {
+                                tier: 'SCOUT PLAN (1-MONTH FREE)',
+                                netPaid: '₹0 (100% OFF Coupon Claimed)',
+                                paymentId: `claim_LAUNCH100_${Math.random().toString(36).slice(2, 8)}`,
+                                features: [
+                                    'Unlocked Phone Numbers & Website Details',
+                                    'Export 100 Verified Leads per month',
+                                    'Track 5 Custom Lead Lists',
+                                    'Interactive Map Views & Suburb Radar'
+                                ]
+                            };
+                            State.upgrade_success_modal_open = true;
+                            State.notify();
+                        }
+                    } catch (e) {
+                        console.error("Coupon redemption error:", e);
+                        alert("Coupon redemption failed. Please try again.");
+                        proceedBtn.innerText = 'Activate Free Scout Plan ➔';
+                        proceedBtn.disabled = false;
                     }
-                } catch (e) {
-                    console.error("Coupon redemption error:", e);
-                    alert("Coupon redemption failed. Please try again.");
-                }
-                proceedBtn.innerText = 'Activate Free Scout Plan ➔';
-                proceedBtn.disabled = false;
+                });
                 return;
             }
 

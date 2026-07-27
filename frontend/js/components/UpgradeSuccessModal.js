@@ -95,9 +95,15 @@ export function bindUpgradeSuccessModalEvents() {
         State.upgrade_success_modal_open = false;
         State.upgrade_success_data = null;
         State.notify();
-        window.location.hash = '#/dashboard/overview';
+        window.location.hash = '#/dashboard/directory';
     };
 
     if (closeBtn) closeBtn.addEventListener('click', close);
-    if (finishBtn) finishBtn.addEventListener('click', close);
+    if (finishBtn) {
+        finishBtn.addEventListener('click', () => {
+            finishBtn.disabled = true;
+            finishBtn.innerText = 'Transitioning to Workspace...';
+            setTimeout(close, 400);
+        });
+    }
 }
