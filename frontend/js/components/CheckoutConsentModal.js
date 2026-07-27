@@ -326,9 +326,24 @@ export function bindCheckoutConsentModalEvents() {
                     const result = await Api.applyCouponCode(activeCoupon, State.user.id);
                     if (result.success) {
                         close();
-                        alert(`🎉 ${result.message}`);
-                        // Reload profile state
-                        window.location.reload();
+                        
+                        // Set celebration success modal data
+                        State.upgrade_success_data = {
+                            tier: 'SCOUT PLAN (1-MONTH FREE)',
+                            netPaid: '0 (100% OFF Coupon Claimed)',
+                            paymentId: `claim_LAUNCH100_${Math.random().toString(36).slice(2, 8)}`,
+                            features: [
+                                'Unlocked Phone Numbers & Website Details',
+                                'Export 100 Verified Leads per month',
+                                'Track 5 Custom Lead Lists',
+                                'Interactive Map Views & Suburb Radar'
+                            ]
+                        };
+                        State.upgrade_success_modal_open = true;
+                        State.notify();
+
+                        // Navigate seamlessly to dashboard
+                        window.location.hash = '#/dashboard';
                         return;
                     } else {
                         alert(result.message || 'Failed to claim coupon.');

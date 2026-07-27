@@ -98,6 +98,16 @@ export function initScratchCardCanvas() {
     canvas.addEventListener('touchmove', (e) => { if (isScratching) { const pos = getPos(e); scratch(pos.x, pos.y); } });
     window.addEventListener('touchend', () => { isScratching = false; });
 
+    // Fetch live remaining count from Supabase
+    Api.getCouponStatus('LAUNCH100').then(res => {
+        const remainingEl = document.getElementById('scratchCardRemainingText');
+        if (remainingEl && res && typeof res.remaining === 'number') {
+            remainingEl.innerText = `${res.remaining} / ${res.max_redemptions || 100} Left`;
+        }
+    }).catch(err => {
+        console.warn("Failed to fetch live coupon status:", err);
+    });
+
     // Copy Code Event
     const copyBtn = document.getElementById('copyScratchCodeBtn');
     if (copyBtn) {
