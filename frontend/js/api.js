@@ -830,15 +830,17 @@ export const Api = {
         return data || [];
     },
 
-    async checkoutSubscription(planId, interval = 'monthly') {
+    async checkoutSubscription(planId, interval = 'monthly', couponCode = '') {
         const { data: userSession } = await supabase.auth.getSession();
         const userId = userSession?.session?.user?.id;
         if (!userId) throw new Error("User session not found");
 
+        const offerId = (couponCode.toUpperCase() === 'LAUNCH100' || planId === 'scout') ? 'offer_TIh4tH1szwNNKb' : null;
+
         let data = null;
         try {
             const res = await supabase.functions.invoke('create-razorpay-subscription', {
-                body: { plan_id: planId, interval: interval }
+                body: { plan_id: planId, interval: interval, offer_id: offerId }
             });
             if (res.error) throw res.error;
             data = res.data;
