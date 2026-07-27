@@ -231,9 +231,15 @@ export const State = {
     },
 
     checkout_consent_modal_open: false,
+    cancel_subscription_modal_open: false,
     pending_checkout_plan: null,
     upgrade_success_modal_open: false,
     upgrade_success_data: null,
+
+    setCancelSubscriptionModal(open) {
+        this.cancel_subscription_modal_open = open;
+        this.notify();
+    },
 
     async selectPlan(planId, interval = 'monthly') {
         if (planId === 'free') {

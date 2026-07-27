@@ -47,6 +47,7 @@ import { renderPlatformOverviewLayout, bindPlatformOverviewEvents } from './comp
 import { renderExplorerPlanModal, bindExplorerPlanModalEvents } from './components/ExplorerPlanModal.js';
 import { renderWaitlistModal, bindWaitlistModalEvents } from './components/WaitlistModal.js';
 import { renderFloatingScratchTrigger, renderScratchModal, bindScratchModalEvents } from './components/ScratchCard.js';
+import { renderCancelSubscriptionModal, bindCancelSubscriptionModalEvents } from './components/CancelSubscriptionModal.js';
 import { initCustomSelect } from './components/CustomSelect.js';
 
 // Main Application shell reference
@@ -157,6 +158,13 @@ State.subscribe(async (currentState) => {
     if (scratchPlaceholder) {
         scratchPlaceholder.innerHTML = renderScratchModal();
         bindScratchModalEvents();
+    }
+
+    // Dynamically render/update Cancel Subscription Modal
+    const cancelSubPlaceholder = document.getElementById('cancelSubscriptionModalPlaceholder');
+    if (cancelSubPlaceholder) {
+        cancelSubPlaceholder.innerHTML = renderCancelSubscriptionModal();
+        bindCancelSubscriptionModalEvents();
     }
     refreshLucideIcons();
 });
@@ -332,6 +340,7 @@ function renderMarketingLayout() {
             <div id="checkoutConsentModalPlaceholder"></div>
             <div id="waitlistModalPlaceholder"></div>
             <div id="scratchModalPlaceholder"></div>
+            <div id="cancelSubscriptionModalPlaceholder"></div>
             ${renderFloatingScratchTrigger(58)}
             <footer class="main-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid var(--border); font-size: 13px; color: var(--text-muted); flex-wrap: wrap; gap: 12px;">
                 <div>NearPro™ — Made with ❤️ by S8N</div>
@@ -406,7 +415,9 @@ async function renderDirectoryLayout() {
             <div id="explorerPlanModalPlaceholder"></div>
             <div id="surveyModalPlaceholder"></div>
             <div id="upgradeModalPlaceholder"></div>
+            <div id="checkoutConsentModalPlaceholder"></div>
             <div id="waitlistModalPlaceholder"></div>
+            <div id="cancelSubscriptionModalPlaceholder"></div>
             
             <footer class="main-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid var(--border); font-size: 13px; color: var(--text-muted); flex-wrap: wrap; gap: 12px;">
                 <div>NearPro™ — Made with ❤️ by S8N</div>
@@ -2397,33 +2408,8 @@ async function renderDashboardLayout(tab) {
 
             const cancelBtn = document.getElementById('cancelBillingPlanBtn');
             if (cancelBtn) {
-                cancelBtn.addEventListener('click', async () => {
-                    const confirmCancel = confirm("⚠️ Are you sure you want to cancel your subscription? You will lose access to premium lead intelligence features.");
-                    if (!confirmCancel) return;
-
-                    cancelBtn.innerText = 'Cancelling...';
-                    cancelBtn.disabled = true;
-                    cancelBtn.style.opacity = '0.5';
-
-                    try {
-                        const res = await Api.cancelSubscription();
-                        
-                        // Update state profile
-                        if (res && res.profile) {
-                            State.profile = res.profile;
-                        } else {
-                            State.profile = await Api.getProfile(State.user.id);
-                        }
-                        State.notify();
-
-                        alert("✅ Your subscription has been cancelled successfully.");
-                    } catch (err) {
-                        console.error("Cancellation failed:", err);
-                        alert("🚫 Cancellation failed. Please contact support.");
-                        cancelBtn.innerText = 'Cancel Subscription';
-                        cancelBtn.disabled = false;
-                        cancelBtn.style.opacity = '1';
-                    }
+                cancelBtn.addEventListener('click', () => {
+                    State.setCancelSubscriptionModal(true);
                 });
             }
 
