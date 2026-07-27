@@ -2408,7 +2408,9 @@ async function renderDashboardLayout(tab) {
 
             const cancelBtn = document.getElementById('cancelBillingPlanBtn');
             if (cancelBtn) {
-                cancelBtn.addEventListener('click', () => {
+                cancelBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
                     State.setCancelSubscriptionModal(true);
                 });
             }
