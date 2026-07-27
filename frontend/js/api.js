@@ -179,13 +179,13 @@ export const Api = {
             const { data: rpcData, error: rpcError } = await supabase.rpc('get_coupon_status', { p_code: code });
             if (!rpcError && rpcData) return rpcData;
 
-            // Direct query fallback to count live Scout plan activations in Supabase
+            // Direct query to count live LAUNCH100 coupon code redemptions in Supabase
             const { count, error } = await supabase
                 .from('profiles')
                 .select('id', { count: 'exact', head: true })
-                .or('subscription_tier.eq.scout,tier.eq.scout');
+                .or(`applied_coupon.eq.${code.toUpperCase()},applied_coupon.eq.${code.toLowerCase()}`);
 
-            const redemptions = (count !== null && count !== undefined) ? count : 42;
+            const redemptions = (count !== null && count !== undefined) ? count : 0;
             const maxRedemptions = 100;
             const remaining = Math.max(0, maxRedemptions - redemptions);
 
@@ -196,16 +196,17 @@ export const Api = {
                 redemption_count: redemptions
             };
         } catch (e) {
-            return { valid: true, remaining: 58, max_redemptions: 100, redemption_count: 42 };
+            return { valid: true, remaining: 100, max_redemptions: 100, redemption_count: 0 };
         }
     },
 
     async applyCouponCode(code, userId) {
+        const cleanCode = (code || 'LAUNCH100').toUpperCase();
         try {
-            const { data, error } = await supabase.rpc('apply_coupon_code', { p_code: code, p_user_id: userId || 'anonymous' });
+            const { data, error } = await supabase.rpc('apply_coupon_code', { p_code: cleanCode, p_user_id: userId || 'anonymous' });
             if (!error && data && data.success !== undefined) {
                 if (userId) {
-                    await supabase.from('profiles').update({ tier: 'scout', subscription_tier: 'scout' }).eq('id', userId);
+                    await supabase.from('profiles').update({ tier: 'scout', subscription_tier: 'scout', applied_coupon: cleanCode }).eq('id', userId);
                 }
                 return data;
             }
@@ -215,10 +216,11 @@ export const Api = {
 
         // Ensure State.profile, State.user and localStorage are updated with Scout tier
         if (!State.profile) {
-            State.profile = { subscription_tier: 'scout', tier: 'scout' };
+            State.profile = { subscription_tier: 'scout', tier: 'scout', applied_coupon: cleanCode };
         } else {
             State.profile.subscription_tier = 'scout';
             State.profile.tier = 'scout';
+            State.profile.applied_coupon = cleanCode;
         }
 
         if (State.user) {
@@ -231,7 +233,7 @@ export const Api = {
 
         if (userId) {
             try {
-                await supabase.from('profiles').update({ tier: 'scout', subscription_tier: 'scout' }).eq('id', userId);
+                await supabase.from('profiles').update({ tier: 'scout', subscription_tier: 'scout', applied_coupon: cleanCode }).eq('id', userId);
             } catch (err) {
                 console.warn("Supabase profiles update fallback:", err);
             }
