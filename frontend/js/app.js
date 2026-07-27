@@ -208,9 +208,11 @@ function initRoutes() {
                 State.stats = await Api.getStats();
                 if (State.stats) {
                     const leadsEl = document.getElementById('heroTotalLeads');
+                    const topLeadsEl = document.getElementById('heroTopBannerLeads');
                     const catEl = document.getElementById('heroTotalCategories');
                     const ratingEl = document.getElementById('heroAvgRating');
                     if (leadsEl && State.stats.total_professionals) leadsEl.innerText = `${State.stats.total_professionals.toLocaleString('en-IN')}+ Verified Leads`;
+                    if (topLeadsEl && State.stats.total_professionals) topLeadsEl.innerText = `📍 Live in Mumbai (${State.stats.total_professionals.toLocaleString('en-IN')}+ Verified Leads)`;
                     if (catEl && State.stats.total_categories) catEl.innerText = `${State.stats.total_categories}+ Sub Categories`;
                     if (ratingEl && State.stats.average_rating) ratingEl.innerText = `${State.stats.average_rating}★ Average Rating`;
                 }
