@@ -200,6 +200,18 @@ export function renderCheckoutConsentModal() {
 
                 </div>
 
+                <!-- Coupon Code Section -->
+                <div style="background: rgba(255, 160, 0, 0.05); border: 1px dashed rgba(255, 160, 0, 0.3); padding: 14px 16px; border-radius: var(--radius-md); margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+                    <div style="flex: 1;">
+                        <div style="font-size: 11px; color: var(--accent-gold); font-family: var(--font-mono); font-weight: 700; text-transform: uppercase;">Have a Coupon Code?</div>
+                        <input type="text" id="consentCouponInput" placeholder="e.g. LAUNCH100" value="${pending.coupon || ''}" style="width: 100%; max-width: 220px; background: rgba(0,0,0,0.4); border: 1px solid var(--border); color: white; padding: 6px 10px; border-radius: 6px; font-size: 12.5px; font-family: var(--font-mono); outline: none; margin-top: 4px;">
+                    </div>
+                    <button id="applyConsentCouponBtn" class="secondary-btn" style="padding: 8px 14px; font-size: 12px; font-weight: 700; border-color: rgba(255, 160, 0, 0.4); color: var(--accent-gold);">
+                        Apply Code
+                    </button>
+                </div>
+                <div id="consentCouponFeedback" style="font-size: 12px; margin-bottom: 16px; display: none;"></div>
+
                 <!-- Agreement & Action Controls -->
                 <div style="background: rgba(255, 255, 255, 0.015); border: 1px solid var(--border); padding: 16px; border-radius: var(--radius-md); margin-bottom: 20px;">
                     <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 12px; color: var(--text-secondary); line-height: 1.5;">
@@ -215,7 +227,7 @@ export function renderCheckoutConsentModal() {
                         Return to Plans
                     </button>
                     <button id="proceedToPaymentBtn" class="brand-btn" disabled style="flex: 1.5; padding: 12px; font-size: 13.5px; opacity: 0.5; cursor: not-allowed; transition: all 0.2s ease;">
-                        Proceed to Payment (₹${netPayable.toLocaleString('en-IN')})
+                        ${netPayable === 0 ? 'Activate Free Scout Plan ➔' : `Proceed to Payment (₹${netPayable.toLocaleString('en-IN')})`}
                     </button>
                 </div>
 
@@ -232,6 +244,11 @@ export function bindCheckoutConsentModalEvents() {
     const cancelBtn = document.getElementById('cancelCheckoutConsentBtn');
     const consentCb = document.getElementById('checkoutConsentCb');
     const proceedBtn = document.getElementById('proceedToPaymentBtn');
+    const applyCouponBtn = document.getElementById('applyConsentCouponBtn');
+    const couponInput = document.getElementById('consentCouponInput');
+    const couponFeedback = document.getElementById('consentCouponFeedback');
+
+    let activeCoupon = State.pending_checkout_plan?.coupon || '';
 
     const close = () => {
         State.checkout_consent_modal_open = false;
@@ -241,6 +258,45 @@ export function bindCheckoutConsentModalEvents() {
 
     if (closeBtn) closeBtn.addEventListener('click', close);
     if (cancelBtn) cancelBtn.addEventListener('click', close);
+
+    if (applyCouponBtn && couponInput) {
+        applyCouponBtn.addEventListener('click', async () => {
+            const code = couponInput.value.trim().toUpperCase();
+            if (!code) return;
+            applyCouponBtn.disabled = true;
+            applyCouponBtn.innerText = 'Validating...';
+
+            try {
+                const res = await Api.getCouponStatus(code);
+                if (res.valid) {
+                    activeCoupon = code;
+                    if (couponFeedback) {
+                        couponFeedback.style.display = 'block';
+                        couponFeedback.style.color = '#4ade80';
+                        couponFeedback.innerHTML = `🎉 Coupon <strong>${code}</strong> valid! 100% OFF applied (${res.remaining} free plans left).`;
+                    }
+                    if (proceedBtn) {
+                        proceedBtn.innerText = 'Activate Free Scout Plan ➔';
+                    }
+                } else {
+                    if (couponFeedback) {
+                        couponFeedback.style.display = 'block';
+                        couponFeedback.style.color = '#f87171';
+                        couponFeedback.innerHTML = `❌ ${res.message || 'Invalid coupon code.'}`;
+                    }
+                }
+            } catch (err) {
+                if (couponFeedback) {
+                    couponFeedback.style.display = 'block';
+                    couponFeedback.style.color = '#f87171';
+                    couponFeedback.innerHTML = '❌ Failed to validate coupon code.';
+                }
+            } finally {
+                applyCouponBtn.disabled = false;
+                applyCouponBtn.innerText = 'Apply Code';
+            }
+        });
+    }
 
     if (consentCb && proceedBtn) {
         consentCb.addEventListener('change', () => {
@@ -262,6 +318,29 @@ export function bindCheckoutConsentModalEvents() {
 
             const pending = State.pending_checkout_plan;
             if (!pending) return;
+
+            if (activeCoupon === 'LAUNCH100') {
+                proceedBtn.innerText = 'Activating Free Scout Plan...';
+                proceedBtn.disabled = true;
+                try {
+                    const result = await Api.applyCouponCode(activeCoupon, State.user.id);
+                    if (result.success) {
+                        close();
+                        alert(`🎉 ${result.message}`);
+                        // Reload profile state
+                        window.location.reload();
+                        return;
+                    } else {
+                        alert(result.message || 'Failed to claim coupon.');
+                    }
+                } catch (e) {
+                    console.error("Coupon redemption error:", e);
+                    alert("Coupon redemption failed. Please try again.");
+                }
+                proceedBtn.innerText = 'Activate Free Scout Plan ➔';
+                proceedBtn.disabled = false;
+                return;
+            }
 
             proceedBtn.innerText = 'Initializing Razorpay...';
             proceedBtn.disabled = true;

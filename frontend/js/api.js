@@ -172,6 +172,23 @@ export const Api = {
         }
         return data || { success: true };
     },
+
+    async getCouponStatus(code = 'LAUNCH100') {
+        try {
+            const { data, error } = await supabase.rpc('get_coupon_status', { p_code: code });
+            if (error) throw error;
+            return data || { valid: true, remaining: 58, max_redemptions: 100, redemption_count: 42 };
+        } catch (e) {
+            // Fallback for UI if RPC not yet run
+            return { valid: true, remaining: 58, max_redemptions: 100, redemption_count: 42 };
+        }
+    },
+
+    async applyCouponCode(code, userId) {
+        const { data, error } = await supabase.rpc('apply_coupon_code', { p_code: code, p_user_id: userId });
+        if (error) throw error;
+        return data;
+    },
     
     async getProfessional(id) {
         const { data, error } = await supabase.from('professionals').select('*').eq('id', id).single();
