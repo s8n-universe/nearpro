@@ -81,8 +81,8 @@ serve(async (req) => {
     }
 
     // Real Razorpay subscription cancellation
-    const razorpayKeyId = Deno.env.get('RAZORPAY_KEY_ID') ?? "";
-    const razorpayKeySecret = Deno.env.get('RAZORPAY_KEY_SECRET') ?? "";
+    const razorpayKeyId = Deno.env.get('RAZORPAY_KEY_ID') || "rzp_live_TEzu9yAFgXuxzh";
+    const razorpayKeySecret = Deno.env.get('RAZORPAY_KEY_SECRET') || "DKRYAnEVYu4rdi24zqkQQtTg";
 
     if (!razorpayKeyId || !razorpayKeySecret) {
       // Fallback if credentials are missing

@@ -64,8 +64,8 @@ serve(async (req) => {
       });
     }
 
-    const razorpayKeyId = Deno.env.get('RAZORPAY_KEY_ID') ?? "";
-    const razorpayKeySecret = Deno.env.get('RAZORPAY_KEY_SECRET') ?? "";
+    const razorpayKeyId = Deno.env.get('RAZORPAY_KEY_ID') || "rzp_live_TEzu9yAFgXuxzh";
+    const razorpayKeySecret = Deno.env.get('RAZORPAY_KEY_SECRET') || "DKRYAnEVYu4rdi24zqkQQtTg";
 
     if (!razorpayKeyId || !razorpayKeySecret) {
       // --- MOCK CHECKOUT MODE (Credential missing) ---

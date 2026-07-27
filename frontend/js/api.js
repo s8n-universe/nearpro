@@ -890,55 +890,17 @@ export const Api = {
         }
 
         if (!data || data.mock) {
-            const isProd = import.meta.env.VITE_NEARPRO_ENV === 'production';
-            if (isProd) {
-                alert("Payment gateway configuration issue. Please try again or contact support.");
-                throw new Error("Razorpay subscription mock mode is disabled in production environments.");
-            }
-
-            const startDate = new Date();
-            const days = interval === 'yearly' ? 365 : 30;
-            const endDate = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
-
-            const { data: updatedProfile, error: updateErr } = await supabase
-                .from('profiles')
-                .update({
-                    tier: planId,
-                    subscription_tier: planId,
-                    subscription_status: 'active',
-                    subscription_started_at: startDate.toISOString(),
-                    subscription_ends_at: endDate.toISOString(),
-                    razorpay_subscription_id: `sub_mock_${Math.random().toString(36).slice(2, 10)}`,
-                    updated_at: new Date().toISOString()
-                })
-                .eq('id', userId)
-                .select()
-                .single();
-
-            if (updateErr) {
-                console.error("Direct profile update failed:", updateErr);
-                throw updateErr;
-            }
-
-            const { showPreparationLoader } = await import('./components/PreparationLoader.js');
-            return new Promise((resolve) => {
-                showPreparationLoader(async () => {
-                    try {
-                        State.profile = updatedProfile || (await this.getProfile(userId));
-                        State.upgrade_success_data = {
-                            tier: planId,
-                            netPaid: interval === 'yearly' ? (planId === 'scout' ? '4,999' : planId === 'hunter' ? '9,999' : '24,999') : (planId === 'scout' ? '499' : planId === 'hunter' ? '999' : '2,499'),
-                            paymentId: `pay_mock_${Math.random().toString(36).slice(2, 8)}`
-                        };
-                        State.upgrade_success_modal_open = true;
-                        State.notify();
-                        resolve(true);
-                    } catch (err) {
-                        console.error("Profile refresh failed:", err);
-                        resolve(true);
-                    }
-                });
-            });
+            // Direct Razorpay Live Mode fallback using production Key ID
+            data = {
+                key_id: "rzp_live_TEzu9yAFgXuxzh",
+                name: `NearPro ${planId.toUpperCase()} Plan`,
+                description: `1-${interval === 'yearly' ? 'Year' : 'Month'} Subscription to NearPro Workspace`,
+                amount: (planId === 'scout' ? (interval === 'yearly' ? 499900 : 49900) : (planId === 'hunter' ? (interval === 'yearly' ? 999900 : 99900) : (interval === 'yearly' ? 2499900 : 249900))),
+                prefill: {
+                    email: State.user?.email || "",
+                    name: State.profile?.full_name || ""
+                }
+            };
         }
 
         if (!window.Razorpay) {
