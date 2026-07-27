@@ -47,3 +47,22 @@ def extract_area(address: str | None) -> str:
             return area_clean
             
     return "Mumbai"  # Fallback
+
+# Alias for cross-module compatibility
+extract_area_from_address = extract_area
+
+import re
+def normalize_phone_e164(phone: str):
+    if not phone:
+        return None
+    digits = re.sub(r'\D', '', str(phone))
+    if len(digits) == 12 and digits.startswith("91"):
+        return f"+{digits}"
+    elif len(digits) == 10:
+        return f"+91{digits}"
+    elif len(digits) == 11 and digits.startswith("0"):
+        return f"+91{digits[1:]}"
+    elif len(digits) > 10 and "91" in digits[:3]:
+        return f"+{digits}"
+    return None
+

@@ -176,51 +176,51 @@ def parse_db_raw_data(raw_data_raw) -> dict:
             return {}
     return {}
 
-def sync(progress_callback=None) -> dict:
+def sync(progress_callback=None, db_conn=None) -> dict:
     start_time = datetime.now(timezone.utc)
     print(f"[{start_time.isoformat()}] Starting NearPro sync to Supabase...")
     
-    if not DB_PATH.exists():
-        print(f"Error: DuckDB file not found at {DB_PATH.absolute()}. Run the Harvest scraper first.")
-        return {"processed": 0, "synced": 0, "failed": 0, "error": "Database file not found"}
-        
     # Get last sync timestamp
     last_sync = get_last_sync_time()
     print(f"Syncing records scraped since: {last_sync.isoformat()}")
 
-    # 1. Connect to local DuckDB (read-only with retry)
-    try:
-        conn = get_duckdb_connection(DB_PATH)
-    except Exception as e:
-        print(f"Error connecting to DuckDB: {e}")
-        return {"processed": 0, "synced": 0, "failed": 0, "error": str(e)}
+    # 1. Connect to local DuckDB
+    should_close = False
+    if db_conn is not None:
+        conn = db_conn
+    else:
+        if not DB_PATH.exists():
+            print(f"Error: DuckDB file not found at {DB_PATH.absolute()}. Run the Harvest scraper first.")
+            return {"processed": 0, "synced": 0, "failed": 0, "error": "Database file not found"}
+        try:
+            conn = get_duckdb_connection(DB_PATH)
+            should_close = True
+        except Exception as e:
+            print(f"Error connecting to DuckDB: {e}")
+            return {"processed": 0, "synced": 0, "failed": 0, "error": str(e)}
 
     # 2. Query new leads
     try:
-        # We query the SQLite-compatible table 'leads'
-        # Fetching scraped_at as timestamp
         query = """
             SELECT id, job_id, name, category, address, phone, website, email,
                    rating, review_count, hours, latitude, longitude,
                    source, source_url, scraped_at, raw_data, dedup_hash
             FROM leads
-            WHERE scraped_at > ?
+            WHERE scraped_at > ? AND (LOWER(source) LIKE '%google%' OR LOWER(source) LIKE '%gmaps%' OR source = 'google_maps')
             ORDER BY scraped_at ASC
         """
-        # Execute query passing the timestamp
-        # Convert datetime to string for DuckDB query parameter
         cursor = conn.execute(query, [last_sync.replace(tzinfo=None)])
         rows = cursor.fetchall()
-        
-        # Get column names
         cols = [desc[0] for desc in cursor.description]
-        
     except Exception as e:
         print(f"Error querying DuckDB: {e}")
-        conn.close()
+        if should_close:
+            conn.close()
         return {"processed": 0, "synced": 0, "failed": 0, "error": str(e)}
         
-    conn.close()
+    if should_close:
+        conn.close()
+
     
     total_leads = len(rows)
     print(f"Found {total_leads} new leads in DuckDB to sync.")
@@ -247,16 +247,20 @@ def sync(progress_callback=None) -> dict:
     for r in rows:
         lead = dict(zip(cols, r))
         
-        # Data Quality check: Skip empty name records
+        # Data Quality check: Skip empty name records and pure B2B industrial listings
         if not lead.get("name") or not lead.get("name").strip():
             continue
+            
+        raw_cat = lead.get("category") or ""
+        if hasattr(category_mapping, "is_b2c_lead"):
+            if not category_mapping.is_b2c_lead(raw_cat, lead.get("name") or ""):
+                continue
             
         # Parse fields
         hours_dict = parse_db_hours(lead.get("hours"))
         raw_data_dict = parse_db_raw_data(lead.get("raw_data"))
         
         # Category Mapping
-        raw_cat = lead.get("category") or ""
         parent_cat = category_mapping.get_parent_category(raw_cat)
         if parent_cat == "Other" and raw_cat:
             unmapped_categories[raw_cat] = unmapped_categories.get(raw_cat, 0) + 1

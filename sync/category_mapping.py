@@ -120,3 +120,24 @@ def get_parent_category(raw_category: str) -> str:
     
     return "Other"
 
+B2B_EXCLUDE_KEYWORDS = [
+    "manufacturer", "wholesaler", "industrial supplier", "chemical supplier",
+    "machinery supplier", "raw material", "bulk supplier", "importer & exporter",
+    "factory", "mill"
+]
+
+def is_b2c_lead(raw_category: str, name: str = "") -> bool:
+    """
+    Returns True if the lead is suitable for NearPro's B2C local service app.
+    Filters out pure B2B industrial manufacturers, wholesalers, and raw material suppliers.
+    """
+    combined = f"{raw_category or ''} {name or ''}".lower()
+    for kw in B2B_EXCLUDE_KEYWORDS:
+        if kw in combined:
+            return False
+    return True
+
+# Alias for cross-module compatibility
+map_parent_category = get_parent_category
+
+
