@@ -327,12 +327,24 @@ export function bindCheckoutConsentModalEvents() {
                     const userId = (State.user && State.user.id) ? State.user.id : null;
                     const result = await Api.applyCouponCode(activeCoupon, userId);
                     if (result && result.success) {
-                        if (State.user) {
-                            State.user.tier = 'scout';
-                            localStorage.setItem('nearpro_user_tier', 'scout');
-                            localStorage.setItem('nearpro_user', JSON.stringify(State.user));
+                        if (!State.profile) {
+                            State.profile = { subscription_tier: 'scout', tier: 'scout' };
+                        } else {
+                            State.profile.subscription_tier = 'scout';
+                            State.profile.tier = 'scout';
                         }
 
+                        if (State.user) {
+                            State.user.tier = 'scout';
+                            State.user.subscription_tier = 'scout';
+                            localStorage.setItem('nearpro_user', JSON.stringify(State.user));
+                        }
+                        localStorage.setItem('nearpro_user_tier', 'scout');
+                        localStorage.setItem('claimed_coupon_LAUNCH100', 'true');
+
+                        // Ensure pricing modal & consent modal are both closed
+                        State.pricing_modal_open = false;
+                        State.checkout_consent_modal_open = false;
                         close();
                         
                         // Set celebration success modal data
@@ -350,7 +362,7 @@ export function bindCheckoutConsentModalEvents() {
                         State.upgrade_success_modal_open = true;
                         State.notify();
 
-                        // Navigate seamlessly to dashboard
+                        // Navigate seamlessly to dashboard directory
                         window.location.hash = '#/dashboard/directory';
                         return;
                     } else {

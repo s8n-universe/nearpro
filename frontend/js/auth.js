@@ -55,10 +55,11 @@ export function hasAccess(userTier, requiredTier) {
  * @returns {string}
  */
 export function getUserTier() {
-    if (!State.profile) return 'free';
-    return State.profile.subscription_tier
-        || State.profile.tier
-        || 'free';
+    const profileTier = State.profile?.subscription_tier || State.profile?.tier;
+    const userTier = State.user?.tier || State.user?.subscription_tier;
+    const storedTier = localStorage.getItem('nearpro_user_tier');
+
+    return (profileTier || userTier || storedTier || 'free').toLowerCase();
 }
 
 /**

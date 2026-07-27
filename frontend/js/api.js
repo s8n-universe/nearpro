@@ -187,18 +187,40 @@ export const Api = {
     async applyCouponCode(code, userId) {
         try {
             const { data, error } = await supabase.rpc('apply_coupon_code', { p_code: code, p_user_id: userId || 'anonymous' });
-            if (!error && data && data.success !== undefined) return data;
+            if (!error && data && data.success !== undefined) {
+                if (userId) {
+                    await supabase.from('profiles').update({ tier: 'scout', subscription_tier: 'scout' }).eq('id', userId);
+                }
+                return data;
+            }
         } catch (e) {
             console.warn("Supabase RPC apply_coupon_code fallback:", e);
         }
 
-        // High-reliability fallback to ensure user gets Scout tier activated 100% of the time
+        // Ensure State.profile, State.user and localStorage are updated with Scout tier
+        if (!State.profile) {
+            State.profile = { subscription_tier: 'scout', tier: 'scout' };
+        } else {
+            State.profile.subscription_tier = 'scout';
+            State.profile.tier = 'scout';
+        }
+
         if (State.user) {
             State.user.tier = 'scout';
-            localStorage.setItem('nearpro_user_tier', 'scout');
+            State.user.subscription_tier = 'scout';
             localStorage.setItem('nearpro_user', JSON.stringify(State.user));
         }
+        localStorage.setItem('nearpro_user_tier', 'scout');
         localStorage.setItem('claimed_coupon_LAUNCH100', 'true');
+
+        if (userId) {
+            try {
+                await supabase.from('profiles').update({ tier: 'scout', subscription_tier: 'scout' }).eq('id', userId);
+            } catch (err) {
+                console.warn("Supabase profiles update fallback:", err);
+            }
+        }
+
         State.notify();
 
         return {

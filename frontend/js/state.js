@@ -10,8 +10,8 @@ export const State = {
     locked: false, // SaaS lockout gating flag
     demo_active: false,
     demo_niche: "",
-    user: null,
-    profile: null,
+    user: JSON.parse(localStorage.getItem('nearpro_user') || 'null'),
+    profile: localStorage.getItem('nearpro_user_tier') ? { subscription_tier: localStorage.getItem('nearpro_user_tier'), tier: localStorage.getItem('nearpro_user_tier') } : null,
     user_survey: JSON.parse(localStorage.getItem('nearpro_user_survey') || 'null'),
     survey_modal_open: false,
     personalization_modal_open: false,
