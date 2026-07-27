@@ -324,14 +324,21 @@ export function bindCheckoutConsentModalEvents() {
                 proceedBtn.innerText = 'Activating Free Scout Plan...';
                 proceedBtn.disabled = true;
                 try {
-                    const result = await Api.applyCouponCode(activeCoupon, State.user.id);
-                    if (result.success) {
+                    const userId = (State.user && State.user.id) ? State.user.id : null;
+                    const result = await Api.applyCouponCode(activeCoupon, userId);
+                    if (result && result.success) {
+                        if (State.user) {
+                            State.user.tier = 'scout';
+                            localStorage.setItem('nearpro_user_tier', 'scout');
+                            localStorage.setItem('nearpro_user', JSON.stringify(State.user));
+                        }
+
                         close();
                         
                         // Set celebration success modal data
                         State.upgrade_success_data = {
                             tier: 'SCOUT PLAN (1-MONTH FREE)',
-                            netPaid: '0 (100% OFF Coupon Claimed)',
+                            netPaid: '₹0 (100% OFF Coupon Claimed)',
                             paymentId: `claim_LAUNCH100_${Math.random().toString(36).slice(2, 8)}`,
                             features: [
                                 'Unlocked Phone Numbers & Website Details',
@@ -344,10 +351,10 @@ export function bindCheckoutConsentModalEvents() {
                         State.notify();
 
                         // Navigate seamlessly to dashboard
-                        window.location.hash = '#/dashboard';
+                        window.location.hash = '#/dashboard/directory';
                         return;
                     } else {
-                        alert(result.message || 'Failed to claim coupon.');
+                        alert((result && result.message) || 'Failed to claim coupon.');
                     }
                 } catch (e) {
                     console.error("Coupon redemption error:", e);
