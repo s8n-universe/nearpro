@@ -2,6 +2,71 @@ import { State } from '../state.js';
 import { Api } from '../api.js';
 
 /**
+ * Floating Top-Right Circular Glowing Trigger Button
+ */
+export function renderFloatingScratchTrigger(remainingCount = 58) {
+    return `
+        <style>
+            @keyframes pulseGlowRing {
+                0% {
+                    box-shadow: 0 0 0 0 rgba(255, 160, 0, 0.6), 0 0 15px rgba(236, 72, 153, 0.4);
+                    transform: scale(1);
+                }
+                50% {
+                    box-shadow: 0 0 0 10px rgba(255, 160, 0, 0), 0 0 25px rgba(236, 72, 153, 0.6);
+                    transform: scale(1.03);
+                }
+                100% {
+                    box-shadow: 0 0 0 0 rgba(255, 160, 0, 0), 0 0 15px rgba(236, 72, 153, 0.4);
+                    transform: scale(1);
+                }
+            }
+            .floating-top-right-scratch {
+                position: fixed;
+                top: 14px;
+                right: 140px;
+                z-index: 99990;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 6px 14px;
+                background: linear-gradient(135deg, rgba(20, 20, 26, 0.95), rgba(9, 9, 11, 0.98));
+                border: 1.5px solid rgba(255, 160, 0, 0.6);
+                border-radius: 50px;
+                backdrop-filter: blur(16px);
+                color: #ffffff;
+                cursor: pointer;
+                animation: pulseGlowRing 3s infinite ease-in-out;
+                transition: all 0.2s ease;
+                user-select: none;
+            }
+            .floating-top-right-scratch:hover {
+                transform: translateY(-1px) scale(1.05) !important;
+                border-color: #ffa000 !important;
+            }
+            @media (max-width: 900px) {
+                .floating-top-right-scratch {
+                    right: 90px;
+                    top: 12px;
+                }
+            }
+            @media (max-width: 600px) {
+                .floating-top-right-scratch {
+                    top: auto;
+                    bottom: 20px;
+                    right: 16px;
+                }
+            }
+        </style>
+        <div class="floating-top-right-scratch" id="floatingScratchTriggerBtn" onclick="window.State.setScratchModal(true)" title="Scratch to unlock 100% Free Scout Plan!">
+            <span style="width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg, #ffa000, #ea580c); display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; box-shadow: 0 2px 8px rgba(255, 160, 0, 0.5);">🎁</span>
+            <span style="font-size: 11.5px; font-weight: 800; font-family: var(--font-heading); color: var(--accent-gold);">Scratch & Claim</span>
+            <span style="font-size: 10.5px; font-family: var(--font-mono); font-weight: 700; color: #22c55e;" id="floatingRemainingBadgeText">${remainingCount} / 100 Left</span>
+        </div>
+    `;
+}
+
+/**
  * Celebratory Confetti Particle Burst FX
  */
 function triggerConfettiBurst() {
