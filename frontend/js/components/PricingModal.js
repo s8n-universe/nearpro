@@ -1,6 +1,5 @@
 import { State } from '../state.js';
 import { getUserTier, TIER_LEVELS } from '../auth.js';
-import { renderScratchCardWidget, initScratchCardCanvas } from './ScratchCard.js';
 
 export function renderPricingModal() {
     if (!State.pricing_modal_open) return '';
@@ -177,9 +176,6 @@ export function renderPricingModal() {
                     </button>
                 </div>
                 
-                <!-- Interactive Scratch Card Promo Widget -->
-                ${renderScratchCardWidget(42)}
-                
                 <!-- Grid of Plan Cards -->
                 <div class="pricing-plans-grid">
                     ${plansToRender.map(plan => {
@@ -297,6 +293,4 @@ export function bindPricingModalEvents() {
             State.notify();
         });
     }
-
-    initScratchCardCanvas();
 }

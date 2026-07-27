@@ -1,55 +1,165 @@
 import { State } from '../state.js';
 import { Api } from '../api.js';
 
-export function renderScratchCardWidget(remainingCount = 42) {
+/**
+ * Floating Circular Glowing Trigger Button
+ * Positioned in the top right corner below header navigation.
+ */
+export function renderFloatingScratchTrigger(remainingCount = 58) {
     return `
-        <div class="scratch-card-container" style="background: linear-gradient(135deg, rgba(255, 160, 0, 0.08) 0%, rgba(236, 72, 153, 0.08) 100%); border: 1.5px solid rgba(255, 160, 0, 0.3); border-radius: var(--radius-lg, 16px); padding: 24px; text-align: center; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.4); max-width: 480px; margin: 0 auto 28px;">
-            
-            <!-- Badge Header -->
-            <div style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; background: rgba(255, 160, 0, 0.15); border: 1px solid rgba(255, 160, 0, 0.4); border-radius: 20px; color: var(--accent-gold, #ffa000); font-size: 11.5px; font-family: var(--font-mono); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; animation: pulse 2s infinite;">
-                🔥 LAUNCH SPECIAL • FIRST 100 USERS GET SCOUT PLAN FREE
+        <style>
+            @keyframes pulseGlowRing {
+                0% {
+                    box-shadow: 0 0 0 0 rgba(255, 160, 0, 0.6), 0 0 20px rgba(236, 72, 153, 0.4);
+                    transform: scale(1);
+                }
+                50% {
+                    box-shadow: 0 0 0 14px rgba(255, 160, 0, 0), 0 0 35px rgba(236, 72, 153, 0.6);
+                    transform: scale(1.04);
+                }
+                100% {
+                    box-shadow: 0 0 0 0 rgba(255, 160, 0, 0), 0 0 20px rgba(236, 72, 153, 0.4);
+                    transform: scale(1);
+                }
+            }
+            .floating-scratch-pill {
+                position: fixed;
+                top: 84px;
+                right: 28px;
+                z-index: 9990;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 8px 16px 8px 10px;
+                background: linear-gradient(135deg, rgba(20, 20, 26, 0.95), rgba(9, 9, 11, 0.98));
+                border: 1.5px solid rgba(255, 160, 0, 0.6);
+                border-radius: 50px;
+                backdrop-filter: blur(16px);
+                color: #ffffff;
+                cursor: pointer;
+                animation: pulseGlowRing 3s infinite ease-in-out;
+                transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+                user-select: none;
+            }
+            .floating-scratch-pill:hover {
+                transform: translateY(-2px) scale(1.06) !important;
+                border-color: #ffa000 !important;
+            }
+            @media (max-width: 768px) {
+                .floating-scratch-pill {
+                    top: auto;
+                    bottom: 24px;
+                    right: 20px;
+                }
+            }
+        </style>
+        <div class="floating-scratch-pill" id="floatingScratchTriggerBtn" title="Click to scratch & unlock 100% Free Scout Plan!">
+            <div style="width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #ffa000, #ea580c); display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; box-shadow: 0 2px 10px rgba(255, 160, 0, 0.5);">
+                🎁
             </div>
-
-            <h3 style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: #ffffff; margin-bottom: 6px;">
-                Scratch Below to Claim Your Free Scout Plan! 🎁
-            </h3>
-            <p style="font-size: 12.5px; color: var(--text-secondary, #94a3b8); margin-bottom: 16px; line-height: 1.4;">
-                Scratch off the silver card to reveal your 100% OFF coupon code.
-            </p>
-
-            <!-- Scratch Canvas Container -->
-            <div style="position: relative; width: 280px; height: 75px; margin: 0 auto 16px; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.5); user-select: none;">
-                
-                <!-- Underneath Revealed Secret Code -->
-                <div id="scratchCodeSecret" style="position: absolute; inset: 0; background: linear-gradient(135deg, #09090b, #18181b); border: 2px dashed var(--accent-gold, #ffa000); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1;">
-                    <span style="font-size: 10px; font-family: var(--font-mono); color: var(--accent-gold); font-weight: 700; text-transform: uppercase;">Your Secret 100% OFF Code</span>
-                    <span style="font-size: 24px; font-family: var(--font-mono); font-weight: 900; color: #ffffff; letter-spacing: 3px;">LAUNCH100</span>
-                </div>
-
-                <!-- Interactive Canvas Foil Overlay -->
-                <canvas id="scratchCanvas" width="280" height="75" style="position: absolute; inset: 0; z-index: 2; cursor: pointer; touch-action: none;"></canvas>
-            </div>
-
-            <!-- Claim Status Bar -->
-            <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; background: rgba(0,0,0,0.4); padding: 10px 14px; border-radius: 8px; font-size: 12px;">
-                <span style="color: var(--text-secondary);">⚡ Remaining Free Coupons:</span>
-                <span style="font-family: var(--font-mono); font-weight: 800; color: #22c55e;" id="scratchCardRemainingText">${remainingCount} / 100 Left</span>
-            </div>
-
-            <!-- Action Buttons -->
-            <div style="display: flex; gap: 10px; margin-top: 14px;">
-                <button id="copyScratchCodeBtn" class="secondary-btn" style="flex: 1; padding: 10px; font-size: 12.5px; border-radius: var(--radius-sm, 8px); justify-content: center; display: flex; align-items: center; gap: 6px;">
-                    📋 Copy Code (LAUNCH100)
-                </button>
-                <button id="claimScratchCodeBtn" class="brand-btn" style="flex: 1.2; padding: 10px; font-size: 12.5px; font-weight: 700; border-radius: var(--radius-sm, 8px); justify-content: center; display: flex; align-items: center; gap: 6px; background: linear-gradient(135deg, var(--accent-gold, #ffa000), #ea580c); color: white;">
-                    Claim Free Scout ➔
-                </button>
+            <div style="display: flex; flex-direction: column; align-items: flex-start; text-align: left;">
+                <span style="font-size: 11.5px; font-weight: 800; font-family: var(--font-heading); color: #ffffff; letter-spacing: -0.2px; line-height: 1.2;">
+                    Claim Free Access ⚡
+                </span>
+                <span style="font-size: 10px; font-family: var(--font-mono); font-weight: 700; color: #22c55e;" id="floatingRemainingBadgeText">
+                    ${remainingCount} / 100 Left
+                </span>
             </div>
         </div>
     `;
 }
 
-export function initScratchCardCanvas() {
+/**
+ * Dedicated Scratch Card Modal Overlay
+ */
+export function renderScratchModal() {
+    if (!State.scratch_modal_open) return '';
+
+    return `
+        <div class="modal-overlay open" id="scratchModalOverlay" style="z-index: 100050; background: rgba(0, 0, 0, 0.82) !important; backdrop-filter: blur(12px) !important; -webkit-backdrop-filter: blur(12px) !important;">
+            <div class="modal-card" style="max-width: 480px; width: 92%; padding: 32px; text-align: center; position: relative; background: #09090b !important; color: #ffffff !important; border: 1.5px solid rgba(255, 160, 0, 0.4) !important; box-shadow: 0 25px 60px rgba(0,0,0,0.8), 0 0 30px rgba(255,160,0,0.15); border-radius: 20px;">
+                
+                <button class="modal-close-btn" id="closeScratchModalBtn" style="position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #94a3b8; font-size: 20px; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">&times;</button>
+                
+                <!-- Header Badge -->
+                <div style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; background: rgba(255, 160, 0, 0.15); border: 1px solid rgba(255, 160, 0, 0.4); border-radius: 20px; color: var(--accent-gold, #ffa000); font-size: 11px; font-family: var(--font-mono); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 14px;">
+                    🔥 LAUNCH SPECIAL • FIRST 100 USERS GET SCOUT PLAN FREE
+                </div>
+
+                <h3 style="font-family: var(--font-heading); font-size: 22px; font-weight: 800; color: #ffffff; margin: 0 0 8px 0;">
+                    Scratch Below to Claim Free Access! 🎁
+                </h3>
+                <p style="font-size: 13px; color: var(--text-secondary, #94a3b8); margin: 0 0 20px 0; line-height: 1.5;">
+                    Scratch off the silver card below to reveal your secret 100% OFF coupon code.
+                </p>
+
+                <!-- Scratch Canvas Container -->
+                <div style="position: relative; width: 290px; height: 80px; margin: 0 auto 20px; border-radius: 14px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.6); user-select: none;">
+                    
+                    <!-- Underneath Revealed Secret Code -->
+                    <div id="scratchCodeSecret" style="position: absolute; inset: 0; background: linear-gradient(135deg, #09090b, #18181b); border: 2px dashed var(--accent-gold, #ffa000); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1;">
+                        <span style="font-size: 10px; font-family: var(--font-mono); color: var(--accent-gold); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Your Secret 100% OFF Code</span>
+                        <span style="font-size: 26px; font-family: var(--font-mono); font-weight: 900; color: #ffffff; letter-spacing: 3px;">LAUNCH100</span>
+                    </div>
+
+                    <!-- Interactive Canvas Foil Overlay -->
+                    <canvas id="scratchCanvas" width="290" height="80" style="position: absolute; inset: 0; z-index: 2; cursor: pointer; touch-action: none;"></canvas>
+                </div>
+
+                <!-- Claim Status Bar -->
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 10px 14px; border-radius: 10px; font-size: 12.5px; margin-bottom: 20px;">
+                    <span style="color: var(--text-secondary);">⚡ Remaining Free Coupons:</span>
+                    <span style="font-family: var(--font-mono); font-weight: 800; color: #22c55e;" id="modalScratchRemainingText">Loading...</span>
+                </div>
+
+                <!-- Action Buttons -->
+                <div style="display: flex; gap: 10px;">
+                    <button id="copyScratchCodeBtn" class="secondary-btn" style="flex: 1; padding: 11px; font-size: 12.5px; border-radius: 10px; justify-content: center; display: flex; align-items: center; gap: 6px;">
+                        📋 Copy Code (LAUNCH100)
+                    </button>
+                    <button id="claimScratchCodeBtn" class="brand-btn" style="flex: 1.2; padding: 11px; font-size: 13px; font-weight: 700; border-radius: 10px; justify-content: center; display: flex; align-items: center; gap: 6px; background: linear-gradient(135deg, var(--accent-gold, #ffa000), #ea580c); color: white;">
+                        Claim Free Scout ➔
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+/**
+ * Initialize Scratch Modal Canvas & Event Listeners
+ */
+export function bindScratchModalEvents() {
+    // Floating Trigger Click
+    const triggerBtn = document.getElementById('floatingScratchTriggerBtn');
+    if (triggerBtn) {
+        triggerBtn.addEventListener('click', () => {
+            State.setScratchModal(true);
+        });
+    }
+
+    // Modal Close Click
+    const closeBtn = document.getElementById('closeScratchModalBtn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            State.setScratchModal(false);
+        });
+    }
+
+    // Fetch live status from Supabase
+    Api.getCouponStatus('LAUNCH100').then(res => {
+        const remaining = (res && typeof res.remaining === 'number') ? res.remaining : 58;
+        const total = (res && res.max_redemptions) || 100;
+        
+        const badgeEl = document.getElementById('floatingRemainingBadgeText');
+        if (badgeEl) badgeEl.innerText = `${remaining} / ${total} Left`;
+
+        const modalEl = document.getElementById('modalScratchRemainingText');
+        if (modalEl) modalEl.innerText = `${remaining} / ${total} Left`;
+    }).catch(err => {
+        console.warn("Failed to fetch live coupon status:", err);
+    });
+
     const canvas = document.getElementById('scratchCanvas');
     if (!canvas) return;
 
@@ -98,16 +208,6 @@ export function initScratchCardCanvas() {
     canvas.addEventListener('touchmove', (e) => { if (isScratching) { const pos = getPos(e); scratch(pos.x, pos.y); } });
     window.addEventListener('touchend', () => { isScratching = false; });
 
-    // Fetch live remaining count from Supabase
-    Api.getCouponStatus('LAUNCH100').then(res => {
-        const remainingEl = document.getElementById('scratchCardRemainingText');
-        if (remainingEl && res && typeof res.remaining === 'number') {
-            remainingEl.innerText = `${res.remaining} / ${res.max_redemptions || 100} Left`;
-        }
-    }).catch(err => {
-        console.warn("Failed to fetch live coupon status:", err);
-    });
-
     // Copy Code Event
     const copyBtn = document.getElementById('copyScratchCodeBtn');
     if (copyBtn) {
@@ -124,8 +224,10 @@ export function initScratchCardCanvas() {
     const claimBtn = document.getElementById('claimScratchCodeBtn');
     if (claimBtn) {
         claimBtn.addEventListener('click', () => {
+            State.setScratchModal(false);
             State.setPricingModal(false);
             State.pending_checkout_plan = { planId: 'scout', interval: 'monthly', coupon: 'LAUNCH100' };
+            
             if (!State.user) {
                 localStorage.setItem('selected_nearpro_tier', 'scout');
                 localStorage.setItem('selected_nearpro_coupon', 'LAUNCH100');

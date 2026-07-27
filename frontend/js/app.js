@@ -46,7 +46,7 @@ import { renderCallScriptGeneratorLayout, bindCallScriptGeneratorEvents } from '
 import { renderPlatformOverviewLayout, bindPlatformOverviewEvents } from './components/PlatformOverview.js';
 import { renderExplorerPlanModal, bindExplorerPlanModalEvents } from './components/ExplorerPlanModal.js';
 import { renderWaitlistModal, bindWaitlistModalEvents } from './components/WaitlistModal.js';
-import { initScratchCardCanvas } from './components/ScratchCard.js';
+import { renderFloatingScratchTrigger, renderScratchModal, bindScratchModalEvents } from './components/ScratchCard.js';
 import { initCustomSelect } from './components/CustomSelect.js';
 
 // Main Application shell reference
@@ -150,6 +150,13 @@ State.subscribe(async (currentState) => {
     if (waitlistPlaceholder) {
         waitlistPlaceholder.innerHTML = renderWaitlistModal();
         bindWaitlistModalEvents();
+    }
+
+    // Dynamically render/update Scratch Modal
+    const scratchPlaceholder = document.getElementById('scratchModalPlaceholder');
+    if (scratchPlaceholder) {
+        scratchPlaceholder.innerHTML = renderScratchModal();
+        bindScratchModalEvents();
     }
     refreshLucideIcons();
 });
@@ -322,6 +329,8 @@ function renderMarketingLayout() {
             <div id="upgradeModalPlaceholder"></div>
             <div id="checkoutConsentModalPlaceholder"></div>
             <div id="waitlistModalPlaceholder"></div>
+            <div id="scratchModalPlaceholder"></div>
+            ${renderFloatingScratchTrigger(58)}
             <footer class="main-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid var(--border); font-size: 13px; color: var(--text-muted); flex-wrap: wrap; gap: 12px;">
                 <div>NearPro™ — Made with ❤️ by S8N</div>
                 <div style="display: flex; gap: 20px;">
@@ -367,8 +376,8 @@ function renderMarketingLayout() {
     if (heroSectorSelect) initCustomSelect(heroSectorSelect, 'hero-dropdown');
     if (heroAreaSelect) initCustomSelect(heroAreaSelect, 'hero-dropdown');
 
-    // Initialize scratch card canvas on homepage hero
-    initScratchCardCanvas();
+    // Bind scratch modal & trigger events
+    bindScratchModalEvents();
 }
 
 // Layer 2: Deployed Directory layout shell

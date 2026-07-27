@@ -16,6 +16,7 @@ export const State = {
     survey_modal_open: false,
     personalization_modal_open: false,
     auth_modal_open: false,
+    scratch_modal_open: false,
     selected_tier: null,
     billing_cycle: 'monthly',
     category_sidebar_collapsed: localStorage.getItem('nearpro_cat_sidebar_collapsed') === 'true',
@@ -184,6 +185,12 @@ export const State = {
     setExplorerPlanModal(isOpen) {
         if (this.explorer_plan_modal_open === isOpen) return;
         this.explorer_plan_modal_open = isOpen;
+        this.notify();
+    },
+
+    setScratchModal(isOpen) {
+        if (this.scratch_modal_open === isOpen) return;
+        this.scratch_modal_open = isOpen;
         this.notify();
     },
 

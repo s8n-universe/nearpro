@@ -5,7 +5,8 @@ import { getUserTier, TIER_LEVELS } from '../auth.js';
 export function renderCheckoutConsentModal() {
     if (!State.checkout_consent_modal_open || !State.pending_checkout_plan) return '';
 
-    const { planId, interval } = State.pending_checkout_plan;
+    const pending = State.pending_checkout_plan || {};
+    const { planId, interval } = pending;
     const cycle = interval || 'monthly';
 
     // Pricing details mapping
