@@ -23,9 +23,9 @@ export function renderFloatingScratchTrigger(remainingCount = 58) {
             }
             .floating-top-right-scratch {
                 position: fixed;
-                top: 14px;
-                right: 140px;
-                z-index: 99990;
+                top: 115px;
+                right: 28px;
+                z-index: 9990;
                 display: flex;
                 align-items: center;
                 gap: 8px;
