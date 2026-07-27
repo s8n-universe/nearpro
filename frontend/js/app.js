@@ -45,6 +45,7 @@ import { renderProposalGeneratorLayout, bindProposalGeneratorEvents } from './co
 import { renderCallScriptGeneratorLayout, bindCallScriptGeneratorEvents } from './components/CallScriptGenerator.js';
 import { renderPlatformOverviewLayout, bindPlatformOverviewEvents } from './components/PlatformOverview.js';
 import { renderExplorerPlanModal, bindExplorerPlanModalEvents } from './components/ExplorerPlanModal.js';
+import { renderWaitlistModal, bindWaitlistModalEvents } from './components/WaitlistModal.js';
 import { initCustomSelect } from './components/CustomSelect.js';
 
 // Main Application shell reference
@@ -141,6 +142,13 @@ State.subscribe(async (currentState) => {
     if (checkoutConsentPlaceholder) {
         checkoutConsentPlaceholder.innerHTML = renderCheckoutConsentModal();
         bindCheckoutConsentModalEvents();
+    }
+
+    // Dynamically render/update City Waitlist Modal
+    const waitlistPlaceholder = document.getElementById('waitlistModalPlaceholder');
+    if (waitlistPlaceholder) {
+        waitlistPlaceholder.innerHTML = renderWaitlistModal();
+        bindWaitlistModalEvents();
     }
     refreshLucideIcons();
 });
@@ -312,12 +320,14 @@ function renderMarketingLayout() {
             <div id="surveyModalPlaceholder"></div>
             <div id="upgradeModalPlaceholder"></div>
             <div id="checkoutConsentModalPlaceholder"></div>
+            <div id="waitlistModalPlaceholder"></div>
             <footer class="main-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid var(--border); font-size: 13px; color: var(--text-muted); flex-wrap: wrap; gap: 12px;">
-                <div>NearPro — Made with ❤️ by S8N</div>
+                <div>NearPro™ — Made with ❤️ by S8N</div>
                 <div style="display: flex; gap: 20px;">
                     <a href="#/privacy" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Privacy Policy</a>
                     <a href="#/terms" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Terms Of Service</a>
                     <a href="#/opt-out" style="color: var(--accent-gold); text-decoration: none; font-weight: 500;">Business Opt-Out</a>
+                    <a href="mailto:support@s8n.in" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Contact Support</a>
                 </div>
             </footer>
         </div>
@@ -381,12 +391,14 @@ async function renderDirectoryLayout() {
             <div id="explorerPlanModalPlaceholder"></div>
             <div id="surveyModalPlaceholder"></div>
             <div id="upgradeModalPlaceholder"></div>
+            <div id="waitlistModalPlaceholder"></div>
             
             <footer class="main-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid var(--border); font-size: 13px; color: var(--text-muted); flex-wrap: wrap; gap: 12px;">
-                <div>NearPro — Made with ❤️ by S8N</div>
+                <div>NearPro™ — Made with ❤️ by S8N</div>
                 <div style="display: flex; gap: 20px;">
                     <a href="#/privacy" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Privacy Policy</a>
                     <a href="#/terms" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Terms Of Service</a>
+                    <a href="mailto:support@s8n.in" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Contact Support</a>
                 </div>
             </footer>
         </div>

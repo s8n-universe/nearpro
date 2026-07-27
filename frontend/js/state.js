@@ -260,5 +260,15 @@ export const State = {
         this.pending_checkout_plan = { planId, interval };
         this.checkout_consent_modal_open = true;
         this.notify();
+    },
+
+    waitlist_modal_open: false,
+    waitlist_city: 'Pune',
+
+    setWaitlistModal(isOpen, city = 'Pune') {
+        if (this.waitlist_modal_open === isOpen && this.waitlist_city === city) return;
+        this.waitlist_modal_open = isOpen;
+        if (city) this.waitlist_city = city;
+        this.notify();
     }
 };

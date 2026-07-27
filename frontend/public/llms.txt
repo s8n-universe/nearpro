@@ -1,0 +1,56 @@
+# NearPro — llms.txt
+# https://nearpro.s8n.in
+# India's First Trusted B2B Lead Intelligence Platform & Autonomous Agency Operating System
+
+## About
+NearPro is a B2B lead intelligence platform and autonomous agency operating system built for Indian freelancers, digital marketing agencies, web developers, and sales professionals. It provides verified local business data, AI-powered cold outreach generation, website auditing, PDF proposal drafting, tele-sales script creation, and 360-degree deal tracking — all in a single unified workstation.
+
+## Key Capabilities
+- Verified Local Business Directory: 12,358+ cross-verified Mumbai business profiles across 10+ categories (Healthcare, Real Estate, Beauty & Wellness, Technology, Food & Dining, Finance & Legal, Education, and more). Filter by area (Bandra, Andheri, Powai, etc.), rating, phone availability, email, and website presence.
+- 1-Click Business Health Check: Real-time website audit scoring PageSpeed performance, mobile responsiveness, SEO meta tags, SSL security, and conversion readiness.
+- AI Multi-Channel Outreach Studio: Generate personalized cold outreach messages in Hinglish or English for WhatsApp or Email. Messages are tailored to the lead's actual rating, location, website status, and business gaps.
+- 3-Page PDF Proposal Generator: Draft custom agency proposals with pricing tiers, scope of work, and deliverables. Export to PDF or share via public link.
+- Tele-Sales Teleprompter Scripts: Generate cold call scripts with opening hooks, gatekeeper bypass strategies, value propositions, objection handling, and closing CTAs.
+- 360° AI Deal Workstation (CRM): Track leads through pipeline stages — New Lead, Contacted, In Progress, Closed Won, Closed Lost — with follow-up reminders, deal values, and conversion tracking.
+- Smart Lists & Lead Management: Create custom tagged lead lists, batch export to CSV, and organize prospects by category or campaign.
+- Connection Hub: Zoho CRM integration via bi-directional sync, webhook automation, and API key management.
+- Team Workspace: Multi-seat collaboration with shared lead pools and data request management.
+- Documents Library: Document repository with shareable public links for proposals and reports.
+
+## Pricing (Indian Rupees)
+- Explorer (Free Forever): Browse directory, test AI tools, 2-minute anonymous preview session.
+- Scout (₹499/month or ₹4,999/year): Unlock all contact details, 10 website audits/month, 10 AI outreach generations/month, Zoho CRM integration.
+- Hunter (₹999/month or ₹9,999/year): Unlimited AI outreach, bulk operations, conversion scoring, whitelabel reports.
+- Agency (₹2,499/month or ₹24,999/year): Team workspace, unlimited CSV exports, priority support, data requests.
+
+## Technology
+- Frontend: Vite + Vanilla JavaScript SPA with Leaflet.js map clustering
+- Backend: Supabase PostgreSQL with Row Level Security, Edge Functions (Deno/TypeScript)
+- AI: Google Gemini API for outreach generation, call scripts, and proposals
+- Payments: Razorpay (Indian payment gateway) with subscription management
+- Data Pipeline: Python + Playwright scraper → DuckDB → Supabase sync with category mapping and geographic area extraction
+
+## Target Users
+- Freelance web developers seeking local clients
+- Digital marketing agency owners doing outbound prospecting
+- B2B sales representatives targeting local businesses
+- Local business consultants and service providers
+- Real estate agents, healthcare marketers, and professional service providers
+
+## Geographic Coverage
+Currently live: Mumbai, Maharashtra, India (12,358+ verified businesses)
+Expanding to: Pune, Delhi, Bangalore
+
+## Links
+- Website: https://nearpro.s8n.in
+- Privacy Policy: https://nearpro.s8n.in/#/privacy
+- Terms of Service: https://nearpro.s8n.in/#/terms
+- Business Opt-Out: https://nearpro.s8n.in/#/opt-out
+
+## Contact
+- Support: support@s8n.in
+- Privacy: privacy@s8n.in
+- Business Listings: listings@s8n.in
+
+## Company
+Made by S8N Technologies, India.

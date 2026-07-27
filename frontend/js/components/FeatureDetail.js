@@ -726,11 +726,12 @@ Include structured JSON-LD schema markup, direct WhatsApp button. Follow a premi
             </main>
 
             <footer class="main-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid var(--border); font-size: 13px; color: var(--text-muted); flex-wrap: wrap; gap: 12px;">
-                <div>NearPro — Made with ❤️ by S8N</div>
+                <div>NearPro™ — Made with ❤️ by S8N</div>
                 <div style="display: flex; gap: 20px;">
                     <a href="#/privacy" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Privacy Policy</a>
                     <a href="#/terms" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Terms Of Service</a>
                     <a href="#/opt-out" style="color: var(--accent-gold); text-decoration: none; font-weight: 500;">Business Opt-Out</a>
+                    <a href="mailto:support@s8n.in" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Contact Support</a>
                 </div>
             </footer>
         </div>

@@ -109,7 +109,7 @@ export function renderHeader() {
             <div class="container header-wrap">
                 <a href="#/" class="header-brand">
                     <img src="/NearPro_logo_nobg.png" alt="NearPro Logo" style="height: 32px; width: auto; object-fit: contain; margin-right: 4px;">
-                    <span>Near<span class="brand-text">Pro</span></span>
+                    <span>Near<span class="brand-text">Pro</span><sup style="font-size: 10px; font-weight: bold; color: var(--accent-gold); margin-left: 2px;">™</sup></span>
                 </a>
                 
                 <nav class="header-nav">

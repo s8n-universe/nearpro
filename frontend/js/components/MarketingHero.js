@@ -2,7 +2,7 @@ export function renderMarketingHero(stats = null) {
     // Dynamic values with default fallbacks
     const totalLeads = stats?.total_professionals 
         ? `${stats.total_professionals.toLocaleString('en-IN')}+` 
-        : '5,390+';
+        : '12,358+';
     const avgRating = stats?.average_rating 
         ? `${stats.average_rating}★` 
         : '4.7★';
@@ -14,6 +14,12 @@ export function renderMarketingHero(stats = null) {
         <section class="marketing-hero">
             <div class="container hero-content">
                 <div class="hero-tag">INTELLIGENCE, ARCHITECTED</div>
+                <div id="heroWaitlistBanner" style="margin: 0 auto 20px; display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px; background: rgba(255, 160, 0, 0.1); border: 1px solid rgba(255, 160, 0, 0.25); border-radius: 100px; backdrop-filter: blur(8px); cursor: pointer; transition: all 0.2s ease; flex-wrap: wrap; justify-content: center;" onclick="window.State.setWaitlistModal(true, 'Pune')" onmouseover="this.style.background='rgba(255, 160, 0, 0.18)'; this.style.borderColor='rgba(255, 160, 0, 0.4)'" onmouseout="this.style.background='rgba(255, 160, 0, 0.1)'; this.style.borderColor='rgba(255, 160, 0, 0.25)'">
+                    <span style="font-size: 13px; color: var(--accent-gold); font-weight: 700;">📍 Live in Mumbai (${totalLeads} Verified Leads)</span>
+                    <span style="color: rgba(255,255,255,0.4);">•</span>
+                    <span style="font-size: 13px; color: #ffffff; font-weight: 500;">Pune, Delhi & Bangalore Dropping Next Month!</span>
+                    <span style="padding: 4px 10px; background: var(--accent-gold); color: #000; font-size: 11px; font-weight: 800; border-radius: 20px; font-family: var(--font-mono); text-transform: uppercase;">Join Waitlist 🚀</span>
+                </div>
                 <h1 class="hero-title">No More Inaccurate Directories. <br>Find, Pitch, and Close <span class="brand-text">Premium B2B Clients.</span></h1>
                 <p class="hero-desc" style="max-width: 680px; margin: 0 auto 32px; line-height: 1.6;">
                     The AI-powered sales workstation for B2B agencies. Map verified leads, run automated audits, generate customized proposals, and sync deals to your CRM on autopilot.

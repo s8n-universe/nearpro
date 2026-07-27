@@ -106,24 +106,71 @@ export function isOpenNow(hours) {
     }
 }
 
+// Cache keys and TTLs for reducing Supabase load under traffic spikes
+const STATS_CACHE_KEY = 'np_stats_cache';
+const STATS_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+const CATEGORIES_CACHE_KEY = 'np_categories_cache';
+const CATEGORIES_CACHE_TTL = 30 * 60 * 1000; // 30 minutes
+const INSIGHTS_CACHE_KEY = 'np_insights_cache';
+const INSIGHTS_CACHE_TTL = 15 * 60 * 1000; // 15 minutes
+
+function getCached(key, ttl) {
+    try {
+        const raw = sessionStorage.getItem(key);
+        if (!raw) return null;
+        const { data, timestamp } = JSON.parse(raw);
+        if (Date.now() - timestamp < ttl) return data;
+    } catch (e) { /* ignore parse errors */ }
+    return null;
+}
+
+function setCache(key, data) {
+    try {
+        sessionStorage.setItem(key, JSON.stringify({ data, timestamp: Date.now() }));
+    } catch (e) { /* ignore quota errors */ }
+}
+
 export const Api = {
     supabase,
     async getStats() {
+        const cached = getCached(STATS_CACHE_KEY, STATS_CACHE_TTL);
+        if (cached) return cached;
         const { data, error } = await supabase.rpc('get_stats');
         if (error) throw error;
+        if (data) setCache(STATS_CACHE_KEY, data);
         return data;
     },
     
     async getCategories() {
+        const cached = getCached(CATEGORIES_CACHE_KEY, CATEGORIES_CACHE_TTL);
+        if (cached) return cached;
         const { data, error } = await supabase.rpc('get_category_groups');
         if (error) throw error;
-        return data || [];
+        const result = data || [];
+        if (result.length > 0) setCache(CATEGORIES_CACHE_KEY, result);
+        return result;
     },
     
     async getAreaInsights() {
+        const cached = getCached(INSIGHTS_CACHE_KEY, INSIGHTS_CACHE_TTL);
+        if (cached) return cached;
         const { data, error } = await supabase.rpc('get_area_insights');
         if (error) throw error;
-        return data || { area_density: [], category_distribution: [] };
+        const result = data || { area_density: [], category_distribution: [] };
+        if (result.area_density?.length > 0) setCache(INSIGHTS_CACHE_KEY, result);
+        return result;
+    },
+
+    async joinCityWaitlist({ email, requested_city, user_role }) {
+        const { data, error } = await supabase
+            .from('city_waitlist')
+            .insert([{ email, requested_city, user_role }])
+            .select()
+            .maybeSingle();
+        if (error && error.code !== '23505') { // Ignore duplicate key errors silently
+            throw error;
+        }
+        return data || { success: true };
     },
     
     async getProfessional(id) {
