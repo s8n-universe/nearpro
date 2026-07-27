@@ -3,7 +3,7 @@
 /* Hero area container */
 .marketing-hero {
     position: relative;
-    padding: 80px 0 85px;
+    padding: 20px 0 85px;
     text-align: center;
     background: 
         radial-gradient(circle at 50% 30%, rgba(255, 160, 0, 0.22) 0%, rgba(236, 72, 153, 0.12) 55%, rgba(3, 3, 3, 0) 80%),

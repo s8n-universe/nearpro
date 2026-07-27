@@ -11,9 +11,8 @@ export function renderMarketingHero(stats = null) {
         : '400+';
 
     return `
-        <section class="marketing-hero">
+        <section class="marketing-hero" style="padding-top: 18px;">
             <div class="container hero-content">
-                <div class="hero-tag">INTELLIGENCE, ARCHITECTED</div>
                 <div id="heroWaitlistBanner" style="margin: 0 auto 20px; display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px; background: rgba(255, 160, 0, 0.1); border: 1px solid rgba(255, 160, 0, 0.25); border-radius: 100px; backdrop-filter: blur(8px); cursor: pointer; transition: all 0.2s ease; flex-wrap: wrap; justify-content: center;" onclick="window.State.setWaitlistModal(true, 'Pune')" onmouseover="this.style.background='rgba(255, 160, 0, 0.18)'; this.style.borderColor='rgba(255, 160, 0, 0.4)'" onmouseout="this.style.background='rgba(255, 160, 0, 0.1)'; this.style.borderColor='rgba(255, 160, 0, 0.25)'">
                     <span style="font-size: 13px; color: var(--accent-gold); font-weight: 700;">📍 Live in Mumbai (${totalLeads} Verified Leads)</span>
                     <span style="color: rgba(255,255,255,0.4);">•</span>
