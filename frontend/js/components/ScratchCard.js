@@ -2,71 +2,79 @@ import { State } from '../state.js';
 import { Api } from '../api.js';
 
 /**
- * Floating Circular Glowing Trigger Button
- * Positioned in the top right corner below header navigation.
+ * Celebratory Confetti Particle Burst FX
  */
-export function renderFloatingScratchTrigger(remainingCount = 58) {
-    return `
-        <style>
-            @keyframes pulseGlowRing {
-                0% {
-                    box-shadow: 0 0 0 0 rgba(255, 160, 0, 0.6), 0 0 20px rgba(236, 72, 153, 0.4);
-                    transform: scale(1);
-                }
-                50% {
-                    box-shadow: 0 0 0 14px rgba(255, 160, 0, 0), 0 0 35px rgba(236, 72, 153, 0.6);
-                    transform: scale(1.04);
-                }
-                100% {
-                    box-shadow: 0 0 0 0 rgba(255, 160, 0, 0), 0 0 20px rgba(236, 72, 153, 0.4);
-                    transform: scale(1);
-                }
-            }
-            .floating-scratch-pill {
-                position: fixed;
-                top: 84px;
-                right: 28px;
-                z-index: 9990;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                padding: 8px 16px 8px 10px;
-                background: linear-gradient(135deg, rgba(20, 20, 26, 0.95), rgba(9, 9, 11, 0.98));
-                border: 1.5px solid rgba(255, 160, 0, 0.6);
-                border-radius: 50px;
-                backdrop-filter: blur(16px);
-                color: #ffffff;
-                cursor: pointer;
-                animation: pulseGlowRing 3s infinite ease-in-out;
-                transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-                user-select: none;
-            }
-            .floating-scratch-pill:hover {
-                transform: translateY(-2px) scale(1.06) !important;
-                border-color: #ffa000 !important;
-            }
-            @media (max-width: 768px) {
-                .floating-scratch-pill {
-                    top: auto;
-                    bottom: 24px;
-                    right: 20px;
-                }
-            }
-        </style>
-        <div class="floating-scratch-pill" id="floatingScratchTriggerBtn" title="Click to scratch & unlock 100% Free Scout Plan!">
-            <div style="width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #ffa000, #ea580c); display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; box-shadow: 0 2px 10px rgba(255, 160, 0, 0.5);">
-                🎁
-            </div>
-            <div style="display: flex; flex-direction: column; align-items: flex-start; text-align: left;">
-                <span style="font-size: 11.5px; font-weight: 800; font-family: var(--font-heading); color: #ffffff; letter-spacing: -0.2px; line-height: 1.2;">
-                    Claim Free Access ⚡
-                </span>
-                <span style="font-size: 10px; font-family: var(--font-mono); font-weight: 700; color: #22c55e;" id="floatingRemainingBadgeText">
-                    ${remainingCount} / 100 Left
-                </span>
-            </div>
-        </div>
-    `;
+function triggerConfettiBurst() {
+    const count = 60;
+    const defaults = { origin: { y: 0.6 } };
+    
+    // Create lightweight HTML canvas confetti burst overlay
+    let confettiCanvas = document.getElementById('confettiCanvasOverlay');
+    if (!confettiCanvas) {
+        confettiCanvas = document.createElement('canvas');
+        confettiCanvas.id = 'confettiCanvasOverlay';
+        confettiCanvas.style.position = 'fixed';
+        confettiCanvas.style.inset = '0';
+        confettiCanvas.style.width = '100vw';
+        confettiCanvas.style.height = '100vh';
+        confettiCanvas.style.pointerEvents = 'none';
+        confettiCanvas.style.zIndex = '100060';
+        document.body.appendChild(confettiCanvas);
+    }
+
+    const ctx = confettiCanvas.getContext('2d');
+    confettiCanvas.width = window.innerWidth;
+    confettiCanvas.height = window.innerHeight;
+
+    const particles = [];
+    const colors = ['#ffa000', '#ec4899', '#10b981', '#ffffff', '#3b82f6', '#f59e0b'];
+
+    for (let i = 0; i < count; i++) {
+        particles.push({
+            x: confettiCanvas.width / 2,
+            y: confettiCanvas.height / 2,
+            vx: (Math.random() - 0.5) * 16,
+            vy: (Math.random() - 0.7) * 16,
+            size: Math.random() * 8 + 4,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            rotation: Math.random() * 360,
+            rSpeed: (Math.random() - 0.5) * 12,
+            opacity: 1
+        });
+    }
+
+    let startTime = Date.now();
+    function animate() {
+        const elapsed = Date.now() - startTime;
+        ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+
+        let activeCount = 0;
+        particles.forEach(p => {
+            if (p.opacity <= 0) return;
+            activeCount++;
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.4; // Gravity
+            p.rotation += p.rSpeed;
+            p.opacity -= 0.015;
+
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate((p.rotation * Math.PI) / 180);
+            ctx.globalAlpha = Math.max(0, p.opacity);
+            ctx.fillStyle = p.color;
+            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+            ctx.restore();
+        });
+
+        if (activeCount > 0 && elapsed < 2500) {
+            requestAnimationFrame(animate);
+        } else {
+            ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+        }
+    }
+
+    animate();
 }
 
 /**
@@ -76,8 +84,8 @@ export function renderScratchModal() {
     if (!State.scratch_modal_open) return '';
 
     return `
-        <div class="modal-overlay open" id="scratchModalOverlay" style="z-index: 100050; background: rgba(0, 0, 0, 0.82) !important; backdrop-filter: blur(12px) !important; -webkit-backdrop-filter: blur(12px) !important;">
-            <div class="modal-card" style="max-width: 480px; width: 92%; padding: 32px; text-align: center; position: relative; background: #09090b !important; color: #ffffff !important; border: 1.5px solid rgba(255, 160, 0, 0.4) !important; box-shadow: 0 25px 60px rgba(0,0,0,0.8), 0 0 30px rgba(255,160,0,0.15); border-radius: 20px;">
+        <div class="modal-overlay open" id="scratchModalOverlay" style="z-index: 100050; background: rgba(0, 0, 0, 0.85) !important; backdrop-filter: blur(14px) !important; -webkit-backdrop-filter: blur(14px) !important;">
+            <div class="modal-card" style="max-width: 480px; width: 92%; padding: 32px; text-align: center; position: relative; background: #09090b !important; color: #ffffff !important; border: 1.5px solid rgba(255, 160, 0, 0.4) !important; box-shadow: 0 25px 60px rgba(0,0,0,0.8), 0 0 35px rgba(255,160,0,0.18); border-radius: 20px;">
                 
                 <button class="modal-close-btn" id="closeScratchModalBtn" style="position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #94a3b8; font-size: 20px; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">&times;</button>
                 
@@ -115,7 +123,7 @@ export function renderScratchModal() {
                 <!-- Action Buttons -->
                 <div style="display: flex; gap: 10px;">
                     <button id="copyScratchCodeBtn" class="secondary-btn" style="flex: 1; padding: 11px; font-size: 12.5px; border-radius: 10px; justify-content: center; display: flex; align-items: center; gap: 6px;">
-                        📋 Copy Code (LAUNCH100)
+                        📋 Copy Secret Code
                     </button>
                     <button id="claimScratchCodeBtn" class="brand-btn" style="flex: 1.2; padding: 11px; font-size: 13px; font-weight: 700; border-radius: 10px; justify-content: center; display: flex; align-items: center; gap: 6px; background: linear-gradient(135deg, var(--accent-gold, #ffa000), #ea580c); color: white;">
                         Claim Free Scout ➔
@@ -130,14 +138,6 @@ export function renderScratchModal() {
  * Initialize Scratch Modal Canvas & Event Listeners
  */
 export function bindScratchModalEvents() {
-    // Floating Trigger Click
-    const triggerBtn = document.getElementById('floatingScratchTriggerBtn');
-    if (triggerBtn) {
-        triggerBtn.addEventListener('click', () => {
-            State.setScratchModal(true);
-        });
-    }
-
     // Modal Close Click
     const closeBtn = document.getElementById('closeScratchModalBtn');
     if (closeBtn) {
@@ -151,8 +151,8 @@ export function bindScratchModalEvents() {
         const remaining = (res && typeof res.remaining === 'number') ? res.remaining : 58;
         const total = (res && res.max_redemptions) || 100;
         
-        const badgeEl = document.getElementById('floatingRemainingBadgeText');
-        if (badgeEl) badgeEl.innerText = `${remaining} / ${total} Left`;
+        const bannerEl = document.getElementById('heroBannerRemainingText');
+        if (bannerEl) bannerEl.innerText = `${remaining} / ${total} Left`;
 
         const modalEl = document.getElementById('modalScratchRemainingText');
         if (modalEl) modalEl.innerText = `${remaining} / ${total} Left`;
@@ -182,12 +182,18 @@ export function bindScratchModalEvents() {
     ctx.fillText('✨ SCRATCH HERE WITH CURSOR ✨', width / 2, height / 2 + 5);
 
     let isScratching = false;
+    let hasTriggeredConfetti = false;
 
     function scratch(x, y) {
         ctx.globalCompositeOperation = 'destination-out';
         ctx.beginPath();
         ctx.arc(x, y, 18, 0, Math.PI * 2);
         ctx.fill();
+
+        if (!hasTriggeredConfetti) {
+            hasTriggeredConfetti = true;
+            triggerConfettiBurst();
+        }
     }
 
     function getPos(e) {
@@ -208,15 +214,16 @@ export function bindScratchModalEvents() {
     canvas.addEventListener('touchmove', (e) => { if (isScratching) { const pos = getPos(e); scratch(pos.x, pos.y); } });
     window.addEventListener('touchend', () => { isScratching = false; });
 
-    // Copy Code Event
+    // Copy Code Event with Confetti
     const copyBtn = document.getElementById('copyScratchCodeBtn');
     if (copyBtn) {
         copyBtn.addEventListener('click', () => {
             navigator.clipboard.writeText('LAUNCH100');
-            copyBtn.innerHTML = '✅ Code Copied!';
+            copyBtn.innerHTML = '🎉 LAUNCH100 Copied!';
+            triggerConfettiBurst();
             setTimeout(() => {
-                copyBtn.innerHTML = '📋 Copy Code (LAUNCH100)';
-            }, 2000);
+                copyBtn.innerHTML = '📋 Copy Secret Code';
+            }, 3500);
         });
     }
 
