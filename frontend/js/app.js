@@ -46,6 +46,7 @@ import { renderCallScriptGeneratorLayout, bindCallScriptGeneratorEvents } from '
 import { renderPlatformOverviewLayout, bindPlatformOverviewEvents } from './components/PlatformOverview.js';
 import { renderExplorerPlanModal, bindExplorerPlanModalEvents } from './components/ExplorerPlanModal.js';
 import { renderWaitlistModal, bindWaitlistModalEvents } from './components/WaitlistModal.js';
+import { initScratchCardCanvas } from './components/ScratchCard.js';
 import { initCustomSelect } from './components/CustomSelect.js';
 
 // Main Application shell reference
@@ -365,6 +366,9 @@ function renderMarketingLayout() {
     const heroAreaSelect = document.getElementById('heroAreaSelect');
     if (heroSectorSelect) initCustomSelect(heroSectorSelect, 'hero-dropdown');
     if (heroAreaSelect) initCustomSelect(heroAreaSelect, 'hero-dropdown');
+
+    // Initialize scratch card canvas on homepage hero
+    initScratchCardCanvas();
 }
 
 // Layer 2: Deployed Directory layout shell
