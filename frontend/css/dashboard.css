@@ -563,7 +563,28 @@
 .list-card-footer {
     margin-top: 16px;
     font-size: 11px;
-    color: var(--text-muted);
+    color: #64748b;
+}
+
+/* High contrast Smart List workspace overrides */
+.lists-workspace-container {
+    background: #f8fafc !important;
+    color: #0f172a !important;
+}
+
+.lists-workspace-container h3,
+.lists-workspace-container h4,
+.list-detail-workspace h3,
+.list-detail-workspace h4 {
+    color: #0f172a !important;
+}
+
+.list-lead-row td {
+    color: #0f172a !important;
+}
+
+.list-lead-row:hover {
+    background: #f1f5f9 !important;
 }
 
 /* Website Audit Workspace CSS Styles */
