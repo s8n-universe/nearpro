@@ -1177,7 +1177,14 @@ input:-webkit-autofill:active {
     font-weight: 600;
 }
 .compare-table tr:hover {
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(0, 0, 0, 0.02);
+}
+.compare-modal-light {
+    background: #ffffff !important;
+    color: #0f172a !important;
+}
+.compare-modal-light .compare-table tr:hover td {
+    background: #f1f5f9 !important;
 }
 
 /* QR code container */

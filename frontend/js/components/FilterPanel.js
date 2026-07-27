@@ -217,9 +217,6 @@ export function bindFilterPanelEvents() {
     });
 
     // Convert native select filters to premium custom dropdowns
-    const areaFilter = document.getElementById('areaFilter');
-    const ratingFilter = document.getElementById('ratingFilter');
-    const sortFilter = document.getElementById('sortFilter');
     if (areaFilter) initCustomSelect(areaFilter, 'dashboard-filter-dropdown');
     if (ratingFilter) initCustomSelect(ratingFilter, 'dashboard-filter-dropdown');
     if (sortFilter) initCustomSelect(sortFilter, 'dashboard-filter-dropdown');
