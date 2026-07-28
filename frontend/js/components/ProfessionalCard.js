@@ -166,7 +166,7 @@ export function renderProfessionalCard(lead, index = 0) {
     const maskedWebsiteDisplay = maskWebsite(lead.website);
 
     return `
-        <div class="prof-card" data-id="${lead.id}" style="--card-accent: ${avatarColor}; border-left: 4px solid ${avatarColor};">
+        <div class="prof-card ${!isUnlocked ? 'locked-card' : ''}" data-id="${lead.id}" data-unlocked="${isUnlocked}" style="--card-accent: ${avatarColor}; border-left: 4px solid ${avatarColor};">
             <div class="card-toolbar" onclick="event.stopPropagation();">
                 <button class="track-card-btn ${isTracked ? 'tracked' : ''}" data-id="${lead.id}" title="${isTracked ? 'Lead is tracked in CRM' : 'Track lead'}">
                     <i data-lucide="${isTracked ? 'bookmark-check' : 'bookmark'}" style="width:13px; height:13px; stroke-width:2.5px;"></i> 
@@ -263,7 +263,17 @@ export function bindProfessionalCardEvents(onCardClick) {
     document.querySelectorAll('.prof-card').forEach(card => {
         card.addEventListener('click', () => {
             const id = card.getAttribute('data-id');
-            if (onCardClick) onCardClick(id);
+            const isUnlocked = card.getAttribute('data-unlocked') === 'true';
+
+            if (isUnlocked) {
+                // Unlocked card -> Open detailed lead modal
+                if (onCardClick) onCardClick(id);
+            } else {
+                // Locked card -> Open Explorer Plan / Pricing Upgrade Modal!
+                if (window.State && window.State.setPricingModal) {
+                    window.State.setPricingModal(true);
+                }
+            }
         });
         
         // Handle track lead triggers
@@ -271,6 +281,13 @@ export function bindProfessionalCardEvents(onCardClick) {
         if (trackBtn) {
             trackBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
+                const isUnlocked = card.getAttribute('data-unlocked') === 'true';
+                if (!isUnlocked) {
+                    if (window.State && window.State.setPricingModal) {
+                        window.State.setPricingModal(true);
+                    }
+                    return;
+                }
                 const id = trackBtn.getAttribute('data-id');
                 showTrackLeadModal(id);
             });
