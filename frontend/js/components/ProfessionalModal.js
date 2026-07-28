@@ -124,7 +124,9 @@ export function renderProfessionalModal(lead) {
                         <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                             <span class="star-rating" style="color: #d97706; font-size: 14px; font-weight: bold;">${starsHTML}</span>
                             <span style="font-size: 13px; color: #475569; font-weight: 600;">(${reviewCount} reviews)</span>
-                            <div class="completeness-dots" title="Data completeness: ${score}/5" style="margin-top: 0;">${dotsHTML}</div>
+                            <span style="font-size: 11px; font-weight: 700; font-family: var(--font-mono); padding: 3px 10px; border-radius: 100px; background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; display: inline-flex; align-items: center; gap: 4px;" title="Lead Data Completeness Score">
+                                <i data-lucide="shield-check" style="width:12px; height:12px; color: #16a34a;"></i> ${score}/5 Completeness
+                            </span>
                         </div>
                     </div>
                 </div>

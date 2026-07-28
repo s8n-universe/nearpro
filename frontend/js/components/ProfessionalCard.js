@@ -192,7 +192,6 @@ export function renderProfessionalCard(lead, index = 0) {
             <div class="card-head">
                 <div class="card-head-top">
                     <span class="category-badge" style="background: ${avatarColor}18; color: ${avatarColor}; border: 1px solid ${avatarColor}35;">${displayCategory}</span>
-                    ${scoreBadgeHTML}
                 </div>
                 <h3 style="margin-top: 4px;">${lead.name}</h3>
             </div>
