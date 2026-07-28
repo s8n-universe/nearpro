@@ -63,6 +63,15 @@ const categoryColors = {
     "Events & Entertainment": "#a855f7" // violet
 };
 
+function encodeContactInfo(info) {
+    if (!info) return '';
+    try {
+        return btoa(info);
+    } catch(e) {
+        return info;
+    }
+}
+
 export function renderProfessionalCard(lead, index = 0) {
     const parentCat = lead.parent_category || "Other";
     const avatarColor = categoryColors[parentCat] || "#52525b";
@@ -145,6 +154,13 @@ export function renderProfessionalCard(lead, index = 0) {
     const scorePct = Math.min(100, Math.max(10, (score / 5) * 100));
     const scoreColor = score >= 4 ? '#10b981' : (score >= 2.5 ? '#f59e0b' : '#ef4444');
 
+    // Anti-Scraping Phone Masking & Encoding
+    const phoneEnc = encodeContactInfo(lead.phone);
+    const rawDigits = lead.phone ? lead.phone.replace(/[^0-9]/g, '') : '';
+    const maskedPhoneDisplay = rawDigits.length >= 10 
+        ? `+91 ${rawDigits.slice(-10, -5)} XXXXX` 
+        : (lead.phone ? `${lead.phone.slice(0, 5)} XXXXX` : '');
+
     return `
         <div class="prof-card" data-id="${lead.id}" style="--card-accent: ${avatarColor}; border-left: 4px solid ${avatarColor};">
             <div class="card-toolbar" onclick="event.stopPropagation();">
@@ -196,9 +212,13 @@ export function renderProfessionalCard(lead, index = 0) {
             <div class="card-actions" onclick="event.stopPropagation();">
                 ${isPremium || isFreemiumSampleUnlocked ? `
                     ${lead.phone ? `
-                        <a href="tel:${lead.phone}" class="card-btn-call">
-                            <i data-lucide="phone" style="width:13px; height:13px; opacity: 0.85;"></i> ${lead.phone}
-                        </a>
+                        <div class="card-btn-reveal-wrap">
+                            <button class="card-btn-reveal-phone" data-phone-enc="${phoneEnc}" title="Click to reveal phone number">
+                                <i data-lucide="phone" style="width:13px; height:13px; opacity: 0.85;"></i>
+                                <span class="phone-text-masked">${maskedPhoneDisplay}</span>
+                                <span class="reveal-btn-label">Show</span>
+                            </button>
+                        </div>
                     ` : ''}
                     ${lead.website ? `
                         <a href="${lead.website}" target="_blank" class="card-btn-site">
@@ -254,6 +274,31 @@ export function bindProfessionalCardEvents(onCardClick) {
             cb.addEventListener('change', () => {
                 const id = cb.getAttribute('data-id');
                 State.toggleSelect(id);
+            });
+        }
+
+        // Anti-Scraping JustDial-style phone reveal click handler
+        const revealBtn = card.querySelector('.card-btn-reveal-phone');
+        if (revealBtn) {
+            revealBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const encodedPhone = revealBtn.getAttribute('data-phone-enc');
+                if (encodedPhone) {
+                    try {
+                        const realPhone = atob(encodedPhone);
+                        const wrap = revealBtn.closest('.card-btn-reveal-wrap');
+                        if (wrap) {
+                            wrap.innerHTML = `
+                                <a href="tel:${realPhone}" class="card-btn-call" style="animation: cardFadeIn 0.2s ease-out;">
+                                    <i data-lucide="phone" style="width:13px; height:13px; opacity: 0.85;"></i> ${realPhone}
+                                </a>
+                            `;
+                            if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
+                        }
+                    } catch(err) {
+                        console.error('Failed to unmask contact:', err);
+                    }
+                }
             });
         }
     });

@@ -550,6 +550,58 @@
     box-shadow: 0 4px 12px rgba(5, 150, 105, 0.35);
 }
 
+/* Anti-Scraping JustDial-style Reveal Phone Button */
+.card-btn-reveal-wrap {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+}
+
+.card-btn-reveal-phone {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 8px 12px;
+    font-size: 12.5px;
+    font-weight: 700;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition);
+    background: #ecfdf5;
+    border: 1.5px solid #6ee7b7;
+    color: #065f46;
+    font-family: var(--font-mono);
+}
+
+.card-btn-reveal-phone:hover {
+    background: #d1fae5;
+    border-color: #34d399;
+    color: #047857;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);
+}
+
+.phone-text-masked {
+    letter-spacing: 0.5px;
+    font-size: 12px;
+}
+
+.reveal-btn-label {
+    font-size: 10px;
+    font-weight: 800;
+    color: #ffffff;
+    background: #059669;
+    padding: 2px 7px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.card-btn-reveal-phone:hover .reveal-btn-label {
+    background: #047857;
+}
+
 /* Website button — solid high contrast blue */
 .card-btn-site {
     flex: 1;
