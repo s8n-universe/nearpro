@@ -787,9 +787,11 @@ function renderFeedContent(hasMore) {
                 ${cardsHTML}
             </div>
             ${isListExceeded ? paywallHTML : (hasMore ? `
-                <div class="load-more-wrap">
-                    <button id="loadMoreBtn" class="secondary-btn load-more-btn">Load More Results</button>
-                    <div id="infiniteScrollSentinel" style="height: 20px; width: 100%; margin-top: 16px;"></div>
+                <div class="load-more-wrap" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 28px 0 12px 0; width: 100%;">
+                    <div id="infiniteScrollBuffer" style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%;">
+                        <div class="buffer-spinner-ring" style="width: 32px; height: 32px; border: 3px solid rgba(37,99,235,0.15); border-top-color: #2563eb; border-radius: 50%; animation: spin 0.8s linear infinite;" title="Loading more cards..."></div>
+                    </div>
+                    <div id="infiniteScrollSentinel" style="height: 20px; width: 100%; margin-top: 8px;"></div>
                 </div>
             ` : '')}
         `;
@@ -808,26 +810,21 @@ function renderFeedContent(hasMore) {
         }
         
         if (!isListExceeded && hasMore) {
-            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            const bufferEl = document.getElementById('infiniteScrollBuffer');
             const sentinel = document.getElementById('infiniteScrollSentinel');
 
             const triggerAutoLoad = async () => {
                 if (window._isLoadingMoreCards) return;
                 window._isLoadingMoreCards = true;
                 
-                if (loadMoreBtn) {
-                    loadMoreBtn.innerText = 'Auto-loading cards...';
-                    loadMoreBtn.style.opacity = '0.7';
+                if (bufferEl) {
+                    bufferEl.style.opacity = '1';
                 }
 
                 State.offset += State.limit;
                 await queryProfessionals(false);
                 window._isLoadingMoreCards = false;
             };
-
-            if (loadMoreBtn) {
-                loadMoreBtn.addEventListener('click', triggerAutoLoad);
-            }
 
             if (sentinel && window.IntersectionObserver) {
                 const observer = new IntersectionObserver((entries) => {
