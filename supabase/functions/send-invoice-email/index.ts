@@ -1,7 +1,8 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") || "";
-const FROM_EMAIL = Deno.env.get("RESEND_FROM_EMAIL") || "NearPro <onboarding@resend.dev>";
+const FROM_EMAIL = Deno.env.get("RESEND_FROM_EMAIL") || "NearPro <onboarding@s8n.in>";
+const SUPPORT_EMAIL = "support@s8n.in";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -36,66 +37,218 @@ serve(async (req) => {
     const tierUpper = (plan_id || 'hunter').toUpperCase();
     const invoiceNumber = `INV-NEARPRO-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
     const invoiceDate = new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' });
-    const recipientName = user_name || 'Valued User';
+    const recipientName = user_name || 'Valued Subscriber';
 
     let subject = `NearPro Notification`;
     let emailHTML = ``;
+
+    // Common Header HTML
+    const commonHeader = `
+    <!-- Top Accent Brand Gradient Bar -->
+    <tr>
+      <td style="height:5px; background:linear-gradient(90deg, #ec4899 0%, #ffa000 100%); font-size:1px; line-height:1px;">&nbsp;</td>
+    </tr>
+    <!-- Header / Brand Bar -->
+    <tr>
+      <td style="background-color:#0b081d; padding:32px 36px; text-align:center; border-bottom:3px solid #ec4899;">
+        <img src="https://nearpro.s8n.in/NearPro_logo_nobg.png" alt="NearPro Logo" height="44" style="height:44px; width:auto; display:inline-block; border:0; margin:0 0 8px 0;" />
+        <br>
+        <span style="font-size:10.5px; font-weight:800; color:#FFA000; letter-spacing:3px; text-transform:uppercase; font-family:'Plus Jakarta Sans', 'Inter', sans-serif; display:inline-block;">INTELLIGENCE, ARCHITECTED &bull; B2B LEAD OS</span>
+      </td>
+    </tr>
+    `;
+
+    // Common Signature & Automated Email Footer HTML
+    const commonFooter = `
+    <!-- Signature -->
+    <tr>
+      <td style="padding:28px 36px; border-top:1px solid #e8e8f0; background-color:#ffffff;">
+        <p style="font-size:14.5px; color:#0b081d; margin:0 0 3px 0; font-family:'Plus Jakarta Sans', sans-serif; font-weight:700;">Shriraj Naik</p>
+        <p style="font-size:13px; color:#666480; margin:0 0 14px 0; font-family:'Inter', sans-serif;">Founder, S8N & NearPro Platform</p>
+        <p style="margin:0; font-family:'Inter', sans-serif; font-size:13.5px; line-height:1.6; color:#666480;">
+          <span style="display:inline-block; margin-right:18px; vertical-align:middle;">
+            <span style="font-size:14px; margin-right:3px; vertical-align:middle;">✉️</span>
+            <a href="mailto:${SUPPORT_EMAIL}" style="color:#0b081d; text-decoration:underline; font-weight:600; vertical-align:middle;">${SUPPORT_EMAIL}</a>
+          </span>
+          <span style="display:inline-block; margin-right:18px; vertical-align:middle;">
+            <span style="font-size:14px; margin-right:3px; vertical-align:middle;">🌐</span>
+            <a href="https://nearpro.s8n.in" style="color:#0b081d; text-decoration:underline; font-weight:600; vertical-align:middle;">nearpro.s8n.in</a>
+          </span>
+          <span style="display:inline-block; vertical-align:middle;">
+            <span style="font-size:14px; margin-right:3px; vertical-align:middle;">💼</span>
+            <a href="https://www.linkedin.com/company/s8n-ai-services/" style="color:#0b081d; text-decoration:underline; font-weight:600; vertical-align:middle;">LinkedIn</a>
+          </span>
+        </p>
+      </td>
+    </tr>
+
+    <!-- Automated Mail Footer Notice -->
+    <tr>
+      <td style="padding:18px 36px; background-color:#f8f8fa; border-top:1px solid #e8e8f0; text-align:center;">
+        <p style="font-size:11.5px; color:#8c8599; margin:0 0 6px 0; font-family:'Inter', sans-serif; line-height:1.5;">
+          ⚡ <strong>Automated System Message:</strong> This is an automated notification sent by NearPro AI OS.
+        </p>
+        <p style="font-size:11.5px; color:#8c8599; margin:0; font-family:'Inter', sans-serif; line-height:1.5;">
+          Need assistance or have a question? Simply reply directly to this email or write to <a href="mailto:${SUPPORT_EMAIL}" style="color:#ec4899; text-decoration:underline; font-weight:600;">${SUPPORT_EMAIL}</a>.
+        </p>
+      </td>
+    </tr>
+    `;
 
     if (type === 'welcome') {
       subject = `🚀 Welcome to NearPro — Your Autonomous Agency Operating System!`;
       emailHTML = `
       <!DOCTYPE html>
-      <html>
-      <head><meta charset="utf-8"></head>
-      <body style="font-family: 'Helvetica Neue', Arial, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 30px 20px;">
-        <div style="max-width: 600px; margin: 0 auto; background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 36px; box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
-          <div style="font-size: 24px; font-weight: 800; color: #ffffff; margin-bottom: 8px;">NearPro <span style="color: #2563eb;">AI OS</span></div>
-          <p style="color: #94a3b8; font-size: 14px; margin-top: 0;">Welcome aboard, ${recipientName}!</p>
-          
-          <h2 style="color: #ffffff; font-size: 20px; margin-top: 24px;">Transform How You Acquire B2B Clients</h2>
-          <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6;">Your NearPro workspace is officially ready. Here is what you can do right away:</p>
-          
-          <ul style="color: #cbd5e1; font-size: 13.5px; line-height: 1.8; padding-left: 20px;">
-            <li><strong>📍 Verified Lead Intelligence:</strong> Access phone numbers, ratings, & website metrics for local businesses across India.</li>
-            <li><strong>⚡ 1-Click PageSpeed Audits:</strong> Run instant mobile health checks & revenue drop-off estimates.</li>
-            <li><strong>📄 3-Page PDF Proposals:</strong> Generate custom agency pitch decks tailored for prospects.</li>
-            <li><strong>📞 AI Teleprompter Scripts:</strong> Execute cold calls with live objection response cards.</li>
-          </ul>
+      <html lang="en">
+      <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Welcome to NearPro</title>
+      <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+      </head>
+      <body style="margin:0; padding:0; background-color:#f4f4f6; font-family:'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f6; padding:32px 0;">
+        <tr>
+          <td align="center">
+            <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 10px 30px rgba(8, 7, 16, 0.08);">
+              ${commonHeader}
+              <tr>
+                <td style="padding:40px 36px 32px 36px;">
+                  <p style="font-size:15px; color:#2d2b3d; margin:0 0 16px 0; font-family:'Inter', sans-serif; line-height:1.6;">
+                    Hi <strong>${recipientName}</strong>,
+                  </p>
+                  <p style="font-size:18px; color:#0b081d; margin:0 0 20px 0; line-height:1.5; font-weight:800; font-family:'Plus Jakarta Sans', sans-serif; letter-spacing:-0.2px;">
+                    Welcome to NearPro — India's Autonomous B2B Lead Intelligence Operating System 🚀
+                  </p>
+                  <p style="font-size:15px; color:#2d2b3d; margin:0 0 26px 0; font-family:'Inter', sans-serif; line-height:1.6;">
+                    Your workspace is officially provisioned and live. Here is how NearPro accelerates your B2B client acquisition pipeline from day one:
+                  </p>
 
-          <div style="text-align: center; margin: 32px 0 20px 0;">
-            <a href="https://nearpro.s8n.in/#/dashboard/directory" style="background: #2563eb; color: #ffffff; text-decoration: none; padding: 14px 28px; font-weight: 700; border-radius: 8px; font-size: 14px; display: inline-block;">Launch Your Workspace Dashboard ↗</a>
-          </div>
+                  <!-- Feature Callouts -->
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px 0; background-color:#fff1f6; border-radius:10px; border:1px solid #fbcfe8;">
+                    <tr>
+                      <td style="padding:24px 24px 8px 24px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                          <tr>
+                            <td style="padding-bottom:18px; vertical-align:top; width:32px; font-size:18px;">📍</td>
+                            <td style="padding-bottom:18px; font-size:14.5px; color:#2d2b3d; line-height:1.5; font-family:'Inter', sans-serif;">
+                              <span style="background:linear-gradient(90deg, rgba(236,72,153,0.12) 0%, rgba(255,160,0,0.12) 100%); padding:4px 8px; border-radius:4px; color:#0b081d; border-left:3px solid #ec4899; display:inline-block; font-weight:700; margin-bottom:4px;">
+                                12,358+ Verified B2B Lead Records
+                              </span><br>
+                              <span style="font-size:13.5px; color:#666480;">Direct phone numbers, ratings, & website tech stacks across India.</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="padding-bottom:18px; vertical-align:top; width:32px; font-size:18px;">⚡</td>
+                            <td style="padding-bottom:18px; font-size:14.5px; color:#2d2b3d; line-height:1.5; font-family:'Inter', sans-serif;">
+                              <span style="background:linear-gradient(90deg, rgba(236,72,153,0.12) 0%, rgba(255,160,0,0.12) 100%); padding:4px 8px; border-radius:4px; color:#0b081d; border-left:3px solid #ec4899; display:inline-block; font-weight:700; margin-bottom:4px;">
+                                1-Click PageSpeed Audits & Revenue Drop-off
+                              </span><br>
+                              <span style="font-size:13.5px; color:#666480;">Instantly expose mobile load speed bottlenecks to prospects.</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="padding-bottom:18px; vertical-align:top; width:32px; font-size:18px;">📄</td>
+                            <td style="padding-bottom:18px; font-size:14.5px; color:#2d2b3d; line-height:1.5; font-family:'Inter', sans-serif;">
+                              <span style="background:linear-gradient(90deg, rgba(236,72,153,0.12) 0%, rgba(255,160,0,0.12) 100%); padding:4px 8px; border-radius:4px; color:#0b081d; border-left:3px solid #ec4899; display:inline-block; font-weight:700; margin-bottom:4px;">
+                                3-Page Agency PDF Proposals
+                              </span><br>
+                              <span style="font-size:13.5px; color:#666480;">Auto generate high-converting pitch decks tailored to target clients.</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="padding-bottom:18px; vertical-align:top; width:32px; font-size:18px;">📞</td>
+                            <td style="padding-bottom:18px; font-size:14.5px; color:#2d2b3d; line-height:1.5; font-family:'Inter', sans-serif;">
+                              <span style="background:linear-gradient(90deg, rgba(236,72,153,0.12) 0%, rgba(255,160,0,0.12) 100%); padding:4px 8px; border-radius:4px; color:#0b081d; border-left:3px solid #ec4899; display:inline-block; font-weight:700; margin-bottom:4px;">
+                                AI Teleprompter Cold Calling Scripts
+                              </span><br>
+                              <span style="font-size:13.5px; color:#666480;">Live objection handling cards with male/female inflection support.</span>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
 
-          <div style="border-top: 1px solid #334155; padding-top: 20px; text-align: center; font-size: 12px; color: #64748b;">
-            NearPro by S8N Technologies • Mumbai, India • Support: s8nservice@gmail.com
-          </div>
-        </div>
+                  <!-- Primary CTA Button -->
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0;">
+                    <tr>
+                      <td align="center">
+                        <a href="https://nearpro.s8n.in/#/dashboard/directory" style="display:inline-block; padding:14px 36px; background:linear-gradient(90deg, #ec4899 0%, #ffa000 100%); color:#0b081d; text-decoration:none; font-size:15px; font-weight:800; border-radius:8px; border:2px solid #0b081d; font-family:'Plus Jakarta Sans', sans-serif; box-shadow:0 6px 18px rgba(236, 72, 153, 0.35);">
+                          Launch Workspace Dashboard &rarr;
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              ${commonFooter}
+            </table>
+          </td>
+        </tr>
+      </table>
       </body>
       </html>
       `;
     } else if (type === 'upgrade') {
-      subject = `🎉 Confirmed: You've Upgraded to NearPro ${tierUpper} Plan!`;
+      subject = `🎉 Confirmed: You have Upgraded to NearPro ${tierUpper} Plan!`;
       emailHTML = `
       <!DOCTYPE html>
-      <html>
-      <head><meta charset="utf-8"></head>
-      <body style="font-family: 'Helvetica Neue', Arial, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 30px 20px;">
-        <div style="max-width: 600px; margin: 0 auto; background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 36px;">
-          <div style="font-size: 24px; font-weight: 800; color: #ffffff; margin-bottom: 8px;">NearPro <span style="color: #059669;">PRO</span></div>
-          <h2 style="color: #059669; font-size: 22px; margin-top: 12px;">Plan Upgraded to ${tierUpper}!</h2>
-          <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6;">Hi ${recipientName}, your subscription has been successfully updated. Your new tier features & quotas are unlocked immediately:</p>
+      <html lang="en">
+      <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>NearPro Plan Upgraded</title>
+      <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+      </head>
+      <body style="margin:0; padding:0; background-color:#f4f4f6; font-family:'Plus Jakarta Sans', 'Inter', sans-serif;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f6; padding:32px 0;">
+        <tr>
+          <td align="center">
+            <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 10px 30px rgba(8, 7, 16, 0.08);">
+              ${commonHeader}
+              <tr>
+                <td style="padding:40px 36px 32px 36px;">
+                  <p style="font-size:15px; color:#2d2b3d; margin:0 0 16px 0; font-family:'Inter', sans-serif; line-height:1.6;">
+                    Hi <strong>${recipientName}</strong>,
+                  </p>
+                  <h2 style="font-size:22px; color:#0b081d; margin:0 0 20px 0; font-weight:800; font-family:'Plus Jakarta Sans', sans-serif;">
+                    Your Subscription is Upgraded to <span style="color:#ec4899;">${tierUpper} Tier</span>! 🎉
+                  </h2>
+                  <p style="font-size:15px; color:#2d2b3d; margin:0 0 24px 0; font-family:'Inter', sans-serif; line-height:1.6;">
+                    Your account limits and premium agency tools have been updated instantly. Here are your newly unlocked monthly quotas:
+                  </p>
 
-          <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px; margin: 20px 0;">
-            <div style="font-size: 13px; color: #94a3b8; font-weight: 700; text-transform: uppercase;">Unlocked Quotas (${tierUpper} Tier):</div>
-            <div style="font-size: 18px; font-weight: 800; color: #34d399; margin-top: 6px;">
-              ${plan_id === 'scout' ? '8 Call Scripts • 40 Prompt Copies • 5 Smart Lists' : plan_id === 'agency' ? '150 Call Scripts • 150 Prompt Copies • Unlimited Smart Lists & Team Access' : '45 Call Scripts • 80 Prompt Copies • 20 Smart Lists'}
-            </div>
-          </div>
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px 0; background-color:#eff6ff; border-radius:10px; border:1px solid #bfdbfe;">
+                    <tr>
+                      <td style="padding:24px;">
+                        <div style="font-size:12px; font-weight:800; color:#1d4ed8; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">
+                          Unlocked ${tierUpper} Quotas:
+                        </div>
+                        <div style="font-size:17px; font-weight:800; color:#0b081d; line-height:1.5;">
+                          ${plan_id === 'scout' ? '8 AI Call Scripts • 40 Prompt Copies • 5 Smart Lists' : plan_id === 'agency' ? '150 AI Call Scripts • 150 Prompt Copies • Unlimited Smart Lists & Team Access' : '45 AI Call Scripts • 80 Prompt Copies • 20 Smart Lists'}
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
 
-          <div style="text-align: center; margin: 28px 0 16px 0;">
-            <a href="https://nearpro.s8n.in/#/dashboard/crm" style="background: #059669; color: #ffffff; text-decoration: none; padding: 12px 24px; font-weight: 700; border-radius: 8px; font-size: 14px; display: inline-block;">Go to CRM Pipeline ↗</a>
-          </div>
-        </div>
+                  <!-- Primary CTA Button -->
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0;">
+                    <tr>
+                      <td align="center">
+                        <a href="https://nearpro.s8n.in/#/dashboard/crm" style="display:inline-block; padding:14px 36px; background:linear-gradient(90deg, #ec4899 0%, #ffa000 100%); color:#0b081d; text-decoration:none; font-size:15px; font-weight:800; border-radius:8px; border:2px solid #0b081d; font-family:'Plus Jakarta Sans', sans-serif; box-shadow:0 6px 18px rgba(236, 72, 153, 0.35);">
+                          Access CRM Workspace &rarr;
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              ${commonFooter}
+            </table>
+          </td>
+        </tr>
+      </table>
       </body>
       </html>
       `;
@@ -103,16 +256,61 @@ serve(async (req) => {
       subject = `✨ You are on the NearPro Priority Waitlist!`;
       emailHTML = `
       <!DOCTYPE html>
-      <html>
-      <body style="font-family: Arial, sans-serif; background: #0f172a; color: #f8fafc; padding: 30px;">
-        <div style="max-width: 550px; margin: 0 auto; background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 32px;">
-          <h2 style="color: #6366f1; margin: 0 0 12px 0;">You're In! Priority Waitlist Confirmed</h2>
-          <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6;">Hi ${recipientName}, thank you for requesting priority access to NearPro AI OS. We have reserved your spot in line.</p>
-          <div style="background: rgba(99,102,241,0.1); border: 1px solid #6366f1; border-radius: 8px; padding: 14px; margin: 20px 0; color: #818cf8; font-weight: bold; text-align: center;">
-            Priority Queue Spot: Locked
-          </div>
-          <p style="color: #94a3b8; font-size: 13px;">We will notify you the moment your early access invite goes live!</p>
-        </div>
+      <html lang="en">
+      <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>NearPro Priority Waitlist</title>
+      <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+      </head>
+      <body style="margin:0; padding:0; background-color:#f4f4f6; font-family:'Plus Jakarta Sans', 'Inter', sans-serif;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f6; padding:32px 0;">
+        <tr>
+          <td align="center">
+            <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 10px 30px rgba(8, 7, 16, 0.08);">
+              ${commonHeader}
+              <tr>
+                <td style="padding:40px 36px 32px 36px;">
+                  <p style="font-size:15px; color:#2d2b3d; margin:0 0 16px 0; font-family:'Inter', sans-serif; line-height:1.6;">
+                    Hi <strong>${recipientName}</strong>,
+                  </p>
+                  <h2 style="font-size:22px; color:#0b081d; margin:0 0 20px 0; font-weight:800; font-family:'Plus Jakarta Sans', sans-serif;">
+                    Priority Waitlist Confirmed 🚀
+                  </h2>
+                  <p style="font-size:15px; color:#2d2b3d; margin:0 0 24px 0; font-family:'Inter', sans-serif; line-height:1.6;">
+                    Thank you for requesting early city access. Your priority reservation is locked in our launch queue.
+                  </p>
+
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px 0; background-color:#fff1f6; border-radius:10px; border:1px solid #fbcfe8;">
+                    <tr>
+                      <td style="padding:20px; text-align:center;">
+                        <div style="font-size:14px; font-weight:800; color:#ec4899; font-family:'Plus Jakarta Sans', sans-serif;">
+                          📍 Priority Status: Reserved & Locked
+                        </div>
+                        <div style="font-size:13px; color:#666480; margin-top:6px;">
+                          You will receive 1 Month Free Scout Tier access the moment data for your requested city drops!
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+
+                  <!-- Primary CTA Button -->
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0;">
+                    <tr>
+                      <td align="center">
+                        <a href="https://nearpro.s8n.in/#/dashboard/directory" style="display:inline-block; padding:14px 36px; background:linear-gradient(90deg, #ec4899 0%, #ffa000 100%); color:#0b081d; text-decoration:none; font-size:15px; font-weight:800; border-radius:8px; border:2px solid #0b081d; font-family:'Plus Jakarta Sans', sans-serif; box-shadow:0 6px 18px rgba(236, 72, 153, 0.35);">
+                          Explore Live Mumbai Directory &rarr;
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              ${commonFooter}
+            </table>
+          </td>
+        </tr>
+      </table>
       </body>
       </html>
       `;
@@ -126,99 +324,111 @@ serve(async (req) => {
 
       emailHTML = `
       <!DOCTYPE html>
-      <html>
+      <html lang="en">
       <head>
-        <meta charset="utf-8">
-        <style>
-          body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #09090b; color: #e4e4e7; margin: 0; padding: 20px; }
-          .invoice-card { max-width: 600px; margin: 0 auto; background: #121218; border: 1px solid #27272a; border-radius: 12px; padding: 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-          .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #27272a; padding-bottom: 20px; margin-bottom: 24px; }
-          .logo-title { font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: -0.5px; }
-          .badge { background: rgba(255,160,0,0.15); color: #ffa000; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 4px; border: 1px solid rgba(255,160,0,0.3); text-transform: uppercase; }
-          .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; font-size: 13px; }
-          .info-col h4 { margin: 0 0 6px 0; color: #a1a1aa; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
-          .info-col p { margin: 0; color: #ffffff; line-height: 1.4; }
-          .table { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px; }
-          .table th { background: #181820; color: #a1a1aa; text-transform: uppercase; font-size: 11px; padding: 10px 12px; text-align: left; border-bottom: 1px solid #27272a; }
-          .table td { padding: 12px; border-bottom: 1px solid #27272a; color: #ffffff; }
-          .total-row { background: rgba(16,185,129,0.08); font-weight: 700; }
-          .total-row td { color: #10b981; font-size: 15px; border-top: 2px solid #10b981; }
-          .footer { text-align: center; border-top: 1px solid #27272a; padding-top: 20px; font-size: 12px; color: #71717a; }
-          .btn { display: inline-block; background: #ffa000; color: #000000; text-decoration: none; padding: 12px 24px; font-weight: 700; border-radius: 6px; margin-top: 16px; }
-        </style>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Tax Invoice NearPro</title>
+      <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
       </head>
-      <body>
-        <div class="invoice-card">
-          <div class="header">
-            <div>
-              <div class="logo-title">NearPro <span style="color: #ffa000;">by S8N</span></div>
-              <div style="font-size: 12px; color: #a1a1aa; margin-top: 4px;">India's Trusted B2B Lead Intelligence Platform</div>
-            </div>
-            <span class="badge">PAID TAX INVOICE</span>
-          </div>
-
-          <div class="info-grid">
-            <div class="info-col">
-              <h4>Billed To:</h4>
-              <p><strong>${recipientName}</strong></p>
-              <p>${user_email}</p>
-              ${company_name ? `<p>Company: ${company_name}</p>` : ''}
-              ${gst_number ? `<p>GSTIN: ${gst_number}</p>` : ''}
-            </div>
-            <div class="info-col" style="text-align: right;">
-              <h4>Invoice Details:</h4>
-              <p><strong>Invoice No:</strong> ${invoiceNumber}</p>
-              <p><strong>Date:</strong> ${invoiceDate}</p>
-              <p><strong>Payment Ref:</strong> ${payment_id || 'RZP_SUCCESS'}</p>
-              <p><strong>Status:</strong> Success (Razorpay)</p>
-            </div>
-          </div>
-
-          <table class="table">
-            <thead>
+      <body style="margin:0; padding:0; background-color:#f4f4f6; font-family:'Plus Jakarta Sans', 'Inter', sans-serif;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f6; padding:32px 0;">
+        <tr>
+          <td align="center">
+            <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 10px 30px rgba(8, 7, 16, 0.08);">
+              ${commonHeader}
               <tr>
-                <th>Description</th>
-                <th style="text-align: right;">Base Rate</th>
-                <th style="text-align: right;">GST (18%)</th>
-                <th style="text-align: right;">Total Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <strong>NearPro ${tierUpper} Plan</strong><br>
-                  <span style="font-size: 11px; color: #a1a1aa;">1 Month Business Intelligence & Lead Access</span>
+                <td style="padding:40px 36px 32px 36px;">
+                  
+                  <!-- Badge & Invoice Header -->
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+                    <tr>
+                      <td>
+                        <span style="background:#fff1f6; color:#ec4899; font-size:11px; font-weight:800; padding:6px 12px; border-radius:4px; border:1px solid #fbcfe8; text-transform:uppercase; letter-spacing:0.5px; font-family:'Plus Jakarta Sans', sans-serif;">
+                          PAID TAX INVOICE
+                        </span>
+                        <h2 style="font-size:20px; color:#0b081d; margin:12px 0 4px 0; font-weight:800; font-family:'Plus Jakarta Sans', sans-serif;">
+                          ${invoiceNumber}
+                        </h2>
+                        <p style="font-size:13px; color:#666480; margin:0; font-family:'Inter', sans-serif;">
+                          Date: ${invoiceDate} &bull; Payment Ref: ${payment_id || 'RZP_SUCCESS'}
+                        </p>
+                      </td>
+                    </tr>
+                  </table>
+
+                  <!-- Info Grid -->
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px; background-color:#f8f8fa; border-radius:8px; padding:20px; border:1px solid #e8e8f0;">
+                    <tr>
+                      <td style="vertical-align:top; font-size:13.5px; color:#2d2b3d; line-height:1.6; font-family:'Inter', sans-serif;">
+                        <strong style="color:#0b081d; font-size:12px; text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:4px;">Billed To:</strong>
+                        <strong>${recipientName}</strong><br>
+                        ${user_email}<br>
+                        ${company_name ? `Company: ${company_name}<br>` : ''}
+                        ${gst_number ? `GSTIN: ${gst_number}` : ''}
+                      </td>
+                      <td style="vertical-align:top; text-align:right; font-size:13.5px; color:#2d2b3d; line-height:1.6; font-family:'Inter', sans-serif;">
+                        <strong style="color:#0b081d; font-size:12px; text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:4px;">Seller Info:</strong>
+                        <strong>S8N Technologies</strong><br>
+                        NearPro Platform<br>
+                        Mumbai, Maharashtra, India
+                      </td>
+                    </tr>
+                  </table>
+
+                  <!-- Itemized Table -->
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px; border-collapse:collapse; font-size:13.5px; font-family:'Inter', sans-serif;">
+                    <thead>
+                      <tr style="background-color:#0b081d; color:#ffffff;">
+                        <th style="padding:12px 14px; text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; border-radius:6px 0 0 6px;">Description</th>
+                        <th style="padding:12px 14px; text-align:right; font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">Base Rate</th>
+                        <th style="padding:12px 14px; text-align:right; font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">GST (18%)</th>
+                        <th style="padding:12px 14px; text-align:right; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; border-radius:0 6px 6px 0;">Total Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr style="border-bottom:1px solid #e8e8f0;">
+                        <td style="padding:14px; color:#0b081d;">
+                          <strong>NearPro ${tierUpper} Plan</strong><br>
+                          <span style="font-size:12px; color:#666480;">1 Month Business Intelligence & Lead Access</span>
+                        </td>
+                        <td style="padding:14px; text-align:right; color:#2d2b3d;">₹${baseAmount}</td>
+                        <td style="padding:14px; text-align:right; color:#2d2b3d;">₹${gstAmount}</td>
+                        <td style="padding:14px; text-align:right; font-weight:bold; color:#0b081d;">₹${numericPaid.toFixed(2)}</td>
+                      </tr>
+                      <tr style="border-bottom:1px solid #e8e8f0;">
+                        <td colspan="3" style="padding:10px 14px; text-align:right; color:#666480; font-size:12px;">CGST (9%)</td>
+                        <td style="padding:10px 14px; text-align:right; font-size:12px; color:#2d2b3d;">₹${halfGst}</td>
+                      </tr>
+                      <tr style="border-bottom:1px solid #e8e8f0;">
+                        <td colspan="3" style="padding:10px 14px; text-align:right; color:#666480; font-size:12px;">SGST (9%)</td>
+                        <td style="padding:10px 14px; text-align:right; font-size:12px; color:#2d2b3d;">₹${halfGst}</td>
+                      </tr>
+                      <tr style="background-color:#ecfdf5;">
+                        <td colspan="3" style="padding:14px; text-align:right; font-weight:800; color:#047857; font-size:14px;">Total Net Paid:</td>
+                        <td style="padding:14px; text-align:right; font-weight:800; color:#047857; font-size:16px;">₹${numericPaid.toFixed(2)}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <!-- Primary CTA Button -->
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0;">
+                    <tr>
+                      <td align="center">
+                        <a href="https://nearpro.s8n.in/#/dashboard/directory" style="display:inline-block; padding:14px 36px; background:linear-gradient(90deg, #ec4899 0%, #ffa000 100%); color:#0b081d; text-decoration:none; font-size:15px; font-weight:800; border-radius:8px; border:2px solid #0b081d; font-family:'Plus Jakarta Sans', sans-serif; box-shadow:0 6px 18px rgba(236, 72, 153, 0.35);">
+                          Launch Workspace Dashboard &rarr;
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+
                 </td>
-                <td style="text-align: right;">₹${baseAmount}</td>
-                <td style="text-align: right;">₹${gstAmount}</td>
-                <td style="text-align: right; font-weight: bold;">₹${numericPaid.toFixed(2)}</td>
               </tr>
-              <tr>
-                <td colspan="3" style="text-align: right; color: #a1a1aa; font-size: 12px;">CGST (9%)</td>
-                <td style="text-align: right; font-size: 12px;">₹${halfGst}</td>
-              </tr>
-              <tr>
-                <td colspan="3" style="text-align: right; color: #a1a1aa; font-size: 12px;">SGST (9%)</td>
-                <td style="text-align: right; font-size: 12px;">₹${halfGst}</td>
-              </tr>
-              <tr class="total-row">
-                <td colspan="3" style="text-align: right;">Total Net Paid:</td>
-                <td style="text-align: right;">₹${numericPaid.toFixed(2)}</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div style="background: rgba(255,255,255,0.02); border: 1px solid #27272a; border-radius: 8px; padding: 14px; font-size: 12px; color: #a1a1aa; margin-bottom: 24px;">
-            <strong style="color: #ffffff;">Seller Details:</strong><br>
-            S8N Technologies / NearPro Platform<br>
-            Mumbai, Maharashtra, India • Support: s8nservice@gmail.com • Web: https://nearpro.s8n.in
-          </div>
-
-          <div class="footer">
-            <p>Thank you for choosing NearPro by S8N! Your subscription is active immediately.</p>
-            <a href="https://nearpro.s8n.in/#/dashboard/directory" class="btn">Launch Workspace Dashboard 🚀</a>
-          </div>
-        </div>
+              ${commonFooter}
+            </table>
+          </td>
+        </tr>
+      </table>
       </body>
       </html>
       `;
@@ -235,6 +445,7 @@ serve(async (req) => {
         },
         body: JSON.stringify({
           from: FROM_EMAIL,
+          reply_to: SUPPORT_EMAIL,
           to: [user_email],
           subject: subject,
           html: emailHTML
