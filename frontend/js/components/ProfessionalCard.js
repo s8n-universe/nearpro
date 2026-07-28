@@ -133,6 +133,7 @@ export function renderProfessionalCard(lead, index = 0) {
     // Freemium Sample Unlocking: Cards #1 and #2 (index 0 and 1) are unlocked for guest/free users as teaser samples!
     const isFreemiumSampleUnlocked = index < 2;
     const isPremium = currentUserHasAccess('scout');
+    const isUnlocked = isPremium || isFreemiumSampleUnlocked;
 
     const scoreBadgeClass = score >= 4 ? 'high-score' : (score >= 2.5 ? 'mid-score' : 'low-score');
     const scoreBadgeHTML = `<span class="score-badge ${scoreBadgeClass}">${score}/5 Score</span>`;
