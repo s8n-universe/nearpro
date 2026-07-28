@@ -297,8 +297,9 @@ export function bindProfessionalCardEvents(onCardClick) {
                         const wrap = revealPhoneBtn.closest('.card-btn-reveal-wrap');
                         if (wrap) {
                             wrap.innerHTML = `
-                                <a href="tel:${realPhone}" class="card-btn-call" style="animation: cardFadeIn 0.2s ease-out;">
-                                    <i data-lucide="phone" style="width:13px; height:13px; opacity: 0.85;"></i> ${realPhone}
+                                <a href="tel:${realPhone}" class="card-btn-call" style="animation: cardFadeIn 0.2s ease-out; width: 100%; min-width: 0;" title="Call ${realPhone}">
+                                    <i data-lucide="phone" style="width:13px; height:13px; flex-shrink:0; opacity: 0.85;"></i>
+                                    <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;">${realPhone}</span>
                                 </a>
                             `;
                             if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
@@ -326,8 +327,9 @@ export function bindProfessionalCardEvents(onCardClick) {
                         if (wrap) {
                             const displayDomain = realWeb.replace(/^https?:\/\/(www\.)?/, '').split('/')[0];
                             wrap.innerHTML = `
-                                <a href="${realWeb}" target="_blank" class="card-btn-site" style="animation: cardFadeIn 0.2s ease-out;" title="Visit ${realWeb}">
-                                    <i data-lucide="globe" style="width:13px; height:13px; opacity: 0.85;"></i> ${displayDomain}
+                                <a href="${realWeb}" target="_blank" class="card-btn-site" style="animation: cardFadeIn 0.2s ease-out; width: 100%; min-width: 0;" title="Visit ${realWeb}">
+                                    <i data-lucide="globe" style="width:13px; height:13px; flex-shrink:0; opacity: 0.85;"></i>
+                                    <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;">${displayDomain}</span>
                                 </a>
                             `;
                             if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
