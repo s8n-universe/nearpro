@@ -167,7 +167,7 @@ serve(async (req) => {
                             <td style="padding-bottom:16px; vertical-align:top; width:28px; font-size:16px; color:#ec4899; font-weight:bold;">•</td>
                             <td style="padding-bottom:16px; font-size:14.5px; color:#2d2b3d; line-height:1.5; font-family:'Inter', sans-serif;">
                               <strong style="color:#0b081d; font-family:'Space Grotesk', sans-serif;">5 Column CRM & Dynamic Deal Valuation</strong><br>
-                              <span style="font-size:13.5px; color:#666480;">Track pipeline deals by niche value (₹25k to ₹75k) and 14 day activity heatmaps.</span>
+                              <span style="font-size:13.5px; color:#666480;">Track pipeline deals by realistic SME niche value (₹5k to ₹15k) and 14 day activity heatmaps.</span>
                             </td>
                           </tr>
                         </table>

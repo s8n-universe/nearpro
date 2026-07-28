@@ -59,17 +59,17 @@ export function renderLeadCRM(pipelineData, stats) {
     const convertedCount = allLeads.filter(l => l.crm_status === 'converted').length;
     const closedCount = allLeads.filter(l => l.crm_status === 'closed').length;
 
-    // Helper: Dynamic deal valuation per lead category/metrics
+    // Helper: Realistic Indian B2B SME deal valuation per lead category
     function getLeadDealValue(lead) {
         const cat = (lead.category || lead.parent_category || '').toLowerCase();
-        if (cat.includes('hospital') || cat.includes('medical') || cat.includes('clinic')) return 50000;
-        if (cat.includes('dental') || cat.includes('dentist')) return 40000;
-        if (cat.includes('real estate') || cat.includes('builder')) return 75000;
-        if (cat.includes('legal') || cat.includes('lawyer')) return 60000;
-        if (cat.includes('beauty') || cat.includes('salon') || cat.includes('spa')) return 25000;
-        if (cat.includes('restaurant') || cat.includes('hotel')) return 35000;
-        if (lead.rating >= 4.5 && (lead.review_count || 0) > 30) return 45000;
-        return 30000;
+        if (cat.includes('real estate') || cat.includes('builder')) return 15000;
+        if (cat.includes('legal') || cat.includes('lawyer')) return 12000;
+        if (cat.includes('hospital') || cat.includes('medical') || cat.includes('clinic')) return 10000;
+        if (cat.includes('dental') || cat.includes('dentist')) return 8000;
+        if (cat.includes('restaurant') || cat.includes('hotel')) return 7000;
+        if (cat.includes('beauty') || cat.includes('salon') || cat.includes('spa')) return 5000;
+        if (lead.rating >= 4.5 && (lead.review_count || 0) > 30) return 9000;
+        return 6000;
     }
 
     // Dynamic sum across active pipeline deals (excluding closed lost)

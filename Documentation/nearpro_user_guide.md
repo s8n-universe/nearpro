@@ -117,7 +117,7 @@ Track every prospective deal across a 5-column Kanban pipeline with dynamic deal
   3. 💬 **Offer Sent**
   4. 🏆 **Converted**
   5. 🔒 **Closed**
-- **Dynamic Deal Valuation**: Deals are automatically valued by niche metrics (Real Estate ₹75k, Legal ₹60k, Healthcare ₹50k, Dental ₹40k, Beauty ₹25k, Default ₹30k). Total pipeline value updates dynamically.
+- **Dynamic Deal Valuation**: Deals are automatically valued by realistic Indian SME metrics (Real Estate ₹15k, Legal ₹12k, Healthcare ₹10k, Dental ₹8k, Beauty ₹5k, Default ₹6k). Total pipeline value updates dynamically.
 - **14-Day Activity Heatmap**: Visual matrix tracking your actual daily lead engagement activity over the last 14 days.
 
 ---
