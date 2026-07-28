@@ -3,6 +3,7 @@ import L from 'leaflet';
 import { State } from '../state.js';
 import { currentUserHasAccess } from '../auth.js';
 import { showTrackLeadModal } from './TrackLeadModal.js';
+import { maskWebsite } from './ProfessionalCard.js';
 
 
 export function renderProfessionalModal(lead) {
@@ -65,8 +66,15 @@ export function renderProfessionalModal(lead) {
     const isFreemiumSampleUnlocked = !isPremium && isLeadInFirst12;
     const hasConnectAccess = isPremium || isFreemiumSampleUnlocked;
 
+    // Masked Contact information for guest/free preview
+    const rawDigits = lead.phone ? lead.phone.replace(/[^0-9]/g, '') : '';
+    const maskedPhone = rawDigits.length >= 10 
+        ? `+91 ${rawDigits.slice(-10, -5)} XXXXX` 
+        : (lead.phone ? `${lead.phone.slice(0, 5)} XXXXX` : '');
+    const maskedWebsite = maskWebsite(lead.website);
+
     const phoneDisplay = !hasConnectAccess 
-        ? `<span onclick="window.State.setPricingModal(true);" style="color: #d97706; cursor: pointer; text-decoration: underline; font-weight: 700; font-size: 13px;"><i data-lucide="lock" style="width:11px; height:11px;"></i> Locked</span>`
+        ? `<span onclick="window.State.setPricingModal(true);" style="color: #d97706; cursor: pointer; text-decoration: underline; font-weight: 700; font-size: 13px;"><i data-lucide="lock" style="width:11px; height:11px;"></i> Locked (${maskedPhone})</span>`
         : (lead.phone ? `<a href="tel:${lead.phone}" style="color: #059669; font-weight: 700; text-decoration: none;">${lead.phone}</a>` : '<span style="color: #64748b; font-weight: 500;">Not available</span>');
 
     const emailDisplay = !hasConnectAccess
@@ -74,8 +82,8 @@ export function renderProfessionalModal(lead) {
         : (lead.email ? `<a href="mailto:${lead.email}" style="color: #2563eb; font-weight: 700; text-decoration: none;">${lead.email}</a>` : '<span style="color: #64748b; font-weight: 500;">Not available</span>');
 
     const websiteDisplay = !hasConnectAccess
-        ? `<span onclick="window.State.setPricingModal(true);" style="color: #d97706; cursor: pointer; text-decoration: underline; font-weight: 700; font-size: 13px;"><i data-lucide="lock" style="width:11px; height:11px;"></i> Locked</span>`
-        : (lead.website ? `<a href="${lead.website}" target="_blank" style="color: #2563eb; font-weight: 700; text-decoration: underline;">Visit Site</a>` : '<span style="color: #64748b; font-weight: 500;">Not available</span>');
+        ? `<span onclick="window.State.setPricingModal(true);" style="color: #d97706; cursor: pointer; text-decoration: underline; font-weight: 700; font-size: 13px;"><i data-lucide="lock" style="width:11px; height:11px;"></i> Locked (${maskedWebsite || 'web****.com'})</span>`
+        : (lead.website ? `<a href="${lead.website.startsWith('http') ? lead.website : 'https://' + lead.website}" target="_blank" style="color: #2563eb; font-weight: 700; text-decoration: underline;">${lead.website.replace(/^https?:\/\/(www\.)?/, '').split('/')[0]} ➔</a>` : '<span style="color: #64748b; font-weight: 500;">Not available</span>');
 
     const mapHTML = lead.latitude && lead.longitude
         ? (hasConnectAccess 

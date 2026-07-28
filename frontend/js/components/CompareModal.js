@@ -1,5 +1,6 @@
 import { State } from '../state.js';
 import { Api } from '../api.js';
+import { maskWebsite } from './ProfessionalCard.js';
 
 export function renderComparePanel() {
     const count = State.selected_ids.length;
@@ -93,14 +94,18 @@ export function renderCompareModalContent(professionals) {
     `).join('');
     
     // Website Link
-    const websiteRow = professionals.map(p => `
-        <td style="padding: 14px 18px; text-align: center; border-bottom: 1px solid #f1f5f9; background: #f8fafc;">
-            ${p.website 
-                ? `<a href="${p.website}" target="_blank" rel="noopener noreferrer" style="color: #059669; text-decoration: none; font-weight: 700; background: #ecfdf5; padding: 6px 12px; border-radius: 6px; border: 1px solid #a7f3d0; display: inline-flex; align-items: center; gap: 4px; font-size: 13px;">🌐 Visit Website ➔</a>` 
-                : '<span style="color: #94a3b8; font-size: 13px; font-weight: 500;">No Website</span>'
-            }
-        </td>
-    `).join('');
+    const websiteRow = professionals.map(p => {
+        const masked = maskWebsite(p.website);
+        const cleanDomain = p.website ? p.website.replace(/^https?:\/\/(www\.)?/, '').split('/')[0] : '';
+        return `
+            <td style="padding: 14px 18px; text-align: center; border-bottom: 1px solid #f1f5f9; background: #f8fafc;">
+                ${p.website 
+                    ? `<a href="${p.website.startsWith('http') ? p.website : 'https://' + p.website}" target="_blank" rel="noopener noreferrer" style="color: #059669; text-decoration: none; font-weight: 700; background: #ecfdf5; padding: 6px 12px; border-radius: 6px; border: 1px solid #a7f3d0; display: inline-flex; align-items: center; gap: 4px; font-size: 13px;" title="Visit ${cleanDomain}">🌐 ${masked} ➔</a>` 
+                    : '<span style="color: #94a3b8; font-size: 13px; font-weight: 500;">No Website</span>'
+                }
+            </td>
+        `;
+    }).join('');
     
     // Email Address
     const emailRow = professionals.map(p => `

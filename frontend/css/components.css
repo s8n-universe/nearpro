@@ -558,7 +558,8 @@
     align-items: center;
 }
 
-.card-btn-reveal-phone {
+.card-btn-reveal-phone,
+.card-btn-reveal-website {
     flex: 1;
     min-width: 0;
     display: inline-flex;
@@ -571,13 +572,16 @@
     border-radius: var(--radius-md);
     cursor: pointer;
     transition: var(--transition);
-    background: #ecfdf5;
-    border: 1.5px solid #6ee7b7;
-    color: #065f46;
     font-family: var(--font-mono);
     white-space: nowrap;
     overflow: hidden;
     width: 100%;
+}
+
+.card-btn-reveal-phone {
+    background: #ecfdf5;
+    border: 1.5px solid #6ee7b7;
+    color: #065f46;
 }
 
 .card-btn-reveal-phone:hover {
@@ -587,7 +591,21 @@
     box-shadow: 0 3px 10px rgba(5, 150, 105, 0.2);
 }
 
-.phone-text-masked {
+.card-btn-reveal-website {
+    background: #eff6ff;
+    border: 1.5px solid #93c5fd;
+    color: #1e40af;
+}
+
+.card-btn-reveal-website:hover {
+    background: #dbeafe;
+    border-color: #60a5fa;
+    color: #1d4ed8;
+    box-shadow: 0 3px 10px rgba(37, 99, 235, 0.2);
+}
+
+.phone-text-masked,
+.website-text-masked {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -610,6 +628,14 @@
 
 .card-btn-reveal-phone:hover .reveal-btn-label {
     background: #047857;
+}
+
+.card-btn-reveal-website .reveal-btn-label {
+    background: #2563eb;
+}
+
+.card-btn-reveal-website:hover .reveal-btn-label {
+    background: #1d4ed8;
 }
 
 /* Website button — solid high contrast blue */

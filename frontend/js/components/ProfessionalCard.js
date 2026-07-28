@@ -72,6 +72,28 @@ function encodeContactInfo(info) {
     }
 }
 
+export function maskWebsite(url) {
+    if (!url) return '';
+    try {
+        let clean = url.replace(/^https?:\/\//i, '').replace(/^www\./i, '').split('/')[0].split('?')[0];
+        const parts = clean.split('.');
+        if (parts.length >= 2) {
+            const domain = parts[0];
+            const ext = parts.slice(1).join('.');
+            if (domain.length <= 3) {
+                return `${domain.slice(0, 1)}****.${ext}`;
+            } else if (domain.length <= 5) {
+                return `${domain.slice(0, 2)}****.${ext}`;
+            } else {
+                return `${domain.slice(0, 4)}****.${ext}`;
+            }
+        }
+        return `${clean.slice(0, 4)}****`;
+    } catch(e) {
+        return 'web****.com';
+    }
+}
+
 export function renderProfessionalCard(lead, index = 0) {
     const parentCat = lead.parent_category || "Other";
     const avatarColor = categoryColors[parentCat] || "#52525b";
@@ -91,11 +113,7 @@ export function renderProfessionalCard(lead, index = 0) {
 
     // Completeness rating score indicators (5 dots)
     const score = lead.completeness_score || 0;
-    let dotsHTML = '';
-    for (let i = 0; i < 5; i++) {
-        dotsHTML += `<span class="complete-dot ${i < score ? 'filled' : ''}"></span>`;
-    }
-
+    
     // Ratings star generator
     const rating = lead.rating || 0;
     const reviewCount = lead.review_count || 0;
@@ -110,43 +128,27 @@ export function renderProfessionalCard(lead, index = 0) {
         }
     }
 
-    // Open status badge (client-side dynamic computing)
-    const openStatus = isOpenNow(lead.hours);
-    let statusBadge = '';
-    if (openStatus === true) {
-        statusBadge = '<span class="status-tag open">Open Now</span>';
-    } else if (openStatus === false) {
-        statusBadge = '<span class="status-tag closed">Closed</span>';
-    }
-
-    // Recently Verified badge (<= 7 days)
-    const isRecent = lead.recently_verified;
-    const freshnessTag = isRecent ? '<span class="freshness-tag">Recently Verified</span>' : '';
-
     const isTracked = State.saved_lead_ids && State.saved_lead_ids.includes(lead.id);
 
-    const hasScoreAccess = currentUserHasAccess('hunter');
-    let scoreBadgeHTML = '';
-    if (hasScoreAccess && lead.conversion_score !== undefined && lead.conversion_score !== null) {
-        const scoreVal = lead.conversion_score;
-        let badgeLabel = 'Moderate';
-        let badgeColor = '#6b7280';
-        let iconName = 'bar-chart-2';
-        if (scoreVal >= 80) {
-            badgeLabel = 'High';
-            badgeColor = '#22c55e';
-            iconName = 'trending-up';
-        } else if (scoreVal >= 60) {
-            badgeLabel = 'Good';
-            badgeColor = '#eab308';
-            iconName = 'zap';
-        }
-        scoreBadgeHTML = `<span class="score-badge" style="background: rgba(255,255,255,0.03); border: 1px solid ${badgeColor}; color: ${badgeColor}; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 100px; margin-left: 6px; font-family: var(--font-mono); text-transform: uppercase;"><i data-lucide="${iconName}" style="width:10px; height:10px;"></i> ${badgeLabel} (${scoreVal})</span>`;
-    }
-
+    // Freemium Sample Unlocking: Cards #1 and #2 (index 0 and 1) are unlocked for guest/free users as teaser samples!
+    const isFreemiumSampleUnlocked = index < 2;
     const isPremium = currentUserHasAccess('scout');
-    // Step 1: Freemium Hook — Free users get first 12 phone numbers unlocked as a free trial sample!
-    const isFreemiumSampleUnlocked = !isPremium && index < 12;
+
+    const scoreBadgeClass = score >= 4 ? 'high-score' : (score >= 2.5 ? 'mid-score' : 'low-score');
+    const scoreBadgeHTML = `<span class="score-badge ${scoreBadgeClass}">${score}/5 Score</span>`;
+
+    // Freshness tag calculation
+    let freshnessTag = '';
+    if (lead.updated_at) {
+        const updatedDate = new Date(lead.updated_at);
+        const now = new Date();
+        const diffDays = Math.floor((now - updatedDate) / (1000 * 60 * 60 * 24));
+        if (diffDays <= 3) {
+            freshnessTag = '<span class="freshness-tag ultra-fresh">🔥 Updated 3d ago</span>';
+        } else if (diffDays <= 7) {
+            freshnessTag = '<span class="freshness-tag fresh">✨ Updated this week</span>';
+        }
+    }
 
     const isSelected = State.selected_ids.includes(lead.id);
 
@@ -154,12 +156,14 @@ export function renderProfessionalCard(lead, index = 0) {
     const scorePct = Math.min(100, Math.max(10, (score / 5) * 100));
     const scoreColor = score >= 4 ? '#10b981' : (score >= 2.5 ? '#f59e0b' : '#ef4444');
 
-    // Anti-Scraping Phone Masking & Encoding
+    // Anti-Scraping Phone & Website Masking & Encoding
     const phoneEnc = encodeContactInfo(lead.phone);
+    const websiteEnc = encodeContactInfo(lead.website);
     const rawDigits = lead.phone ? lead.phone.replace(/[^0-9]/g, '') : '';
     const maskedPhoneDisplay = rawDigits.length >= 10 
         ? `+91 ${rawDigits.slice(-10, -5)} XXXXX` 
         : (lead.phone ? `${lead.phone.slice(0, 5)} XXXXX` : '');
+    const maskedWebsiteDisplay = maskWebsite(lead.website);
 
     return `
         <div class="prof-card" data-id="${lead.id}" style="--card-accent: ${avatarColor}; border-left: 4px solid ${avatarColor};">
@@ -217,17 +221,21 @@ export function renderProfessionalCard(lead, index = 0) {
                         </div>
                     ` : ''}
                     ${lead.website ? `
-                        <a href="${lead.website}" target="_blank" class="card-btn-site">
-                            <i data-lucide="globe" style="width:13px; height:13px; opacity: 0.85;"></i> Website
-                        </a>
+                        <div class="card-btn-reveal-wrap">
+                            <button class="card-btn-reveal-website" data-website-enc="${websiteEnc}" title="Click to reveal website link">
+                                <i data-lucide="globe" style="width:13px; height:13px; opacity: 0.85;"></i>
+                                <span class="website-text-masked">${maskedWebsiteDisplay}</span>
+                                <span class="reveal-btn-label">Show</span>
+                            </button>
+                        </div>
                     ` : ''}
                     ${!lead.phone && !lead.website ? `
                         <span class="card-btn-empty">No contact info</span>
                     ` : ''}
                 ` : `
-                    <!-- Soft Blurred Phone Number for Freemium Hook (Cards 3-12) -->
-                    <div style="display: flex; gap: 8px; width: 100%; align-items: center;">
-                        <div onclick="window.State.setPricingModal(true);" style="flex: 1; display: flex; align-items: center; justify-content: space-between; background: rgba(255,160,0,0.04); border: 1px dashed rgba(255,160,0,0.3); padding: 6px 12px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s ease;">
+                    <!-- Soft Blurred Contact Info for Freemium Hook (Cards 3-12) -->
+                    <div style="display: flex; flex-direction: column; gap: 6px; width: 100%;">
+                        <div onclick="window.State.setPricingModal(true);" style="flex: 1; display: flex; align-items: center; justify-content: space-between; background: rgba(255,160,0,0.04); border: 1px dashed rgba(255,160,0,0.3); padding: 6px 12px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s ease;" title="Upgrade to unlock phone number">
                             <span style="font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); filter: blur(3px); user-select: none;">
                                 +91 ${lead.phone ? lead.phone.slice(0, 5) : '98201'} XXXXX
                             </span>
@@ -236,9 +244,14 @@ export function renderProfessionalCard(lead, index = 0) {
                             </span>
                         </div>
                         ${lead.website ? `
-                            <a href="${lead.website}" target="_blank" class="card-btn-site" style="padding: 6px 10px;">
-                                <i data-lucide="globe" style="width:13px; height:13px;"></i>
-                            </a>
+                            <div onclick="window.State.setPricingModal(true);" style="flex: 1; display: flex; align-items: center; justify-content: space-between; background: rgba(37,99,235,0.04); border: 1px dashed rgba(37,99,235,0.3); padding: 6px 10px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s ease;" title="Upgrade to unlock website link">
+                                <span style="font-family: var(--font-mono); font-size: 11.5px; color: var(--text-secondary); filter: blur(3px); user-select: none;">
+                                    ${maskedWebsiteDisplay || 'web****.com'}
+                                </span>
+                                <span style="font-size: 11px; font-weight: 600; color: #2563eb; display: flex; align-items: center; gap: 4px;">
+                                    <i data-lucide="lock" style="width:11px; height:11px;"></i> Unlock
+                                </span>
+                            </div>
                         ` : ''}
                     </div>
                 `}
@@ -273,16 +286,16 @@ export function bindProfessionalCardEvents(onCardClick) {
             });
         }
 
-        // Anti-Scraping JustDial-style phone reveal click handler
-        const revealBtn = card.querySelector('.card-btn-reveal-phone');
-        if (revealBtn) {
-            revealBtn.addEventListener('click', (e) => {
+        // Anti-Scraping phone reveal click handler
+        const revealPhoneBtn = card.querySelector('.card-btn-reveal-phone');
+        if (revealPhoneBtn) {
+            revealPhoneBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const encodedPhone = revealBtn.getAttribute('data-phone-enc');
+                const encodedPhone = revealPhoneBtn.getAttribute('data-phone-enc');
                 if (encodedPhone) {
                     try {
                         const realPhone = atob(encodedPhone);
-                        const wrap = revealBtn.closest('.card-btn-reveal-wrap');
+                        const wrap = revealPhoneBtn.closest('.card-btn-reveal-wrap');
                         if (wrap) {
                             wrap.innerHTML = `
                                 <a href="tel:${realPhone}" class="card-btn-call" style="animation: cardFadeIn 0.2s ease-out;">
@@ -293,6 +306,35 @@ export function bindProfessionalCardEvents(onCardClick) {
                         }
                     } catch(err) {
                         console.error('Failed to unmask contact:', err);
+                    }
+                }
+            });
+        }
+
+        // Anti-Scraping website reveal click handler
+        const revealWebBtn = card.querySelector('.card-btn-reveal-website');
+        if (revealWebBtn) {
+            revealWebBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const encodedWeb = revealWebBtn.getAttribute('data-website-enc');
+                if (encodedWeb) {
+                    try {
+                        let realWeb = atob(encodedWeb);
+                        if (!/^https?:\/\//i.test(realWeb)) {
+                            realWeb = 'https://' + realWeb;
+                        }
+                        const wrap = revealWebBtn.closest('.card-btn-reveal-wrap');
+                        if (wrap) {
+                            const displayDomain = realWeb.replace(/^https?:\/\/(www\.)?/, '').split('/')[0];
+                            wrap.innerHTML = `
+                                <a href="${realWeb}" target="_blank" class="card-btn-site" style="animation: cardFadeIn 0.2s ease-out;" title="Visit ${realWeb}">
+                                    <i data-lucide="globe" style="width:13px; height:13px; opacity: 0.85;"></i> ${displayDomain}
+                                </a>
+                            `;
+                            if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
+                        }
+                    } catch(err) {
+                        console.error('Failed to unmask website:', err);
                     }
                 }
             });
