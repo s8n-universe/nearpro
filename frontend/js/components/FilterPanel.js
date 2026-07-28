@@ -19,7 +19,16 @@ export function renderFilterPanel() {
     // Compute active filter tags to display
     const activeTags = [];
     if (State.filters.area) activeTags.push({ id: 'area', label: `Area: ${State.filters.area}` });
-    if (State.filters.min_rating) activeTags.push({ id: 'min_rating', label: `Rating: ${State.filters.min_rating}+ ★` });
+    if (State.filters.rating_range) {
+        if (State.filters.rating_range === '4.5-5.0') activeTags.push({ id: 'min_rating', label: `Rating: 4.5 - 5.0 ★` });
+        else if (State.filters.rating_range === '4.0-4.4') activeTags.push({ id: 'min_rating', label: `Rating: 4.0 - 4.4 ★` });
+        else if (State.filters.rating_range === '3.5-3.9') activeTags.push({ id: 'min_rating', label: `Rating: 3.5 - 3.9 ★` });
+        else if (State.filters.rating_range === '3.0-3.4') activeTags.push({ id: 'min_rating', label: `Rating: 3.0 - 3.4 ★` });
+        else if (State.filters.rating_range === '<3.0') activeTags.push({ id: 'min_rating', label: `Rating: Below 3.0 ★` });
+        else activeTags.push({ id: 'min_rating', label: `Rating: ${State.filters.rating_range}+ ★` });
+    } else if (State.filters.min_rating) {
+        activeTags.push({ id: 'min_rating', label: `Rating: ${State.filters.min_rating}+ ★` });
+    }
     if (State.filters.has_email) activeTags.push({ id: 'has_email', label: `Has Email` });
     if (State.filters.has_phone) activeTags.push({ id: 'has_phone', label: `Has Phone` });
     if (State.filters.has_website || State.filters.website_filter === 'has_website') activeTags.push({ id: 'has_website', label: `Has Website` });
@@ -52,9 +61,13 @@ export function renderFilterPanel() {
                         <span class="filter-label">RATING</span>
                         <select id="ratingFilter" class="filter-select">
                             <option value="">Any Rating</option>
-                            <option value="4.5" ${State.filters.min_rating == 4.5 ? 'selected' : ''}>4.5+ Stars</option>
-                            <option value="4" ${State.filters.min_rating == 4 ? 'selected' : ''}>4.0+ Stars</option>
-                            <option value="3" ${State.filters.min_rating == 3 ? 'selected' : ''}>3.0+ Stars</option>
+                            <option value="4.5-5.0" ${State.filters.rating_range === '4.5-5.0' ? 'selected' : ''}>4.5 - 5.0 Stars ★★★★★</option>
+                            <option value="4.0-4.4" ${State.filters.rating_range === '4.0-4.4' ? 'selected' : ''}>4.0 - 4.4 Stars ★★★★☆</option>
+                            <option value="3.5-3.9" ${State.filters.rating_range === '3.5-3.9' ? 'selected' : ''}>3.5 - 3.9 Stars ★★★½☆</option>
+                            <option value="3.0-3.4" ${State.filters.rating_range === '3.0-3.4' ? 'selected' : ''}>3.0 - 3.4 Stars ★★★☆☆</option>
+                            <option value="<3.0" ${State.filters.rating_range === '<3.0' ? 'selected' : ''}>Below 3.0 Stars ★★☆☆☆</option>
+                            <option value="4.0" ${State.filters.rating_range === '4.0' || (State.filters.min_rating == 4 && !State.filters.rating_range) ? 'selected' : ''}>4.0+ Stars Minimum</option>
+                            <option value="3.0" ${State.filters.rating_range === '3.0' || (State.filters.min_rating == 3 && !State.filters.rating_range) ? 'selected' : ''}>3.0+ Stars Minimum</option>
                         </select>
                     </div>
                     
@@ -141,7 +154,19 @@ export function bindFilterPanelEvents() {
 
     if (ratingFilter) {
         ratingFilter.addEventListener('change', (e) => {
-            State.updateFilters({ min_rating: e.target.value ? parseFloat(e.target.value) : null });
+            const val = e.target.value;
+            if (!val) {
+                State.updateFilters({ min_rating: null, rating_min: null, rating_max: null, rating_range: null });
+            } else if (val.includes('-')) {
+                const parts = val.split('-').map(x => parseFloat(x));
+                State.updateFilters({ min_rating: null, rating_min: parts[0], rating_max: parts[1], rating_range: val });
+            } else if (val.startsWith('<')) {
+                const maxVal = parseFloat(val.replace('<', ''));
+                State.updateFilters({ min_rating: null, rating_min: 0, rating_max: maxVal, rating_range: val });
+            } else {
+                const minVal = parseFloat(val);
+                State.updateFilters({ min_rating: minVal, rating_min: minVal, rating_max: null, rating_range: val });
+            }
         });
     }
 
@@ -204,7 +229,7 @@ export function bindFilterPanelEvents() {
             e.stopPropagation();
             const filterId = btn.getAttribute('data-filter-id');
             if (filterId === 'area') State.updateFilters({ area: null });
-            else if (filterId === 'min_rating') State.updateFilters({ min_rating: null });
+            else if (filterId === 'min_rating') State.updateFilters({ min_rating: null, rating_min: null, rating_max: null, rating_range: null });
             else if (filterId === 'has_email') State.updateFilters({ has_email: false });
             else if (filterId === 'has_phone') State.updateFilters({ has_phone: false });
             else if (filterId === 'has_website') State.updateFilters({ has_website: false, website_filter: 'all' });

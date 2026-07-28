@@ -287,7 +287,17 @@ export const Api = {
             if (f.parentCategory) countQuery = countQuery.eq('parent_category', f.parentCategory);
             if (f.category) countQuery = countQuery.eq('category', f.category);
             if (f.area) countQuery = countQuery.eq('area', f.area);
-            if (f.min_rating) countQuery = countQuery.gte('rating', parseFloat(f.min_rating));
+            
+            // Rating range or minimum filtering
+            if (f.rating_min !== undefined && f.rating_min !== null) {
+                countQuery = countQuery.gte('rating', parseFloat(f.rating_min));
+            } else if (f.min_rating) {
+                countQuery = countQuery.gte('rating', parseFloat(f.min_rating));
+            }
+            if (f.rating_max !== undefined && f.rating_max !== null) {
+                countQuery = countQuery.lte('rating', parseFloat(f.rating_max));
+            }
+
             if (f.has_email) countQuery = countQuery.not('email', 'is', null).neq('email', '');
             if (f.has_phone) countQuery = countQuery.not('phone', 'is', null).neq('phone', '');
             
@@ -295,7 +305,6 @@ export const Api = {
                 countQuery = countQuery.not('website', 'is', null).neq('website', '');
             } else if (f.no_website || f.website_filter === 'no_website') {
                 countQuery = countQuery.or('website.is.null,website.eq.');
-                countQuery = countQuery.or('phone.not.is.null,email.not.is.null');
             }
             if (f.search && f.search.trim()) {
                 const s = f.search.trim();
@@ -312,7 +321,6 @@ export const Api = {
             // 2. Fetch the paginated and masked results via get_professionals_v2 RPC
             let items = [];
             let errorOccurred = false;
-            let clientSideFilterNoWeb = false;
             
             try {
                 const rpcParams = {
@@ -320,7 +328,7 @@ export const Api = {
                     parent_cat: f.parentCategory || null,
                     sub_cat: f.category || null,
                     filter_area: f.area || null,
-                    min_rat: f.min_rating ? parseFloat(f.min_rating) : null,
+                    min_rat: f.rating_min ? parseFloat(f.rating_min) : (f.min_rating ? parseFloat(f.min_rating) : null),
                     has_em: !!f.has_email,
                     has_ph: !!f.has_phone,
                     has_web: f.has_website || f.website_filter === 'has_website',
@@ -338,7 +346,6 @@ export const Api = {
                 
                 if (error) {
                     if (error.code === '42883' && (f.no_website || f.website_filter === 'no_website')) {
-                        clientSideFilterNoWeb = true;
                         delete rpcParams.has_no_web;
                         const retryResult = await supabase.rpc('get_professionals_v2', rpcParams);
                         if (retryResult.error) {
@@ -359,12 +366,6 @@ export const Api = {
                 
                 if (!errorOccurred) {
                     items = data || [];
-                    if (clientSideFilterNoWeb || f.no_website || f.website_filter === 'no_website') {
-                        items = items.filter(p => 
-                            (!p.website || p.website.trim() === '') && 
-                            ((p.phone && p.phone.trim() !== '') || (p.email && p.email.trim() !== ''))
-                        );
-                    }
                 }
             } catch (e) {
                 if (e.message && (e.message.includes('Could not find') || e.message.includes('schema cache'))) {
@@ -379,7 +380,16 @@ export const Api = {
                 if (f.parentCategory) fallbackQuery = fallbackQuery.eq('parent_category', f.parentCategory);
                 if (f.category) fallbackQuery = fallbackQuery.eq('category', f.category);
                 if (f.area) fallbackQuery = fallbackQuery.eq('area', f.area);
-                if (f.min_rating) fallbackQuery = fallbackQuery.gte('rating', parseFloat(f.min_rating));
+
+                if (f.rating_min !== undefined && f.rating_min !== null) {
+                    fallbackQuery = fallbackQuery.gte('rating', parseFloat(f.rating_min));
+                } else if (f.min_rating) {
+                    fallbackQuery = fallbackQuery.gte('rating', parseFloat(f.min_rating));
+                }
+                if (f.rating_max !== undefined && f.rating_max !== null) {
+                    fallbackQuery = fallbackQuery.lte('rating', parseFloat(f.rating_max));
+                }
+
                 if (f.has_email) fallbackQuery = fallbackQuery.not('email', 'is', null).neq('email', '');
                 if (f.has_phone) fallbackQuery = fallbackQuery.not('phone', 'is', null).neq('phone', '');
                 
@@ -387,7 +397,6 @@ export const Api = {
                     fallbackQuery = fallbackQuery.not('website', 'is', null).neq('website', '');
                 } else if (f.no_website || f.website_filter === 'no_website') {
                     fallbackQuery = fallbackQuery.or('website.is.null,website.eq.');
-                    fallbackQuery = fallbackQuery.or('phone.not.is.null,email.not.is.null');
                 }
                 
                 if (f.search && f.search.trim()) {
@@ -419,6 +428,39 @@ export const Api = {
                 items = items.filter(p => isOpenNow(p.hours) === true);
             }
 
+            // -------------------------------------------------------------
+            // STRICT CLIENT-SIDE GUARANTEE POST-FILTERING
+            // Guarantees zero filter leaks regardless of RPC/Supabase quirks
+            // -------------------------------------------------------------
+            if (items && items.length > 0) {
+                if (f.rating_min !== undefined && f.rating_min !== null) {
+                    const rMin = parseFloat(f.rating_min);
+                    items = items.filter(p => p.rating !== null && p.rating !== undefined && parseFloat(p.rating) >= rMin);
+                } else if (f.min_rating) {
+                    const rMin = parseFloat(f.min_rating);
+                    items = items.filter(p => p.rating !== null && p.rating !== undefined && parseFloat(p.rating) >= rMin);
+                }
+
+                if (f.rating_max !== undefined && f.rating_max !== null) {
+                    const rMax = parseFloat(f.rating_max);
+                    items = items.filter(p => p.rating !== null && p.rating !== undefined && parseFloat(p.rating) <= rMax);
+                }
+
+                if (f.has_website || f.website_filter === 'has_website') {
+                    items = items.filter(p => p.website && typeof p.website === 'string' && p.website.trim() !== '' && p.website.trim().toLowerCase() !== 'n/a' && p.website.trim().toLowerCase() !== 'null');
+                } else if (f.no_website || f.website_filter === 'no_website') {
+                    items = items.filter(p => !p.website || typeof p.website !== 'string' || p.website.trim() === '' || p.website.trim().toLowerCase() === 'n/a' || p.website.trim().toLowerCase() === 'null');
+                }
+
+                if (f.has_phone) {
+                    items = items.filter(p => p.phone && typeof p.phone === 'string' && p.phone.trim() !== '' && p.phone.trim().toLowerCase() !== 'n/a');
+                }
+
+                if (f.has_email) {
+                    items = items.filter(p => p.email && typeof p.email === 'string' && p.email.trim() !== '' && p.email.trim().toLowerCase() !== 'n/a');
+                }
+            }
+
             return { items, count: count || items.length };
         };
 
@@ -426,48 +468,22 @@ export const Api = {
         let activeFilters = { ...filters };
         let { items, count } = await runQuery(activeFilters);
 
-        // 2. Sequential query relaxation loop if we have < 12 items (guaranteeing 10-15 leads)
-        if (items.length < 12) {
-            console.log(`⚠️ Search returned only ${items.length} leads. Relaxing filters to guarantee 10-15 leads...`);
-            
-            // Phase 1: Relax "open_now" and rating requirements
+        // 2. Sequential query relaxation loop (ONLY run if NO explicit user filters/search are set)
+        const hasExplicitUserFilters = !!(
+            activeFilters.rating_min || activeFilters.rating_max ||
+            (activeFilters.min_rating && activeFilters.min_rating !== "4.0") ||
+            activeFilters.has_email || activeFilters.has_phone ||
+            activeFilters.has_website || activeFilters.no_website ||
+            (activeFilters.website_filter && activeFilters.website_filter !== 'all') ||
+            activeFilters.open_now || activeFilters.area || activeFilters.category || activeFilters.parentCategory ||
+            (activeFilters.search && activeFilters.search.trim())
+        );
+
+        if (!hasExplicitUserFilters && items.length < 12) {
+            console.log(`⚠️ Search returned only ${items.length} leads on default view. Relaxing default filters...`);
             if (activeFilters.open_now || activeFilters.min_rating) {
                 activeFilters.open_now = false;
                 activeFilters.min_rating = null;
-                const retry = await runQuery(activeFilters);
-                if (retry.items.length > items.length) {
-                    items = retry.items;
-                    count = retry.count;
-                }
-            }
-
-            // Phase 2: Relax specific contact checkbox constraints (email, phone, website flags)
-            if (items.length < 12 && (activeFilters.has_email || activeFilters.has_phone || activeFilters.has_website || activeFilters.no_website || activeFilters.website_filter)) {
-                activeFilters.has_email = false;
-                activeFilters.has_phone = false;
-                activeFilters.has_website = false;
-                activeFilters.no_website = false;
-                activeFilters.website_filter = null;
-                const retry = await runQuery(activeFilters);
-                if (retry.items.length > items.length) {
-                    items = retry.items;
-                    count = retry.count;
-                }
-            }
-
-            // Phase 3: Relax localized Area filter to search across the entire city (Mumbai/general database)
-            if (items.length < 12 && activeFilters.area) {
-                activeFilters.area = null;
-                const retry = await runQuery(activeFilters);
-                if (retry.items.length > items.length) {
-                    items = retry.items;
-                    count = retry.count;
-                }
-            }
-
-            // Phase 4: Fallback to general category leads if keyword/search matches are extremely narrow
-            if (items.length < 12 && activeFilters.search) {
-                activeFilters.search = null;
                 const retry = await runQuery(activeFilters);
                 if (retry.items.length > items.length) {
                     items = retry.items;
