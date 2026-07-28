@@ -104,6 +104,42 @@ serve(async (req) => {
       return new Response(`Database update failed: ${error.message}`, { status: 500 });
     }
 
+    // Trigger Automated Email via Resend Edge Function if profile found
+    if (data && data.length > 0) {
+      const userProfile = data[0];
+      const userEmail = userProfile.email;
+      const userName = userProfile.full_name || 'Valued Subscriber';
+
+      if (userEmail && event === 'subscription.charged') {
+        try {
+          // Invoke send-invoice-email function
+          await supabase.functions.invoke('send-invoice-email', {
+            body: {
+              type: 'invoice',
+              user_email: userEmail,
+              user_name: userName,
+              plan_id: tier,
+              payment_id: rzpSubscription.id,
+              company_name: userProfile.company_name
+            }
+          });
+
+          // Also send Upgrade Confirmation email
+          await supabase.functions.invoke('send-invoice-email', {
+            body: {
+              type: 'upgrade',
+              user_email: userEmail,
+              user_name: userName,
+              plan_id: tier
+            }
+          });
+          console.log(`Triggered automated Resend invoice & upgrade emails for ${userEmail}`);
+        } catch (emailErr) {
+          console.error("Failed to send automated email via webhook:", emailErr);
+        }
+      }
+    }
+
     console.log(`Successfully updated profiles for subscription ${subscriptionId}`);
     return new Response("ok", { status: 200 });
 

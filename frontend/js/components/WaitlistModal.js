@@ -115,10 +115,24 @@ export function bindWaitlistModalEvents() {
 
             try {
                 await Api.joinCityWaitlist({ email, requested_city, user_role });
+                
+                // Trigger automated Resend confirmation email
+                try {
+                    await Api.supabase.functions.invoke('send-invoice-email', {
+                        body: {
+                            type: 'waitlist',
+                            user_email: email,
+                            user_name: email.split('@')[0]
+                        }
+                    });
+                } catch (emailErr) {
+                    console.warn("Failed to send waitlist email via Resend:", emailErr);
+                }
+
                 if (form) form.style.display = 'none';
                 if (successMsg) {
                     successMsg.style.display = 'block';
-                    successMsg.innerHTML = `🎉 <strong>You're on the priority waitlist for ${requested_city}!</strong><br>We will notify <strong>${email}</strong> the moment ${requested_city} data goes live.`;
+                    successMsg.innerHTML = `🎉 <strong>You're on the priority waitlist for ${requested_city}!</strong><br>A confirmation email has been sent to <strong>${email}</strong>. We will notify you the moment data goes live.`;
                 }
                 setTimeout(() => {
                     State.setWaitlistModal(false);

@@ -578,6 +578,20 @@ export function bindAuthModalEvents() {
                     }
                 } else {
                     await Api.signUp(email, password);
+
+                    // Trigger automated Resend Welcome Email
+                    try {
+                        await Api.supabase.functions.invoke('send-invoice-email', {
+                            body: {
+                                type: 'welcome',
+                                user_email: email,
+                                user_name: email.split('@')[0]
+                            }
+                        });
+                    } catch (welcomeEmailErr) {
+                        console.warn("Failed to trigger welcome email:", welcomeEmailErr);
+                    }
+
                     localStorage.removeItem('selected_nearpro_tier');
                     localStorage.removeItem('selected_nearpro_interval');
                     State.setAuthModal(false);
