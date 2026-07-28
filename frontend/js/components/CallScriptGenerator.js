@@ -34,7 +34,7 @@ export function renderCallScriptGeneratorLayout(selectedLeadId = null) {
                 
                 <div style="display: flex; align-items: center; gap: 12px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 14px;">
                     <span style="font-size: 12px; color: #475569; font-weight: 600;">Monthly Script Quota:</span>
-                    <strong style="font-size: 14px; color: #059669;">${used} / ${limit === 0 ? '0 (Free)' : limit === 999999 ? 'Unlimited' : limit}</strong>
+                    <strong id="scriptQuotaCounter" style="font-size: 14px; color: #059669;">${used} / ${limit === 0 ? '0 (Free)' : limit === 999999 ? 'Unlimited' : limit}</strong>
                     <span style="font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 700; background: #e2e8f0; padding: 2px 6px; border-radius: 4px;">
                         ${userTier}
                     </span>
@@ -270,6 +270,16 @@ export function bindCallScriptGeneratorEvents() {
                 window._callScriptCache[leadId] = res;
                 if (res.quota && State.profile) {
                     State.profile.monthly_call_scripts_used = res.quota.used;
+                    const counterEl = document.getElementById('scriptQuotaCounter');
+                    if (counterEl) {
+                        const userTier = (State.profile?.subscription_tier || State.profile?.tier || 'free').toLowerCase();
+                        let limit = 1;
+                        if (userTier === 'scout') limit = 8;
+                        else if (userTier === 'hunter') limit = 45;
+                        else if (userTier === 'agency') limit = 150;
+                        else if (userTier === 'enterprise') limit = 999999;
+                        counterEl.innerText = `${res.quota.used} / ${limit === 0 ? '0 (Free)' : limit === 999999 ? 'Unlimited' : limit}`;
+                    }
                 }
 
                 const currentLoader = document.getElementById('scriptStepLoader');

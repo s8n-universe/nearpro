@@ -18,10 +18,15 @@ export function renderPersonalizationModal() {
         localStorage.setItem('draft_personalize_booking', State.profile?.booking_url || '');
     }
 
+    if (localStorage.getItem('draft_personalize_gender') === null) {
+        localStorage.setItem('draft_personalize_gender', State.profile?.gender || 'male');
+    }
+
     const name = localStorage.getItem('draft_personalize_name');
     const company = localStorage.getItem('draft_personalize_company');
     const portfolio = localStorage.getItem('draft_personalize_portfolio');
     const booking = localStorage.getItem('draft_personalize_booking');
+    const gender = localStorage.getItem('draft_personalize_gender') || 'male';
 
     return `
         <div class="modal-overlay open" id="personalizationModalOverlay" style="z-index: 11000; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px);">
@@ -30,13 +35,23 @@ export function renderPersonalizationModal() {
                 
                 <div style="font-size: 36px; margin-bottom: 12px;">🚀</div>
                 <h2 style="font-size: 20px; margin-bottom: 8px; font-family: var(--font-heading); color: white; font-weight: 700;">Personalize Your Outreach Profile</h2>
-                <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 24px; line-height: 1.5;">Welcome to NearPro Premium! Configure your personalization settings to customize your generated AI pitches, emails, and portfolio audit URLs automatically.</p>
+                <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 24px; line-height: 1.5;">Welcome to NearPro Premium! Configure your personalization settings to customize your generated AI pitches, call scripts, emails, and portfolio audit URLs automatically.</p>
                 
                 <form id="personalizationForm" style="text-align: left; display: flex; flex-direction: column; gap: 16px;">
                     <!-- Step 1: Sender Name -->
                     <div>
                         <label style="font-size: 11px; font-family: var(--font-mono); color: var(--text-secondary); text-transform: uppercase; display: block; margin-bottom: 6px;">Your Name <span style="color: var(--accent-pink);">*</span></label>
                         <input type="text" id="personalizeName" value="${name}" placeholder="e.g. Shri Naik" style="width: 100%; padding: 10px 12px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13px;" required />
+                    </div>
+
+                    <!-- Step 1.5: Caller Gender Perspective -->
+                    <div>
+                        <label style="font-size: 11px; font-family: var(--font-mono); color: var(--text-secondary); text-transform: uppercase; display: block; margin-bottom: 6px;">Caller Gender / Script Perspective <span style="color: var(--accent-pink);">*</span></label>
+                        <select id="personalizeGender" style="width: 100%; padding: 10px 12px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13px; outline: none;">
+                            <option value="male" ${gender === 'male' ? 'selected' : ''}>👨 Male Caller ("main bol raha hoon / karta hoon")</option>
+                            <option value="female" ${gender === 'female' ? 'selected' : ''}>👩 Female Caller ("main bol rahi hoon / karti hoon")</option>
+                        </select>
+                        <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 4px;">Tailors AI cold calling scripts automatically to male or female tone & grammar.</span>
                     </div>
 
                     <!-- Step 2: Agency / Business Name -->
@@ -49,14 +64,12 @@ export function renderPersonalizationModal() {
                     <div>
                         <label style="font-size: 11px; font-family: var(--font-mono); color: var(--text-secondary); text-transform: uppercase; display: block; margin-bottom: 6px;">Custom Portfolio URL (Optional)</label>
                         <input type="url" id="personalizePortfolio" value="${portfolio}" placeholder="e.g. https://myagency.com" style="width: 100%; padding: 10px 12px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13px;" />
-                        <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 4px;">Replaces default demo mock links with your agency's website link.</span>
                     </div>
 
                     <!-- Step 4: Calendly / Booking Link -->
                     <div>
                         <label style="font-size: 11px; font-family: var(--font-mono); color: var(--text-secondary); text-transform: uppercase; display: block; margin-bottom: 6px;">Meeting Booking Link (Optional)</label>
                         <input type="url" id="personalizeBooking" value="${booking}" placeholder="e.g. https://calendly.com/shri" style="width: 100%; padding: 10px 12px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13px;" />
-                        <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 4px;">Replaces booking placeholders with your direct Calendly or booking URL.</span>
                     </div>
 
                     <button type="submit" class="brand-btn" style="width: 100%; padding: 12px; margin-top: 12px; font-size: 13.5px; font-weight: 600; cursor: pointer;">
@@ -70,6 +83,7 @@ export function renderPersonalizationModal() {
 
 export function bindPersonalizationModalEvents() {
     const nameInput = document.getElementById('personalizeName');
+    const genderSelect = document.getElementById('personalizeGender');
     const companyInput = document.getElementById('personalizeCompany');
     const portfolioInput = document.getElementById('personalizePortfolio');
     const bookingInput = document.getElementById('personalizeBooking');
@@ -77,9 +91,16 @@ export function bindPersonalizationModalEvents() {
     // Helper to clear drafts
     function clearDrafts() {
         localStorage.removeItem('draft_personalize_name');
+        localStorage.removeItem('draft_personalize_gender');
         localStorage.removeItem('draft_personalize_company');
         localStorage.removeItem('draft_personalize_portfolio');
         localStorage.removeItem('draft_personalize_booking');
+    }
+
+    if (genderSelect) {
+        genderSelect.addEventListener('change', () => {
+            localStorage.setItem('draft_personalize_gender', genderSelect.value);
+        });
     }
 
     if (nameInput) {
@@ -116,15 +137,17 @@ export function bindPersonalizationModalEvents() {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const name = nameInput.value.trim();
-            const company = companyInput.value.trim();
-            const portfolio = portfolioInput.value.trim();
-            const booking = bookingInput.value.trim();
+            const name = nameInput ? nameInput.value.trim() : '';
+            const gender = genderSelect ? genderSelect.value : 'male';
+            const company = companyInput ? companyInput.value.trim() : '';
+            const portfolio = portfolioInput ? portfolioInput.value.trim() : '';
+            const booking = bookingInput ? bookingInput.value.trim() : '';
 
             try {
                 // Persist personalization details to profiles table
                 const { error } = await Api.supabase.from('profiles').update({
                     full_name: name,
+                    gender: gender,
                     company_name: company,
                     portfolio_url: portfolio,
                     booking_url: booking,
@@ -135,6 +158,7 @@ export function bindPersonalizationModalEvents() {
 
                 if (State.profile) {
                     State.profile.full_name = name;
+                    State.profile.gender = gender;
                     State.profile.company_name = company;
                     State.profile.portfolio_url = portfolio;
                     State.profile.booking_url = booking;

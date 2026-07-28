@@ -100,23 +100,72 @@ export function showTrackLeadModal(professionalId, onSavedCallback) {
                 }
             });
         } else {
-            // Present select dropdown
+            // Present select dropdown + inline '+' new list toggle
             const options = lists.map(l => `<option value="${l.id}">${l.name}</option>`).join('');
             body.innerHTML = `
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-size: 11px; font-family: var(--font-mono); color: var(--text-secondary); text-transform: uppercase; margin-bottom: 6px;">Select Smart List</label>
-                    <select id="trackLeadListSelect" style="width: 100%; padding: 10px; background: var(--bg-base); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13px;">
-                        ${options}
-                    </select>
+                <div style="margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <label style="display: block; font-size: 11px; font-family: var(--font-mono); color: var(--text-secondary); text-transform: uppercase;">Select Smart List</label>
+                        <button id="toggleNewListFormBtn" style="background: rgba(37,99,235,0.15); border: 1px solid rgba(37,99,235,0.4); color: #60a5fa; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 2px 8px; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                            <span style="font-size: 13px;">+</span> Create New List
+                        </button>
+                    </div>
+                    
+                    <div id="existingListContainer">
+                        <select id="trackLeadListSelect" style="width: 100%; padding: 10px; background: var(--bg-base); border: 1px solid var(--border); border-radius: var(--radius-sm); color: white; font-size: 13px;">
+                            ${options}
+                        </select>
+                    </div>
+
+                    <div id="newListInputContainer" style="display: none; flex-direction: column; gap: 8px; margin-top: 8px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px;">
+                        <label style="font-size: 11px; color: var(--text-secondary); font-weight: 600;">NEW LIST NAME:</label>
+                        <input type="text" id="newListNameInput" placeholder="e.g. Converted, Closed, High Value..." style="width: 100%; padding: 8px 12px; background: var(--bg-base); border: 1px solid var(--border); border-radius: 6px; color: white; font-size: 13px; outline: none;" />
+                        
+                        <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 2px;">
+                            <span class="quick-tag-btn" data-tag="Converted" style="font-size: 10.5px; background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); border-radius: 4px; padding: 2px 6px; cursor: pointer; font-weight: 600;">+ Converted</span>
+                            <span class="quick-tag-btn" data-tag="Closed" style="font-size: 10.5px; background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); border-radius: 4px; padding: 2px 6px; cursor: pointer; font-weight: 600;">+ Closed</span>
+                            <span class="quick-tag-btn" data-tag="Hot Leads" style="font-size: 10.5px; background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); border-radius: 4px; padding: 2px 6px; cursor: pointer; font-weight: 600;">+ Hot Leads</span>
+                        </div>
+                    </div>
                 </div>
+
                 <div id="trackLeadError" style="color: var(--accent-pink); font-size: 12px; margin-bottom: 12px; display: none;"></div>
+                
                 <button class="brand-btn" id="submitTrackLeadBtn" style="width: 100%; padding: 10px;">
                     Save to List
                 </button>
             `;
 
-            document.getElementById('submitTrackLeadBtn').addEventListener('click', async () => {
-                const listId = document.getElementById('trackLeadListSelect').value;
+            let isCreatingNew = false;
+            const toggleBtn = document.getElementById('toggleNewListFormBtn');
+            const existingContainer = document.getElementById('existingListContainer');
+            const newContainer = document.getElementById('newListInputContainer');
+            const submitBtn = document.getElementById('submitTrackLeadBtn');
+            const nameInput = document.getElementById('newListNameInput');
+
+            toggleBtn.addEventListener('click', () => {
+                isCreatingNew = !isCreatingNew;
+                if (isCreatingNew) {
+                    existingContainer.style.display = 'none';
+                    newContainer.style.display = 'flex';
+                    toggleBtn.innerHTML = '← Select Existing List';
+                    submitBtn.innerText = 'Create & Save Lead';
+                    nameInput.focus();
+                } else {
+                    existingContainer.style.display = 'block';
+                    newContainer.style.display = 'none';
+                    toggleBtn.innerHTML = '<span style="font-size: 13px;">+</span> Create New List';
+                    submitBtn.innerText = 'Save to List';
+                }
+            });
+
+            document.querySelectorAll('.quick-tag-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    nameInput.value = btn.getAttribute('data-tag');
+                });
+            });
+
+            submitBtn.addEventListener('click', async () => {
                 const errEl = document.getElementById('trackLeadError');
                 errEl.style.display = 'none';
 
@@ -124,15 +173,37 @@ export function showTrackLeadModal(professionalId, onSavedCallback) {
                 const limits = TIER_LIMITS[tier] || TIER_LIMITS.free;
 
                 try {
-                    // Fetch existing leads in this list to check limits
-                    const existingLeads = await Api.getSavedLeads(listId);
+                    let targetListId = null;
+
+                    if (isCreatingNew) {
+                        const newName = (nameInput.value || '').trim();
+                        if (!newName) {
+                            errEl.innerText = "Please enter a name for your new Smart List.";
+                            errEl.style.display = 'block';
+                            return;
+                        }
+                        submitBtn.innerText = "Creating list...";
+                        submitBtn.disabled = true;
+
+                        const newList = await Api.createLeadList(newName, "Custom segment created from pipeline", "#2563eb");
+                        targetListId = newList.id;
+                    } else {
+                        targetListId = document.getElementById('trackLeadListSelect').value;
+                    }
+
+                    // Fetch existing leads in target list to check limits
+                    const existingLeads = await Api.getSavedLeads(targetListId);
                     if (existingLeads.length >= limits.maxLeadsPerList) {
-                        alert(`You have reached the maximum number of leads allowed per list on the ${TIER_NAMES[tier] || 'Explorer'} plan (${limits.maxLeadsPerList}). Please upgrade to save more leads.`);
+                        alert(`You have reached the maximum number of leads allowed per list on your plan (${limits.maxLeadsPerList}). Please upgrade to save more leads.`);
                         State.setPricingModal(true);
+                        submitBtn.disabled = false;
                         return;
                     }
 
-                    await Api.saveLead(listId, professionalId);
+                    submitBtn.innerText = "Saving lead...";
+                    submitBtn.disabled = true;
+
+                    await Api.saveLead(targetListId, professionalId);
                     
                     // Update state tracking
                     if (!State.saved_lead_ids) State.saved_lead_ids = [];
@@ -156,10 +227,12 @@ export function showTrackLeadModal(professionalId, onSavedCallback) {
                     });
                 } catch (err) {
                     console.error("Failed to track lead: ", err);
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = isCreatingNew ? 'Create & Save Lead' : 'Save to List';
                     if (err.message && err.message.includes("unique_dedup")) {
                         errEl.innerText = "This lead is already saved in your pipeline.";
                     } else {
-                        errEl.innerText = "Error tracking lead. It might already be tracked.";
+                        errEl.innerText = err.message || "Error tracking lead. Please try again.";
                     }
                     errEl.style.display = 'block';
                 }

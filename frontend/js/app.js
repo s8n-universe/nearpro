@@ -1900,31 +1900,27 @@ async function renderDashboardLayout(tab) {
                     content.innerHTML = renderPromptGenerator(savedLeads, activeLeadId, selectedPlatform, 'Generating tailored prompt... Please wait.');
                     bindEvents();
 
-                    const statusTitles = [
-                        "Analyzing business profile...",
-                        "Extracting client reviews & ratings...",
-                        "Formatting physical address & hours...",
-                        "Applying conversion rate optimization...",
-                        "Drafting custom specifications for " + (selectedPlatform === 'v0' ? 'v0.dev' : selectedPlatform === 'cursor' ? 'Cursor IDE' : selectedPlatform === 'claude' ? 'Claude Code' : selectedPlatform === 'emergent' ? 'Emergent AI' : selectedPlatform === 'bolt' ? 'Bolt.new' : 'Lovable.dev') + "..."
-                    ];
-                    const statusDescs = [
-                        "Reviewing category tags and local target parameters",
-                        "Extracting review highlights to build customer validation",
-                        "Setting up operational details & contact endpoints",
-                        "Optimizing CTA links and WhatsApp parameters for client leadgen",
-                        "Structuring React layout file tree and component guidelines"
+                    const statusSteps = [
+                        { pct: '15%', num: 15, title: "Analyzing business profile...", desc: "Reviewing category tags and local target parameters" },
+                        { pct: '40%', num: 40, title: "Extracting client reviews & ratings...", desc: "Extracting review highlights to build customer validation" },
+                        { pct: '65%', num: 65, title: "Formatting physical address & hours...", desc: "Setting up operational details & contact endpoints" },
+                        { pct: '88%', num: 88, title: "Applying conversion rate optimization...", desc: "Optimizing CTA links and WhatsApp parameters for client leadgen" },
+                        { pct: '98%', num: 98, title: "Drafting custom specifications for " + (selectedPlatform === 'antigravity' ? 'Antigravity AI' : selectedPlatform === 'v0' ? 'v0.dev' : selectedPlatform === 'cursor' ? 'Cursor IDE' : selectedPlatform === 'claude' ? 'Claude Code' : selectedPlatform === 'emergent' ? 'Emergent AI' : selectedPlatform === 'bolt' ? 'Bolt.new' : 'Lovable.dev') + "...", desc: "Structuring component design tokens and layout system" }
                     ];
                     
                     let statusIdx = 0;
                     const statusInterval = setInterval(() => {
-                        statusIdx = (statusIdx + 1) % statusTitles.length;
+                        statusIdx = Math.min(statusIdx + 1, statusSteps.length - 1);
+                        const step = statusSteps[statusIdx];
                         const titleEl = document.getElementById('generationStatusTitle');
                         const descEl = document.getElementById('generationStatusDesc');
-                        if (titleEl && descEl) {
-                            titleEl.innerText = statusTitles[statusIdx];
-                            descEl.innerText = statusDescs[statusIdx];
-                        }
-                    }, 1800);
+                        const pctCounter = document.getElementById('promptPctCounter');
+                        const pctBar = document.getElementById('promptPctBar');
+                        if (titleEl) titleEl.innerText = step.title;
+                        if (descEl) descEl.innerText = step.desc;
+                        if (pctCounter) pctCounter.innerText = `${step.num}%`;
+                        if (pctBar) pctBar.style.width = step.pct;
+                    }, 650);
 
                     const activeLeadObj = savedLeads.find(l => l.professionals?.id === activeLeadId);
                     const leadName = activeLeadObj?.professionals?.name || 'Lead';

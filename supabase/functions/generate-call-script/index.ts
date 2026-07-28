@@ -107,6 +107,8 @@ serve(async (req) => {
     const callerName = profile.full_name || 'Shriraj';
     const callerCompany = profile.company_name || 'S8N Digital';
     const bookingUrl = profile.booking_url || 'https://topmate.io/shriraj';
+    const callerGender = (profile.gender || payload.caller_gender || 'male').toLowerCase();
+    const isFemale = callerGender === 'female';
 
     const systemPrompt = `You are an elite B2B tele-sales coach crafting a highly effective, natural Cold Calling Script & Live Objection Handling Guide for an Indian agency founder calling a local business owner.
 
@@ -124,9 +126,10 @@ CALLER DETAILS:
 - Caller Name: ${callerName}
 - Agency Name: ${callerCompany}
 - Booking URL: ${bookingUrl}
+- Caller Gender / Perspective: ${callerGender.toUpperCase()} (${isFemale ? 'CRITICAL: Must write script in FEMALE perspective using female Hindi/Hinglish verb inflections like "bol rahi hoon", "karti hoon", "baat kar sakti hoon", "bhej rahi hoon"' : 'Write script in MALE perspective using male Hindi/Hinglish verb inflections like "bol raha hoon", "karta hoon", "baat kar sakta hoon", "bhej raha hoon"'})
 
 TONE & LANGUAGE:
-Natural, respectful, high-converting Hinglish/English mix used in Indian business calls. Professional, non-pushy, curiosity-driven.
+Natural, respectful, high-converting Hinglish/English mix used in Indian business calls. Professional, non-pushy, curiosity-driven. Ensure all self-referencing verbs strictly match the caller's gender (${callerGender}).
 
 YOUR TASK:
 Return a valid, strict JSON object (NO markdown backticks, NO markdown formatting outside JSON) containing structured script sections:
@@ -136,7 +139,7 @@ Return a valid, strict JSON object (NO markdown backticks, NO markdown formattin
   "caller_name": "${callerName}",
   "caller_company": "${callerCompany}",
   "opening_pattern_interrupt": {
-    "script_text": "Hello ${lead.name} team, main ${callerName} bol raha hoon ${callerCompany} Mumbai se. Maine dekha aapka Google rating 5 star hai. Quick 30 seconds hain aapke paas?",
+    "script_text": "Hello ${lead.name} team, main ${callerName} ${isFemale ? 'bol rahi hoon' : 'bol raha hoon'} ${callerCompany} Mumbai se. Maine dekha aapka Google rating 5 star hai. Quick 30 seconds hain aapke paas?",
     "coaching_tip": "Speak warmly and unhurriedly. Give a 2-second pause after asking for 30 seconds."
   },
   "observation_hook": {
