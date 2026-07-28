@@ -42,7 +42,7 @@ serve(async (req) => {
     let subject = `NearPro Notification`;
     let emailHTML = ``;
 
-    // Common Header HTML — Pure NearPro Branding (No Hyphens)
+    // Common Header HTML — High-Contrast Space Grotesk Header Badge
     const commonHeader = `
     <!-- Top Accent Brand Gradient Bar -->
     <tr>
@@ -50,10 +50,12 @@ serve(async (req) => {
     </tr>
     <!-- Header / Brand Bar -->
     <tr>
-      <td style="background-color:#0b081d; padding:30px 36px; text-align:center; border-bottom:3px solid #ec4899;">
-        <img src="https://nearpro.s8n.in/NearPro_logo_nobg.png" alt="NearPro Logo" height="42" style="height:42px; width:auto; display:inline-block; border:0; margin:0 0 6px 0;" />
+      <td style="background-color:#0b081d; padding:32px 36px; text-align:center; border-bottom:3px solid #ec4899;">
+        <img src="https://nearpro.s8n.in/NearPro_logo_nobg.png" alt="NearPro Logo" height="48" style="height:48px; width:auto; display:inline-block; border:0; margin:0 0 10px 0;" />
         <br>
-        <span style="font-size:10.5px; font-weight:800; color:#FFA000; letter-spacing:2.5px; text-transform:uppercase; font-family:'Plus Jakarta Sans', 'Inter', sans-serif; display:inline-block;">NEARPRO™ &bull; AUTONOMOUS B2B LEAD INTELLIGENCE OS</span>
+        <div style="display:inline-block; background:rgba(255, 160, 0, 0.15); border:1px solid rgba(255, 160, 0, 0.4); color:#ffa000; font-size:12px; font-weight:800; padding:6px 16px; border-radius:20px; letter-spacing:1.5px; text-transform:uppercase; font-family:'Space Grotesk', 'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif;">
+          NEARPRO™ &bull; AUTONOMOUS B2B LEAD INTELLIGENCE OS
+        </div>
       </td>
     </tr>
     `;
@@ -118,7 +120,7 @@ serve(async (req) => {
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Welcome to NearPro</title>
-      <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
       </head>
       <body style="margin:0; padding:0; background-color:#f4f4f6; font-family:'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f6; padding:32px 0;">
@@ -128,7 +130,7 @@ serve(async (req) => {
               ${commonHeader}
               <tr>
                 <td style="padding:40px 36px 32px 36px;">
-                  <p style="font-size:20px; color:#0b081d; margin:0 0 16px 0; line-height:1.4; font-weight:800; font-family:'Plus Jakarta Sans', sans-serif; letter-spacing:-0.2px;">
+                  <p style="font-size:20px; color:#0b081d; margin:0 0 16px 0; line-height:1.4; font-weight:800; font-family:'Space Grotesk', 'Plus Jakarta Sans', sans-serif; letter-spacing:-0.2px;">
                     Welcome to NearPro : Autonomous B2B Lead Intelligence 🚀
                   </p>
                   <p style="font-size:15px; color:#2d2b3d; margin:0 0 24px 0; font-family:'Inter', sans-serif; line-height:1.6;">
@@ -143,28 +145,28 @@ serve(async (req) => {
                           <tr>
                             <td style="padding-bottom:18px; vertical-align:top; width:28px; font-size:16px; color:#ec4899; font-weight:bold;">•</td>
                             <td style="padding-bottom:18px; font-size:14.5px; color:#2d2b3d; line-height:1.5; font-family:'Inter', sans-serif;">
-                              <strong style="color:#0b081d; font-family:'Plus Jakarta Sans', sans-serif;">12,358+ Verified B2B Lead Records</strong><br>
+                              <strong style="color:#0b081d; font-family:'Space Grotesk', sans-serif;">12,358+ Verified B2B Lead Records</strong><br>
                               <span style="font-size:13.5px; color:#666480;">Direct phone numbers, ratings, and website tech stacks across India.</span>
                             </td>
                           </tr>
                           <tr>
                             <td style="padding-bottom:18px; vertical-align:top; width:28px; font-size:16px; color:#ec4899; font-weight:bold;">•</td>
                             <td style="padding-bottom:18px; font-size:14.5px; color:#2d2b3d; line-height:1.5; font-family:'Inter', sans-serif;">
-                              <strong style="color:#0b081d; font-family:'Plus Jakarta Sans', sans-serif;">Instant 1 Click PageSpeed Audits and Revenue Drop Off</strong><br>
+                              <strong style="color:#0b081d; font-family:'Space Grotesk', sans-serif;">Instant 1 Click PageSpeed Audits and Revenue Drop Off</strong><br>
                               <span style="font-size:13.5px; color:#666480;">Instantly expose mobile load speed bottlenecks to prospects.</span>
                             </td>
                           </tr>
                           <tr>
                             <td style="padding-bottom:18px; vertical-align:top; width:28px; font-size:16px; color:#ec4899; font-weight:bold;">•</td>
                             <td style="padding-bottom:18px; font-size:14.5px; color:#2d2b3d; line-height:1.5; font-family:'Inter', sans-serif;">
-                              <strong style="color:#0b081d; font-family:'Plus Jakarta Sans', sans-serif;">3 Page Agency PDF Proposals</strong><br>
+                              <strong style="color:#0b081d; font-family:'Space Grotesk', sans-serif;">3 Page Agency PDF Proposals</strong><br>
                               <span style="font-size:13.5px; color:#666480;">Auto generate high converting pitch decks tailored to target clients.</span>
                             </td>
                           </tr>
                           <tr>
                             <td style="padding-bottom:18px; vertical-align:top; width:28px; font-size:16px; color:#ec4899; font-weight:bold;">•</td>
                             <td style="padding-bottom:18px; font-size:14.5px; color:#2d2b3d; line-height:1.5; font-family:'Inter', sans-serif;">
-                              <strong style="color:#0b081d; font-family:'Plus Jakarta Sans', sans-serif;">AI Teleprompter Cold Calling Scripts</strong><br>
+                              <strong style="color:#0b081d; font-family:'Space Grotesk', sans-serif;">AI Teleprompter Cold Calling Scripts</strong><br>
                               <span style="font-size:13.5px; color:#666480;">Live objection response cards with male and female inflection support.</span>
                             </td>
                           </tr>
@@ -177,7 +179,7 @@ serve(async (req) => {
                   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0;">
                     <tr>
                       <td align="center">
-                        <a href="https://nearpro.s8n.in/#/dashboard/directory" style="display:inline-block; padding:14px 36px; background:linear-gradient(90deg, #ec4899 0%, #ffa000 100%); color:#0b081d; text-decoration:none; font-size:15px; font-weight:800; border-radius:8px; border:2px solid #0b081d; font-family:'Plus Jakarta Sans', sans-serif; box-shadow:0 6px 18px rgba(236, 72, 153, 0.35);">
+                        <a href="https://nearpro.s8n.in/#/dashboard/directory" style="display:inline-block; padding:14px 36px; background:linear-gradient(90deg, #ec4899 0%, #ffa000 100%); color:#0b081d; text-decoration:none; font-size:15px; font-weight:800; border-radius:8px; border:2px solid #0b081d; font-family:'Space Grotesk', 'Plus Jakarta Sans', sans-serif; box-shadow:0 6px 18px rgba(236, 72, 153, 0.35);">
                           Launch Workspace Dashboard &rarr;
                         </a>
                       </td>
@@ -218,7 +220,7 @@ serve(async (req) => {
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>NearPro Plan Upgraded</title>
-      <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
       </head>
       <body style="margin:0; padding:0; background-color:#f4f4f6; font-family:'Plus Jakarta Sans', 'Inter', sans-serif;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f6; padding:32px 0;">
@@ -231,7 +233,7 @@ serve(async (req) => {
                   <p style="font-size:15px; color:#2d2b3d; margin:0 0 12px 0; font-family:'Inter', sans-serif;">
                     Hello <strong>${recipientDisplayName}</strong>,
                   </p>
-                  <h2 style="font-size:22px; color:#0b081d; margin:0 0 20px 0; font-weight:800; font-family:'Plus Jakarta Sans', sans-serif;">
+                  <h2 style="font-size:22px; color:#0b081d; margin:0 0 20px 0; font-weight:800; font-family:'Space Grotesk', 'Plus Jakarta Sans', sans-serif;">
                     Your Subscription is Upgraded to <span style="color:#ec4899;">${tierUpper} Tier</span>! 🎉
                   </h2>
                   <p style="font-size:15px; color:#2d2b3d; margin:0 0 24px 0; font-family:'Inter', sans-serif; line-height:1.6;">
@@ -241,7 +243,7 @@ serve(async (req) => {
                   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px 0; background-color:#eff6ff; border-radius:10px; border:1px solid #bfdbfe;">
                     <tr>
                       <td style="padding:24px;">
-                        <div style="font-size:12px; font-weight:800; color:#1d4ed8; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px;">
+                        <div style="font-size:12px; font-weight:800; color:#1d4ed8; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; font-family:'Space Grotesk', sans-serif;">
                           Unlocked ${tierUpper} Plan Inclusions:
                         </div>
                         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-family:'Inter', sans-serif;">
@@ -255,7 +257,7 @@ serve(async (req) => {
                   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0;">
                     <tr>
                       <td align="center">
-                        <a href="https://nearpro.s8n.in/#/dashboard/crm" style="display:inline-block; padding:14px 36px; background:linear-gradient(90deg, #ec4899 0%, #ffa000 100%); color:#0b081d; text-decoration:none; font-size:15px; font-weight:800; border-radius:8px; border:2px solid #0b081d; font-family:'Plus Jakarta Sans', sans-serif; box-shadow:0 6px 18px rgba(236, 72, 153, 0.35);">
+                        <a href="https://nearpro.s8n.in/#/dashboard/crm" style="display:inline-block; padding:14px 36px; background:linear-gradient(90deg, #ec4899 0%, #ffa000 100%); color:#0b081d; text-decoration:none; font-size:15px; font-weight:800; border-radius:8px; border:2px solid #0b081d; font-family:'Space Grotesk', sans-serif; box-shadow:0 6px 18px rgba(236, 72, 153, 0.35);">
                           Access CRM Workspace &rarr;
                         </a>
                       </td>
@@ -280,7 +282,7 @@ serve(async (req) => {
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>NearPro Priority Waitlist</title>
-      <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
       </head>
       <body style="margin:0; padding:0; background-color:#f4f4f6; font-family:'Plus Jakarta Sans', 'Inter', sans-serif;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f6; padding:32px 0;">
@@ -293,7 +295,7 @@ serve(async (req) => {
                   <p style="font-size:15px; color:#2d2b3d; margin:0 0 12px 0; font-family:'Inter', sans-serif;">
                     Hello <strong>${recipientDisplayName}</strong>,
                   </p>
-                  <h2 style="font-size:22px; color:#0b081d; margin:0 0 20px 0; font-weight:800; font-family:'Plus Jakarta Sans', sans-serif;">
+                  <h2 style="font-size:22px; color:#0b081d; margin:0 0 20px 0; font-weight:800; font-family:'Space Grotesk', sans-serif;">
                     Priority Waitlist Confirmed 🚀
                   </h2>
                   <p style="font-size:15px; color:#2d2b3d; margin:0 0 24px 0; font-family:'Inter', sans-serif; line-height:1.6;">
@@ -303,7 +305,7 @@ serve(async (req) => {
                   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px 0; background-color:#fff1f6; border-radius:10px; border:1px solid #fbcfe8;">
                     <tr>
                       <td style="padding:20px; text-align:center;">
-                        <div style="font-size:14px; font-weight:800; color:#ec4899; font-family:'Plus Jakarta Sans', sans-serif;">
+                        <div style="font-size:14px; font-weight:800; color:#ec4899; font-family:'Space Grotesk', sans-serif;">
                           📍 Priority Status: Reserved and Locked
                         </div>
                         <div style="font-size:13.5px; color:#666480; margin-top:6px; font-family:'Inter', sans-serif;">
@@ -317,7 +319,7 @@ serve(async (req) => {
                   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0;">
                     <tr>
                       <td align="center">
-                        <a href="https://nearpro.s8n.in/#/dashboard/directory" style="display:inline-block; padding:14px 36px; background:linear-gradient(90deg, #ec4899 0%, #ffa000 100%); color:#0b081d; text-decoration:none; font-size:15px; font-weight:800; border-radius:8px; border:2px solid #0b081d; font-family:'Plus Jakarta Sans', sans-serif; box-shadow:0 6px 18px rgba(236, 72, 153, 0.35);">
+                        <a href="https://nearpro.s8n.in/#/dashboard/directory" style="display:inline-block; padding:14px 36px; background:linear-gradient(90deg, #ec4899 0%, #ffa000 100%); color:#0b081d; text-decoration:none; font-size:15px; font-weight:800; border-radius:8px; border:2px solid #0b081d; font-family:'Space Grotesk', sans-serif; box-shadow:0 6px 18px rgba(236, 72, 153, 0.35);">
                           Explore Live Mumbai Directory &rarr;
                         </a>
                       </td>
@@ -348,7 +350,7 @@ serve(async (req) => {
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Tax Invoice NearPro</title>
-      <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
       </head>
       <body style="margin:0; padding:0; background-color:#f4f4f6; font-family:'Plus Jakarta Sans', 'Inter', sans-serif;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f6; padding:32px 0;">
@@ -363,10 +365,10 @@ serve(async (req) => {
                   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
                     <tr>
                       <td>
-                        <span style="background:#fff1f6; color:#ec4899; font-size:11px; font-weight:800; padding:6px 12px; border-radius:4px; border:1px solid #fbcfe8; text-transform:uppercase; letter-spacing:0.5px; font-family:'Plus Jakarta Sans', sans-serif;">
+                        <span style="background:#fff1f6; color:#ec4899; font-size:11px; font-weight:800; padding:6px 12px; border-radius:4px; border:1px solid #fbcfe8; text-transform:uppercase; letter-spacing:0.5px; font-family:'Space Grotesk', sans-serif;">
                           PAID TAX INVOICE
                         </span>
-                        <h2 style="font-size:20px; color:#0b081d; margin:12px 0 4px 0; font-weight:800; font-family:'Plus Jakarta Sans', sans-serif;">
+                        <h2 style="font-size:20px; color:#0b081d; margin:12px 0 4px 0; font-weight:800; font-family:'Space Grotesk', sans-serif;">
                           ${invoiceNumber}
                         </h2>
                         <p style="font-size:13px; color:#666480; margin:0; font-family:'Inter', sans-serif;">
@@ -434,7 +436,7 @@ serve(async (req) => {
                   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0;">
                     <tr>
                       <td align="center">
-                        <a href="https://nearpro.s8n.in/#/dashboard/directory" style="display:inline-block; padding:14px 36px; background:linear-gradient(90deg, #ec4899 0%, #ffa000 100%); color:#0b081d; text-decoration:none; font-size:15px; font-weight:800; border-radius:8px; border:2px solid #0b081d; font-family:'Plus Jakarta Sans', sans-serif; box-shadow:0 6px 18px rgba(236, 72, 153, 0.35);">
+                        <a href="https://nearpro.s8n.in/#/dashboard/directory" style="display:inline-block; padding:14px 36px; background:linear-gradient(90deg, #ec4899 0%, #ffa000 100%); color:#0b081d; text-decoration:none; font-size:15px; font-weight:800; border-radius:8px; border:2px solid #0b081d; font-family:'Space Grotesk', sans-serif; box-shadow:0 6px 18px rgba(236, 72, 153, 0.35);">
                           Launch Workspace Dashboard &rarr;
                         </a>
                       </td>
