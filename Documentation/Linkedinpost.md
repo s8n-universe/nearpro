@@ -54,8 +54,25 @@ Watch the video above to experience the official logo reveal!
 
 ---
 
-🎨 **𝗔𝗜 𝗜𝗺𝗮𝗴𝗲 / 𝗩𝗶𝗱𝗲𝗼 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺𝗽𝘁:**
-> *High tech 3D motion logo reveal animation for NearPro, glowing location pin emblem crafted from polished orange gradient obsidian glass (#f97316), floating smoothly over a dark slate metallic surface (#0f172a). Cinematic neon gold rim lighting, subtle volumetric light rays radiating outwards, ultra crisp 8k resolution, modern corporate SaaS aesthetic, hyperrealistic.*
+🎨 **𝗔𝗜 𝗜𝗺𝗮𝗴𝗲 / 𝗩𝗶𝗱𝗲𝗼 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺𝗽𝘁 (𝗗𝗲𝘁𝗮𝗶𝗹𝗲𝗱 𝗠𝗶𝗱𝗷𝗼𝘂𝗿𝗻𝗲𝘆 / 𝗜𝗱𝗲𝗼𝗴𝗿𝗮𝗺 / 𝗗𝗔𝗟𝗟-𝗘 𝟯 𝗦𝗽𝗲𝗰𝗶𝗳𝗶𝗰𝗮𝘁𝗶𝗼𝗻):**
+
+**Visual Aesthetic & Background:**
+* **Background:** Deep slate dark background (`#0f172a`), with subtle abstract digital grid lines and glowing network nodes fading into dark space.
+* **Card Format:** Frosted glassmorphism UI card structure with glowing ambient highlights, rounded corners, thin light borders, and depth effects.
+* **Ratio:** 16:9 cinematic aspect ratio.
+* **Branding & Palette:** Corporate B2B SaaS theme featuring vibrant orange (`#f97316`), glowing gold (`#ffa000`), emerald green (`#10b981`), and dark slate (`#0f172a`).
+
+**Primary Visual Elements (Center / Main Focal Point):**
+* **3D Motion Logo Emblem:** High tech 3D motion logo reveal animation for NearPro. A central location pin emblem crafted from polished orange gradient obsidian glass (`#f97316`), floating smoothly over a dark slate metallic surface.
+* **Glow & Lighting:** Cinematic neon gold rim lighting (`#ffa000`), with subtle volumetric light rays radiating outwards from the core location pin center.
+* **Text & Typography:** Bold crisp 3D metallic lettering reading **"NearPro"** positioned directly below the pin emblem, with a subtle subtitle reading **"by S8N AI Services"**.
+
+**Secondary Visual Elements (Background & Ambiance):**
+* Floating semi-transparent holographic UI widgets around the main logo displaying live indicator badges: "Live Directory Active", "50k+ Data Points", "AI Engine Ready".
+
+**Footer & Professional Finish:**
+* Refined tagline along bottom edge: "India's Premier Local B2B Client Acquisition Suite".
+* Ultra crisp 8k resolution, modern corporate SaaS aesthetic, hyperrealistic studio lighting finish.
 
 ---
 
@@ -89,8 +106,27 @@ With **𝗡𝗲𝗮𝗿𝗣𝗿𝗼**, you can filter local market opportunities
 
 ---
 
-🎨 **𝗔𝗜 𝗜𝗺𝗮𝗴𝗲 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺𝗽𝘁:**
-> *Clean modern infographic vector card on deep slate dark background (#0f172a). Left side shows 4.8 star rating glowing gold (#ffa000) next to a warning badge "No Website Detected" in vibrant orange accent (#f97316). Right side shows a rising growth graph line and 3D metallic golden padlock opening. Sleek glassmorphism UI card format, 16:9 ratio, professional corporate B2B branding.*
+🎨 **𝗔𝗜 𝗜𝗺𝗮𝗴𝗲 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺𝗽𝘁 (𝗗𝗲𝘁𝗮𝗶𝗹𝗲𝗱 𝗠𝗶𝗱𝗷𝗼𝘂𝗿𝗻𝗲𝘆 / 𝗜𝗱𝗲𝗼𝗴𝗿𝗮𝗺 / 𝗗𝗔𝗟𝗟-𝗘 𝟯 𝗦𝗽𝗲𝗰𝗶𝗳𝗶𝗰𝗮𝘁𝗶𝗼𝗻):**
+
+**Visual Aesthetic & Background:**
+* **Background:** Deep slate dark background (`#0f172a`), evoking a professional, data centric corporate environment. Subtle, abstract digital grid lines and glowing network nodes fade into the darkness.
+* **Card Format:** A clean, modern infographic vector card, structured as a sleek glassmorphism UI element with frosted glass textures, soft ambient lighting, and subtle reflections.
+* **Ratio:** 16:9 cinematic aspect ratio.
+* **Branding:** Professional corporate B2B branding, with all elements meticulously aligned using a modern sans serif font.
+
+**Left Section: Performance & Alerts (Discover and Audit):**
+* **4.8 Star Rating:** Prominent "4.8" star rating displayed in a vibrant, glowing gold color (`#ffa000`). Below the rating, four large fully lit gold stars and one partially lit star solidify the value, pulsing gently with a halo light effect.
+* **"WARNING: No Website Detected" Badge:** Positioned directly below the stars, a striking, vibrant orange accent (`#f97316`) rectangular badge with glowing edges. Contains white text: **"WARNING: No Website Detected"** next to an alert icon.
+* **Contextual Data:** Subtle light text directly under the badge: "Automated audit reveals no website. Estimating lost revenue potential: ~$5k/month."
+
+**Right Section: Growth & Security (Outreach and Pipeline):**
+* **Rising Growth Graph Line:** Ascending graph line in a bright gold to orange gradient with bezier curves pointing upwards sharply, marked with glowing data points.
+* **3D Metallic Golden Padlock (Opening):** Large 3D metallic golden padlock in mid open state placed near the graph peak, symbolizing unlocked revenue opportunities.
+* **Holographic Tooltips:** Floating semi transparent popups: "AI Outreach Success: Secured Client" and "Pipeline Value Increased by 150%".
+
+**Footer / Professional Finish:**
+* **Brand/Action Line:** Refined text along bottom edge: "B2B Performance & Security Dashboard • Scale Your Outreach Now".
+* **Subtle Data Stream:** Micro particle trails flowing from right to left illustrating the continuous intelligent loop of discovery and action.
 
 ---
 
@@ -122,8 +158,26 @@ When business owners see exact data about their revenue gaps, closing the deal b
 
 ---
 
-🎨 **𝗔𝗜 𝗜mint 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺𝗽𝘁:**
-> *Sleek 3D isometric layout showcasing three elegant corporate PDF proposal documents floating over a glowing dark glass desktop surface. Orange accent highlight borders (#f97316), clean typography, visible charts, pie graphs, and performance score badges. Premium dark mode SaaS theme, studio lighting, highly detailed 8k render.*
+🎨 **𝗔𝗜 𝗜𝗺𝗮𝗴𝗲 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺𝗽𝘁 (𝗗𝗲𝘁𝗮𝗶𝗹𝗲𝗱 𝗠𝗶𝗱𝗷𝗼𝘂𝗿𝗻𝗲𝘆 / 𝗜𝗱𝗲𝗼𝗴𝗿𝗮𝗺 / 𝗗𝗔𝗟𝗟-𝗘 𝟯 𝗦𝗽𝗲𝗰𝗶𝗳𝗶𝗰𝗮𝘁𝗶𝗼𝗻):**
+
+**Visual Aesthetic & Background:**
+* **Background:** Deep slate corporate background (`#0f172a`) with subtle blueprint wireframe grids fading into dark ambient shadows.
+* **Card Format:** 3D isometric presentation layout of three floating frosted glass document pages.
+* **Ratio:** 16:9 cinematic aspect ratio.
+* **Branding & Palette:** Dark slate (`#0f172a`), orange highlights (`#f97316`), emerald green checkmarks (`#10b981`), and crisp white text typography.
+
+**Primary Visual Elements (3 Floating PDF Proposal Pages):**
+* **Page 1 (Front Left):** Header titled "Local Market Benchmark". Features a 3D bar chart comparing business rating vs top competitor, with a glowing green "Pass Score: 94%" badge.
+* **Page 2 (Center Raised):** Header titled "Revenue Leak Breakdown". Features a red and orange donut chart showing 24% lost direct call volume, with highlighted text callout: "Estimated Loss: ₹35,000/mo".
+* **Page 3 (Right Back):** Header titled "3-Tier Solution Growth Packages". Displays three structured pricing columns ($15k, $30k, $55k) with clear bullet checks.
+
+**Secondary Visual Elements:**
+* Glowing orange accent border highlights (`#f97316`) on the center proposal page.
+* Floating holographic badges: "1 Click Generated PDF" and "Client Ready Audit".
+
+**Footer & Professional Finish:**
+* Refined tagline at bottom: "NearPro Proposal Engine • Turn Audits into Paid Retainers".
+* Studio quality soft ambient rim light, 8k resolution, photorealistic render.
 
 ---
 
@@ -160,8 +214,25 @@ Stop letting manual research slow down your business growth.
 
 ---
 
-🎨 **𝗔𝗜 𝗜𝗺𝗮𝗴𝗲 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺𝗽𝘁:**
-> *Split screen visual concept. Left side shows a messy dark spreadsheet with red warning marks. Right side shows a futuristic glowing orange dashboard (#f97316) displaying organized business cards with checkmarks and green success badges. High contrast, polished glassmorphism style, modern UI design, 16:9 ratio.*
+🎨 **𝗔𝗜 𝗜𝗺𝗮𝗴𝗲 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺𝗽𝘁 (𝗗𝗲𝘁𝗮𝗶𝗹𝗲𝗱 𝗠𝗶𝗱𝗷𝗼𝘂𝗿𝗻𝗲𝘆 / 𝗜𝗱𝗲𝗼𝗴𝗿𝗮𝗺 / 𝗗𝗔𝗟𝗟-𝗘 𝟯 𝗦𝗽𝗲𝗰𝗶𝗳𝗶𝗰𝗮𝘁𝗶𝗼𝗻):**
+
+**Visual Aesthetic & Background:**
+* **Background:** Dual split background concept. Left half is muted dark gray with red warning tones; right half is vibrant dark slate (`#0f172a`) with orange glowing neon highlights (`#f97316`).
+* **Card Format:** Split comparison graphic on a sleek glassmorphism UI canvas.
+* **Ratio:** 16:9 cinematic aspect ratio.
+
+**Left Section (The Old Broken Process):**
+* A messy dark spreadsheet window cluttered with red exclamation marks, crossed out numbers, slow hourglass icon, and text label: **"Manual Research: 20 Hours Lost/Wk"**.
+
+**Right Section (The NearPro Solution):**
+* A glowing modern dashboard card showing automated green checkmarks, rising velocity line graph, 100% data completeness badge, and text label: **"NearPro Automation: 1 Click Discovery"**.
+
+**Center Visual Divider:**
+* A vertical glowing orange divider beam with a central forward arrow icon (`➔`), showing transition from slow manual work to automated speed.
+
+**Footer & Professional Finish:**
+* Text caption along bottom: "NearPro Workflow Automation • Eliminate Spreadsheet Bottlenecks".
+* Ultra clean, sharp vector graphic finish, high contrast 8k render.
 
 ---
 
@@ -192,8 +263,26 @@ Everything your agency needs to scale is now under one roof.
 
 ---
 
-🎨 **𝗔𝗜 𝗜𝗺𝗮𝗴𝗲 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺𝗽𝘁:**
-> *Four glowing 3D acrylic tiles floating in an arc formation. Each tile represents a core tool (Directory Search, Audit Chart, Proposal PDF, WhatsApp Chat) with custom orange glow (#f97316) on dark slate background (#0f172a). Sleek minimalist tech graphic, soft studio shadow, 16:9 banner.*
+🎨 **𝗔𝗜 𝗜𝗺𝗮𝗴𝗲 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺𝗽𝘁 (𝗗𝗲𝘁𝗮𝗶𝗹𝗲𝗱 𝗠𝗶𝗱𝗷𝗼𝘂𝗿𝗻𝗲𝘆 / 𝗜𝗱𝗲𝗼𝗴𝗿𝗮𝗺 / 𝗗𝗔𝗟𝗟-𝗘 𝟯 𝗦𝗽𝗲𝗰𝗶𝗳𝗶𝗰𝗮𝘁𝗶𝗼𝗻):**
+
+**Visual Aesthetic & Background:**
+* **Background:** Deep slate dark background (`#0f172a`), featuring subtle circular network orbits and soft ambient gold glow (`#ffa000`).
+* **Card Format:** 4 floating 3D acrylic tiles arranged in a symmetrical 2x2 grid or circular orbit.
+* **Ratio:** 16:9 cinematic aspect ratio.
+* **Branding:** Modern B2B SaaS architecture layout with clean icon badges and frosted glass borders.
+
+**The 4 Floating Feature Tiles:**
+* **Tile 1 (Top Left):** Icon of a glowing magnifying glass over a local map pin (`#f97316`). Label: "1. Smart Directory".
+* **Tile 2 (Top Right):** Icon of a high speed gauge and audit checkmark (`#10b981`). Label: "2. Audit Engine".
+* **Tile 3 (Bottom Left):** Icon of a 3D PDF proposal document with gold seal (`#ffa000`). Label: "3. Proposal Generator".
+* **Tile 4 (Bottom Right):** Icon of a chat bubble with teleprompter lines (`#3b82f6`). Label: "4. Outreach Studio".
+
+**Center Hub Connection:**
+* A central glowing core sphere with the **NearPro** emblem, connecting all 4 tiles with glowing orange light conduits.
+
+**Footer & Professional Finish:**
+* Tagline: "NearPro All In One Acquisition Suite • Powered by S8N AI Services".
+* Hyperdetailed 3D render, studio lighting, crisp reflections.
 
 ---
 
@@ -225,8 +314,24 @@ By leading with value instead of a hard sales pitch, business owners welcome you
 
 ---
 
-🎨 **𝗔𝗜 𝗜𝗺𝗮𝗴𝗲 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺𝗽𝘁:**
-> *Futuristic 3D map graph showing Mumbai commercial areas glowing with orange location pins (#f97316). Upward trending green growth arrow climbing over local business icons. Professional dark slate backdrop (#0f172a), high tech data overlay, cinematic lighting.*
+🎨 **𝗔𝗜 𝗜𝗺𝗮𝗴𝗲 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺𝗽𝘁 (𝗗𝗲𝘁𝗮𝗶𝗹𝗲𝗱 𝗠𝗶𝗱𝗷𝗼𝘂𝗿𝗻𝗲𝘆 / 𝗜𝗱𝗲𝗼𝗴𝗿𝗮𝗺 / 𝗗𝗔𝗟𝗟-𝗘 𝟯 𝗦𝗽𝗲𝗰𝗶𝗳𝗶𝗰𝗮𝘁𝗶𝗼𝗻):**
+
+**Visual Aesthetic & Background:**
+* **Background:** Deep slate dark atmosphere (`#0f172a`) layered with a subtle 3D top-down map matrix of Mumbai commercial districts (Bandra, Andheri, BKC).
+* **Card Format:** Glassmorphism analytics dashboard overlay card.
+* **Ratio:** 16:9 cinematic aspect ratio.
+
+**Primary Visual Elements:**
+* **3D Map Pin Nodes:** Glowing orange location pins (`#f97316`) rising from the map surface over Bandra and BKC hubs, each displaying a floating "Gap Lead Found" mini badge.
+* **Ascending Revenue Graph:** A prominent 3D neon green (`#10b981`) and gold (`#ffa000`) trendline rising steeply from left to right across the map overlay, featuring a label: **"Client Volume: +210%"**.
+
+**Secondary Contextual Elements:**
+* Floating metrics card: "Ad Cost: ₹0 • Conversion Rate: 34%".
+* Glowing checkmarks on target business category badges (Dentists, Eye Clinics, Law Firms).
+
+**Footer & Professional Finish:**
+* Bottom text: "NearPro Market Intelligence • Predictable Organic Client Acquisition".
+* Cinematic depth of field, neon rim lighting, 8k resolution render.
 
 ---
 
@@ -259,8 +364,23 @@ Empower your agency with the tools built for modern Indian entrepreneurs.
 
 ---
 
-🎨 **𝗔𝗜 𝗜𝗺𝗮𝗴𝗲 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺𝗽𝘁:**
-> *Elegant artistic graphic combining a glowing orange Indian flag motif with modern digital tech elements. A sleek laptop displaying NearPro's dark workspace UI with glowing orange accents (#f97316). Clean premium aesthetic, inspirational mood, high resolution render.*
+🎨 **𝗔𝗜 𝗜𝗺𝗮𝗴𝗲 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺𝗽𝘁 (𝗗𝗲𝘁𝗮𝗶𝗹𝗲𝗱 𝗠𝗶𝗱𝗷𝗼𝘂𝗿𝗻𝗲𝘆 / 𝗜𝗱𝗲𝗼𝗴𝗿𝗮𝗺 / 𝗗𝗔𝗟𝗟-𝗘 𝟯 𝗦𝗽𝗲𝗰𝗶𝗳𝗶𝗰𝗮𝘁𝗶𝗼𝗻):**
+
+**Visual Aesthetic & Background:**
+* **Background:** Sophisticated dark slate background (`#0f172a`) featuring an artistic glowing saffron orange (`#f97316`), white, and emerald green (`#10b981`) ambient light wave motif representing Indian Independence Day.
+* **Card Format:** Modern corporate glassmorphism visual banner.
+* **Ratio:** 16:9 cinematic aspect ratio.
+
+**Primary Visual Elements:**
+* **Centerpiece Mockup:** A sleek ultra thin metallic laptop floating in center frame, displaying NearPro's dark UI workstation with a prominent headline badge: **"Independence From Manual Prospecting"**.
+* **3D Indian Flag Colors Accent:** Elegant volumetric light ribbons in subtle Saffron (#f97316) and Emerald (#10b981) gracefully curving around the laptop screen.
+
+**Secondary Visual Elements:**
+* Floating badges: "Built For Indian Founders" and "Powered by S8N AI Services".
+
+**Footer & Professional Finish:**
+* Bottom text: "Celebrate Growth Independence • Empowering Indian Agencies".
+* Warm premium lighting, ultra crisp typography, studio quality 8k render.
 
 ---
 
@@ -293,8 +413,25 @@ With NearPro, you can launch custom Hinglish or English WhatsApp pitches in 1 cl
 
 ---
 
-🎨 **𝗔𝗜 𝗜𝗺𝗮𝗴𝗲 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺𝗽𝘁:**
-> *Sleek smartphone mockup floating against a dark background (#0f172a). The phone displays a clean Hinglish WhatsApp message preview with glowing orange accent checkmarks (#f97316). Glassmorphic background blur, soft neon green and orange backlighting, corporate marketing presentation style.*
+🎨 **𝗔𝗜 𝗜𝗺𝗮𝗴𝗲 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺𝗽𝘁 (𝗗𝗲𝘁𝗮𝗶𝗹𝗲𝗱 𝗠𝗶𝗱𝗷𝗼𝘂𝗿𝗻𝗲𝘆 / 𝗜𝗱𝗲𝗼𝗴𝗿𝗮𝗺 / 𝗗𝗔𝗟𝗟-𝗘 𝟯 𝗦𝗽𝗲𝗰𝗶𝗳𝗶𝗰𝗮𝘁𝗶𝗼𝗻):**
+
+**Visual Aesthetic & Background:**
+* **Background:** Deep slate dark background (`#0f172a`) with subtle green and orange neon particle trails.
+* **Card Format:** High tech smartphone mockup floating dynamically in 3D space next to a desktop UI snippet.
+* **Ratio:** 16:9 cinematic aspect ratio.
+
+**Primary Visual Elements (Smartphone UI Screen):**
+* **WhatsApp Chat Interface:** Displays a clean, professional Hinglish chat preview:
+  *"Namaste Dr. Sharma! Noticed your clinic in Bandra has a 4.9★ rating with 140+ reviews, but missing an online booking link. Prepared a quick 30-sec audit report for you: nearpro.s8n.in/audit..."*
+* **Interactive Element:** A double green checkmark icon (`✓✓`) glowing brightly, next to a 1-click **"Send Audit PDF"** action button highlighted in orange (`#f97316`).
+
+**Secondary Visual Elements:**
+* Floating tooltip card: "Response Rate: 68% (vs 4% Cold Email)".
+* NearPro logo badge softly illuminated in the top right corner.
+
+**Footer & Professional Finish:**
+* Bottom text: "NearPro Outreach Studio • Direct B2B WhatsApp Communication Engine".
+* Photorealistic glass reflections, 8k resolution studio render.
 
 ---
 
@@ -325,8 +462,25 @@ When you know exactly what to say next, phone calls become your fastest channel 
 
 ---
 
-🎨 **𝗔𝗜 𝗜𝗺𝗮𝗴𝗲 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺𝗽𝘁:**
-> *Futuristic UI screen showing a dark themed teleprompter desktop card with glowing white and orange script text (#f97316). Phone handset icon floating beside it with active soundwave pulses. Modern corporate dark mode studio, 16:9 aspect ratio, clean design.*
+🎨 **𝗔𝗜 𝗜𝗺𝗮𝗴𝗲 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺𝗽𝘁 (𝗗𝗲𝘁𝗮𝗶𝗹𝗲𝗱 𝗠𝗶𝗱𝗷𝗼𝘂𝗿𝗻𝗲𝘆 / 𝗜𝗱𝗲𝗼𝗴𝗿𝗮𝗺 / 𝗗𝗔𝗟𝗟-𝗘 𝟯 𝗦𝗽𝗲𝗰𝗶𝗳𝗶𝗰𝗮𝘁𝗶𝗼𝗻):**
+
+**Visual Aesthetic & Background:**
+* **Background:** Dark slate ambient background (`#0f172a`) with subtle audio frequency waveforms illuminated in glowing gold (`#ffa000`).
+* **Card Format:** Sleek teleprompter workstation interface presented inside a frosted glass card.
+* **Ratio:** 16:9 cinematic aspect ratio.
+
+**Primary Visual Elements:**
+* **Teleprompter Display Window:** Displays highlighted script lines:
+  > *"Namaste! Main NearPro se Priya bol rahi hoon... Humne notice kiya ki Bandra mein aapka clinic 4.9★ rated hai..."*
+* **Objection Pivot Buttons:** Interactive tab buttons along the side: "Send on WhatsApp", "Price Inquiry", "Busy Call Later", highlighted in orange (`#f97316`).
+
+**Secondary Visual Elements:**
+* Floating 3D metallic telephone headset with glowing soundwave rings around the receiver.
+* Badge: "Confidence Score: 100% • Zero Pauses".
+
+**Footer & Professional Finish:**
+* Bottom text: "NearPro Sales Teleprompter • Structured Call Closing Engine".
+* Clean UI typography, studio rim lighting, hyperrealistic render.
 
 ---
 
@@ -358,8 +512,23 @@ Medical professionals value data driven advice. Show them their exact revenue ga
 
 ---
 
-🎨 **𝗔𝗜 𝗜𝗺𝗮𝗴𝗲 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺𝗽𝘁:**
-> *High tech medical UI presentation graphic. A stylized 3D dental tooth emblem glowing softly next to an orange audit score card badge (#f97316) reading "4.9★ Healthcare Gap Detected". Dark blue slate background (#0f172a), clean vector icons, professional medical SaaS styling.*
+🎨 **𝗔𝗜 𝗜𝗺𝗮𝗴𝗲 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺𝗽𝘁 (𝗗𝗲𝘁𝗮𝗶𝗹𝗲𝗱 𝗠𝗶𝗱𝗷𝗼𝘂𝗿𝗻𝗲𝘆 / 𝗜𝗱𝗲𝗼𝗴𝗿𝗮𝗺 / 𝗗𝗔𝗟𝗟-𝗘 𝟯 𝗦𝗽𝗲𝗰𝗶𝗳𝗶𝗰𝗮𝘁𝗶𝗼𝗻):**
+
+**Visual Aesthetic & Background:**
+* **Background:** Deep navy slate background (`#0f172a`) with subtle medical cross grid patterns and soft cyan backlighting.
+* **Card Format:** Healthcare analytics dashboard infographic card with frosted glass textures.
+* **Ratio:** 16:9 cinematic aspect ratio.
+
+**Primary Visual Elements:**
+* **Medical Iconography:** A polished 3D metallic tooth and medical cross emblem glowing next to a prominent score badge: **"4.9★ Healthcare Gap Discovered"**.
+* **Clinic Data Card:** Mini profile card showing "Total Teeth Dental Care Clinic • Bandra", with glowing orange warning pill: **"Missing Website Link"** (`#f97316`).
+
+**Secondary Visual Elements:**
+* A patient revenue calculator gauge indicating: **"Estimated Lost Bookings: 25 Patients/mo • Revenue Leak: ₹1.2L"**.
+
+**Footer & Professional Finish:**
+* Bottom text: "NearPro Healthcare Market Intelligence • High Value Clinic Targeting".
+* Crisp 8k render, professional clinical SaaS theme, high contrast lighting.
 
 ---
 
@@ -385,14 +554,27 @@ The team at **𝗦𝟴𝗡 𝗔𝗜 𝗦𝗲𝗿𝘃𝗶𝗰𝗲𝘀** advocates
 
 By presenting three clear options, clients choose the package that fits their ambition instead of negotiating your rate down.
 
-🌐 Build your multi-tier proposals: nearpro.s8n.in
+🌐 Build your multi tier proposals: nearpro.s8n.in
 
 #AgencyPricing #B2BSales #HighTicket #NearPro #S8NAIServices
 
 ---
 
-🎨 **𝗔𝗜 𝗜𝗺𝗮𝗴𝗲 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺帕Prompt:**
-> *Three 3D glass pricing cards arranged side by side on a dark slate background (#0f172a). The center "Growth Package" card glows with a bright orange border (#f97316) and a prominent "Most Popular" ribbon tag. Sleek typography, polished UI aesthetic, 16:9 ratio.*
+🎨 **𝗔𝗜 𝗜𝗺𝗮𝗴𝗲 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺𝗽𝘁 (𝗗𝗲𝘁𝗮𝗶𝗹𝗲𝗱 𝗠𝗶𝗱𝗷𝗼𝘂𝗿𝗻𝗲𝘆 / 𝗜𝗱𝗲𝗼𝗴𝗿𝗮𝗺 / 𝗗𝗔𝗟𝗟-𝗘 𝟯 𝗦𝗽𝗲𝗰𝗶𝗳𝗶𝗰𝗮𝘁𝗶𝗼𝗻):**
+
+**Visual Aesthetic & Background:**
+* **Background:** Deep slate dark environment (`#0f172a`) with subtle glowing currency symbol particle dust (₹ / $).
+* **Card Format:** Three 3D glass pricing tier cards floating side by side in space.
+* **Ratio:** 16:9 cinematic aspect ratio.
+
+**The 3 Pricing Tier Cards:**
+* **Card 1 (Left - Starter):** "Starter • ₹15,000" — Muted silver glass finish with basic feature bullets.
+* **Card 2 (Center - Growth - Focal Point):** "Growth Package • ₹30,000" — Raised higher with a glowing vibrant orange border (`#f97316`) and top ribbon: **"MOST POPULAR (80% CHOICE)"**.
+* **Card 3 (Right - Dominance):** "Dominance • ₹55,000" — Deep gold glass finish (`#ffa000`) with full stack feature bullets.
+
+**Footer & Professional Finish:**
+* Bottom text: "NearPro Multi-Tier Pricing Engine • Stop Discounting, Start Scaling".
+* 3D isometric perspective, studio lighting, hyperrealistic render.
 
 ---
 
@@ -425,8 +607,25 @@ Keep your pipeline organized and watch your conversion rates double!
 
 ---
 
-🎨 **𝗔𝗜 𝗜𝗺𝗮𝗴𝗲 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺𝗽𝘁:**
-> *Sleek 3D Kanban board workspace layout featuring glowing column cards (New, Contacted, Pitched, Closed). Smooth orange highlights (#f97316) on dark slate glass background (#0f172a). Clean modern dashboard view, top down perspective, studio lighting.*
+🎨 **𝗔𝗜 𝗜𝗺𝗮𝗴𝗲 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺𝗽𝘁 (𝗗𝗲𝘁𝗮𝗶𝗹𝗲𝗱 𝗠𝗶𝗱𝗷𝗼𝘂𝗿𝗻𝗲𝘆 / 𝗜𝗱𝗲𝗼𝗴𝗿𝗮𝗺 / 𝗗𝗔𝗟𝗟-𝗘 𝟯 𝗦𝗽𝗲𝗰𝗶𝗳𝗶𝗰𝗮𝘁𝗶𝗼𝗻):**
+
+**Visual Aesthetic & Background:**
+* **Background:** Dark slate metallic background (`#0f172a`) with subtle linear grid structures.
+* **Card Format:** 3D Kanban sales pipeline workstation UI board viewed from a dynamic 45 degree angle.
+* **Ratio:** 16:9 cinematic aspect ratio.
+
+**Primary Visual Elements (Kanban Pipeline Columns):**
+* **Column 1:** "New Leads (14)" — Muted glass cards.
+* **Column 2:** "Audit Pitched (8)" — Light blue highlighted cards.
+* **Column 3:** "Demo Scheduled (5)" — Glowing orange cards (`#f97316`).
+* **Column 4:** "Closed Retainer (12)" — Bright emerald green cards (`#10b981`) with confetti particle accent.
+
+**Interactive Details:**
+* A 3D cursor dragging a lead card from "Pitched" into "Closed Retainer", with glowing green status pop-up: **"Retainer Locked: ₹30,000/mo"**.
+
+**Footer & Professional Finish:**
+* Bottom text: "NearPro 360° B2B CRM • Zero Leaked Opportunities".
+* Ultra crisp UI elements, high end corporate SaaS lighting.
 
 ---
 
@@ -458,8 +657,20 @@ Thank you to all the agency leaders who joined our platform during our launch mo
 
 ---
 
-🎨 **𝗔𝗜 𝗜𝗺𝗮𝗴𝗲 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺𝗽𝘁:**
-> *Inspiring corporate photography visual. A modern Indian tech founder working in a sleek dark office background, looking at a laptop displaying NearPro's glowing orange dashboard (#f97316). Warm ambient lighting, professional cinematic depth of field, high quality 8k render.*
+🎨 **𝗔𝗜 𝗜𝗺𝗮𝗴𝗲 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺𝗽𝘁 (𝗗𝗲𝘁𝗮𝗶𝗹𝗲𝗱 𝗠𝗶𝗱𝗷𝗼𝘂𝗿𝗻𝗲𝘆 / 𝗜𝗱𝗲𝗼𝗴𝗿𝗮𝗺 / 𝗗𝗔𝗟𝗟-𝗘 𝟯 𝗦𝗽𝗲𝗰𝗶𝗳𝗶𝗰𝗮𝘁𝗶𝗼𝗻):**
+
+**Visual Aesthetic & Background:**
+* **Background:** Deep dark slate office environment (`#0f172a`) with cinematic warm background bokeh lights.
+* **Card Format:** High quality photographic narrative visual overlaid with sleek glassmorphism typography card.
+* **Ratio:** 16:9 cinematic aspect ratio.
+
+**Primary Visual Elements:**
+* **Founder at Work:** A confident Indian tech founder sitting at a modern dark wooden desk, reviewing NearPro's glowing orange analytics workspace (`#f97316`) on a sleek monitor.
+* **Holographic Indian Map Network:** Floating semi transparent 3D map of India behind the screen, with interconnected glowing orange data nodes connecting Mumbai, Delhi, Bangalore, and Kolkata.
+
+**Footer & Professional Finish:**
+* Bottom text: "The NearPro Vision • Empowering Indian MSMEs & Growth Agencies".
+* Photorealistic depth of field, warm ambient studio lighting, 8k resolution.
 
 ---
 
@@ -493,21 +704,37 @@ Make September your highest revenue month of the year!
 
 ---
 
-🎨 **𝗔𝗜 𝗜𝗺𝗮𝗴𝗲 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺𝗽𝘁:**
-> *High impact 3D trophy graphic floating above a dark metallic desktop with glowing orange checkmark badges (#f97316). Calendar page showing September 1st with bright neon backlight. Sleek corporate SaaS aesthetics, 16:9 banner format, studio lighting.*
+🎨 **𝗔𝗜 𝗜𝗺𝗮𝗴𝗲 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗶𝗼𝗻 𝗣𝗿𝗼𝗺𝗽𝘁 (𝗗𝗲𝘁𝗮𝗶𝗹𝗲𝗱 𝗠𝗶𝗱𝗷𝗼𝘂𝗿𝗻𝗲𝘆 / 𝗜𝗱𝗲𝗼𝗴𝗿𝗮𝗺 / 𝗗𝗔𝗟𝗟-𝗘 𝟯 𝗦𝗽𝗲𝗰𝗶𝗳𝗶𝗰𝗮𝘁𝗶𝗼𝗻):**
+
+**Visual Aesthetic & Background:**
+* **Background:** Deep slate dark backdrop (`#0f172a`) with subtle glowing gold and orange particle streams.
+* **Card Format:** 3D executive checklist card with frosted glass styling and gold trim.
+* **Ratio:** 16:9 cinematic aspect ratio.
+
+**Primary Visual Elements:**
+* **3D Gold Trophy:** A glowing 3D metallic golden trophy (`#ffa000`) on the left, symbolizing agency revenue mastery.
+* **Checklist Board:** A clean glass board on the right displaying 5 glowing green checkmark items (`#10b981`):
+  "✓ Live Directory Search Active", "✓ 3-Page Proposals Automated", "✓ WhatsApp Outreach Studio Live", "✓ 360° CRM Configured", "✓ September Revenue Ready".
+
+**Calendar Accent:**
+* A floating 3D desk calendar showing "September 1st" glowing with a bright orange neon ring (`#f97316`).
+
+**Footer & Professional Finish:**
+* Bottom text: "NearPro Sales Stack • Make September Your Highest Revenue Month".
+* Ultra crisp 8k render, studio lighting, hyperrealistic finish.
 
 ---
 
 ## 💡 LINKEDIN ALGORITHM & EXECUTION GUIDELINES
 
-1. **Strict Zero-Hyphen Policy**:  
+1. **Strict Zero Hyphen Policy**:  
    No hyphens (`-`) are used anywhere in the post text or bullet points. Bullet points use clean unicode symbols (`•`, `▪`, `►`) to ensure pristine readability across desktop and mobile LinkedIn apps.
 
 2. **No Data Extraction Warnings**:  
    All content uses approved positioning language (*"Live Market Discovery"*, *"Verified Business Intelligence"*, *"Local Directory Mapping"*) without disclosing technical data sources or using forbidden terms like "scraping" or "extraction".
 
 3. **Mathematical Bold Characters**:  
-   All hooks and section headers use native Unicode Mathematical Bold characters. When you copy-paste the post text into LinkedIn, the bold formatting will stay intact automatically without needing manual bolding!
+   All hooks and section headers use native Unicode Mathematical Bold characters. When you copy paste the post text into LinkedIn, the bold formatting will stay intact automatically without needing manual bolding!
 
 4. **Exact URL & Brand Attribution**:  
    Every single post links to `nearpro.s8n.in` and explicitly highlights `S8N AI Services` as the parent organization.
