@@ -35,14 +35,14 @@ serve(async (req) => {
     }
 
     const tierUpper = (plan_id || 'hunter').toUpperCase();
-    const invoiceNumber = `INV-NEARPRO-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+    const invoiceNumber = `INV NEARPRO ${new Date().getFullYear()} ${Math.floor(1000 + Math.random() * 9000)}`;
     const invoiceDate = new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' });
     const recipientDisplayName = user_name || user_email.split('@')[0];
 
     let subject = `NearPro Notification`;
     let emailHTML = ``;
 
-    // Common Header HTML — Pure NearPro Branding
+    // Common Header HTML — Pure NearPro Branding (No Hyphens)
     const commonHeader = `
     <!-- Top Accent Brand Gradient Bar -->
     <tr>
@@ -58,23 +58,41 @@ serve(async (req) => {
     </tr>
     `;
 
-    // Common Signature & Automated Email Footer HTML — NearPro Team & support@s8n.in
+    // Common Signature & Automated Email Footer HTML — Expanded Links & Trust Badges
     const commonFooter = `
     <!-- Signature -->
     <tr>
       <td style="padding:28px 36px; border-top:1px solid #e8e8f0; background-color:#ffffff;">
-        <p style="font-size:14.5px; color:#0b081d; margin:0 0 3px 0; font-family:'Plus Jakarta Sans', sans-serif; font-weight:700;">NearPro Platform Team</p>
-        <p style="font-size:13px; color:#666480; margin:0 0 14px 0; font-family:'Inter', sans-serif;">S8N Technologies &bull; India's Trusted B2B Lead OS</p>
-        <p style="margin:0; font-family:'Inter', sans-serif; font-size:13.5px; line-height:1.6; color:#666480;">
-          <span style="display:inline-block; margin-right:18px; vertical-align:middle;">
-            <span style="font-size:14px; margin-right:3px; vertical-align:middle;">✉️</span>
-            <a href="mailto:${SUPPORT_EMAIL}" style="color:#0b081d; text-decoration:underline; font-weight:600; vertical-align:middle;">${SUPPORT_EMAIL}</a>
+        <p style="font-size:15px; color:#0b081d; margin:0 0 4px 0; font-family:'Plus Jakarta Sans', sans-serif; font-weight:800;">NearPro Platform Team</p>
+        <p style="font-size:13px; color:#666480; margin:0 0 16px 0; font-family:'Inter', sans-serif;">S8N Technologies &bull; India's Trusted B2B Lead OS</p>
+        
+        <p style="margin:0 0 16px 0; font-family:'Inter', sans-serif; font-size:13px; line-height:1.8; color:#475569;">
+          <span style="display:inline-block; margin-right:16px; vertical-align:middle;">
+            <span style="font-size:14px; margin-right:4px; vertical-align:middle;">✉️</span>
+            <a href="mailto:${SUPPORT_EMAIL}" style="color:#0b081d; text-decoration:underline; font-weight:600;">${SUPPORT_EMAIL}</a>
           </span>
-          <span style="display:inline-block; margin-right:18px; vertical-align:middle;">
-            <span style="font-size:14px; margin-right:3px; vertical-align:middle;">🌐</span>
-            <a href="https://nearpro.s8n.in" style="color:#0b081d; text-decoration:underline; font-weight:600; vertical-align:middle;">nearpro.s8n.in</a>
+          <span style="display:inline-block; margin-right:16px; vertical-align:middle;">
+            <span style="font-size:14px; margin-right:4px; vertical-align:middle;">🚀</span>
+            <a href="https://nearpro.s8n.in" style="color:#0b081d; text-decoration:underline; font-weight:600;">nearpro.s8n.in</a>
+          </span>
+          <span style="display:inline-block; margin-right:16px; vertical-align:middle;">
+            <span style="font-size:14px; margin-right:4px; vertical-align:middle;">🌐</span>
+            <a href="https://www.s8n.in" style="color:#0b081d; text-decoration:underline; font-weight:600;">s8n.in</a>
+          </span>
+          <span style="display:inline-block; vertical-align:middle;">
+            <span style="font-size:14px; margin-right:4px; vertical-align:middle;">💼</span>
+            <a href="https://www.linkedin.com/company/s8n-ai-services" style="color:#0b081d; text-decoration:underline; font-weight:600;">LinkedIn</a>
           </span>
         </p>
+
+        <!-- High Trust Badges -->
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px; font-size:11.5px; color:#475569; font-family:'Inter', sans-serif;">
+          <tr>
+            <td align="center">
+              🔒 <strong>256 Bit Encrypted Data</strong> &nbsp;&bull;&nbsp; ⚡ <strong>Instant API Pipeline Sync</strong> &nbsp;&bull;&nbsp; ⏱️ <strong>Under 2 Hour Support SLA</strong>
+            </td>
+          </tr>
+        </table>
       </td>
     </tr>
 
@@ -92,7 +110,7 @@ serve(async (req) => {
     `;
 
     if (type === 'welcome') {
-      subject = `🚀 Welcome to NearPro — Your Autonomous Agency Operating System!`;
+      subject = `🚀 Welcome to NearPro : Your Autonomous Agency Operating System!`;
       emailHTML = `
       <!DOCTYPE html>
       <html lang="en">
@@ -111,13 +129,13 @@ serve(async (req) => {
               <tr>
                 <td style="padding:40px 36px 32px 36px;">
                   <p style="font-size:20px; color:#0b081d; margin:0 0 16px 0; line-height:1.4; font-weight:800; font-family:'Plus Jakarta Sans', sans-serif; letter-spacing:-0.2px;">
-                    Welcome to NearPro — Autonomous B2B Lead Intelligence 🚀
+                    Welcome to NearPro : Autonomous B2B Lead Intelligence 🚀
                   </p>
                   <p style="font-size:15px; color:#2d2b3d; margin:0 0 24px 0; font-family:'Inter', sans-serif; line-height:1.6;">
                     Your workspace is officially provisioned and live. Here is how NearPro accelerates your B2B client acquisition pipeline from day one:
                   </p>
 
-                  <!-- Professional Bulletins Section -->
+                  <!-- Professional Bulletins Section (No Hyphens) -->
                   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px 0; background-color:#fff1f6; border-radius:10px; border:1px solid #fbcfe8;">
                     <tr>
                       <td style="padding:24px 24px 8px 24px;">
@@ -126,28 +144,28 @@ serve(async (req) => {
                             <td style="padding-bottom:18px; vertical-align:top; width:28px; font-size:16px; color:#ec4899; font-weight:bold;">•</td>
                             <td style="padding-bottom:18px; font-size:14.5px; color:#2d2b3d; line-height:1.5; font-family:'Inter', sans-serif;">
                               <strong style="color:#0b081d; font-family:'Plus Jakarta Sans', sans-serif;">12,358+ Verified B2B Lead Records</strong><br>
-                              <span style="font-size:13.5px; color:#666480;">Direct phone numbers, ratings, & website tech stacks across India.</span>
+                              <span style="font-size:13.5px; color:#666480;">Direct phone numbers, ratings, and website tech stacks across India.</span>
                             </td>
                           </tr>
                           <tr>
                             <td style="padding-bottom:18px; vertical-align:top; width:28px; font-size:16px; color:#ec4899; font-weight:bold;">•</td>
                             <td style="padding-bottom:18px; font-size:14.5px; color:#2d2b3d; line-height:1.5; font-family:'Inter', sans-serif;">
-                              <strong style="color:#0b081d; font-family:'Plus Jakarta Sans', sans-serif;">1-Click PageSpeed Audits & Revenue Drop-off</strong><br>
+                              <strong style="color:#0b081d; font-family:'Plus Jakarta Sans', sans-serif;">Instant 1 Click PageSpeed Audits and Revenue Drop Off</strong><br>
                               <span style="font-size:13.5px; color:#666480;">Instantly expose mobile load speed bottlenecks to prospects.</span>
                             </td>
                           </tr>
                           <tr>
                             <td style="padding-bottom:18px; vertical-align:top; width:28px; font-size:16px; color:#ec4899; font-weight:bold;">•</td>
                             <td style="padding-bottom:18px; font-size:14.5px; color:#2d2b3d; line-height:1.5; font-family:'Inter', sans-serif;">
-                              <strong style="color:#0b081d; font-family:'Plus Jakarta Sans', sans-serif;">3-Page Agency PDF Proposals</strong><br>
-                              <span style="font-size:13.5px; color:#666480;">Auto generate high-converting pitch decks tailored to target clients.</span>
+                              <strong style="color:#0b081d; font-family:'Plus Jakarta Sans', sans-serif;">3 Page Agency PDF Proposals</strong><br>
+                              <span style="font-size:13.5px; color:#666480;">Auto generate high converting pitch decks tailored to target clients.</span>
                             </td>
                           </tr>
                           <tr>
                             <td style="padding-bottom:18px; vertical-align:top; width:28px; font-size:16px; color:#ec4899; font-weight:bold;">•</td>
                             <td style="padding-bottom:18px; font-size:14.5px; color:#2d2b3d; line-height:1.5; font-family:'Inter', sans-serif;">
                               <strong style="color:#0b081d; font-family:'Plus Jakarta Sans', sans-serif;">AI Teleprompter Cold Calling Scripts</strong><br>
-                              <span style="font-size:13.5px; color:#666480;">Live objection response cards with male/female inflection support.</span>
+                              <span style="font-size:13.5px; color:#666480;">Live objection response cards with male and female inflection support.</span>
                             </td>
                           </tr>
                         </table>
@@ -176,21 +194,21 @@ serve(async (req) => {
       </html>
       `;
     } else if (type === 'upgrade') {
-      subject = `🎉 Confirmed: You have Upgraded to NearPro ${tierUpper} Plan!`;
+      subject = `🎉 Confirmed : You have Upgraded to NearPro ${tierUpper} Plan!`;
       
       const quotaBullets = plan_id === 'scout' ? `
-        <tr><td style="padding-bottom:10px; font-size:14px; color:#0b081d;">✓ <strong>8 AI Tele-Sales Call Scripts</strong> / month</td></tr>
-        <tr><td style="padding-bottom:10px; font-size:14px; color:#0b081d;">✓ <strong>40 Web AI & Antigravity Prompt Copies</strong> / month</td></tr>
-        <tr><td style="padding-bottom:10px; font-size:14px; color:#0b081d;">✓ <strong>5 Custom Smart Lead Lists & Pipeline Tracking</strong></td></tr>
+        <tr><td style="padding-bottom:10px; font-size:14px; color:#0b081d;">✓ <strong>8 AI Tele Sales Call Scripts</strong> / month</td></tr>
+        <tr><td style="padding-bottom:10px; font-size:14px; color:#0b081d;">✓ <strong>40 Web AI and Antigravity Prompt Copies</strong> / month</td></tr>
+        <tr><td style="padding-bottom:10px; font-size:14px; color:#0b081d;">✓ <strong>5 Custom Smart Lead Lists and Pipeline Tracking</strong></td></tr>
       ` : plan_id === 'agency' ? `
-        <tr><td style="padding-bottom:10px; font-size:14px; color:#0b081d;">✓ <strong>150 AI Tele-Sales Call Scripts</strong> / month (Male/Female inflections)</td></tr>
-        <tr><td style="padding-bottom:10px; font-size:14px; color:#0b081d;">✓ <strong>150 Antigravity & Web AI Prompt Copies</strong> / month</td></tr>
-        <tr><td style="padding-bottom:10px; font-size:14px; color:#0b081d;">✓ <strong>Unlimited Smart Lead Lists & CRM Board Columns</strong></td></tr>
-        <tr><td style="padding-bottom:10px; font-size:14px; color:#0b081d;">✓ <strong>Team Workspaces & Priority API Pipeline Sync</strong></td></tr>
+        <tr><td style="padding-bottom:10px; font-size:14px; color:#0b081d;">✓ <strong>150 AI Tele Sales Call Scripts</strong> / month (Male and Female inflections)</td></tr>
+        <tr><td style="padding-bottom:10px; font-size:14px; color:#0b081d;">✓ <strong>150 Antigravity and Web AI Prompt Copies</strong> / month</td></tr>
+        <tr><td style="padding-bottom:10px; font-size:14px; color:#0b081d;">✓ <strong>Unlimited Smart Lead Lists and CRM Board Columns</strong></td></tr>
+        <tr><td style="padding-bottom:10px; font-size:14px; color:#0b081d;">✓ <strong>Team Workspaces and Priority API Pipeline Sync</strong></td></tr>
       ` : `
-        <tr><td style="padding-bottom:10px; font-size:14px; color:#0b081d;">✓ <strong>45 AI Tele-Sales Call Scripts</strong> / month</td></tr>
-        <tr><td style="padding-bottom:10px; font-size:14px; color:#0b081d;">✓ <strong>80 Antigravity & Web AI Prompt Copies</strong> / month</td></tr>
-        <tr><td style="padding-bottom:10px; font-size:14px; color:#0b081d;">✓ <strong>20 Custom Smart Lead Lists & Pipeline Tracking</strong></td></tr>
+        <tr><td style="padding-bottom:10px; font-size:14px; color:#0b081d;">✓ <strong>45 AI Tele Sales Call Scripts</strong> / month</td></tr>
+        <tr><td style="padding-bottom:10px; font-size:14px; color:#0b081d;">✓ <strong>80 Antigravity and Web AI Prompt Copies</strong> / month</td></tr>
+        <tr><td style="padding-bottom:10px; font-size:14px; color:#0b081d;">✓ <strong>20 Custom Smart Lead Lists and Pipeline Tracking</strong></td></tr>
       `;
 
       emailHTML = `
@@ -286,7 +304,7 @@ serve(async (req) => {
                     <tr>
                       <td style="padding:20px; text-align:center;">
                         <div style="font-size:14px; font-weight:800; color:#ec4899; font-family:'Plus Jakarta Sans', sans-serif;">
-                          📍 Priority Status: Reserved & Locked
+                          📍 Priority Status: Reserved and Locked
                         </div>
                         <div style="font-size:13.5px; color:#666480; margin-top:6px; font-family:'Inter', sans-serif;">
                           You will receive 1 Month Free Scout Tier access the moment data for your requested city drops!
@@ -316,8 +334,8 @@ serve(async (req) => {
       </html>
       `;
     } else {
-      // Default: Invoice Email
-      subject = `Tax Invoice ${invoiceNumber} — NearPro ${tierUpper} Plan Purchase`;
+      // Default: Invoice Email (No Hyphens)
+      subject = `Tax Invoice ${invoiceNumber} : NearPro ${tierUpper} Plan Purchase`;
       const numericPaid = parseFloat(net_paid) || (plan_id === 'scout' ? 499 : (plan_id === 'agency' ? 2499 : 999));
       const baseAmount = (numericPaid / 1.18).toFixed(2);
       const gstAmount = (numericPaid - parseFloat(baseAmount)).toFixed(2);
@@ -358,7 +376,7 @@ serve(async (req) => {
                     </tr>
                   </table>
 
-                  <!-- Info Grid (Dynamic User Profile Data) -->
+                  <!-- Info Grid -->
                   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px; background-color:#f8f8fa; border-radius:8px; padding:20px; border:1px solid #e8e8f0;">
                     <tr>
                       <td style="vertical-align:top; font-size:13.5px; color:#2d2b3d; line-height:1.6; font-family:'Inter', sans-serif;">
@@ -391,7 +409,7 @@ serve(async (req) => {
                       <tr style="border-bottom:1px solid #e8e8f0;">
                         <td style="padding:14px; color:#0b081d;">
                           <strong>NearPro ${tierUpper} Plan</strong><br>
-                          <span style="font-size:12px; color:#666480;">1 Month Business Intelligence & Lead Access</span>
+                          <span style="font-size:12px; color:#666480;">1 Month Business Intelligence and Lead Access</span>
                         </td>
                         <td style="padding:14px; text-align:right; color:#2d2b3d;">₹${baseAmount}</td>
                         <td style="padding:14px; text-align:right; color:#2d2b3d;">₹${gstAmount}</td>
