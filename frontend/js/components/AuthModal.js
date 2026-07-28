@@ -141,134 +141,229 @@ export function renderAuthModal() {
 
                 <!-- Right Pane Product Showcase -->
                 <div class="auth-right-pane">
-                    
-                    <div style="z-index: 2; margin: 0 0 auto 0; display: flex; flex-direction: column; gap: 20px; width: 100%;">
-                        <div style="max-width: 580px; text-align: left;">
-                            <h1 style="font-size: 34px; font-weight: 800; font-family: var(--font-heading); color: white; line-height: 1.25; margin: 0 0 10px 0; letter-spacing: -0.5px;">
-                                Simplify Your Business Operations
-                            </h1>
-                            <p style="color: rgba(255, 255, 255, 0.9); font-size: 14px; line-height: 1.6; margin: 0 0 8px 0;">
-                                From search directory mapping to instant pipeline syncing, everything your agency needs is here.
-                            </p>
+                    <!-- Subtle Ambient Background Glows & Pattern -->
+                    <div style="position: absolute; top: -60px; right: -60px; width: 450px; height: 450px; background: rgba(255, 255, 255, 0.16); filter: blur(100px); border-radius: 50%; pointer-events: none; z-index: 1;"></div>
+                    <div style="position: absolute; bottom: -80px; left: 80px; width: 500px; height: 500px; background: rgba(236, 72, 153, 0.35); filter: blur(120px); border-radius: 50%; pointer-events: none; z-index: 1;"></div>
+
+                    <div style="z-index: 2; display: flex; flex-direction: column; gap: 20px; width: 100%; height: 100%; justify-content: space-between;">
+                        
+                        <!-- Top Header & Features Area (Full Width) -->
+                        <div style="display: flex; flex-direction: column; gap: 16px; width: 100%;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.18); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 5px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.28); box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                                    <span style="width: 7px; height: 7px; border-radius: 50%; background: #4ade80; display: inline-block; box-shadow: 0 0 8px #4ade80;"></span>
+                                    <span style="font-size: 11px; font-weight: 800; color: white; text-transform: uppercase; letter-spacing: 0.9px;">NearPro Agency Suite</span>
+                                </div>
+                                <div style="display: flex; gap: 16px; font-size: 11.5px; font-weight: 700; color: rgba(255,255,255,0.9);">
+                                    <span>⚡ 12,800+ Leads Extracted</span>
+                                    <span>&bull;</span>
+                                    <span>🎯 99.8% Verified Mobiles</span>
+                                </div>
+                            </div>
+
+                            <div style="width: 100%; text-align: left;">
+                                <h1 style="font-size: 34px; font-weight: 800; font-family: var(--font-heading); color: #ffffff; line-height: 1.2; margin: 0 0 8px 0; letter-spacing: -0.6px; text-shadow: 0 2px 10px rgba(0,0,0,0.15);">
+                                    Simplify Your Business Operations
+                                </h1>
+                                <p style="color: rgba(255, 255, 255, 0.95); font-size: 14.5px; line-height: 1.5; margin: 0; font-weight: 400; max-width: 900px;">
+                                    From search directory mapping to instant pipeline syncing, everything your agency needs is right here.
+                                </p>
+                            </div>
+
+                            <!-- Full Width Responsive Glassmorphic Feature Cards Grid (4 Columns across wide screen) -->
+                            <div class="auth-features-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 4px; width: 100%;">
+                                <div style="background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.22); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 12px; padding: 12px 14px; display: flex; gap: 10px; align-items: flex-start;">
+                                    <div style="background: rgba(255,255,255,0.22); border-radius: 8px; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: 800; flex-shrink: 0; margin-top: 1px; box-shadow: inset 0 1px 1px rgba(255,255,255,0.4);">✓</div>
+                                    <div>
+                                        <div style="font-size: 13px; font-weight: 700; color: #ffffff;">Unlimited Lead Mapping</div>
+                                        <div style="font-size: 11px; color: rgba(255,255,255,0.85); margin-top: 2px; line-height: 1.3;">Extract verified directories with direct phones.</div>
+                                    </div>
+                                </div>
+                                <div style="background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.22); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 12px; padding: 12px 14px; display: flex; gap: 10px; align-items: flex-start;">
+                                    <div style="background: rgba(255,255,255,0.22); border-radius: 8px; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: 800; flex-shrink: 0; margin-top: 1px; box-shadow: inset 0 1px 1px rgba(255,255,255,0.4);">✓</div>
+                                    <div>
+                                        <div style="font-size: 13px; font-weight: 700; color: #ffffff;">1-Click CRM Sync</div>
+                                        <div style="font-size: 11px; color: rgba(255,255,255,0.85); margin-top: 2px; line-height: 1.3;">Push leads to Sheets, Zoho, or your CRM.</div>
+                                    </div>
+                                </div>
+                                <div style="background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.22); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 12px; padding: 12px 14px; display: flex; gap: 10px; align-items: flex-start;">
+                                    <div style="background: rgba(255,255,255,0.22); border-radius: 8px; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: 800; flex-shrink: 0; margin-top: 1px; box-shadow: inset 0 1px 1px rgba(255,255,255,0.4);">✓</div>
+                                    <div>
+                                        <div style="font-size: 13px; font-weight: 700; color: #ffffff;">Instant Site Audits</div>
+                                        <div style="font-size: 11px; color: rgba(255,255,255,0.85); margin-top: 2px; line-height: 1.3;">Generate PDF proposals with site gaps.</div>
+                                    </div>
+                                </div>
+                                <div style="background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.22); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 12px; padding: 12px 14px; display: flex; gap: 10px; align-items: flex-start;">
+                                    <div style="background: rgba(255,255,255,0.22); border-radius: 8px; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: 800; flex-shrink: 0; margin-top: 1px; box-shadow: inset 0 1px 1px rgba(255,255,255,0.4);">✓</div>
+                                    <div>
+                                        <div style="font-size: 13px; font-weight: 700; color: #ffffff;">AI Outreach Composer</div>
+                                        <div style="font-size: 11px; color: rgba(255,255,255,0.85); margin-top: 2px; line-height: 1.3;">Draft personalized pitch emails on autopilot.</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Highlights list / using the right side for something more -->
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 620px;">
-                            <div style="display: flex; gap: 10px; align-items: flex-start;">
-                                <span style="background: rgba(255,255,255,0.15); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: 800; flex-shrink: 0; margin-top: 1px;">✓</span>
-                                <div>
-                                    <div style="font-size: 13.5px; font-weight: 700; color: white;">Unlimited Lead Mapping</div>
-                                    <div style="font-size: 11.5px; color: rgba(255,255,255,0.75); margin-top: 2px; line-height: 1.4;">Extract verified local directories with direct mobile numbers.</div>
-                                </div>
-                            </div>
-                            <div style="display: flex; gap: 10px; align-items: flex-start;">
-                                <span style="background: rgba(255,255,255,0.15); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: 800; flex-shrink: 0; margin-top: 1px;">✓</span>
-                                <div>
-                                    <div style="font-size: 13.5px; font-weight: 700; color: white;">1-Click CRM Sync</div>
-                                    <div style="font-size: 11.5px; color: rgba(255,255,255,0.75); margin-top: 2px; line-height: 1.4;">Push leads automatically to Google Sheets, Zoho, or your custom CRM.</div>
-                                </div>
-                            </div>
-                            <div style="display: flex; gap: 10px; align-items: flex-start;">
-                                <span style="background: rgba(255,255,255,0.15); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: 800; flex-shrink: 0; margin-top: 1px;">✓</span>
-                                <div>
-                                    <div style="font-size: 13.5px; font-weight: 700; color: white;">Instant Site Audits</div>
-                                    <div style="font-size: 11.5px; color: rgba(255,255,255,0.75); margin-top: 2px; line-height: 1.4;">Generate beautiful, customized PDF proposals with performance gaps.</div>
-                                </div>
-                            </div>
-                            <div style="display: flex; gap: 10px; align-items: flex-start;">
-                                <span style="background: rgba(255,255,255,0.15); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: 800; flex-shrink: 0; margin-top: 1px;">✓</span>
-                                <div>
-                                    <div style="font-size: 13.5px; font-weight: 700; color: white;">AI Outreach Composer</div>
-                                    <div style="font-size: 11.5px; color: rgba(255,255,255,0.75); margin-top: 2px; line-height: 1.4;">Draft custom call templates and warm openers on autopilot.</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Unified High Fidelity Browser Mockup -->
-                        <div class="auth-browser-mockup" style="width: 100%; max-width: 680px; background: rgba(15, 23, 42, 0.65); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; box-shadow: 0 30px 60px rgba(0,0,0,0.5); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: flex; flex-direction: column; overflow: hidden; height: 280px; font-family: sans-serif; transition: transform 0.3s ease, border-color 0.3s ease; margin-top: 18px;">
+                        <!-- High Fidelity Interactive Dashboard Preview Frame (Edge-to-Edge Width) -->
+                        <div style="position: relative; width: 100%; flex: 1; min-height: 380px; max-height: 480px; margin: 6px 0 10px 0;">
                             
-                            <!-- Browser Header Bar -->
-                            <div style="background: rgba(30, 41, 59, 0.5); padding: 10px 16px; display: flex; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); gap: 16px;">
-                                <!-- Colored circles -->
-                                <div style="display: flex; gap: 6px;">
-                                    <span style="width: 10px; height: 10px; border-radius: 50%; background: #ef4444; display: inline-block;"></span>
-                                    <span style="width: 10px; height: 10px; border-radius: 50%; background: #f59e0b; display: inline-block;"></span>
-                                    <span style="width: 10px; height: 10px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
-                                </div>
-                                <!-- Address bar mockup -->
-                                <div style="flex: 1; max-width: 320px; background: rgba(15, 23, 42, 0.4); border-radius: 6px; border: 1px solid rgba(255,255,255,0.06); padding: 4px 12px; text-align: center; color: rgba(255,255,255,0.4); font-size: 11px; font-family: monospace; letter-spacing: 0.5px;">
-                                    app.nearpro.com/dashboard
-                                </div>
-                                <!-- Status dot -->
-                                <div style="display: flex; align-items: center; gap: 6px;">
-                                    <span style="width: 6px; height: 6px; border-radius: 50%; background: #10b981;"></span>
-                                    <span style="font-size: 10px; color: rgba(255,255,255,0.5); font-weight: 600;">System Online</span>
-                                </div>
+                            <!-- Floating Glass Badge: Top Right -->
+                            <div style="position: absolute; top: -14px; right: 24px; z-index: 10; background: rgba(15, 23, 42, 0.88); border: 1px solid rgba(255,255,255,0.25); border-radius: 20px; padding: 6px 16px; display: flex; align-items: center; gap: 8px; box-shadow: 0 12px 24px rgba(0,0,0,0.35); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); animation: pulseFloat 4s ease-in-out infinite;">
+                                <span style="width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 10px #22c55e;"></span>
+                                <span style="font-size: 11.5px; font-weight: 700; color: #ffffff;">⚡ +1,248 Verified Leads Mapped Today</span>
                             </div>
 
-                            <!-- Browser Body Layout -->
-                            <div style="display: flex; flex: 1; overflow: hidden; height: 100%;">
-                                <!-- Sidebar -->
-                                <div style="width: 110px; background: rgba(30, 41, 59, 0.3); border-right: 1px solid rgba(255,255,255,0.06); padding: 14px 6px; display: flex; flex-direction: column; gap: 6px; flex-shrink: 0;">
-                                    <div style="background: rgba(245, 158, 11, 0.1); border-left: 2px solid var(--accent-gold); color: white; padding: 5px 6px; border-radius: 0 4px 4px 0; font-size: 10px; font-weight: 700;">
-                                        Overview
+                            <!-- Floating Glass Badge: Bottom Left -->
+                            <div style="position: absolute; bottom: -12px; left: 28px; z-index: 10; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255,255,255,0.22); border-radius: 20px; padding: 6px 16px; display: flex; align-items: center; gap: 8px; box-shadow: 0 12px 24px rgba(0,0,0,0.35); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+                                <span style="font-size: 12px;">🔄</span>
+                                <span style="font-size: 11.5px; font-weight: 700; color: #ffffff;">Auto-Synced with Google Sheets, Zoho & Custom CRM</span>
+                            </div>
+
+                            <!-- Main Browser Window -->
+                            <div class="auth-browser-mockup" style="width: 100%; height: 100%; background: rgba(15, 23, 42, 0.82); border: 1px solid rgba(255,255,255,0.18); border-radius: 14px; box-shadow: 0 35px 70px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.12); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); display: flex; flex-direction: column; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; transition: all 0.3s ease;">
+                                
+                                <!-- Browser Header Bar -->
+                                <div style="background: rgba(30, 41, 59, 0.65); padding: 10px 20px; display: flex; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); gap: 16px;">
+                                    <!-- Window buttons -->
+                                    <div style="display: flex; gap: 7px;">
+                                        <span style="width: 11px; height: 11px; border-radius: 50%; background: #ff5f56; display: inline-block;"></span>
+                                        <span style="width: 11px; height: 11px; border-radius: 50%; background: #ffbd2e; display: inline-block;"></span>
+                                        <span style="width: 11px; height: 11px; border-radius: 50%; background: #27c93f; display: inline-block;"></span>
                                     </div>
-                                    <div style="color: rgba(255,255,255,0.5); padding: 5px 6px; font-size: 10px; font-weight: 600;">
-                                        Lead Map
+                                    <!-- Address Bar -->
+                                    <div style="flex: 1; max-width: 420px; margin: 0 auto; background: rgba(15, 23, 42, 0.5); border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); padding: 4px 14px; text-align: center; color: rgba(255,255,255,0.6); font-size: 11px; font-family: monospace; letter-spacing: 0.5px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                        app.nearpro.com/agency/dashboard
                                     </div>
-                                    <div style="color: rgba(255,255,255,0.5); padding: 5px 6px; font-size: 10px; font-weight: 600;">
-                                        Outreach
+                                    <!-- Status Indicator -->
+                                    <div style="display: flex; align-items: center; gap: 6px;">
+                                        <span style="width: 6px; height: 6px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 6px #22c55e;"></span>
+                                        <span style="font-size: 10.5px; color: rgba(255,255,255,0.7); font-weight: 600;">Engine Active</span>
                                     </div>
                                 </div>
 
-                                <!-- Main Panel Content -->
-                                <div style="flex: 1; padding: 14px; display: flex; flex-direction: column; gap: 12px; justify-content: center; overflow: hidden;">
-                                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                                        <div style="font-size: 12.5px; font-weight: 700; color: white;">Pipeline Status</div>
-                                        <span style="background: rgba(16, 185, 129, 0.15); color: #10b981; padding: 1px 6px; border-radius: 12px; font-size: 9.5px; font-weight: 700; border: 1px solid rgba(16, 185, 129, 0.3);">System Active</span>
+                                <!-- Browser Inner Layout Split -->
+                                <div style="display: flex; flex: 1; overflow: hidden; height: calc(100% - 37px);">
+                                    <!-- Left Navigation Sidebar inside Mockup -->
+                                    <div style="width: 140px; background: rgba(30, 41, 59, 0.4); border-right: 1px solid rgba(255,255,255,0.06); padding: 14px 10px; display: flex; flex-direction: column; gap: 6px; flex-shrink: 0;">
+                                        <div style="background: rgba(245, 158, 11, 0.18); border-left: 3px solid var(--accent-gold, #f59e0b); color: #ffffff; padding: 7px 10px; border-radius: 0 6px 6px 0; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                                            <span>📊</span> Overview
+                                        </div>
+                                        <div style="color: rgba(255,255,255,0.6); padding: 7px 10px; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                                            <span>📍</span> Lead Map
+                                        </div>
+                                        <div style="color: rgba(255,255,255,0.6); padding: 7px 10px; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                                            <span>⚡</span> Outreach CRM
+                                        </div>
+                                        <div style="color: rgba(255,255,255,0.6); padding: 7px 10px; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                                            <span>📄</span> PDF Audits
+                                        </div>
+
+                                        <div style="margin-top: auto; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 6px; padding: 8px; text-align: center;">
+                                            <div style="font-size: 9px; color: rgba(255,255,255,0.4); text-transform: uppercase; font-weight: 700;">Scraper Health</div>
+                                            <div style="font-size: 12px; font-weight: 800; color: #22c55e; margin-top: 2px;">99.8% Uptime</div>
+                                        </div>
                                     </div>
 
-                                    <!-- Stats Grid Row -->
-                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                                        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 8px 10px; border-radius: 6px;">
-                                            <div style="font-size: 9px; color: rgba(255,255,255,0.4); margin-bottom: 1px;">Leads Mapped</div>
-                                            <div style="font-size: 14px; font-weight: 800; color: white;">1,248</div>
+                                    <!-- Main Panel Display inside Mockup -->
+                                    <div style="flex: 1; padding: 18px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto;">
+                                        <!-- Header row inside Mockup -->
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <div>
+                                                <div style="font-size: 15px; font-weight: 800; color: #ffffff; letter-spacing: -0.2px;">Agency Lead Pipeline & Workstation</div>
+                                                <div style="font-size: 10.5px; color: rgba(255,255,255,0.5);">Real-time local directory extraction & automated outreach</div>
+                                            </div>
+                                            <div style="display: flex; gap: 8px;">
+                                                <span style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 700; border: 1px solid rgba(245, 158, 11, 0.3);">Export CSV</span>
+                                                <span style="background: rgba(34, 197, 94, 0.15); color: #22c55e; padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 700; border: 1px solid rgba(34, 197, 94, 0.3);">+ Auto-Sync All</span>
+                                            </div>
                                         </div>
-                                        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 8px 10px; border-radius: 6px;">
-                                            <div style="font-size: 9px; color: rgba(255,255,255,0.4); margin-bottom: 1px;">CRM Auto-Sync</div>
-                                            <div style="font-size: 14px; font-weight: 800; color: #22c55e;">100% Active</div>
-                                        </div>
-                                    </div>
 
-                                    <!-- Clean Lead Cards (No Mumbai Hotel reference) -->
-                                    <div style="display: flex; flex-direction: column; gap: 6px;">
-                                        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center;">
-                                            <div>
-                                                <div style="font-size: 11px; font-weight: 700; color: white;">Apex Web Developers</div>
-                                                <div style="font-size: 9px; color: rgba(255,255,255,0.4); margin-top: 1px;">PageSpeed Score: 42 (Critical Gap)</div>
+                                        <!-- Stat Metric Grid Row -->
+                                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+                                            <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); padding: 10px 14px; border-radius: 8px;">
+                                                <div style="font-size: 9.5px; color: rgba(255,255,255,0.5); font-weight: 600;">Total Leads Mapped</div>
+                                                <div style="font-size: 17px; font-weight: 800; color: #ffffff; margin-top: 2px; display: flex; align-items: baseline; gap: 6px;">
+                                                    12,840
+                                                    <span style="font-size: 9.5px; color: #22c55e; font-weight: 700;">+18% today</span>
+                                                </div>
                                             </div>
-                                            <span style="background: rgba(245, 158, 11, 0.15); color: var(--accent-gold); padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: 700; border: 1px solid rgba(245, 158, 11, 0.3); cursor: pointer;">Sync CRM</span>
+                                            <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); padding: 10px 14px; border-radius: 8px;">
+                                                <div style="font-size: 9.5px; color: rgba(255,255,255,0.5); font-weight: 600;">Mobile Direct Dials</div>
+                                                <div style="font-size: 17px; font-weight: 800; color: #38bdf8; margin-top: 2px; display: flex; align-items: baseline; gap: 6px;">
+                                                    98.4%
+                                                    <span style="font-size: 9.5px; color: rgba(255,255,255,0.4);">Verified</span>
+                                                </div>
+                                            </div>
+                                            <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); padding: 10px 14px; border-radius: 8px;">
+                                                <div style="font-size: 9.5px; color: rgba(255,255,255,0.5); font-weight: 600;">CRM Auto-Sync</div>
+                                                <div style="font-size: 17px; font-weight: 800; color: #22c55e; margin-top: 2px; display: flex; align-items: baseline; gap: 6px;">
+                                                    100% Active
+                                                </div>
+                                            </div>
                                         </div>
-                                        
-                                        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center;">
-                                            <div>
-                                                <div style="font-size: 11px; font-weight: 700; color: white;">Bandra Dental Clinic</div>
-                                                <div style="font-size: 9px; color: rgba(255,255,255,0.4); margin-top: 1px;">PageSpeed Score: 95 (Optimized)</div>
+
+                                        <!-- Lead Pipeline Table Feed -->
+                                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                                            <!-- Lead Row 1 -->
+                                            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center;">
+                                                <div style="display: flex; align-items: center; gap: 12px;">
+                                                    <div style="width: 32px; height: 32px; border-radius: 6px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 11px;">AW</div>
+                                                    <div>
+                                                        <div style="font-size: 12.5px; font-weight: 700; color: #ffffff;">Apex Web Developers</div>
+                                                        <div style="font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 1px;">📞 +1 (555) 019-2834 &bull; Mobile Verified &bull; San Francisco, CA</div>
+                                                    </div>
+                                                </div>
+                                                <div style="display: flex; align-items: center; gap: 10px;">
+                                                    <span style="background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); padding: 3px 8px; border-radius: 4px; font-size: 9.5px; font-weight: 700;">Speed Gap: 42</span>
+                                                    <span style="background: linear-gradient(135deg, #f59e0b, #ea580c); color: #ffffff; padding: 4px 12px; border-radius: 5px; font-size: 10px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 6px rgba(234, 88, 12, 0.4);">⚡ Sync CRM</span>
+                                                </div>
                                             </div>
-                                            <span style="color: rgba(255,255,255,0.4); font-size: 9.5px; font-weight: 600;">Synced</span>
+                                            
+                                            <!-- Lead Row 2 -->
+                                            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center;">
+                                                <div style="display: flex; align-items: center; gap: 12px;">
+                                                    <div style="width: 32px; height: 32px; border-radius: 6px; background: linear-gradient(135deg, #10b981, #047857); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 11px;">BD</div>
+                                                    <div>
+                                                        <div style="font-size: 12.5px; font-weight: 700; color: #ffffff;">Bandra Dental Clinic</div>
+                                                        <div style="font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 1px;">📞 +1 (555) 014-9921 &bull; Direct Mobile &bull; Mumbai, MH</div>
+                                                    </div>
+                                                </div>
+                                                <div style="display: flex; align-items: center; gap: 10px;">
+                                                    <span style="background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); padding: 3px 8px; border-radius: 4px; font-size: 9.5px; font-weight: 700;">Score: 95</span>
+                                                    <span style="color: rgba(255,255,255,0.5); font-size: 10px; font-weight: 600; padding: 4px 8px;">✓ Synced to Zoho</span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Lead Row 3 -->
+                                            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center;">
+                                                <div style="display: flex; align-items: center; gap: 12px;">
+                                                    <div style="width: 32px; height: 32px; border-radius: 6px; background: linear-gradient(135deg, #8b5cf6, #6d28d9); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 11px;">NV</div>
+                                                    <div>
+                                                        <div style="font-size: 12.5px; font-weight: 700; color: #ffffff;">Nova Architecture Studio</div>
+                                                        <div style="font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 1px;">📞 +1 (555) 017-4820 &bull; Mobile Verified &bull; Austin, TX</div>
+                                                    </div>
+                                                </div>
+                                                <div style="display: flex; align-items: center; gap: 10px;">
+                                                    <span style="background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); padding: 3px 8px; border-radius: 4px; font-size: 9.5px; font-weight: 700;">Audit Needed</span>
+                                                    <span style="background: rgba(255,255,255,0.08); color: #ffffff; padding: 4px 12px; border-radius: 5px; font-size: 10px; font-weight: 700; cursor: pointer;">PDF Audit</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Bottom Footer Context -->
-                    <div style="z-index: 2; font-size: 11.5px; color: rgba(255,255,255,0.4); display: flex; justify-content: flex-end; align-items: center; width: 100%;">
-                        <div style="display: flex; gap: 12px; align-items: center;">
-                            <a href="#/terms" style="color: rgba(255,255,255,0.4); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Terms of Service</a>
-                            <span>&bull;</span>
-                            <a href="#/privacy" style="color: rgba(255,255,255,0.4); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Privacy Policy</a>
+                        <!-- Bottom Footer Context -->
+                        <div style="font-size: 12px; color: rgba(255,255,255,0.6); display: flex; justify-content: space-between; align-items: center; width: 100%; padding-top: 4px;">
+                            <div style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: rgba(255,255,255,0.6);">
+                                <span>🔒</span> 256-Bit Encrypted Data &bull; SOC2 Type II Certified &bull; 99.99% Uptime Guarantee
+                            </div>
+                            <div style="display: flex; gap: 16px; align-items: center;">
+                                <a href="#/terms" style="color: rgba(255,255,255,0.7); text-decoration: none; font-weight: 500; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Terms of Service</a>
+                                <span>&bull;</span>
+                                <a href="#/privacy" style="color: rgba(255,255,255,0.7); text-decoration: none; font-weight: 500; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Privacy Policy</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -295,11 +390,13 @@ export function renderAuthModal() {
             }
             .auth-right-pane {
                 flex: 1;
-                background: linear-gradient(135deg, #ffa000 0%, #ec4899 100%);
+                background: linear-gradient(135deg, #f97316 0%, #ea580c 25%, #d97706 50%, #e11d48 80%, #be185d 100%);
+                background-image: radial-gradient(rgba(255, 255, 255, 0.16) 1.2px, transparent 1.2px), linear-gradient(135deg, #f97316 0%, #ea580c 25%, #d97706 50%, #e11d48 80%, #be185d 100%);
+                background-size: 24px 24px, 100% 100%;
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
-                padding: 64px;
+                padding: 48px 56px;
                 position: relative;
                 overflow: hidden;
             }
@@ -339,9 +436,13 @@ export function renderAuthModal() {
                 box-shadow: 0 0 0 2px rgba(255, 160, 0, 0.15) !important;
             }
             .auth-browser-mockup:hover {
-                transform: translateY(-8px) scale(1.01);
-                border-color: rgba(255, 255, 255, 0.3) !important;
-                box-shadow: 0 40px 80px rgba(0,0,0,0.6) !important;
+                transform: translateY(-4px) scale(1.005);
+                border-color: rgba(255, 255, 255, 0.35) !important;
+                box-shadow: 0 45px 90px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.2) !important;
+            }
+            @keyframes pulseFloat {
+                0%, 100% { transform: translateY(0); }
+                50% { transform: translateY(-6px); }
             }
             #googleAuthBtn:hover, #linkedinAuthBtn:hover, #hubspotAuthBtn:hover, #zohoAuthBtn:hover {
                 background-color: #f8fafc !important;
@@ -350,6 +451,11 @@ export function renderAuthModal() {
             .auth-input:focus {
                 border-color: var(--accent-gold) !important;
                 box-shadow: 0 0 0 2px rgba(255, 160, 0, 0.15) !important;
+            }
+            @media (max-width: 1280px) {
+                .auth-features-grid {
+                    grid-template-columns: repeat(2, 1fr) !important;
+                }
             }
             @media (max-width: 900px) {
                 .auth-split-container {

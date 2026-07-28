@@ -122,8 +122,8 @@ export function renderDashboardShell(activeTab = 'crm') {
                         </a>
 
                         ${State.user ? `
-                        <div class="user-profile-dropdown-container" style="position: relative; display: inline-block;">
-                            <div class="user-profile-badge" style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
+                        <div class="user-profile-dropdown-container" style="position: relative; display: inline-block; padding-bottom: 14px; margin-bottom: -14px;">
+                            <div class="user-profile-badge" id="dashboardUserProfileBtn" style="cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 4px 8px; border-radius: 8px; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'">
                                 <span class="user-avatar-circle" style="width: 32px; height: 32px; border-radius: 50%; background: ${tierColor}; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; text-transform: uppercase; font-family: var(--font-mono);">${initials}</span>
                                 <div class="user-meta-info" style="display: flex; flex-direction: column; align-items: flex-start;">
                                     <span class="user-email" style="font-size: 13.5px; font-weight: 600; color: #ffffff; display: flex; align-items: center; gap: 4px;">
@@ -133,23 +133,34 @@ export function renderDashboardShell(activeTab = 'crm') {
                                     <span class="tier-tag ${userTier}" style="font-size: 11px; font-family: var(--font-mono); font-weight: 700; color: ${tierColor};">${tierName} Plan</span>
                                 </div>
                             </div>
-                            <!-- Dropdown Menu -->
-                            <div class="dashboard-profile-dropdown" style="position: absolute; right: 0; top: 46px; width: 220px; background: #0f172a; border: 1px solid #334155; border-radius: var(--radius-md, 8px); padding: 14px; display: none; flex-direction: column; gap: 10px; z-index: 99999; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5), 0 8px 10px -6px rgba(0,0,0,0.5); text-align: left;">
+                            <!-- Dropdown Menu with Hover Bridge -->
+                            <div class="dashboard-profile-dropdown" id="dashboardProfileDropdownMenu" style="position: absolute; right: 0; top: calc(100% - 6px); width: 230px; background: #0f172a; border: 1px solid #334155; border-radius: var(--radius-md, 8px); padding: 14px; display: none; flex-direction: column; gap: 10px; z-index: 99999; box-shadow: 0 14px 35px -5px rgba(0,0,0,0.65), 0 8px 10px -6px rgba(0,0,0,0.5); text-align: left;">
                                 <div style="display: flex; flex-direction: column; gap: 2px;">
                                     <span style="font-size: 11px; font-family: var(--font-mono); color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Account</span>
                                     <span style="font-size: 13px; color: #f8fafc; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${userEmail}">${userEmail}</span>
                                 </div>
                                 <hr style="border: none; border-top: 1px solid #334155; margin: 4px 0;">
-                                <a href="#/dashboard/settings" style="font-size: 13px; color: #cbd5e1; text-decoration: none; display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 4px; transition: all 0.2s;" onmouseover="this.style.background='#1e293b'; this.style.color='#ffffff'" onmouseout="this.style.background='transparent'; this.style.color='#cbd5e1'">
+                                <a href="#/dashboard/settings" style="font-size: 13px; color: #cbd5e1; text-decoration: none; display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 6px; transition: all 0.2s;" onmouseover="this.style.background='#1e293b'; this.style.color='#ffffff'" onmouseout="this.style.background='transparent'; this.style.color='#cbd5e1'">
                                     ⚙️ Settings Profile
                                 </a>
-                                <button id="dashboardSignOutBtn" class="secondary-btn" style="width: 100%; padding: 8px; font-size: 12.5px; border-radius: var(--radius-sm); border-color: rgba(239, 68, 68, 0.3); color: #f87171; background: rgba(239, 68, 68, 0.08); text-align: center; justify-content: center; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='rgba(239, 68, 68, 0.15)'" onmouseout="this.style.background='rgba(239, 68, 68, 0.08)'">
+                                <button id="dashboardSignOutBtn" class="secondary-btn" style="width: 100%; padding: 8px 10px; font-size: 12.5px; border-radius: var(--radius-sm); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; background: rgba(239, 68, 68, 0.08); text-align: center; justify-content: center; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='rgba(239, 68, 68, 0.2)'" onmouseout="this.style.background='rgba(239, 68, 68, 0.08)'">
                                     🚪 Sign Out
                                 </button>
                             </div>
                         </div>
                         <style>
-                            .user-profile-dropdown-container:hover .dashboard-profile-dropdown {
+                            .dashboard-profile-dropdown::before {
+                                content: '';
+                                position: absolute;
+                                top: -20px;
+                                left: 0;
+                                right: 0;
+                                height: 24px;
+                                background: transparent;
+                            }
+                            .user-profile-dropdown-container:hover .dashboard-profile-dropdown,
+                            .user-profile-dropdown-container.open .dashboard-profile-dropdown,
+                            .dashboard-profile-dropdown:hover {
                                 display: flex !important;
                             }
                         </style>
@@ -230,6 +241,20 @@ export function bindDashboardShellEvents() {
                     });
                 });
             });
+        });
+    }
+
+    const profileBtn = document.getElementById('dashboardUserProfileBtn');
+    const profileContainer = document.querySelector('.user-profile-dropdown-container');
+    if (profileBtn && profileContainer) {
+        profileBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profileContainer.classList.toggle('open');
+        });
+        document.addEventListener('click', (e) => {
+            if (!profileContainer.contains(e.target)) {
+                profileContainer.classList.remove('open');
+            }
         });
     }
 
