@@ -173,8 +173,12 @@ export function renderProfessionalCard(lead, index = 0) {
                 <div class="card-head-top">
                     <span class="category-badge" style="background: ${avatarColor}18; color: ${avatarColor}; border: 1px solid ${avatarColor}35;">${displayCategory}</span>
                     ${scoreBadgeHTML}
+                    <span class="card-click-hint" title="Click card to open full details">
+                        <span>Details</span>
+                        <i data-lucide="chevron-right" style="width:12px; height:12px; stroke-width:2.5px;"></i>
+                    </span>
                 </div>
-                <h3>${lead.name}</h3>
+                <h3 style="margin-top: 6px;">${lead.name}</h3>
             </div>
 
             <div class="card-info-row">
