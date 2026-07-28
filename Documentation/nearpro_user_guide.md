@@ -1,18 +1,18 @@
-# NearPro Platform Master User Guide & Operating Manual
-## The Official 360° Agency & Freelancer Client Acquisition Playbook
+# NearPro Platform Master User Guide & Operating Playbook
+## The Official 360° Agency & Freelancer Client Acquisition Manual
 ### Platform URL: [nearpro.s8n.in](https://nearpro.s8n.in) | Built by S8N Technologies
 
 ---
 
 ## TABLE OF CONTENTS
 1. **Introduction & Quick Start Guide**
-2. **Module 1: Verified B2B Lead Intelligence Directory (`#/dashboard/directory`)**
-3. **Module 2: 1-Click Business & PageSpeed Health Check (`#/dashboard/audit`)**
-4. **Module 3: Multi-Channel AI Outreach Studio (`#/dashboard/outreach`)**
-5. **Module 4: 3-Page Agency PDF Proposals (`#/dashboard/proposals`)**
-6. **Module 5: AI Tele-Sales Teleprompter Scripts (`#/dashboard/call-scripts`)**
-7. **Module 6: Antigravity AI System Prompt Generator (`#/dashboard/prompts`)**
-8. **Module 7: 360° AI Deal Workstation & CRM (`#/dashboard/crm`)**
+2. **Module 1: Verified B2B Lead Intelligence Directory**
+3. **Module 2: 1-Click Business & PageSpeed Health Check**
+4. **Module 3: Multi-Channel AI Outreach Studio**
+5. **Module 4: 3-Page Agency PDF Proposals**
+6. **Module 5: AI Tele-Sales Teleprompter Scripts**
+7. **Module 6: Antigravity AI System Prompt Generator**
+8. **Module 7: 360° AI Deal Workstation & CRM**
 9. **Module 8: Profile Personalization & Gender-Based AI Pitching**
 10. **Tier Quotas & Account Management**
 
@@ -27,13 +27,13 @@ Search Leads ➔ Run 1-Click Audit ➔ Draft AI Outreach ➔ Generate PDF Propos
 ```
 
 ### Quick 3-Step Start:
-1. **Login to Dashboard**: Access your workspace at `https://nearpro.s8n.in/#/dashboard/directory`.
+1. **Login to Dashboard**: Access your workspace dashboard at `https://nearpro.s8n.in`.
 2. **Set Profile Preferences**: Open **Profile Settings** and configure your **Caller Gender** (Male/Female) for natural cold calling verb inflections.
 3. **Save Your First Lead**: Search Dentists or Real Estate in Bandra, click **Track Lead**, and assign it to a Smart List.
 
 ---
 
-## 2. MODULE 1: VERIFIED B2B LEAD DIRECTORY (`#/dashboard/directory`)
+## 2. MODULE 1: VERIFIED B2B LEAD DIRECTORY
 
 The Directory contains **12,358+ verified business profiles** across Mumbai (expanding to Pune & Delhi/NCR).
 
@@ -46,7 +46,7 @@ The Directory contains **12,358+ verified business profiles** across Mumbai (exp
 
 ---
 
-## 3. MODULE 2: 1-CLICK BUSINESS HEALTH CHECK (`#/dashboard/audit`)
+## 3. MODULE 2: 1-CLICK BUSINESS HEALTH CHECK
 
 Audit any business website in real-time to uncover page load bottlenecks and mobile conversion gaps before reaching out.
 
@@ -61,7 +61,7 @@ Audit any business website in real-time to uncover page load bottlenecks and mob
 
 ---
 
-## 4. MODULE 3: MULTI-CHANNEL AI OUTREACH STUDIO (`#/dashboard/outreach`)
+## 4. MODULE 3: MULTI-CHANNEL AI OUTREACH STUDIO
 
 Draft high-converting, personalized cold pitch copy in seconds tailored to the prospect's exact rating, location, and website audit findings.
 
@@ -72,19 +72,19 @@ Draft high-converting, personalized cold pitch copy in seconds tailored to the p
 
 ---
 
-## 5. MODULE 4: 3-PAGE AGENCY PDF PROPOSALS (`#/dashboard/proposals`)
+## 5. MODULE 4: 3-PAGE AGENCY PDF PROPOSALS
 
 Generate professional 3-page agency pitch decks customized for target leads, ready for PDF export or public link sharing.
 
 ### How to Use:
 1. Select a saved lead from your CRM pipeline.
 2. Choose package scope (*Starter*, *Growth*, *Enterprise*) and set monthly retainer pricing.
-3. **Public View Link**: Share public view URLs (`https://nearpro.s8n.in/#/d/:proposal_id`) directly with clients.
+3. **Public View Link**: Share public view URLs directly with clients.
 4. **PDF Export**: Download print-ready PDF files formatted with your agency branding.
 
 ---
 
-## 6. MODULE 5: AI TELE-SALES TELEPROMPTER SCRIPTS (`#/dashboard/call-scripts`)
+## 6. MODULE 5: AI TELE-SALES TELEPROMPTER SCRIPTS
 
 Execute high-impact cold calls with live teleprompter scripts and real-time objection handling cards.
 
@@ -95,7 +95,7 @@ Execute high-impact cold calls with live teleprompter scripts and real-time obje
 
 ---
 
-## 7. MODULE 6: ANTIGRAVITY AI SYSTEM PROMPT GENERATOR (`#/dashboard/prompts`)
+## 7. MODULE 6: ANTIGRAVITY AI SYSTEM PROMPT GENERATOR
 
 Build ultra-detailed system architecture prompts tailored for modern AI platforms (Antigravity AI, Vite, Next.js).
 
@@ -106,7 +106,7 @@ Build ultra-detailed system architecture prompts tailored for modern AI platform
 
 ---
 
-## 8. MODULE 7: 360° AI DEAL WORKSTATION & CRM (`#/dashboard/crm`)
+## 8. MODULE 7: 360° AI DEAL WORKSTATION & CRM
 
 Track every prospective deal across a 5-column Kanban pipeline with dynamic deal valuation and real activity mapping.
 
