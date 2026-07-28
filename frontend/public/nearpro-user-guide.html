@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NearPro Platform Master User Guide & Operating Manual</title>
+  <meta name="description" content="Official 360° User Guide & Operating Manual for NearPro Autonomous B2B Lead Intelligence Operating System.">
+  <link rel="icon" type="image/png" href="/favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0b081d;
+      --bg-surface: #121028;
+      --bg-card: #1a1738;
+      --accent-pink: #ec4899;
+      --accent-gold: #ffa000;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #2e2a56;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 0;
+      margin: 0;
+    }
+
+    /* Top Accent Gradient Bar */
+    .top-gradient-bar {
+      height: 6px;
+      background: linear-gradient(90deg, #ec4899 0%, #ffa000 100%);
+    }
+
+    /* Container */
+    .guide-container {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    /* Header */
+    .header-bar {
+      text-align: center;
+      padding: 30px 20px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      margin-bottom: 40px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .brand-logo {
+      height: 52px;
+      width: auto;
+      margin-bottom: 12px;
+    }
+
+    .brand-badge {
+      display: inline-block;
+      background: rgba(255, 160, 0, 0.15);
+      border: 1px solid rgba(255, 160, 0, 0.4);
+      color: var(--accent-gold);
+      font-size: 12px;
+      font-weight: 800;
+      padding: 6px 18px;
+      border-radius: 20px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-family: 'Space Grotesk', sans-serif;
+      margin-top: 6px;
+    }
+
+    h1 {
+      font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: #ffffff;
+      margin: 20px 0 8px;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    /* Action Toolbar */
+    .action-bar {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: linear-gradient(90deg, #ec4899 0%, #ffa000 100%);
+      color: #0b081d;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 800;
+      border-radius: 8px;
+      font-family: 'Space Grotesk', sans-serif;
+      box-shadow: 0 6px 18px rgba(236, 72, 153, 0.35);
+      transition: transform 0.2s;
+    }
+
+    .btn-cta:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 8px;
+      font-family: 'Space Grotesk', sans-serif;
+      transition: background-color 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Section Cards */
+    .section-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 32px;
+      margin-bottom: 32px;
+    }
+
+    .section-card h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+    }
+
+    .section-card h3 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent-gold);
+      margin: 20px 0 10px;
+    }
+
+    p {
+      color: #cbd5e1;
+      font-size: 14.5px;
+      margin-bottom: 14px;
+      line-height: 1.7;
+    }
+
+    ul, ol {
+      margin: 12px 0 20px 24px;
+      color: #cbd5e1;
+      font-size: 14px;
+    }
+
+    li {
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+
+    code {
+      background: rgba(236, 72, 153, 0.15);
+      color: #ec4899;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 13px;
+    }
+
+    .feature-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 16px 0;
+    }
+
+    .feature-box h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+
+    /* Print styling */
+    @media print {
+      body { background: #ffffff; color: #000000; }
+      .section-card { background: #ffffff; border: 1px solid #ccc; color: #000000; }
+      .section-card h2, .section-card h3 { color: #000000; }
+      .btn-cta, .btn-secondary { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-gradient-bar"></div>
+
+  <div class="guide-container">
+    <!-- Header -->
+    <div class="header-bar">
+      <img src="https://nearpro.s8n.in/NearPro_logo_nobg.png" alt="NearPro Logo" class="brand-logo">
+      <br>
+      <div class="brand-badge">NEARPRO™ • AUTONOMOUS B2B LEAD INTELLIGENCE OS</div>
+      <h1>Master Platform User Guide & Operating Playbook</h1>
+      <p class="subtitle">The complete 360° client acquisition manual for agencies, freelancers, & B2B sales teams</p>
+      
+      <div class="action-bar">
+        <a href="https://nearpro.s8n.in/#/dashboard/directory" class="btn-cta">🚀 Launch NearPro Dashboard</a>
+        <button onclick="window.print()" class="btn-secondary">🖨️ Print / Save as PDF</button>
+      </div>
+    </div>
+
+    <!-- Quick Start -->
+    <div class="section-card">
+      <h2>🚀 1. Introduction & 3-Step Quick Start</h2>
+      <p>Welcome to <strong>NearPro</strong> — India's #1 Autonomous B2B Lead Intelligence Operating System. NearPro collapses the entire 6-step agency client acquisition workflow into a single unified workstation:</p>
+      
+      <div class="feature-box" style="text-align: center; font-weight: 700; color: var(--accent-gold);">
+        Search Leads ➔ Run 1-Click Audit ➔ Draft AI Outreach ➔ Generate PDF Proposal ➔ Execute Call Script ➔ Close Deal in CRM
+      </div>
+
+      <h3>Quick 3-Step Setup:</h3>
+      <ol>
+        <li><strong>Access Workspace:</strong> Open your dashboard at <code>https://nearpro.s8n.in/#/dashboard/directory</code>.</li>
+        <li><strong>Set Profile Preferences:</strong> Open <strong>Profile Settings</strong> and select your <strong>Caller Gender</strong> (Male/Female) for natural cold call verb inflections.</li>
+        <li><strong>Track Your First Lead:</strong> Filter Dentists or Real Estate in Bandra, click <strong>Track Lead</strong>, and save it to a Smart List.</li>
+      </ol>
+    </div>
+
+    <!-- Module 1 -->
+    <div class="section-card">
+      <h2>📍 2. Verified B2B Lead Directory (<code>#/dashboard/directory</code>)</h2>
+      <p>The Directory contains <strong>12,358+ verified business profiles</strong> across Mumbai (expanding to Pune & Delhi/NCR).</p>
+      <ul>
+        <li><strong>Niche & Micro-Location Filters:</strong> Narrow down leads by category (Healthcare, Real Estate, Legal, Dental, Beauty, Tech) and neighborhood (Bandra, Andheri, Lower Parel).</li>
+        <li><strong>Google Ratings & Data Completeness:</strong> Instantly view review scores, direct phone numbers, and website URLs.</li>
+        <li><strong>Leaflet Map View:</strong> Toggle to geographic map view to see density pin clusters.</li>
+        <li><strong>Inline Smart List Creation (<code>+</code>):</strong> Click <strong>Track Lead</strong> to assign leads to existing lists or click the <code>+</code> icon to create custom lists (e.g., <em>Hot Leads</em>, <em>Closed Deals</em>) in one click.</li>
+      </ul>
+    </div>
+
+    <!-- Module 2 -->
+    <div class="section-card">
+      <h2>⚡ 3. 1-Click Business & PageSpeed Health Check (<code>#/dashboard/audit</code>)</h2>
+      <p>Audit any prospect's website in real time to reveal performance bottlenecks before making first contact.</p>
+      <ul>
+        <li><strong>Mobile PageSpeed Score (0-100):</strong> Measures exact mobile load times.</li>
+        <li><strong>SEO Meta Inspection:</strong> Checks title tags, meta descriptions, and H1 heading structure.</li>
+        <li><strong>Revenue Drop-Off Calculator:</strong> Estimates annual lost client revenue caused by slow mobile load speeds.</li>
+        <li><strong>1-Click Pitch Export:</strong> Click "Pitch Optimization Service" to push audit findings directly into the AI Outreach Studio.</li>
+      </ul>
+    </div>
+
+    <!-- Module 3 -->
+    <div class="section-card">
+      <h2>💬 4. Multi-Channel AI Outreach Studio (<code>#/dashboard/outreach</code>)</h2>
+      <p>Draft high-converting personalized pitch copy tailored to prospect rating, location, and audit results.</p>
+      <ul>
+        <li><strong>Language Selector:</strong> Toggle between conversational <strong>Hinglish</strong> or formal <strong>English</strong>.</li>
+        <li><strong>Channel Formats:</strong> Tailored templates for WhatsApp, Cold Email, and LinkedIn Message.</li>
+        <li><strong>1-Click WhatsApp Launch:</strong> Opens WhatsApp Web instantly with pre-filled personalized message copy.</li>
+      </ul>
+    </div>
+
+    <!-- Module 4 -->
+    <div class="section-card">
+      <h2>📄 5. 3-Page Agency PDF Proposals (<code>#/dashboard/proposals</code>)</h2>
+      <p>Auto-generate professional 3-page pitch decks tailored for prospects, ready for PDF export or public link sharing.</p>
+      <ul>
+        <li><strong>Package Tiering:</strong> Choose Starter, Growth, or Enterprise retainer pricing.</li>
+        <li><strong>Public View Links:</strong> Share live proposal URLs (<code>https://nearpro.s8n.in/#/d/:id</code>) directly with decision-makers.</li>
+        <li><strong>PDF Export:</strong> Download high-resolution print-ready PDFs formatted with your agency branding.</li>
+      </ul>
+    </div>
+
+    <!-- Module 5 -->
+    <div class="section-card">
+      <h2>📞 6. AI Tele-Sales Teleprompter Scripts (<code>#/dashboard/call-scripts</code>)</h2>
+      <p>Execute cold calls with live teleprompter scripts and real-time objection handling cards.</p>
+      <ul>
+        <li><strong>Gender Inflection Engine:</strong> Automatically adapts Hindi/Hinglish verbs based on your Profile Gender setting (<em>"bol raha/rahi hoon"</em>, <em>"karta/karti hoon"</em>).</li>
+        <li><strong>Objection Cards:</strong> 1-click objection handling cards for common gatekeeper responses (<em>"Send an email"</em>, <em>"No budget"</em>, <em>"Already have an agency"</em>).</li>
+      </ul>
+    </div>
+
+    <!-- Module 6 -->
+    <div class="section-card">
+      <h2>🚀 7. Antigravity AI System Prompt Generator (<code>#/dashboard/prompts</code>)</h2>
+      <p>Build comprehensive web architecture system prompts tailored for modern AI platforms (Antigravity AI, Vite, Next.js).</p>
+      <ul>
+        <li><strong>Dynamic Progress Bar:</strong> Animated 0% to 100% progress counter while prompts are generated.</li>
+        <li><strong>Sticky Top-Right Copy Button:</strong> Sticky copy button anchored inside the prompt box container for effortless copying.</li>
+      </ul>
+    </div>
+
+    <!-- Module 7 -->
+    <div class="section-card">
+      <h2>📊 8. 360° AI Deal Workstation & CRM (<code>#/dashboard/crm</code>)</h2>
+      <p>Manage deals across a 5-column Kanban pipeline with dynamic valuation and activity heatmaps.</p>
+      <ul>
+        <li><strong>5 Kanban Columns:</strong> 🔵 New Leads ➔ 📞 Contacted ➔ 💬 Offer Sent ➔ 🏆 Converted ➔ 🔒 Closed.</li>
+        <li><strong>Dynamic Deal Valuation:</strong> Deal values calculated by niche metrics (Real Estate ₹75k, Legal ₹60k, Healthcare ₹50k, Dental ₹40k, Beauty ₹25k, Default ₹30k).</li>
+        <li><strong>14-Day Activity Heatmap:</strong> Visual grid tracking your actual daily lead engagement over the last 14 days.</li>
+      </ul>
+    </div>
+
+    <!-- Footer Support -->
+    <div class="section-card" style="text-align: center;">
+      <h3>NearPro Platform Team & Support</h3>
+      <p>S8N Technologies • India's Trusted B2B Lead OS</p>
+      <p>✉️ <a href="mailto:support@s8n.in" style="color: var(--accent-pink);">support@s8n.in</a> &bull; 🚀 <a href="https://nearpro.s8n.in" style="color: var(--accent-pink);">nearpro.s8n.in</a> &bull; 🌐 <a href="https://www.s8n.in" style="color: var(--accent-pink);">s8n.in</a> &bull; 💼 <a href="https://www.linkedin.com/company/s8n-ai-services" style="color: var(--accent-pink);">LinkedIn</a></p>
+    </div>
+
+  </div>
+
+</body>
+</html>

@@ -42,7 +42,7 @@ serve(async (req) => {
     let subject = `NearPro Notification`;
     let emailHTML = ``;
 
-    // Common Header HTML — High-Contrast Space Grotesk Header Badge
+    // Common Header HTML — Pure NearPro Branding (No Hyphens)
     const commonHeader = `
     <!-- Top Accent Brand Gradient Bar -->
     <tr>
@@ -113,40 +113,61 @@ serve(async (req) => {
                     Welcome to NearPro : Autonomous B2B Lead Intelligence 🚀
                   </p>
                   <p style="font-size:15px; color:#2d2b3d; margin:0 0 24px 0; font-family:'Inter', sans-serif; line-height:1.6;">
-                    Your workspace is officially provisioned and live. Here is how NearPro accelerates your B2B client acquisition pipeline from day one:
+                    Your workspace is officially provisioned and live. Here is your complete suite of powerful client acquisition tools:
                   </p>
 
-                  <!-- Professional Bulletins Section (No Hyphens) -->
+                  <!-- Comprehensive All-Features Bulletin List -->
                   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px 0; background-color:#fff1f6; border-radius:10px; border:1px solid #fbcfe8;">
                     <tr>
                       <td style="padding:24px 24px 8px 24px;">
                         <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                           <tr>
-                            <td style="padding-bottom:18px; vertical-align:top; width:28px; font-size:16px; color:#ec4899; font-weight:bold;">•</td>
-                            <td style="padding-bottom:18px; font-size:14.5px; color:#2d2b3d; line-height:1.5; font-family:'Inter', sans-serif;">
-                              <strong style="color:#0b081d; font-family:'Space Grotesk', sans-serif;">12,358+ Verified B2B Lead Records</strong><br>
-                              <span style="font-size:13.5px; color:#666480;">Direct phone numbers, ratings, and website tech stacks across India.</span>
+                            <td style="padding-bottom:16px; vertical-align:top; width:28px; font-size:16px; color:#ec4899; font-weight:bold;">•</td>
+                            <td style="padding-bottom:16px; font-size:14.5px; color:#2d2b3d; line-height:1.5; font-family:'Inter', sans-serif;">
+                              <strong style="color:#0b081d; font-family:'Space Grotesk', sans-serif;">12,358+ Verified B2B Lead Directory</strong><br>
+                              <span style="font-size:13.5px; color:#666480;">Direct phone numbers, ratings, locations, and website tech stacks across India.</span>
                             </td>
                           </tr>
                           <tr>
-                            <td style="padding-bottom:18px; vertical-align:top; width:28px; font-size:16px; color:#ec4899; font-weight:bold;">•</td>
-                            <td style="padding-bottom:18px; font-size:14.5px; color:#2d2b3d; line-height:1.5; font-family:'Inter', sans-serif;">
-                              <strong style="color:#0b081d; font-family:'Space Grotesk', sans-serif;">Instant 1 Click PageSpeed Audits and Revenue Drop Off</strong><br>
-                              <span style="font-size:13.5px; color:#666480;">Instantly expose mobile load speed bottlenecks to prospects.</span>
+                            <td style="padding-bottom:16px; vertical-align:top; width:28px; font-size:16px; color:#ec4899; font-weight:bold;">•</td>
+                            <td style="padding-bottom:16px; font-size:14.5px; color:#2d2b3d; line-height:1.5; font-family:'Inter', sans-serif;">
+                              <strong style="color:#0b081d; font-family:'Space Grotesk', sans-serif;">Instant 1 Click PageSpeed & Mobile Audits</strong><br>
+                              <span style="font-size:13.5px; color:#666480;">Audit any website in real time and calculate estimated annual revenue loss.</span>
                             </td>
                           </tr>
                           <tr>
-                            <td style="padding-bottom:18px; vertical-align:top; width:28px; font-size:16px; color:#ec4899; font-weight:bold;">•</td>
-                            <td style="padding-bottom:18px; font-size:14.5px; color:#2d2b3d; line-height:1.5; font-family:'Inter', sans-serif;">
+                            <td style="padding-bottom:16px; vertical-align:top; width:28px; font-size:16px; color:#ec4899; font-weight:bold;">•</td>
+                            <td style="padding-bottom:16px; font-size:14.5px; color:#2d2b3d; line-height:1.5; font-family:'Inter', sans-serif;">
+                              <strong style="color:#0b081d; font-family:'Space Grotesk', sans-serif;">Multi Channel AI Outreach Studio</strong><br>
+                              <span style="font-size:13.5px; color:#666480;">Craft personalized Hinglish or English pitch copy with 1 click WhatsApp launching.</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="padding-bottom:16px; vertical-align:top; width:28px; font-size:16px; color:#ec4899; font-weight:bold;">•</td>
+                            <td style="padding-bottom:16px; font-size:14.5px; color:#2d2b3d; line-height:1.5; font-family:'Inter', sans-serif;">
                               <strong style="color:#0b081d; font-family:'Space Grotesk', sans-serif;">3 Page Agency PDF Proposals</strong><br>
-                              <span style="font-size:13.5px; color:#666480;">Auto generate high converting pitch decks tailored to target clients.</span>
+                              <span style="font-size:13.5px; color:#666480;">Auto generate customized proposal PDFs or share via public view links.</span>
                             </td>
                           </tr>
                           <tr>
-                            <td style="padding-bottom:18px; vertical-align:top; width:28px; font-size:16px; color:#ec4899; font-weight:bold;">•</td>
-                            <td style="padding-bottom:18px; font-size:14.5px; color:#2d2b3d; line-height:1.5; font-family:'Inter', sans-serif;">
+                            <td style="padding-bottom:16px; vertical-align:top; width:28px; font-size:16px; color:#ec4899; font-weight:bold;">•</td>
+                            <td style="padding-bottom:16px; font-size:14.5px; color:#2d2b3d; line-height:1.5; font-family:'Inter', sans-serif;">
                               <strong style="color:#0b081d; font-family:'Space Grotesk', sans-serif;">AI Teleprompter Cold Calling Scripts</strong><br>
-                              <span style="font-size:13.5px; color:#666480;">Live objection response cards with male and female inflection support.</span>
+                              <span style="font-size:13.5px; color:#666480;">Live objection handling cards with male and female inflection profile support.</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="padding-bottom:16px; vertical-align:top; width:28px; font-size:16px; color:#ec4899; font-weight:bold;">•</td>
+                            <td style="padding-bottom:16px; font-size:14.5px; color:#2d2b3d; line-height:1.5; font-family:'Inter', sans-serif;">
+                              <strong style="color:#0b081d; font-family:'Space Grotesk', sans-serif;">Antigravity AI System Prompt Generator</strong><br>
+                              <span style="font-size:13.5px; color:#666480;">Build detailed web architecture prompts with dynamic 0 to 100 percentage progress.</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="padding-bottom:16px; vertical-align:top; width:28px; font-size:16px; color:#ec4899; font-weight:bold;">•</td>
+                            <td style="padding-bottom:16px; font-size:14.5px; color:#2d2b3d; line-height:1.5; font-family:'Inter', sans-serif;">
+                              <strong style="color:#0b081d; font-family:'Space Grotesk', sans-serif;">5 Column CRM & Dynamic Deal Valuation</strong><br>
+                              <span style="font-size:13.5px; color:#666480;">Track pipeline deals by niche value (₹25k to ₹75k) and 14 day activity heatmaps.</span>
                             </td>
                           </tr>
                         </table>
@@ -154,12 +175,15 @@ serve(async (req) => {
                     </tr>
                   </table>
 
-                  <!-- Primary CTA Button -->
+                  <!-- Primary & Secondary CTA Buttons -->
                   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0;">
                     <tr>
                       <td align="center">
-                        <a href="https://nearpro.s8n.in/#/dashboard/directory" style="display:inline-block; padding:14px 36px; background:linear-gradient(90deg, #ec4899 0%, #ffa000 100%); color:#0b081d; text-decoration:none; font-size:15px; font-weight:800; border-radius:8px; border:2px solid #0b081d; font-family:'Space Grotesk', 'Plus Jakarta Sans', sans-serif; box-shadow:0 6px 18px rgba(236, 72, 153, 0.35);">
-                          Launch Workspace Dashboard &rarr;
+                        <a href="https://nearpro.s8n.in/#/dashboard/directory" style="display:inline-block; padding:14px 28px; background:linear-gradient(90deg, #ec4899 0%, #ffa000 100%); color:#0b081d; text-decoration:none; font-size:14.5px; font-weight:800; border-radius:8px; border:2px solid #0b081d; font-family:'Space Grotesk', 'Plus Jakarta Sans', sans-serif; box-shadow:0 6px 18px rgba(236, 72, 153, 0.35); margin-right:8px; margin-bottom:10px;">
+                          Launch Workspace &rarr;
+                        </a>
+                        <a href="https://nearpro.s8n.in/nearpro-user-guide.html" target="_blank" style="display:inline-block; padding:14px 24px; background:#f8fafc; color:#0b081d; text-decoration:none; font-size:14px; font-weight:700; border-radius:8px; border:1.5px solid #cbd5e1; font-family:'Space Grotesk', sans-serif; margin-bottom:10px;">
+                          📖 Read Master User Guide &rarr;
                         </a>
                       </td>
                     </tr>
