@@ -73,6 +73,7 @@ Watch the video above to experience the official logo reveal!
 **Footer & Professional Finish:**
 * Refined tagline along bottom edge: "India's Premier Local B2B Client Acquisition Suite".
 * Ultra crisp 8k resolution, modern corporate SaaS aesthetic, hyperrealistic studio lighting finish.
+* **Watermark Branding:** The logo watermark is placed in the bottom right corner with its signature pink and orange gradient colors preserved, but styled at a very high transparency to appear camouflaged.
 
 ---
 
@@ -127,6 +128,7 @@ With **𝗡𝗲𝗮𝗿𝗣𝗿𝗼**, you can filter local market opportunities
 **Footer / Professional Finish:**
 * **Brand/Action Line:** Refined text along bottom edge: "B2B Performance & Security Dashboard • Scale Your Outreach Now".
 * **Subtle Data Stream:** Micro particle trails flowing from right to left illustrating the continuous intelligent loop of discovery and action.
+* **Watermark Branding:** The logo watermark is placed in the bottom right corner with its signature pink and orange gradient colors preserved, but styled at a very high transparency to appear camouflaged.
 
 ---
 
@@ -178,6 +180,7 @@ When business owners see exact data about their revenue gaps, closing the deal b
 **Footer & Professional Finish:**
 * Refined tagline at bottom: "NearPro Proposal Engine • Turn Audits into Paid Retainers".
 * Studio quality soft ambient rim light, 8k resolution, photorealistic render.
+* **Watermark Branding:** The logo watermark is placed in the bottom right corner with its signature pink and orange gradient colors preserved, but styled at a very high transparency to appear camouflaged.
 
 ---
 
@@ -233,6 +236,7 @@ Stop letting manual research slow down your business growth.
 **Footer & Professional Finish:**
 * Text caption along bottom: "NearPro Workflow Automation • Eliminate Spreadsheet Bottlenecks".
 * Ultra clean, sharp vector graphic finish, high contrast 8k render.
+* **Watermark Branding:** The logo watermark is placed in the bottom right corner with its signature pink and orange gradient colors preserved, but styled at a very high transparency to appear camouflaged.
 
 ---
 
@@ -283,6 +287,7 @@ Everything your agency needs to scale is now under one roof.
 **Footer & Professional Finish:**
 * Tagline: "NearPro All In One Acquisition Suite • Powered by S8N AI Services".
 * Hyperdetailed 3D render, studio lighting, crisp reflections.
+* **Watermark Branding:** The logo watermark is placed in the bottom right corner with its signature pink and orange gradient colors preserved, but styled at a very high transparency to appear camouflaged.
 
 ---
 
@@ -332,6 +337,7 @@ By leading with value instead of a hard sales pitch, business owners welcome you
 **Footer & Professional Finish:**
 * Bottom text: "NearPro Market Intelligence • Predictable Organic Client Acquisition".
 * Cinematic depth of field, neon rim lighting, 8k resolution render.
+* **Watermark Branding:** The logo watermark is placed in the bottom right corner with its signature pink and orange gradient colors preserved, but styled at a very high transparency to appear camouflaged.
 
 ---
 
@@ -381,6 +387,7 @@ Empower your agency with the tools built for modern Indian entrepreneurs.
 **Footer & Professional Finish:**
 * Bottom text: "Celebrate Growth Independence • Empowering Indian Agencies".
 * Warm premium lighting, ultra crisp typography, studio quality 8k render.
+* **Watermark Branding:** The logo watermark is placed in the bottom right corner with its signature pink and orange gradient colors preserved, but styled at a very high transparency to appear camouflaged.
 
 ---
 
@@ -432,6 +439,7 @@ With NearPro, you can launch custom Hinglish or English WhatsApp pitches in 1 cl
 **Footer & Professional Finish:**
 * Bottom text: "NearPro Outreach Studio • Direct B2B WhatsApp Communication Engine".
 * Photorealistic glass reflections, 8k resolution studio render.
+* **Watermark Branding:** The logo watermark is placed in the bottom right corner with its signature pink and orange gradient colors preserved, but styled at a very high transparency to appear camouflaged.
 
 ---
 
@@ -481,6 +489,7 @@ When you know exactly what to say next, phone calls become your fastest channel 
 **Footer & Professional Finish:**
 * Bottom text: "NearPro Sales Teleprompter • Structured Call Closing Engine".
 * Clean UI typography, studio rim lighting, hyperrealistic render.
+* **Watermark Branding:** The logo watermark is placed in the bottom right corner with its signature pink and orange gradient colors preserved, but styled at a very high transparency to appear camouflaged.
 
 ---
 
@@ -529,6 +538,7 @@ Medical professionals value data driven advice. Show them their exact revenue ga
 **Footer & Professional Finish:**
 * Bottom text: "NearPro Healthcare Market Intelligence • High Value Clinic Targeting".
 * Crisp 8k render, professional clinical SaaS theme, high contrast lighting.
+* **Watermark Branding:** The logo watermark is placed in the bottom right corner with its signature pink and orange gradient colors preserved, but styled at a very high transparency to appear camouflaged.
 
 ---
 
@@ -575,6 +585,7 @@ By presenting three clear options, clients choose the package that fits their am
 **Footer & Professional Finish:**
 * Bottom text: "NearPro Multi-Tier Pricing Engine • Stop Discounting, Start Scaling".
 * 3D isometric perspective, studio lighting, hyperrealistic render.
+* **Watermark Branding:** The logo watermark is placed in the bottom right corner with its signature pink and orange gradient colors preserved, but styled at a very high transparency to appear camouflaged.
 
 ---
 
@@ -626,6 +637,7 @@ Keep your pipeline organized and watch your conversion rates double!
 **Footer & Professional Finish:**
 * Bottom text: "NearPro 360° B2B CRM • Zero Leaked Opportunities".
 * Ultra crisp UI elements, high end corporate SaaS lighting.
+* **Watermark Branding:** The logo watermark is placed in the bottom right corner with its signature pink and orange gradient colors preserved, but styled at a very high transparency to appear camouflaged.
 
 ---
 
@@ -671,6 +683,7 @@ Thank you to all the agency leaders who joined our platform during our launch mo
 **Footer & Professional Finish:**
 * Bottom text: "The NearPro Vision • Empowering Indian MSMEs & Growth Agencies".
 * Photorealistic depth of field, warm ambient studio lighting, 8k resolution.
+* **Watermark Branding:** The logo watermark is placed in the bottom right corner with its signature pink and orange gradient colors preserved, but styled at a very high transparency to appear camouflaged.
 
 ---
 
@@ -722,6 +735,7 @@ Make September your highest revenue month of the year!
 **Footer & Professional Finish:**
 * Bottom text: "NearPro Sales Stack • Make September Your Highest Revenue Month".
 * Ultra crisp 8k render, studio lighting, hyperrealistic finish.
+* **Watermark Branding:** The logo watermark is placed in the bottom right corner with its signature pink and orange gradient colors preserved, but styled at a very high transparency to appear camouflaged.
 
 ---
 
