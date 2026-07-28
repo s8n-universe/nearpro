@@ -1132,32 +1132,43 @@
     color: #0f172a !important;
 }
 
-/* Autofill styling overrides for a premium dark experience */
-input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
-input:-webkit-autofill:active {
+/* Autofill styling overrides for a premium dark experience (excluding light auth-input) */
+input:-webkit-autofill:not(.auth-input),
+input:-webkit-autofill:hover:not(.auth-input), 
+input:-webkit-autofill:focus:not(.auth-input), 
+input:-webkit-autofill:active:not(.auth-input) {
     -webkit-background-clip: text;
     -webkit-text-fill-color: var(--text-primary) !important;
     transition: background-color 5000s ease-in-out 0s;
     box-shadow: inset 0 0 20px 20px var(--bg-surface) !important;
 }
 
-/* Premium input styling and focus glow for authentication modal */
+/* Premium light input styling and focus glow for authentication modal */
 .auth-input {
     width: 100%;
     padding: 10px;
     border-radius: var(--radius-sm);
-    border: 1px solid var(--border) !important;
-    background: var(--bg-base) !important;
-    color: white !important;
+    border: 1px solid #cbd5e1 !important;
+    background: #f8fafc !important;
+    color: #0f172a !important;
     outline: none;
     font-size: 14px;
     transition: var(--transition);
 }
 .auth-input:focus {
+    background: #ffffff !important;
     border-color: var(--accent-gold) !important;
     box-shadow: 0 0 0 2px rgba(255, 160, 0, 0.15) !important;
+    color: #0f172a !important;
+}
+.auth-input:-webkit-autofill,
+.auth-input:-webkit-autofill:hover, 
+.auth-input:-webkit-autofill:focus, 
+.auth-input:-webkit-autofill:active {
+    -webkit-text-fill-color: #0f172a !important;
+    -webkit-box-shadow: 0 0 0px 1000px #f8fafc inset !important;
+    box-shadow: 0 0 0px 1000px #f8fafc inset !important;
+    transition: background-color 50000s ease-in-out 0s !important;
 }
 
 /* Interactive tab header hover transitions */

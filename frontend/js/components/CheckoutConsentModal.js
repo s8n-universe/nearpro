@@ -54,7 +54,7 @@ function showActivationAnimationSequence(onComplete) {
 
     setTimeout(() => {
         if (titleEl) titleEl.innerText = "🚀 Configuring AI Agency Workspace...";
-        if (subEl) subEl.innerText = "Preparing 50,000+ Verified B2B Lead Filters & Proposal Generators!";
+        if (subEl) subEl.innerText = "Preparing Verified B2B Lead Filters & Proposal Generators!";
         if (progressEl) progressEl.style.width = "100%";
     }, 1400);
 

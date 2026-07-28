@@ -90,13 +90,13 @@ export function renderAuthModal() {
                         <form id="authForm">
                             <div style="margin-bottom: 16px;">
                                 <label style="display: block; font-size: 13px; color: #334155; margin-bottom: 6px; font-weight: 600;">Email Address</label>
-                                <input type="email" id="authEmailInput" class="auth-input" required placeholder="name@domain.com" style="width:100%; padding:12px 14px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; color:#0f172a; font-size:14px; outline:none; transition: border-color 0.2s, box-shadow 0.2s;">
+                                <input type="email" id="authEmailInput" class="auth-input" required placeholder="name@domain.com" style="width:100%; padding:12px 14px; background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; color:#0f172a; font-size:14px; outline:none; transition: border-color 0.2s, box-shadow 0.2s;">
                             </div>
                             
                             <div style="margin-bottom: 16px;">
                                 <label style="display: block; font-size: 13px; color: #334155; margin-bottom: 6px; font-weight: 600;">Password</label>
                                 <div style="position: relative;">
-                                    <input type="password" id="authPasswordInput" class="auth-input" required placeholder="••••••••" style="width:100%; padding:12px 14px; padding-right: 40px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; color:#0f172a; font-size:14px; outline:none; transition: border-color 0.2s, box-shadow 0.2s;">
+                                    <input type="password" id="authPasswordInput" class="auth-input" required placeholder="••••••••" style="width:100%; padding:12px 14px; padding-right: 40px; background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; color:#0f172a; font-size:14px; outline:none; transition: border-color 0.2s, box-shadow 0.2s;">
                                     <button type="button" id="togglePasswordVisibilityBtn" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 4px;">
                                         <svg id="passwordVisibilityIcon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -148,19 +148,7 @@ export function renderAuthModal() {
                     <div style="z-index: 2; display: flex; flex-direction: column; gap: 20px; width: 100%; height: 100%; justify-content: space-between;">
                         
                         <!-- Top Header & Features Area (Full Width) -->
-                        <div style="display: flex; flex-direction: column; gap: 16px; width: 100%;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                                <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.18); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 5px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.28); box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
-                                    <span style="width: 7px; height: 7px; border-radius: 50%; background: #4ade80; display: inline-block; box-shadow: 0 0 8px #4ade80;"></span>
-                                    <span style="font-size: 11px; font-weight: 800; color: white; text-transform: uppercase; letter-spacing: 0.9px;">NearPro Agency Suite</span>
-                                </div>
-                                <div style="display: flex; gap: 16px; font-size: 11.5px; font-weight: 700; color: rgba(255,255,255,0.9);">
-                                    <span>⚡ 12,800+ Leads Extracted</span>
-                                    <span>&bull;</span>
-                                    <span>🎯 99.8% Verified Mobiles</span>
-                                </div>
-                            </div>
-
+                        <div style="display: flex; flex-direction: column; gap: 20px; width: 100%; padding-top: 8px;">
                             <div style="width: 100%; text-align: left;">
                                 <h1 style="font-size: 34px; font-weight: 800; font-family: var(--font-heading); color: #ffffff; line-height: 1.2; margin: 0 0 8px 0; letter-spacing: -0.6px; text-shadow: 0 2px 10px rgba(0,0,0,0.15);">
                                     Simplify Your Business Operations
@@ -426,14 +414,32 @@ export function renderAuthModal() {
                 color: #94a3b8 !important;
                 opacity: 1 !important;
             }
-            .auth-left-pane .auth-input {
-                background: #f8fafc !important;
+            .auth-left-pane .auth-input,
+            .auth-input {
+                background: #ffffff !important;
+                background-color: #ffffff !important;
                 border: 1px solid #cbd5e1 !important;
                 color: #0f172a !important;
             }
-            .auth-left-pane .auth-input:focus {
+            .auth-left-pane .auth-input:focus,
+            .auth-input:focus {
+                background: #ffffff !important;
+                background-color: #ffffff !important;
                 border-color: var(--accent-gold) !important;
                 box-shadow: 0 0 0 2px rgba(255, 160, 0, 0.15) !important;
+                color: #0f172a !important;
+            }
+            .auth-input:-webkit-autofill,
+            .auth-input:-webkit-autofill:hover, 
+            .auth-input:-webkit-autofill:focus, 
+            .auth-input:-webkit-autofill:active,
+            .auth-left-pane input:-webkit-autofill {
+                -webkit-text-fill-color: #0f172a !important;
+                -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+                box-shadow: 0 0 0px 1000px #ffffff inset !important;
+                transition: background-color 50000s ease-in-out 0s !important;
+                background-color: #ffffff !important;
+                color: #0f172a !important;
             }
             .auth-browser-mockup:hover {
                 transform: translateY(-4px) scale(1.005);

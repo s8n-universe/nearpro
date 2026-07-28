@@ -4,7 +4,6 @@ import { currentUserHasAccess } from '../auth.js';
 export function renderPlatformOverviewLayout() {
     const userTier = (State.profile?.subscription_tier || State.profile?.tier || 'free').toLowerCase();
     const userName = State.profile?.full_name || State.user?.email?.split('@')[0] || 'Agency Founder';
-    const companyName = State.profile?.company_name || 'S8N Partner Agency';
 
     const features = [
         {
@@ -14,7 +13,7 @@ export function renderPlatformOverviewLayout() {
             badgeBg: '#e0f2fe',
             badgeColor: '#0369a1',
             requiredTier: 'free',
-            desc: 'Search 50,000+ local Indian business listings across Mumbai, Delhi & major hubs. Filter by Google review volume gaps and un-optimized websites.',
+            desc: 'Search verified local Indian business listings across Mumbai, Delhi & major hubs. Filter by Google review volume gaps and un-optimized websites.',
             cta: 'Open Directory ➔'
         },
         {
@@ -123,11 +122,11 @@ export function renderPlatformOverviewLayout() {
                     </div>
                     
                     <h1 style="font-size: 28px; font-weight: 800; margin: 0 0 12px 0; color: #0f172a; font-family: var(--font-heading); letter-spacing: -0.5px;">
-                        Welcome, ${userName}! (${companyName})
+                        Welcome, ${userName}!
                     </h1>
                     
                     <p style="color: #475569; font-size: 15px; margin: 0 0 24px 0; line-height: 1.6; max-width: 720px;">
-                        NearPro & S8N AI Services is your professional B2B client acquisition suite. Discover local Indian business leads, analyze competitor review gaps, generate 3-page audit proposals, and close deals with teleprompter scripts.
+                        NearPro by S8N AI Services is your professional B2B client acquisition suite. Discover local Indian business leads, analyze competitor review gaps, generate 3-page audit proposals, and close deals with teleprompter scripts.
                     </p>
                     
                     <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
