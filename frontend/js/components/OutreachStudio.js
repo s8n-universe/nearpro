@@ -570,6 +570,39 @@ export function bindOutreachStudioEvents(templates, onLeadSelectCallback, onTemp
         });
     }
 
+    // AI Channel dropdown selector change listener
+    const aiChannelEl = document.getElementById('aiChannel');
+    if (aiChannelEl) {
+        aiChannelEl.addEventListener('change', () => {
+            window._aiOutreachChannel = aiChannelEl.value;
+            if (onLeadSelectCallback) onLeadSelectCallback(activeLeadId);
+        });
+    }
+
+    // Sequence Day Tabs (Day 1 - Initial, Day 3 - Follow-up, Day 7 - Final Touch)
+    document.querySelectorAll('.studio-tab-btn').forEach(tabBtn => {
+        tabBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetTab = tabBtn.getAttribute('data-tab');
+            if (targetTab) {
+                window._activeStudioTab = targetTab;
+                if (onLeadSelectCallback) onLeadSelectCallback(activeLeadId);
+            }
+        });
+    });
+
+    // Subject Line A/B/C Pills (Email channel)
+    document.querySelectorAll('.subject-pill-btn').forEach(subjBtn => {
+        subjBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const subjectVal = subjBtn.getAttribute('data-subject');
+            if (subjectVal) {
+                window._selectedSubject = subjectVal;
+                if (onLeadSelectCallback) onLeadSelectCallback(activeLeadId);
+            }
+        });
+    });
+
     // Write AI Pitch
     const generateAIPitchBtn = document.getElementById('generateAIPitchBtn');
     if (generateAIPitchBtn) {
@@ -592,9 +625,12 @@ export function bindOutreachStudioEvents(templates, onLeadSelectCallback, onTemp
             const leadId = activeLeadId;
             if (!leadId) return;
 
-            const language = document.getElementById('aiLanguage').value;
-            const tone = document.getElementById('aiTone').value;
-            const channel = window._aiOutreachChannel || 'whatsapp';
+            const language = document.getElementById('aiLanguage') ? document.getElementById('aiLanguage').value : 'hinglish';
+            const tone = document.getElementById('aiTone') ? document.getElementById('aiTone').value : 'professional';
+            const channel = document.getElementById('aiChannel') ? document.getElementById('aiChannel').value : (window._aiOutreachChannel || 'whatsapp');
+            
+            window._aiOutreachChannel = channel;
+            window._activeStudioTab = 'day1';
 
             // Local cache of state settings
             State.ai_outreach_language = language;
