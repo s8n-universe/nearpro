@@ -1,0 +1,228 @@
+{
+  "name": "NearPro - B2B Lead Automation & CRM Sync",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "nearpro-lead-push",
+        "responseMode": "onReceived",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "nearpro-webhook-trigger",
+      "name": "NearPro Webhook Trigger"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.event }}",
+                    "rightValue": "test_connection",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Test Connection"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.event }}",
+                    "rightValue": "lead_tracked",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "New Lead Tracked"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.event }}",
+                    "rightValue": "crm_status_changed",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "CRM Status Changed"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [
+        240,
+        0
+      ],
+      "id": "event-router-switch",
+      "name": "Route by Event Type"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "lead_name",
+              "value": "={{ $json.body.lead ? $json.body.lead.name : ($json.body.sample_lead ? $json.body.sample_lead.name : 'Unknown Business') }}",
+              "type": "string"
+            },
+            {
+              "id": "2",
+              "name": "lead_phone",
+              "value": "={{ $json.body.lead ? $json.body.lead.phone : ($json.body.sample_lead ? $json.body.sample_lead.phone : 'N/A') }}",
+              "type": "string"
+            },
+            {
+              "id": "3",
+              "name": "lead_area",
+              "value": "={{ $json.body.lead ? $json.body.lead.area : ($json.body.sample_lead ? $json.body.sample_lead.area : 'Mumbai') }}",
+              "type": "string"
+            },
+            {
+              "id": "4",
+              "name": "lead_rating",
+              "value": "={{ $json.body.lead ? $json.body.lead.rating : ($json.body.sample_lead ? $json.body.sample_lead.rating : 4.8) }}",
+              "type": "number"
+            },
+            {
+              "id": "5",
+              "name": "website_status",
+              "value": "={{ $json.body.lead ? ($json.body.lead.website ? 'Has Website' : '⚠️ NO WEBSITE (GAP LEAD)') : 'Gap Lead' }}",
+              "type": "string"
+            },
+            {
+              "id": "6",
+              "name": "received_at",
+              "value": "={{ $json.body.timestamp || new Date().toISOString() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        520,
+        -100
+      ],
+      "id": "format-lead-data",
+      "name": "Format Lead Metadata"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "status",
+              "value": "SUCCESS",
+              "type": "string"
+            },
+            {
+              "id": "2",
+              "name": "message",
+              "value": "n8n Webhook Connection Verified with NearPro by S8N AI Services!",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        520,
+        140
+      ],
+      "id": "test-ack-node",
+      "name": "Connection Test Acknowledgment"
+    }
+  ],
+  "connections": {
+    "NearPro Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Route by Event Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Event Type": {
+      "main": [
+        [
+          {
+            "node": "Connection Test Acknowledgment",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format Lead Metadata",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format Lead Metadata",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
