@@ -55,8 +55,6 @@ const appShell = document.getElementById('app');
 
 // State Subscription - Centralized UI synchronization
 State.subscribe(async (currentState) => {
-    State.locked = false;
-
     // Check route types to prevent state subscribers from resetting standalone views
     const hash = window.location.hash || '';
 
@@ -581,10 +579,35 @@ async function queryProfessionals(isInitialLoad = false) {
         feed.style.opacity = '0.75';
     }
 
+    if (State.locked && !State.user && !State.demo_active) {
+        renderFeedContent(false);
+        return;
+    }
+
     try {
         if (!State.fingerprint) {
             State.fingerprint = generateBrowserFingerprint();
         }
+
+        // Guest trial lockout check (2 minutes session limit)
+        if (!State.user && !State.demo_active) {
+            try {
+                let trial = await Api.checkTrial(State.fingerprint);
+                if (!trial) {
+                    trial = await Api.startTrial(State.fingerprint);
+                }
+                const startedAt = new Date(trial.started_at);
+                const diffMs = Date.now() - startedAt.getTime();
+                if (diffMs >= 2 * 60 * 1000) { // 2 minutes in ms
+                    State.locked = true;
+                    State.notify();
+                    return;
+                }
+            } catch (err) {
+                console.warn("Trial check failed:", err);
+            }
+        }
+
         State.loading = true;
         const result = await Api.getProfessionals(State.filters, State.offset, State.limit, State.fingerprint);
         

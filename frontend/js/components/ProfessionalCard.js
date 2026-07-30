@@ -130,8 +130,8 @@ export function renderProfessionalCard(lead, index = 0) {
 
     const isTracked = State.saved_lead_ids && State.saved_lead_ids.includes(lead.id);
 
-    // Freemium Sample Unlocking: Cards #1 and #2 (index 0 and 1) are unlocked for guest/free users as teaser samples!
-    const isFreemiumSampleUnlocked = index < 2;
+    // Freemium Sample Unlocking: Cards 1 to 12 (index 0 to 11) are unlocked for guest/free users as teaser samples!
+    const isFreemiumSampleUnlocked = index < 12;
     const isPremium = currentUserHasAccess('scout');
     const isUnlocked = isPremium || isFreemiumSampleUnlocked;
 

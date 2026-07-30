@@ -1127,7 +1127,23 @@ export const Api = {
             console.warn("Could not fetch lead details for local AI pitch:", err);
         }
 
-        return this.buildLocalAISequence(lead, channel, language, tone, regenerateDay, existingDay1, existingDay3, existingDay7);
+        // Fetch current profile stats and increment AI usage limit
+        let currentUsed = State.profile?.monthly_ai_generations_used || 0;
+        let updatedUsed = currentUsed + 1;
+        try {
+            if (State.user?.id) {
+                await supabase
+                    .from('profiles')
+                    .update({ monthly_ai_generations_used: updatedUsed })
+                    .eq('id', State.user.id);
+            }
+        } catch (updateErr) {
+            console.warn("Could not update local AI outreach generation count:", updateErr);
+        }
+
+        const sequence = this.buildLocalAISequence(lead, channel, language, tone, regenerateDay, existingDay1, existingDay3, existingDay7);
+        sequence.used = updatedUsed;
+        return sequence;
     },
 
     buildLocalAISequence(lead, channel, language, tone, regenerateDay = null, existingDay1 = null, existingDay3 = null, existingDay7 = null) {

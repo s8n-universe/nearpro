@@ -62,8 +62,8 @@ export function renderProfessionalModal(lead) {
     }
 
     const isPremium = currentUserHasAccess('scout');
-    const isLeadInFirst12 = State.professionals && State.professionals.slice(0, 12).some(p => p.id === lead.id);
-    const isFreemiumSampleUnlocked = !isPremium && isLeadInFirst12;
+    const leadIndex = State.professionals ? State.professionals.findIndex(p => p.id === lead.id) : -1;
+    const isFreemiumSampleUnlocked = !isPremium && leadIndex >= 0 && leadIndex < 12;
     const hasConnectAccess = isPremium || isFreemiumSampleUnlocked;
 
     // Masked Contact information for guest/free preview

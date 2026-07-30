@@ -102,9 +102,9 @@ BEGIN
     -- Increment usage counter
     UPDATE public.coupons SET redemption_count = redemption_count + 1 WHERE code = v_coupon.code;
 
-    -- Upgrade user tier to Scout in user_profiles
-    UPDATE public.user_profiles 
-    SET subscription_tier = v_coupon.target_tier, updated_at = NOW() 
+    -- Upgrade user tier to Scout in profiles
+    UPDATE public.profiles 
+    SET subscription_tier = v_coupon.target_tier, tier = v_coupon.target_tier, applied_coupon = v_coupon.code, updated_at = NOW() 
     WHERE id = p_user_id;
 
     RETURN jsonb_build_object(

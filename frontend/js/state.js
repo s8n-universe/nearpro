@@ -144,6 +144,7 @@ export const State = {
     setAuth(user, profile) {
         this.user = user;
         this.profile = profile;
+        this.locked = false;
         if (user) {
             this.auth_modal_open = false;
             // Clear default guest filters on login
