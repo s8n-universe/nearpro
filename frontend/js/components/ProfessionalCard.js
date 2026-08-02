@@ -173,6 +173,10 @@ export function renderProfessionalCard(lead, index = 0) {
                     <i data-lucide="${isTracked ? 'bookmark-check' : 'bookmark'}" style="width:13px; height:13px; stroke-width:2.5px;"></i> 
                     <span>${isTracked ? 'Tracked' : 'Track'}</span>
                 </button>
+                <button class="card-research-btn" data-id="${lead.id}" title="Run AI Agent Research" style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; font-size: 11px; font-weight: 700; border-radius: var(--radius-sm); border: 1px solid rgba(37,99,235,0.15); background: rgba(37,99,235,0.06); color: #2563eb; cursor: pointer; transition: all 0.2s ease;">
+                    <i data-lucide="brain-circuit" style="width:12px; height:12px; stroke-width:2.5px; opacity:0.8;"></i> 
+                    <span>Research</span>
+                </button>
                 ${isPremium ? `
                     <label class="compare-checkbox-label ${isSelected ? 'active' : ''}" title="Add to comparison tray">
                         <input type="checkbox" class="compare-checkbox" data-id="${lead.id}" ${isSelected ? 'checked' : ''} style="display: none;">
@@ -291,6 +295,23 @@ export function bindProfessionalCardEvents(onCardClick) {
                 }
                 const id = trackBtn.getAttribute('data-id');
                 showTrackLeadModal(id);
+            });
+        }
+
+        // Handle AI Research triggers on card
+        const researchBtn = card.querySelector('.card-research-btn');
+        if (researchBtn) {
+            researchBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isUnlocked = card.getAttribute('data-unlocked') === 'true';
+                if (!isUnlocked) {
+                    if (window.State && window.State.setPricingModal) {
+                        window.State.setPricingModal(true);
+                    }
+                    return;
+                }
+                const id = researchBtn.getAttribute('data-id');
+                if (onCardClick) onCardClick(id, 'research');
             });
         }
 
