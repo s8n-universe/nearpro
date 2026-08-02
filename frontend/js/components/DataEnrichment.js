@@ -8,6 +8,7 @@ let recentJobs = [];
 let enrichmentStats = null;
 let currentListLeads = [];
 let selectedListLeads = [];
+let leadLists = [];
 
 export function renderDataEnrichment() {
     const stats = enrichmentStats || {
