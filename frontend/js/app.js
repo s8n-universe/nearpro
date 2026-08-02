@@ -262,7 +262,7 @@ function initRoutes() {
     });
 
     Router.on('#/dashboard/:tab', (tab) => {
-        const isPublicTab = tab === 'directory' || tab === 'overview';
+        const isPublicTab = tab === 'directory' || tab === 'overview' || tab === 'help-docs';
         if (!State.user && !isPublicTab) {
             if (!window._isSigningOut) {
                 State.setExplorerPlanModal(true);
@@ -387,6 +387,7 @@ function renderMarketingLayout() {
             <footer class="main-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid var(--border); font-size: 13px; color: var(--text-muted); flex-wrap: wrap; gap: 12px;">
                 <div>NearPro™ v1.0.0 — Made with ❤️ by S8N AI Services</div>
                 <div style="display: flex; gap: 20px;">
+                    <a href="#/dashboard/help-docs" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Help Center</a>
                     <a href="#/privacy" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Privacy Policy</a>
                     <a href="#/terms" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Terms Of Service</a>
                     <a href="#/opt-out" style="color: var(--accent-gold); text-decoration: none; font-weight: 500;">Business Opt-Out</a>
@@ -466,6 +467,7 @@ async function renderDirectoryLayout() {
             <footer class="main-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid var(--border); font-size: 13px; color: var(--text-muted); flex-wrap: wrap; gap: 12px;">
                 <div>NearPro™ v1.0.0 — Made with ❤️ by S8N AI Services</div>
                 <div style="display: flex; gap: 20px;">
+                    <a href="#/dashboard/help-docs" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Help Center</a>
                     <a href="#/privacy" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Privacy Policy</a>
                     <a href="#/terms" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Terms Of Service</a>
                     <a href="https://www.linkedin.com/company/s8n-nearpro" target="_blank" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">LinkedIn</a>
@@ -1330,7 +1332,7 @@ function setupCategorySidebarHover() {
 }
 
 async function renderDashboardLayout(tab) {
-    const isPublicTab = tab === 'directory' || tab === 'overview';
+    const isPublicTab = tab === 'directory' || tab === 'overview' || tab === 'help-docs';
     if (!State.user && !isPublicTab) {
         State.setExplorerPlanModal(true);
         Router.navigate('#/dashboard/directory');
