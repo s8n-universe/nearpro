@@ -58,6 +58,7 @@ import { renderDataEnrichment, bindDataEnrichmentEvents } from './components/Dat
 import { renderPluginMarketplace, bindPluginMarketplaceEvents } from './components/PluginMarketplace.js';
 import { renderIntentSignals, bindIntentSignalsEvents } from './components/IntentSignals.js';
 import { renderVoiceAgentDashboard, bindVoiceAgentDashboardEvents } from './components/VoiceAgentDashboard.js';
+import { renderHelpDocs, bindHelpDocsEvents } from './components/HelpDocs.js';
 
 // Main Application shell reference
 const appShell = document.getElementById('app');
@@ -1359,7 +1360,8 @@ async function renderDashboardLayout(tab) {
         enrichment: 'scout',
         plugins: 'free',
         signals: 'scout',
-        'voice-agent': 'hunter'
+        'voice-agent': 'hunter',
+        'help-docs': 'free'
     };
 
     const requiredTier = requiredTiers[tab] || 'free';
@@ -1480,6 +1482,12 @@ async function renderDashboardLayout(tab) {
         if (content) {
             content.innerHTML = renderPlatformOverviewLayout();
             bindPlatformOverviewEvents();
+        }
+    } else if (tab === 'help-docs') {
+        if (titleEl) titleEl.innerText = 'Help Center';
+        if (content) {
+            content.innerHTML = renderHelpDocs();
+            bindHelpDocsEvents();
         }
     } else if (tab === 'crm') {
         if (titleEl) titleEl.innerText = 'Outreach Pipeline';

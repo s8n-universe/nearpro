@@ -140,7 +140,7 @@ export function renderPlatformOverviewLayout() {
                                 <h4 style="margin: 0; font-size: 14px; font-weight: 800; color: #0f172a;">Learn with NearPro Academy</h4>
                                 <p style="margin: 6px 0 0 0; font-size: 12px; color: #475569; line-height: 1.45;">Explore tutorials and best practices designed to help you get started with sales automation.</p>
                             </div>
-                            <button class="secondary-btn" style="width: 100%; padding: 8px; font-size: 12px; border-radius: 6px; font-weight: 700; border: 1px solid #cbd5e1; background: #ffffff; color: #0f172a; cursor: pointer;">Visit Academy</button>
+                            <button class="secondary-btn" style="width: 100%; padding: 8px; font-size: 12px; border-radius: 6px; font-weight: 700; border: 1px solid #cbd5e1; background: #ffffff; color: #0f172a; cursor: pointer;" onclick="window.location.hash = '#/dashboard/help-docs';">Visit Academy</button>
                         </div>
                     </div>
 
@@ -156,7 +156,7 @@ export function renderPlatformOverviewLayout() {
                                 <h4 style="margin: 0; font-size: 14px; font-weight: 800; color: #0f172a;">Watch a webinar</h4>
                                 <p style="margin: 6px 0 0 0; font-size: 12px; color: #475569; line-height: 1.45;">See NearPro in action through live sessions or on-demand walkthroughs you can watch anytime.</p>
                             </div>
-                            <button class="secondary-btn" style="width: 100%; padding: 8px; font-size: 12px; border-radius: 6px; font-weight: 700; border: 1px solid #cbd5e1; background: #ffffff; color: #0f172a; cursor: pointer;">Browse webinars</button>
+                            <button class="secondary-btn" style="width: 100%; padding: 8px; font-size: 12px; border-radius: 6px; font-weight: 700; border: 1px solid #cbd5e1; background: #ffffff; color: #0f172a; cursor: pointer;" onclick="window.location.hash = '#/dashboard/help-docs';">Browse webinars</button>
                         </div>
                     </div>
 
@@ -172,7 +172,7 @@ export function renderPlatformOverviewLayout() {
                                 <h4 style="margin: 0; font-size: 14px; font-weight: 800; color: #0f172a;">Go deeper with help docs</h4>
                                 <p style="margin: 6px 0 0 0; font-size: 12px; color: #475569; line-height: 1.45;">Find detailed answers, setup guidance, and platform tutorials at your own pace.</p>
                             </div>
-                            <button class="secondary-btn" style="width: 100%; padding: 8px; font-size: 12px; border-radius: 6px; font-weight: 700; border: 1px solid #cbd5e1; background: #ffffff; color: #0f172a; cursor: pointer;">Search help docs</button>
+                            <button class="secondary-btn" style="width: 100%; padding: 8px; font-size: 12px; border-radius: 6px; font-weight: 700; border: 1px solid #cbd5e1; background: #ffffff; color: #0f172a; cursor: pointer;" onclick="window.location.hash = '#/dashboard/help-docs';">Search help docs</button>
                         </div>
                     </div>
                 </div>
