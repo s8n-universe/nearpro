@@ -19,10 +19,10 @@ export function renderDeliverabilityHub() {
     const overallStatusColor = overallRep >= 80 ? '#22c55e' : overallRep >= 60 ? 'var(--accent-gold)' : '#ef4444';
 
     const accountCardsHTML = list.length === 0 ? `
-        <div style="grid-column: 1 / -1; padding: 60px 24px; text-align: center; border: 1px dashed rgba(255,255,255,0.08); border-radius: var(--radius-lg); background: #111115;">
+        <div style="grid-column: 1 / -1; padding: 60px 24px; text-align: center; border: 1px dashed #cbd5e1; border-radius: var(--radius-lg); background: #ffffff;">
             <div style="font-size: 48px; margin-bottom: 20px;">🛡️</div>
-            <h3 style="color: white; font-family: var(--font-heading); font-size: 18px; margin-bottom: 8px;">Connect Sender Email Accounts</h3>
-            <p style="color: var(--text-muted); font-size: 13.5px; max-width: 440px; margin: 0 auto 24px auto; line-height: 1.5;">
+            <h3 style="color: #0f172a; font-family: var(--font-heading); font-size: 18px; margin-bottom: 8px;">Connect Sender Email Accounts</h3>
+            <p style="color: #475569; font-size: 13.5px; max-width: 440px; margin: 0 auto 24px auto; line-height: 1.5;">
                 Start warming up inboxes. Connect SMTP/IMAP servers to rotate sender addresses dynamically and validate DNS records.
             </p>
             <button class="brand-btn" id="deliverAddFirstAccountBtn" style="background: #2563eb; color: white;">+ Connect Account</button>
@@ -33,10 +33,10 @@ export function renderDeliverabilityHub() {
         const dnsValid = acc.spf_valid && acc.dkim_valid && acc.dmarc_valid;
 
         return `
-            <div class="deliver-account-card" style="background: #111115; border: 1px solid ${dnsValid ? '#222227' : 'rgba(239, 68, 68, 0.25)'}; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.25s ease;">
+            <div class="deliver-account-card" style="background: #ffffff; border: 1px solid ${dnsValid ? '#e2e8f0' : 'rgba(239, 68, 68, 0.25)'}; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.25s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
                 <div>
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-                        <span style="font-family: var(--font-mono, monospace); font-size: 11px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); color: #a1a1aa; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase;">
+                        <span style="font-family: var(--font-mono, monospace); font-size: 11px; background: #f8fafc; border: 1px solid #e2e8f0; color: #475569; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase;">
                             ${acc.provider}
                         </span>
                         
@@ -48,31 +48,31 @@ export function renderDeliverabilityHub() {
                         </div>
                     </div>
 
-                    <h4 style="margin: 0 0 4px 0; color: white; font-family: var(--font-heading); font-size: 15px; font-weight: 800; word-break: break-all;">${acc.email_address}</h4>
-                    <p style="margin: 0 0 16px 0; color: #a1a1aa; font-size: 12px;">Display Name: ${acc.display_name || 'Not Configured'}</p>
+                    <h4 style="margin: 0 0 4px 0; color: #0f172a; font-family: var(--font-heading); font-size: 15px; font-weight: 800; word-break: break-all;">${acc.email_address}</h4>
+                    <p style="margin: 0 0 16px 0; color: #475569; font-size: 12px;">Display Name: ${acc.display_name || 'Not Configured'}</p>
                 </div>
 
-                <div style="border-top: 1px solid #222227; padding-top: 16px; display: flex; flex-direction: column; gap: 12px;">
+                <div style="border-top: 1px solid #e2e8f0; padding-top: 16px; display: flex; flex-direction: column; gap: 12px;">
                     <!-- Warmup Progress Bar -->
                     <div>
-                        <div style="display: flex; justify-content: space-between; font-size: 11px; color: #a1a1aa; margin-bottom: 4px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 11px; color: #475569; margin-bottom: 4px;">
                             <span>Warmup: Day ${acc.warmup_day}/30 (${acc.warmup_status})</span>
                             <span>Sends today: ${acc.daily_sends_today}/${acc.daily_send_limit}</span>
                         </div>
-                        <div style="height: 6px; background: #222227; border-radius: 10px; overflow: hidden; position: relative;">
+                        <div style="height: 6px; background: #f1f5f9; border-radius: 10px; overflow: hidden; position: relative;">
                             <div style="width: ${pct}%; height: 100%; background: linear-gradient(90deg, #d97706 0%, #22c55e 100%); border-radius: 10px;"></div>
                         </div>
                     </div>
 
                     <!-- DNS Checklist Status -->
-                    <div style="display: flex; gap: 8px; font-size: 11px; font-weight: 700; color: #a1a1aa; flex-wrap: wrap;">
+                    <div style="display: flex; gap: 8px; font-size: 11px; font-weight: 700; color: #475569; flex-wrap: wrap;">
                         <span style="color: ${acc.spf_valid ? '#22c55e' : '#ef4444'};">SPF: ${acc.spf_valid ? '✅' : '❌'}</span>
                         <span style="color: ${acc.dkim_valid ? '#22c55e' : '#ef4444'};">DKIM: ${acc.dkim_valid ? '✅' : '❌'}</span>
                         <span style="color: ${acc.dmarc_valid ? '#22c55e' : '#ef4444'};">DMARC: ${acc.dmarc_valid ? '✅' : '❌'}</span>
                     </div>
 
                     <div style="display: flex; gap: 6px; justify-content: flex-end; margin-top: 4px;">
-                        <button class="brand-btn acc-action-btn toggle-warmup" data-id="${acc.id}" data-status="${acc.warmup_status}" style="padding: 6px 10px; font-size: 11px; font-weight: 700; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); color: white;">
+                        <button class="brand-btn acc-action-btn toggle-warmup" data-id="${acc.id}" data-status="${acc.warmup_status}" style="padding: 6px 10px; font-size: 11px; font-weight: 700; background: #f8fafc; border: 1px solid #cbd5e1; color: #0f172a;">
                             ${isWarming ? 'Pause Warmup' : 'Start Warmup'}
                         </button>
                         <button class="brand-btn acc-action-btn dns-check" data-id="${acc.id}" data-domain="${acc.email_address.split('@')[1]}" style="padding: 6px 10px; font-size: 11px; font-weight: 700; background: rgba(255,160,0,0.1); border: 1px solid rgba(255,160,0,0.25); color: var(--accent-gold);">
@@ -90,13 +90,13 @@ export function renderDeliverabilityHub() {
     // Selected domain report layout
     const activeReport = healthReports.find(r => r.id === selectedAccountForDns);
     const domainReportHTML = !activeReport ? `
-        <div style="text-align: center; color: #a1a1aa; font-size: 13px; padding: 40px 20px;">
+        <div style="text-align: center; color: #475569; font-size: 13px; padding: 40px 20px;">
             Select "Diagnostics" on any connected email account to scan domain DNS health records.
         </div>
     ` : `
         <div style="display: flex; flex-direction: column; gap: 16px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222227; padding-bottom: 12px;">
-                <h4 style="margin: 0; font-size: 15px; color: white; font-family: var(--font-heading); font-weight: 800;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;">
+                <h4 style="margin: 0; font-size: 15px; color: #0f172a; font-family: var(--font-heading); font-weight: 800;">
                     🔍 Health Scan: ${activeReport.domain}
                 </h4>
                 <span style="font-family: var(--font-mono, monospace); font-size: 12px; font-weight: 800; color: ${activeReport.health_score >= 80 ? '#22c55e' : 'var(--accent-gold)'};">
@@ -106,28 +106,28 @@ export function renderDeliverabilityHub() {
 
             <!-- DNS details -->
             <div style="display: flex; flex-direction: column; gap: 10px;">
-                <div style="background: #09090b; border: 1px solid #222227; border-radius: 6px; padding: 12px;">
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px;">
                     <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; font-weight: 700;">
-                        <span style="color: white;">SPF Record</span>
+                        <span style="color: #0f172a;">SPF Record</span>
                         <span style="color: ${activeReport.spf_status === 'pass' ? '#22c55e' : '#ef4444'};">${activeReport.spf_status.toUpperCase()}</span>
                     </div>
-                    <code style="font-family: var(--font-mono, monospace); font-size: 11px; color: #a1a1aa; display: block; word-break: break-all;">${activeReport.spf_record || 'Missing'}</code>
+                    <code style="font-family: var(--font-mono, monospace); font-size: 11px; color: #475569; display: block; word-break: break-all;">${activeReport.spf_record || 'Missing'}</code>
                 </div>
 
-                <div style="background: #09090b; border: 1px solid #222227; border-radius: 6px; padding: 12px;">
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px;">
                     <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; font-weight: 700;">
-                        <span style="color: white;">DKIM Selector: ${activeReport.dkim_selector}</span>
+                        <span style="color: #0f172a;">DKIM Selector: ${activeReport.dkim_selector}</span>
                         <span style="color: ${activeReport.dkim_status === 'pass' ? '#22c55e' : '#ef4444'};">${activeReport.dkim_status.toUpperCase()}</span>
                     </div>
-                    <code style="font-family: var(--font-mono, monospace); font-size: 11px; color: #a1a1aa; display: block; word-break: break-all;">Status check queried successfully for selector.</code>
+                    <code style="font-family: var(--font-mono, monospace); font-size: 11px; color: #475569; display: block; word-break: break-all;">Status check queried successfully for selector.</code>
                 </div>
 
-                <div style="background: #09090b; border: 1px solid #222227; border-radius: 6px; padding: 12px;">
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px;">
                     <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; font-weight: 700;">
-                        <span style="color: white;">DMARC Policy</span>
+                        <span style="color: #0f172a;">DMARC Policy</span>
                         <span style="color: ${activeReport.dmarc_status === 'pass' ? '#22c55e' : '#ef4444'};">${activeReport.dmarc_status.toUpperCase()}</span>
                     </div>
-                    <code style="font-family: var(--font-mono, monospace); font-size: 11px; color: #a1a1aa; display: block; word-break: break-all;">${activeReport.dmarc_record || 'Missing'}</code>
+                    <code style="font-family: var(--font-mono, monospace); font-size: 11px; color: #475569; display: block; word-break: break-all;">${activeReport.dmarc_record || 'Missing'}</code>
                 </div>
             </div>
 
@@ -136,13 +136,13 @@ export function renderDeliverabilityHub() {
                 <div style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.15); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 8px;">
                     <div style="font-size: 12.5px; font-weight: 800; color: #f87171;">⚠️ Required DNS Corrections:</div>
                     ${activeReport.recommendations.map(rec => `
-                        <div style="font-size: 12px; color: #a1a1aa; line-height: 1.4;">
+                        <div style="font-size: 12px; color: #475569; line-height: 1.4;">
                             <strong>${rec.title}:</strong> ${rec.action}
                         </div>
                     `).join('')}
                 </div>
             ` : `
-                <div style="background: rgba(34, 197, 94, 0.05); border: 1px solid rgba(34, 197, 94, 0.15); border-radius: 8px; padding: 16px; font-size: 12px; color: #86efac; text-align: center; font-weight: 600;">
+                <div style="background: rgba(34, 197, 94, 0.05); border: 1px solid rgba(34, 197, 94, 0.15); border-radius: 8px; padding: 16px; font-size: 12px; color: #22c55e; text-align: center; font-weight: 600;">
                     🛡️ DNS setup is completely healthy and optimized!
                 </div>
             `}
@@ -150,16 +150,16 @@ export function renderDeliverabilityHub() {
     `;
 
     return `
-        <div style="max-width: 1200px; display: flex; flex-direction: column; gap: 24px; color: white; padding-bottom: 40px;">
+        <div style="max-width: 1200px; display: flex; flex-direction: column; gap: 24px; color: #0f172a; padding-bottom: 40px;">
             
             <!-- Deliverability Overview Header -->
-            <div style="background: linear-gradient(135deg, rgba(236,72,153,0.04) 0%, rgba(37,99,235,0.02) 100%); border: 1px solid #222227; border-radius: 12px; padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+            <div style="background: linear-gradient(135deg, rgba(236,72,153,0.04) 0%, rgba(37,99,235,0.01) 100%); border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; box-shadow: 0 4px 30px rgba(0,0,0,0.02);">
                 <div style="display: flex; flex-direction: column; gap: 4px;">
-                    <h3 style="margin: 0; font-size: 20px; font-weight: 800; font-family: var(--font-heading); display: flex; align-items: center; gap: 8px;">
+                    <h3 style="margin: 0; font-size: 20px; font-weight: 800; font-family: var(--font-heading); display: flex; align-items: center; gap: 8px; color: #0f172a;">
                         <span>🛡️ Deliverability Hub</span>
-                        <span style="font-size: 10px; background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.3); color: #22c55e; font-weight: 800; padding: 2px 8px; border-radius: 50px; text-transform: uppercase; font-family: var(--font-mono);">Scout Gated</span>
+                        <span style="font-size: 10px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); color: #22c55e; font-weight: 800; padding: 2px 8px; border-radius: 50px; text-transform: uppercase; font-family: var(--font-mono);">Scout Gated</span>
                     </h3>
-                    <p style="margin: 0; font-size: 13.5px; color: #a1a1aa;">Validate DNS entries, monitor blacklist occurrences, and warm up email servers to guarantee inbox delivery.</p>
+                    <p style="margin: 0; font-size: 13.5px; color: #475569;">Validate DNS entries, monitor blacklist occurrences, and warm up email servers to guarantee inbox delivery.</p>
                 </div>
                 <button class="brand-btn" id="deliverAddAccountBtn" style="background: #2563eb; color: white; font-weight: 800; padding: 10px 20px;">
                     + Connect Account
@@ -170,26 +170,26 @@ export function renderDeliverabilityHub() {
             <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 20px; flex-wrap: wrap; align-items: start;">
                 
                 <!-- Score summary card -->
-                <div style="background: #111115; border: 1px solid #222227; border-radius: 12px; padding: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
-                    <span style="font-size: 11px; color:#a1a1aa; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Global Reputation Index</span>
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                    <span style="font-size: 11px; color:#475569; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Global Reputation Index</span>
                     
-                    <div style="position: relative; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; border: 4px solid #222227; border-radius: 50%; margin: 8px 0; border-top-color: ${overallStatusColor}; border-right-color: ${overallStatusColor};">
-                        <div style="font-size: 32px; font-weight: 800; font-family: var(--font-mono); color: white;">${overallRep}%</div>
+                    <div style="position: relative; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; border: 4px solid #f1f5f9; border-radius: 50%; margin: 8px 0; border-top-color: ${overallStatusColor}; border-right-color: ${overallStatusColor};">
+                        <div style="font-size: 32px; font-weight: 800; font-family: var(--font-mono); color: #0f172a;">${overallRep}%</div>
                     </div>
                     
                     <span style="font-size: 14px; font-weight: 800; color: ${overallStatusColor}; letter-spacing: 0.5px;">${overallStatusText}</span>
-                    <p style="margin: 0; font-size: 12.5px; color: #a1a1aa; line-height: 1.4;">Warmup domain send ramp reduces spam flags automatically.</p>
+                    <p style="margin: 0; font-size: 12.5px; color: #475569; line-height: 1.4;">Warmup domain send ramp reduces spam flags automatically.</p>
                 </div>
 
                 <!-- Rotation Settings Configuration -->
-                <div style="background: #111115; border: 1px solid #222227; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
-                    <h4 style="margin: 0; font-size: 15px; color: white; font-family: var(--font-heading); font-weight: 800;">
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                    <h4 style="margin: 0; font-size: 15px; color: #0f172a; font-family: var(--font-heading); font-weight: 800;">
                         🔄 Smart Inbox Rotation Settings
                     </h4>
                     
                     <div>
-                        <label style="display: block; font-size: 12px; font-weight: 700; color: #a1a1aa; margin-bottom: 6px;">Rotation Strategy</label>
-                        <select id="deliverRotationStrategy" style="width: 100%; padding: 10px 14px; background: #09090b; border: 1px solid #222227; border-radius: 6px; color: white; font-size: 13.5px; outline: none; font-weight: 600;">
+                        <label style="display: block; font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 6px;">Rotation Strategy</label>
+                        <select id="deliverRotationStrategy" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; color: #0f172a; font-size: 13.5px; outline: none; font-weight: 600;">
                             <option value="round_robin" ${rotation.rotation_strategy === 'round_robin' ? 'selected' : ''}>round-robin (Evenly distribute sends)</option>
                             <option value="weighted" ${rotation.rotation_strategy === 'weighted' ? 'selected' : ''}>weighted rotation (Prioritize high reputation)</option>
                             <option value="random" ${rotation.rotation_strategy === 'random' ? 'selected' : ''}>random picker</option>
@@ -198,12 +198,12 @@ export function renderDeliverabilityHub() {
 
                     <div style="display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
                         <div>
-                            <span style="font-size: 13px; font-weight: 700; color: white;">Enable Rotation Router</span>
-                            <div style="font-size: 11px; color:#a1a1aa; margin-top:2px;">Alternate accounts automatically inside sequence outreach campaigns.</div>
+                            <span style="font-size: 13px; font-weight: 700; color: #0f172a;">Enable Rotation Router</span>
+                            <div style="font-size: 11px; color:#475569; margin-top:2px;">Alternate accounts automatically inside sequence outreach campaigns.</div>
                         </div>
                         <label class="s8n-switch-toggle" style="position: relative; display: inline-block; width: 44px; height: 24px; cursor: pointer;">
                             <input type="checkbox" id="deliverRotationEnabledCheckbox" ${rotation.enabled ? 'checked' : ''} style="opacity: 0; width: 0; height: 0;">
-                            <span class="s8n-slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #2e2e38; transition: .3s; border-radius: 34px;"></span>
+                            <span class="s8n-slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 34px;"></span>
                         </label>
                     </div>
                 </div>
@@ -215,14 +215,14 @@ export function renderDeliverabilityHub() {
                 
                 <!-- Left: Connected Accounts -->
                 <div>
-                    <h3 style="margin: 0 0 16px 0; font-size: 17px; font-family: var(--font-heading); font-weight: 800;">Connected Senders</h3>
+                    <h3 style="margin: 0 0 16px 0; font-size: 17px; font-family: var(--font-heading); font-weight: 800; color: #0f172a;">Connected Senders</h3>
                     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
                         ${accountCardsHTML}
                     </div>
                 </div>
 
                 <!-- Right: DNS Diagnosis Report details panel -->
-                <div style="background: #111115; border: 1px solid #222227; border-radius: 12px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); color: #0f172a;">
                     ${domainReportHTML}
                 </div>
 
@@ -231,17 +231,17 @@ export function renderDeliverabilityHub() {
         </div>
 
         <!-- Add account Modal overlay -->
-        <div id="addAccountModalOverlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 10000; align-items: center; justify-content: center; padding: 24px;">
-            <div style="background: #111115; border: 1px solid #222227; border-radius: 12px; max-width: 500px; width: 100%; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
-                <div style="padding: 20px; border-bottom: 1px solid #222227; display: flex; justify-content: space-between; align-items: center;">
-                    <h3 style="margin:0; font-size: 16px; font-weight:800; font-family:var(--font-heading);">Connect Email Account</h3>
-                    <button class="brand-btn" id="closeAddAccountModal" style="background:none; border:none; padding:4px; font-size:18px; line-height:1; color:#a1a1aa; cursor:pointer;">×</button>
+        <div id="addAccountModalOverlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 10000; align-items: center; justify-content: center; padding: 24px;">
+            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; max-width: 500px; width: 100%; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.1); color: #0f172a;">
+                <div style="padding: 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="margin:0; font-size: 16px; font-weight:800; font-family:var(--font-heading); color:#0f172a;">Connect Email Account</h3>
+                    <button class="brand-btn" id="closeAddAccountModal" style="background:none; border:none; padding:4px; font-size:18px; line-height:1; color:#475569; cursor:pointer;">×</button>
                 </div>
                 
                 <div style="padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px;">
                     <div>
-                        <label style="display: block; font-size: 12.5px; font-weight:700; color:#a1a1aa; margin-bottom: 6px;">Email Provider</label>
-                        <select id="accProviderSelect" style="width:100%; padding: 10px 14px; background:#09090b; border:1px solid #222227; border-radius:6px; color:white; font-size:13.5px; outline:none;">
+                        <label style="display: block; font-size: 12.5px; font-weight:700; color:#475569; margin-bottom: 6px;">Email Provider</label>
+                        <select id="accProviderSelect" style="width:100%; padding: 10px 14px; background:#ffffff; border:1px solid #cbd5e1; border-radius:6px; color:#0f172a; font-size:13.5px; outline:none;">
                             <option value="smtp">Custom SMTP Server</option>
                             <option value="gmail">Google Mail (Workspace)</option>
                             <option value="zoho">Zoho Mail</option>
@@ -250,47 +250,47 @@ export function renderDeliverabilityHub() {
                     </div>
 
                     <div>
-                        <label style="display: block; font-size: 12.5px; font-weight:700; color:#a1a1aa; margin-bottom: 6px;">Email Address</label>
-                        <input type="email" id="accEmailAddressInput" placeholder="you@domain.com" style="width: 100%; padding: 10px 14px; background: #09090b; border: 1.5px solid #222227; border-radius: 6px; color: white; font-size: 13.5px; outline: none;" />
+                        <label style="display: block; font-size: 12.5px; font-weight:700; color:#475569; margin-bottom: 6px;">Email Address</label>
+                        <input type="email" id="accEmailAddressInput" placeholder="you@domain.com" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 6px; color: #0f172a; font-size: 13.5px; outline: none;" />
                     </div>
 
                     <div>
-                        <label style="display: block; font-size: 12.5px; font-weight:700; color:#a1a1aa; margin-bottom: 6px;">Sender Display Name</label>
-                        <input type="text" id="accDisplayNameInput" placeholder="e.g. Shri from NearPro" style="width: 100%; padding: 10px 14px; background: #09090b; border: 1.5px solid #222227; border-radius: 6px; color: white; font-size: 13.5px; outline: none;" />
+                        <label style="display: block; font-size: 12.5px; font-weight:700; color:#475569; margin-bottom: 6px;">Sender Display Name</label>
+                        <input type="text" id="accDisplayNameInput" placeholder="e.g. Shri from NearPro" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 6px; color: #0f172a; font-size: 13.5px; outline: none;" />
                     </div>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                         <div>
-                            <label style="display: block; font-size: 12.5px; font-weight:700; color:#a1a1aa; margin-bottom: 6px;">SMTP Host</label>
-                            <input type="text" id="accSmtpHostInput" placeholder="smtp.mail.com" style="width: 100%; padding: 10px 14px; background: #09090b; border: 1.5px solid #222227; border-radius: 6px; color: white; font-size: 13.5px; outline: none;" />
+                            <label style="display: block; font-size: 12.5px; font-weight:700; color:#475569; margin-bottom: 6px;">SMTP Host</label>
+                            <input type="text" id="accSmtpHostInput" placeholder="smtp.mail.com" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 6px; color: #0f172a; font-size: 13.5px; outline: none;" />
                         </div>
                         <div>
-                            <label style="display: block; font-size: 12.5px; font-weight:700; color:#a1a1aa; margin-bottom: 6px;">SMTP Port</label>
-                            <input type="number" id="accSmtpPortInput" value="587" style="width: 100%; padding: 10px 14px; background: #09090b; border: 1.5px solid #222227; border-radius: 6px; color: white; font-size: 13.5px; outline: none;" />
+                            <label style="display: block; font-size: 12.5px; font-weight:700; color:#475569; margin-bottom: 6px;">SMTP Port</label>
+                            <input type="number" id="accSmtpPortInput" value="587" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 6px; color: #0f172a; font-size: 13.5px; outline: none;" />
                         </div>
                     </div>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                         <div>
-                            <label style="display: block; font-size: 12.5px; font-weight:700; color:#a1a1aa; margin-bottom: 6px;">IMAP Host</label>
-                            <input type="text" id="accImapHostInput" placeholder="imap.mail.com" style="width: 100%; padding: 10px 14px; background: #09090b; border: 1.5px solid #222227; border-radius: 6px; color: white; font-size: 13.5px; outline: none;" />
+                            <label style="display: block; font-size: 12.5px; font-weight:700; color:#475569; margin-bottom: 6px;">IMAP Host</label>
+                            <input type="text" id="accImapHostInput" placeholder="imap.mail.com" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 6px; color: #0f172a; font-size: 13.5px; outline: none;" />
                         </div>
                         <div>
-                            <label style="display: block; font-size: 12.5px; font-weight:700; color:#a1a1aa; margin-bottom: 6px;">SMTP Password</label>
-                            <input type="password" id="accPasswordInput" placeholder="••••••••••" style="width: 100%; padding: 10px 14px; background: #09090b; border: 1.5px solid #222227; border-radius: 6px; color: white; font-size: 13.5px; outline: none;" />
+                            <label style="display: block; font-size: 12.5px; font-weight:700; color:#475569; margin-bottom: 6px;">SMTP Password</label>
+                            <input type="password" id="accPasswordInput" placeholder="••••••••••" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 6px; color: #0f172a; font-size: 13.5px; outline: none;" />
                         </div>
                     </div>
 
                     <div style="display:flex; flex-direction:column; gap:8px; margin-top:4px;">
-                        <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:12.5px; color:white;">
+                        <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:12.5px; color:#0f172a;">
                             <input type="checkbox" id="accStartWarmupCheckbox" checked />
                             <span>Start email warmup immediately after connection</span>
                         </label>
                     </div>
                 </div>
 
-                <div style="padding: 20px; border-top: 1px solid #222227; display: flex; justify-content: flex-end; gap: 10px;">
-                    <button class="brand-btn" id="cancelAddAccBtn" style="padding: 8px 16px; font-size:12.5px; background:rgba(255,255,255,0.06); color:white; border: 1px solid rgba(255,255,255,0.08);">Cancel</button>
+                <div style="padding: 20px; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 10px;">
+                    <button class="brand-btn" id="cancelAddAccBtn" style="padding: 8px 16px; font-size:12.5px; background:#f8fafc; color:#0f172a; border: 1px solid #cbd5e1;">Cancel</button>
                     <button class="brand-btn" id="confirmAddAccBtn" style="padding: 8px 16px; font-size:12.5px; background:#2563eb; color:white; border:none;">Connect Account</button>
                 </div>
             </div>

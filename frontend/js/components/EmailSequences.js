@@ -34,10 +34,10 @@ function renderSequencesDashboard() {
     };
 
     const cardsHTML = list.length === 0 ? `
-        <div style="grid-column: 1 / -1; padding: 60px 24px; text-align: center; border: 1px dashed rgba(255,255,255,0.08); border-radius: var(--radius-lg); background: #111115;">
+        <div style="grid-column: 1 / -1; padding: 60px 24px; text-align: center; border: 1px dashed #cbd5e1; border-radius: var(--radius-lg); background: #ffffff;">
             <div style="font-size: 48px; margin-bottom: 20px; animation: bounce 2s infinite;">✉️</div>
-            <h3 style="color: white; font-family: var(--font-heading); font-size: 18px; margin-bottom: 8px;">Create Your First Multi-Channel Sequence</h3>
-            <p style="color: var(--text-muted); font-size: 13.5px; max-width: 440px; margin: 0 auto 24px auto; line-height: 1.5;">
+            <h3 style="color: #0f172a; font-family: var(--font-heading); font-size: 18px; margin-bottom: 8px;">Create Your First Multi-Channel Sequence</h3>
+            <p style="color: #475569; font-size: 13.5px; max-width: 440px; margin: 0 auto 24px auto; line-height: 1.5;">
                 Engage prospects via Email, WhatsApp messages, LinkedIn connection tasks, and manual twilio scripts automatically.
             </p>
             <div style="display: flex; gap: 12px; justify-content: center;">
@@ -50,39 +50,39 @@ function renderSequencesDashboard() {
         const replyRate = seq.reply_rate || 0;
 
         return `
-            <div class="sequence-card-item" data-id="${seq.id}" style="background: #111115; border: 1px solid #222227; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.25s ease;">
+            <div class="sequence-card-item" data-id="${seq.id}" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.25s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
                 <div>
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-                        <span style="font-size: 10px; background: ${isLive ? 'rgba(34,197,94,0.1)' : 'rgba(255,255,255,0.06)'}; border: 1px solid ${isLive ? 'rgba(34,197,94,0.2)' : 'rgba(255,255,255,0.1)'}; color: ${isLive ? '#22c55e' : '#a1a1aa'}; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase;">
+                        <span style="font-size: 10px; background: ${isLive ? 'rgba(34,197,94,0.1)' : '#f8fafc'}; border: 1px solid ${isLive ? 'rgba(34,197,94,0.2)' : '#cbd5e1'}; color: ${isLive ? '#22c55e' : '#475569'}; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase;">
                             ${seq.status}
                         </span>
-                        <span style="font-size: 12px; color: #a1a1aa; font-family: var(--font-mono, monospace); font-weight: 600;">
+                        <span style="font-size: 12px; color: #475569; font-family: var(--font-mono, monospace); font-weight: 600;">
                             ${seq.total_steps} steps
                         </span>
                     </div>
 
-                    <h4 style="margin: 0 0 6px 0; color: white; font-family: var(--font-heading); font-size: 16px; font-weight: 800;">${seq.name}</h4>
-                    <p style="margin: 0 0 16px 0; color: #a1a1aa; font-size: 12.5px; line-height: 1.4;">${seq.description || 'No description provided.'}</p>
+                    <h4 style="margin: 0 0 6px 0; color: #0f172a; font-family: var(--font-heading); font-size: 16px; font-weight: 800;">${seq.name}</h4>
+                    <p style="margin: 0 0 16px 0; color: #475569; font-size: 12.5px; line-height: 1.4;">${seq.description || 'No description provided.'}</p>
                 </div>
 
-                <div style="border-top: 1px solid #222227; padding-top: 16px;">
-                    <div style="display: flex; justify-content: space-between; font-size: 12px; color: #a1a1aa; margin-bottom: 8px; font-weight: 600;">
+                <div style="border-top: 1px solid #e2e8f0; padding-top: 16px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 12px; color: #475569; margin-bottom: 8px; font-weight: 600;">
                         <span>Enrolled: ${seq.total_enrolled}</span>
                         <span>Replies: ${seq.total_replied}</span>
                     </div>
 
                     <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 16px;">
                         <div style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
-                            <span style="font-size: 10px; color: #a1a1aa;">Response Index</span>
-                            <div style="height: 6px; background: #222227; border-radius: 10px; overflow: hidden; position: relative;">
+                            <span style="font-size: 10px; color: #475569;">Response Index</span>
+                            <div style="height: 6px; background: #f1f5f9; border-radius: 10px; overflow: hidden; position: relative;">
                                 <div style="width: ${openRate}%; height: 100%; background: var(--accent-gold); border-radius: 10px;"></div>
                             </div>
                         </div>
-                        <div style="font-family: var(--font-mono, monospace); font-size: 11px; font-weight: 800; color: white; margin-top: 12px;">${openRate}%</div>
+                        <div style="font-family: var(--font-mono, monospace); font-size: 11px; font-weight: 800; color: #0f172a; margin-top: 12px;">${openRate}%</div>
                     </div>
 
                     <div style="display: flex; gap: 8px; justify-content: flex-end;">
-                        <button class="brand-btn seq-action-btn edit" data-id="${seq.id}" style="padding: 6px 12px; font-size: 12px; font-weight: 700; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); color: white;">Edit</button>
+                        <button class="brand-btn seq-action-btn edit" data-id="${seq.id}" style="padding: 6px 12px; font-size: 12px; font-weight: 700; background: #f8fafc; border: 1px solid #cbd5e1; color: #0f172a;">Edit</button>
                         <button class="brand-btn seq-action-btn enroll" data-id="${seq.id}" style="padding: 6px 12px; font-size: 12px; font-weight: 700; background: #2563eb; color: white; border: none;">Enroll Leads</button>
                         <button class="brand-btn seq-action-btn analytics" data-id="${seq.id}" style="padding: 6px 12px; font-size: 12px; font-weight: 700; background: rgba(255,160,0,0.1); border: 1px solid rgba(255,160,0,0.25); color: var(--accent-gold);">Stats</button>
                     </div>
@@ -92,16 +92,16 @@ function renderSequencesDashboard() {
     }).join('');
 
     return `
-        <div style="max-width: 1200px; display: flex; flex-direction: column; gap: 24px; color: white; padding-bottom: 40px;">
+        <div style="max-width: 1200px; display: flex; flex-direction: column; gap: 24px; color: #0f172a; padding-bottom: 40px;">
             
             <!-- Dashboard Stats Overview Banner -->
-            <div style="background: linear-gradient(135deg, rgba(37,99,235,0.06) 0%, rgba(236,72,153,0.02) 100%); border: 1px solid #222227; border-radius: 12px; padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+            <div style="background: linear-gradient(135deg, rgba(37,99,235,0.04) 0%, rgba(236,72,153,0.01) 100%); border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; box-shadow: 0 4px 30px rgba(0,0,0,0.02);">
                 <div style="display: flex; flex-direction: column; gap: 4px;">
-                    <h3 style="margin: 0; font-size: 20px; font-weight: 800; font-family: var(--font-heading); display: flex; align-items: center; gap: 8px;">
+                    <h3 style="margin: 0; font-size: 20px; font-weight: 800; font-family: var(--font-heading); display: flex; align-items: center; gap: 8px; color: #0f172a;">
                         <span>✉️ Multi-Channel Outreach Dashboard</span>
-                        <span style="font-size: 10px; background: rgba(37,99,235,0.15); border: 1px solid rgba(37,99,235,0.3); color: #3b82f6; font-weight: 800; padding: 2px 8px; border-radius: 50px; text-transform: uppercase; font-family: var(--font-mono);">Scout Gated</span>
+                        <span style="font-size: 10px; background: rgba(37,99,235,0.1); border: 1px solid rgba(37,99,235,0.2); color: #3b82f6; font-weight: 800; padding: 2px 8px; border-radius: 50px; text-transform: uppercase; font-family: var(--font-mono);">Scout Gated</span>
                     </h3>
-                    <p style="margin: 0; font-size: 13.5px; color: #a1a1aa;">Set up automated cross-channel drip sequences, schedule follow-ups, and monitor deliverability rates.</p>
+                    <p style="margin: 0; font-size: 13.5px; color: #475569;">Set up automated cross-channel drip sequences, schedule follow-ups, and monitor deliverability rates.</p>
                 </div>
                 <button class="brand-btn" id="dashboardNewSeqBtn" style="background: #2563eb; color: white; font-weight: 800; padding: 10px 20px;">
                     + New Sequence
@@ -110,31 +110,31 @@ function renderSequencesDashboard() {
 
             <!-- Dashboard Analytics Grid -->
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;">
-                <div style="background: #111115; border: 1px solid #222227; border-radius: 8px; padding: 16px; text-align: center;">
-                    <div style="font-size: 11px; color: #a1a1aa; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Total Sequences</div>
-                    <div style="font-size: 24px; font-weight: 800; font-family: var(--font-mono); color: white;">${stats.total_sequences}</div>
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                    <div style="font-size: 11px; color: #475569; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Total Sequences</div>
+                    <div style="font-size: 24px; font-weight: 800; font-family: var(--font-mono); color: #0f172a;">${stats.total_sequences}</div>
                 </div>
-                <div style="background: #111115; border: 1px solid #222227; border-radius: 8px; padding: 16px; text-align: center;">
-                    <div style="font-size: 11px; color: #a1a1aa; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Active Campaigns</div>
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                    <div style="font-size: 11px; color: #475569; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Active Campaigns</div>
                     <div style="font-size: 24px; font-weight: 800; font-family: var(--font-mono); color: #22c55e;">${stats.active_sequences}</div>
                 </div>
-                <div style="background: #111115; border: 1px solid #222227; border-radius: 8px; padding: 16px; text-align: center;">
-                    <div style="font-size: 11px; color: #a1a1aa; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Enrolled Leads</div>
-                    <div style="font-size: 24px; font-weight: 800; font-family: var(--font-mono); color: white;">${stats.total_enrolled}</div>
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                    <div style="font-size: 11px; color: #475569; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Enrolled Leads</div>
+                    <div style="font-size: 24px; font-weight: 800; font-family: var(--font-mono); color: #0f172a;">${stats.total_enrolled}</div>
                 </div>
-                <div style="background: #111115; border: 1px solid #222227; border-radius: 8px; padding: 16px; text-align: center;">
-                    <div style="font-size: 11px; color: #a1a1aa; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Average Open Rate</div>
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                    <div style="font-size: 11px; color: #475569; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Average Open Rate</div>
                     <div style="font-size: 24px; font-weight: 800; font-family: var(--font-mono); color: var(--accent-gold);">${Math.round(stats.avg_open_rate)}%</div>
                 </div>
-                <div style="background: #111115; border: 1px solid #222227; border-radius: 8px; padding: 16px; text-align: center;">
-                    <div style="font-size: 11px; color: #a1a1aa; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Average Reply Rate</div>
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                    <div style="font-size: 11px; color: #475569; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Average Reply Rate</div>
                     <div style="font-size: 24px; font-weight: 800; font-family: var(--font-mono); color: #ec4899;">${Math.round(stats.avg_reply_rate)}%</div>
                 </div>
             </div>
 
             <!-- Sequences List Grid -->
             <div>
-                <h3 style="margin: 0 0 16px 0; font-size: 17px; font-family: var(--font-heading); font-weight: 800;">My Sequences</h3>
+                <h3 style="margin: 0 0 16px 0; font-size: 17px; font-family: var(--font-heading); font-weight: 800; color: #0f172a;">My Sequences</h3>
                 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;">
                     ${cardsHTML}
                 </div>
@@ -143,32 +143,36 @@ function renderSequencesDashboard() {
         </div>
 
         <!-- Enrollment Modal overlay -->
-        <div id="enrollmentModalOverlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 10000; align-items: center; justify-content: center; padding: 24px;">
-            <div style="background: #111115; border: 1px solid #222227; border-radius: 12px; max-width: 500px; width: 100%; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
-                <div style="padding: 20px; border-bottom: 1px solid #222227; display: flex; justify-content: space-between; align-items: center;">
-                    <h3 style="margin:0; font-size: 16px; font-weight:800; font-family:var(--font-heading);">Enroll Leads in Sequence</h3>
-                    <button class="brand-btn" id="closeEnrollmentModal" style="background:none; border:none; padding:4px; font-size:18px; line-height:1; color:#a1a1aa; cursor:pointer;">×</button>
+        <div id="watchlistModalOverlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 10000; align-items: center; justify-content: center; padding: 24px;">
+            <!-- Dummy element fallback mapping to match overlay variables -->
+        </div>
+        
+        <div id="enrollmentModalOverlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 10000; align-items: center; justify-content: center; padding: 24px;">
+            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; max-width: 500px; width: 100%; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.1); color: #0f172a;">
+                <div style="padding: 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="margin:0; font-size: 16px; font-weight:800; font-family:var(--font-heading); color:#0f172a;">Enroll Leads in Sequence</h3>
+                    <button class="brand-btn" id="closeEnrollmentModal" style="background:none; border:none; padding:4px; font-size:18px; line-height:1; color:#475569; cursor:pointer;">×</button>
                 </div>
                 
                 <div style="padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px;">
                     <div>
-                        <label style="display: block; font-size: 12.5px; font-weight:700; color:#a1a1aa; margin-bottom: 6px;">Select Lead Source List</label>
-                        <select id="enrollLeadListSelect" style="width:100%; padding: 10px 14px; background:#09090b; border:1px solid #222227; border-radius:6px; color:white; font-size:13.5px; outline:none;">
+                        <label style="display: block; font-size: 12.5px; font-weight:700; color:#475569; margin-bottom: 6px;">Select Lead Source List</label>
+                        <select id="enrollLeadListSelect" style="width:100%; padding: 10px 14px; background:#ffffff; border:1px solid #cbd5e1; border-radius:6px; color:#0f172a; font-size:13.5px; outline:none;">
                             <option value="">-- Choose List --</option>
                             ${leadLists.map(l => `<option value="${l.id}">${l.name} (${l.total_leads || 0} leads)</option>`).join('')}
                         </select>
                     </div>
 
                     <div style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="display: block; font-size: 12.5px; font-weight:700; color:#a1a1aa;">Leads Checklist</label>
-                        <div id="enrollLeadsListWrapper" style="border: 1px solid #222227; border-radius: 6px; padding: 10px; max-height: 200px; overflow-y: auto; background:#09090b; display:flex; flex-direction:column; gap:8px;">
-                            <div style="color:#a1a1aa; font-size:12.5px; text-align:center; padding:12px;">Choose a source list first...</div>
+                        <label style="display: block; font-size: 12.5px; font-weight:700; color:#475569;">Leads Checklist</label>
+                        <div id="enrollLeadsListWrapper" style="border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px; max-height: 200px; overflow-y: auto; background:#f8fafc; display:flex; flex-direction:column; gap:8px;">
+                            <div style="color:#475569; font-size:12.5px; text-align:center; padding:12px;">Choose a source list first...</div>
                         </div>
                     </div>
                 </div>
 
-                <div style="padding: 20px; border-top: 1px solid #222227; display: flex; justify-content: flex-end; gap: 10px;">
-                    <button class="brand-btn" id="cancelEnrollBtn" style="padding: 8px 16px; font-size:12.5px; background:rgba(255,255,255,0.06); color:white; border: 1px solid rgba(255,255,255,0.08);">Cancel</button>
+                <div style="padding: 20px; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 10px;">
+                    <button class="brand-btn" id="cancelEnrollBtn" style="padding: 8px 16px; font-size:12.5px; background:#f8fafc; color:#0f172a; border: 1px solid #cbd5e1;">Cancel</button>
                     <button class="brand-btn" id="confirmEnrollBtn" style="padding: 8px 16px; font-size:12.5px; background:#2563eb; color:white; border:none;" disabled>Enroll Selected Leads</button>
                 </div>
             </div>
@@ -182,8 +186,8 @@ function renderSequenceBuilder() {
     const desc = currentSequence ? currentSequence.description : '';
 
     const stepsHTML = sequenceSteps.length === 0 ? `
-        <div style="text-align: center; padding: 32px 16px; border: 1.5px dashed rgba(255,255,255,0.06); border-radius: 8px; background: rgba(0,0,0,0.1); margin-bottom: 20px;">
-            <p style="color: #a1a1aa; font-size: 13px; margin-bottom: 12px;">No campaign steps created. Add your first step to define the drip outreach.</p>
+        <div style="text-align: center; padding: 32px 16px; border: 1.5px dashed #cbd5e1; border-radius: 8px; background: #f8fafc; margin-bottom: 20px;">
+            <p style="color: #475569; font-size: 13px; margin-bottom: 12px;">No campaign steps created. Add your first step to define the drip outreach.</p>
             <button class="brand-btn" id="builderAddFirstStepBtn" style="background: rgba(255,160,0,0.1); border: 1px solid rgba(255,160,0,0.25); color: var(--accent-gold); font-size: 12.5px; font-weight: 700; padding: 8px 16px;">
                 + Add Step 1 (Email)
             </button>
@@ -193,17 +197,17 @@ function renderSequenceBuilder() {
         const accentColor = type === 'whatsapp' ? '#22c55e' : type === 'phone' ? '#a855f7' : type === 'linkedin' ? '#f97316' : '#2563eb';
 
         return `
-            <div class="builder-step-node" data-idx="${idx}" style="background: #111115; border: 1.5px solid ${accentColor}; border-radius: 8px; padding: 20px; position: relative; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: border-color 0.3s ease;">
+            <div class="builder-step-node" data-idx="${idx}" style="background: #ffffff; border: 1.5px solid ${accentColor}; border-radius: 8px; padding: 20px; position: relative; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); color: #0f172a; transition: border-color 0.3s ease;">
                 
                 <!-- Remove Step button -->
-                <button class="builder-remove-step-btn" data-idx="${idx}" style="position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 16px; color: #a1a1aa; cursor: pointer;">×</button>
+                <button class="builder-remove-step-btn" data-idx="${idx}" style="position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 16px; color: #475569; cursor: pointer;">×</button>
 
                 <!-- Step Header Node -->
                 <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 16px;">
                     <span style="font-family: var(--font-mono, monospace); font-size: 11px; background: ${accentColor}; color: #fff; font-weight: 800; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                         ${idx + 1}
                     </span>
-                    <h4 style="margin: 0; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
+                    <h4 style="margin: 0; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #0f172a;">
                         Step ${idx + 1}: ${idx === 0 ? 'First Touch' : 'Follow Up'}
                     </h4>
                 </div>
@@ -213,8 +217,8 @@ function renderSequenceBuilder() {
                     
                     <!-- Channel Selector -->
                     <div>
-                        <label style="display: block; font-size: 12px; font-weight: 700; color: #a1a1aa; margin-bottom: 4px;">Outreach Channel Type</label>
-                        <select class="step-channel-select" data-idx="${idx}" style="width: 100%; padding: 8px 12px; background: #09090b; border: 1.5px solid #222227; border-radius: 6px; color: white; font-size: 13px; outline: none; font-weight:600;">
+                        <label style="display: block; font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 4px;">Outreach Channel Type</label>
+                        <select class="step-channel-select" data-idx="${idx}" style="width: 100%; padding: 8px 12px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 6px; color: #0f172a; font-size: 13px; outline: none; font-weight:600;">
                             <option value="email" ${type === 'email' ? 'selected' : ''}>📧 SMTP Email Message</option>
                             <option value="whatsapp" ${type === 'whatsapp' ? 'selected' : ''}>💬 WhatsApp Template Message</option>
                             <option value="phone" ${type === 'phone' ? 'selected' : ''}>📞 Manual Phone Call (Script reminder task)</option>
@@ -224,47 +228,47 @@ function renderSequenceBuilder() {
 
                     ${type === 'email' ? `
                         <div>
-                            <label style="display: block; font-size: 12px; font-weight: 700; color: #a1a1aa; margin-bottom: 4px;">Email Subject Line</label>
-                            <input type="text" class="step-subject-input" data-idx="${idx}" value="${step.subject_line || ''}" placeholder="e.g. Hey {{name}}, noticed your page is loading slowly..." style="width: 100%; padding: 10px; background: #09090b; border: 1.5px solid #222227; border-radius: 6px; color: white; font-size: 13px; outline: none;" />
+                            <label style="display: block; font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 4px;">Email Subject Line</label>
+                            <input type="text" class="step-subject-input" data-idx="${idx}" value="${step.subject_line || ''}" placeholder="e.g. Hey {{name}}, noticed your page is loading slowly..." style="width: 100%; padding: 10px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 6px; color: #0f172a; font-size: 13px; outline: none;" />
                         </div>
                     ` : ''}
                     
                     <div>
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                            <label style="display: block; font-size: 12px; font-weight: 700; color: #a1a1aa;">Message Content Template</label>
+                            <label style="display: block; font-size: 12px; font-weight: 700; color: #475569;">Message Content Template</label>
                             <span style="font-size: 11px; color: var(--accent-gold); font-weight: 700;">Tip: Type {{ to insert dynamic placeholders</span>
                         </div>
-                        <textarea class="step-body-textarea" data-idx="${idx}" placeholder="Write your template. Use {{name}}, {{area}}, {{category}}, {{website}}, or {{rating}} variables." style="width: 100%; height: 120px; padding: 12px; background: #09090b; border: 1.5px solid #222227; border-radius: 6px; color: white; font-size: 13px; font-family: inherit; line-height: 1.5; resize: vertical; outline: none;">${step.body_template || ''}</textarea>
+                        <textarea class="step-body-textarea" data-idx="${idx}" placeholder="Write your template. Use {{name}}, {{area}}, {{category}}, {{website}}, or {{rating}} variables." style="width: 100%; height: 120px; padding: 12px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 6px; color: #0f172a; font-size: 13px; font-family: inherit; line-height: 1.5; resize: vertical; outline: none;">${step.body_template || ''}</textarea>
                     </div>
 
                     <!-- Wait/Delay Options -->
                     ${idx > 0 ? `
-                        <div style="display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.15); padding: 10px 14px; border-radius: 6px; border: 1px solid #222227; margin-top: 4px;">
-                            <span style="font-size: 12px; font-weight: 700; color: #a1a1aa;">⏱ Delay sending step:</span>
-                            <input type="number" class="step-delay-input" data-idx="${idx}" value="${step.delay_days || 3}" min="1" max="30" style="width: 50px; padding: 6px; background:#09090b; border:1px solid #222227; border-radius:4px; color:white; font-size:12.5px; font-weight:700; text-align:center;" />
-                            <span style="font-size: 12.5px; color:#a1a1aa; font-weight:600;">days after previous step.</span>
+                        <div style="display: flex; align-items: center; gap: 10px; background: #f8fafc; padding: 10px 14px; border-radius: 6px; border: 1px solid #cbd5e1; margin-top: 4px;">
+                            <span style="font-size: 12px; font-weight: 700; color: #475569;">⏱ Delay sending step:</span>
+                            <input type="number" class="step-delay-input" data-idx="${idx}" value="${step.delay_days || 3}" min="1" max="30" style="width: 50px; padding: 6px; background:#ffffff; border:1px solid #cbd5e1; border-radius:4px; color:#0f172a; font-size:12.5px; font-weight:700; text-align:center;" />
+                            <span style="font-size: 12.5px; color:#475569; font-weight:600;">days after previous step.</span>
                         </div>
                     ` : ''}
                 </div>
 
                 <!-- Inter-node Connector Line -->
                 ${idx < sequenceSteps.length - 1 ? `
-                    <div style="width: 2px; height: 24px; background: #222227; margin: 12px auto -36px auto; position: relative; z-index: 1;"></div>
+                    <div style="width: 2px; height: 24px; background: #cbd5e1; margin: 12px auto -36px auto; position: relative; z-index: 1;"></div>
                 ` : ''}
             </div>
         `;
     }).join('');
 
     return `
-        <div style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; color: white; padding-bottom: 40px;">
+        <div style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; color: #0f172a; padding-bottom: 40px;">
             
             <!-- Builder Nav Header -->
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222227; padding-bottom: 16px;">
-                <button class="brand-btn" id="builderBackToDashboard" style="padding: 6px 14px; font-size: 12.5px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); color: white; font-weight: 700;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 16px;">
+                <button class="brand-btn" id="builderBackToDashboard" style="padding: 6px 14px; font-size: 12.5px; background: #f8fafc; border: 1px solid #cbd5e1; color: #0f172a; font-weight: 700;">
                     ← Back to Dashboard
                 </button>
                 <div style="display: flex; gap: 10px;">
-                    <button class="brand-btn" id="builderSaveDraftBtn" style="padding: 8px 16px; font-size: 13px; font-weight: 700; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); color: white;">
+                    <button class="brand-btn" id="builderSaveDraftBtn" style="padding: 8px 16px; font-size: 13px; font-weight: 700; background: #f8fafc; border: 1px solid #cbd5e1; color: #0f172a;">
                         Save Draft
                     </button>
                     <button class="brand-btn" id="builderActivateBtn" style="padding: 8px 16px; font-size: 13px; font-weight: 800; background: #2563eb; color: white; border: none;">
@@ -274,26 +278,26 @@ function renderSequenceBuilder() {
             </div>
 
             <!-- Sequence settings inputs -->
-            <div style="background: #111115; border: 1px solid #222227; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 16px;">
-                <h3 style="margin: 0; font-size: 16px; font-weight: 800; font-family: var(--font-heading);">
+            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                <h3 style="margin: 0; font-size: 16px; font-weight: 800; font-family: var(--font-heading); color: #0f172a;">
                     ${isNew ? 'New Multi-Channel Blueprint' : 'Modify Campaign Blueprint'}
                 </h3>
                 
                 <div>
-                    <label style="display: block; font-size: 12.5px; font-weight: 700; color: #a1a1aa; margin-bottom: 6px;">Sequence Name</label>
-                    <input type="text" id="builderSequenceName" value="${name}" placeholder="e.g. Cold Restaurant Outbound (Juhu)" style="width: 100%; padding: 10px 14px; background: #09090b; border: 1.5px solid #222227; border-radius: 6px; color: white; font-size: 13.5px; outline: none; font-weight: 600;" />
+                    <label style="display: block; font-size: 12.5px; font-weight: 700; color: #475569; margin-bottom: 6px;">Sequence Name</label>
+                    <input type="text" id="builderSequenceName" value="${name}" placeholder="e.g. Cold Restaurant Outbound (Juhu)" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 6px; color: #0f172a; font-size: 13.5px; outline: none; font-weight: 600;" />
                 </div>
                 
                 <div>
-                    <label style="display: block; font-size: 12.5px; font-weight: 700; color: #a1a1aa; margin-bottom: 6px;">Campaign Description</label>
-                    <textarea id="builderSequenceDesc" placeholder="Describe the goal of this automated sequence..." style="width: 100%; height: 80px; padding: 10px 14px; background: #09090b; border: 1.5px solid #222227; border-radius: 6px; color: white; font-size: 13.5px; font-family: inherit; line-height: 1.4; resize: none; outline: none;">${desc}</textarea>
+                    <label style="display: block; font-size: 12.5px; font-weight: 700; color: #475569; margin-bottom: 6px;">Campaign Description</label>
+                    <textarea id="builderSequenceDesc" placeholder="Describe the goal of this automated sequence..." style="width: 100%; height: 80px; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 6px; color: #0f172a; font-size: 13.5px; font-family: inherit; line-height: 1.4; resize: none; outline: none;">${desc}</textarea>
                 </div>
             </div>
 
             <!-- Steps Editor Container -->
             <div>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; font-family: var(--font-heading); font-weight: 800;">Campaign Sequence Steps</h3>
+                    <h3 style="margin: 0; font-size: 16px; font-family: var(--font-heading); font-weight: 800; color: #0f172a;">Campaign Sequence Steps</h3>
                     <button class="brand-btn" id="builderAddStepBtn" style="padding: 6px 14px; font-size: 12.5px; background: rgba(255,160,0,0.1); border: 1px solid rgba(255,160,0,0.25); color: var(--accent-gold); font-weight: 700;">
                         + Add Next Step
                     </button>
@@ -320,52 +324,52 @@ function renderSequenceAnalytics() {
         const color = perf.channel_type === 'whatsapp' ? '#22c55e' : '#2563eb';
 
         return `
-            <div style="background: #09090b; border: 1px solid #222227; border-radius: 8px; padding: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                 <div style="display:flex; align-items:center; gap:10px;">
                     <span style="font-size:20px;">${perf.channel_type === 'whatsapp' ? '💬' : '📧'}</span>
                     <div>
-                        <div style="font-size:13.5px; font-weight:700; color:white; text-transform:uppercase;">${perf.channel_type} Channel</div>
-                        <div style="font-size:11px; color:#a1a1aa; margin-top:2px;">Sent: ${perf.total_sent} • Delivered: ${perf.total_delivered}</div>
+                        <div style="font-size:13.5px; font-weight:700; color:#0f172a; text-transform:uppercase;">${perf.channel_type} Channel</div>
+                        <div style="font-size:11px; color:#475569; margin-top:2px;">Sent: ${perf.total_sent} • Delivered: ${perf.total_delivered}</div>
                     </div>
                 </div>
                 
                 <div style="text-align:right;">
                     <div style="font-family:var(--font-mono); font-size:14.5px; font-weight:800; color:${color};">${rate}% Reply Rate</div>
-                    <div style="font-size:11px; color:#a1a1aa; margin-top:2px;">Avg Response: ${perf.avg_response_time_h}h</div>
+                    <div style="font-size:11px; color:#475569; margin-top:2px;">Avg Response: ${perf.avg_response_time_h}h</div>
                 </div>
             </div>
         `;
     }).join('');
 
     return `
-        <div style="max-width: 1000px; display: flex; flex-direction: column; gap: 24px; color: white; padding-bottom: 40px;">
+        <div style="max-width: 1000px; display: flex; flex-direction: column; gap: 24px; color: #0f172a; padding-bottom: 40px;">
             
             <!-- Analytics Nav Header -->
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <button class="brand-btn" id="analyticsBackToDashboard" style="padding: 6px 14px; font-size: 12.5px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); color: white; font-weight: 700;">
+                <button class="brand-btn" id="analyticsBackToDashboard" style="padding: 6px 14px; font-size: 12.5px; background: #f8fafc; border: 1px solid #cbd5e1; color: #0f172a; font-weight: 700;">
                     ← Back to Dashboard
                 </button>
-                <div style="font-size: 13.5px; color: #a1a1aa; font-weight: 500;">
-                    Inspecting: <strong style="color: white;">${seq.name}</strong>
+                <div style="font-size: 13.5px; color: #475569; font-weight: 500;">
+                    Inspecting: <strong style="color: #0f172a;">${seq.name}</strong>
                 </div>
             </div>
 
             <!-- Performance Numbers Overview Grid -->
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-                <div style="background: #111115; border: 1px solid #222227; border-radius: 8px; padding: 20px; text-align: center;">
-                    <div style="font-size: 11px; color: #a1a1aa; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Total Enrolled</div>
-                    <div style="font-size: 26px; font-weight: 800; font-family: var(--font-mono); color: white;">${seq.total_enrolled}</div>
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                    <div style="font-size: 11px; color: #475569; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Total Enrolled</div>
+                    <div style="font-size: 26px; font-weight: 800; font-family: var(--font-mono); color: #0f172a;">${seq.total_enrolled}</div>
                 </div>
-                <div style="background: #111115; border: 1px solid #222227; border-radius: 8px; padding: 20px; text-align: center;">
-                    <div style="font-size: 11px; color: #a1a1aa; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Replies Received</div>
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                    <div style="font-size: 11px; color: #475569; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Replies Received</div>
                     <div style="font-size: 26px; font-weight: 800; font-family: var(--font-mono); color: #22c55e;">${seq.total_replied}</div>
                 </div>
-                <div style="background: #111115; border: 1px solid #222227; border-radius: 8px; padding: 20px; text-align: center;">
-                    <div style="font-size: 11px; color: #a1a1aa; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Replies Rate</div>
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                    <div style="font-size: 11px; color: #475569; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Replies Rate</div>
                     <div style="font-size: 26px; font-weight: 800; font-family: var(--font-mono); color: #ec4899;">${Math.round(replyRate)}%</div>
                 </div>
-                <div style="background: #111115; border: 1px solid #222227; border-radius: 8px; padding: 20px; text-align: center;">
-                    <div style="font-size: 11px; color: #a1a1aa; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Bounces Detected</div>
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                    <div style="font-size: 11px; color: #475569; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Bounces Detected</div>
                     <div style="font-size: 26px; font-weight: 800; font-family: var(--font-mono); color: #ef4444;">${seq.total_bounced}</div>
                 </div>
             </div>
@@ -374,28 +378,28 @@ function renderSequenceAnalytics() {
             <div style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; align-items: start;">
                 
                 <!-- Left: Funnel details -->
-                <div style="background: #111115; border: 1px solid #222227; border-radius: 12px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
-                    <h4 style="margin: 0 0 16px 0; font-size: 16px; color: white; font-family: var(--font-heading); font-weight: 800; border-bottom: 1px solid #222227; padding-bottom: 12px;">
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); color: #0f172a;">
+                    <h4 style="margin: 0 0 16px 0; font-size: 16px; color: #0f172a; font-family: var(--font-heading); font-weight: 800; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;">
                         📈 Campaign Conversion Funnel
                     </h4>
                     
                     <div style="display: flex; flex-direction: column; gap: 16px; padding: 10px 0;">
                         <div>
-                            <div style="display: flex; justify-content: space-between; font-size: 13px; color: #a1a1aa; margin-bottom: 6px; font-weight: 600;">
+                            <div style="display: flex; justify-content: space-between; font-size: 13px; color: #475569; margin-bottom: 6px; font-weight: 600;">
                                 <span>Step 1: First Touch Pitch</span>
                                 <span>${seq.total_enrolled} sent (100%)</span>
                             </div>
-                            <div style="height: 24px; background: #09090b; border: 1px solid #222227; border-radius: 6px; overflow: hidden; position: relative;">
+                            <div style="height: 24px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; overflow: hidden; position: relative;">
                                 <div style="width: 100%; height: 100%; background: linear-gradient(90deg, #2563eb 0%, #1e40af 100%); display: flex; align-items: center; padding-left: 12px; font-size: 11px; font-weight: 700; color: white;">ENROLLED PITCH</div>
                             </div>
                         </div>
 
                         <div>
-                            <div style="display: flex; justify-content: space-between; font-size: 13px; color: #a1a1aa; margin-bottom: 6px; font-weight: 600;">
+                            <div style="display: flex; justify-content: space-between; font-size: 13px; color: #475569; margin-bottom: 6px; font-weight: 600;">
                                 <span>Replies Log</span>
                                 <span>${seq.total_replied} replies (${Math.round(replyRate)}%)</span>
                             </div>
-                            <div style="height: 24px; background: #09090b; border: 1px solid #222227; border-radius: 6px; overflow: hidden; position: relative;">
+                            <div style="height: 24px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; overflow: hidden; position: relative;">
                                 <div style="width: ${replyRate}%; height: 100%; background: linear-gradient(90deg, #ec4899 0%, #be185d 100%); display: flex; align-items: center; padding-left: 12px; font-size: 11px; font-weight: 700; color: white;">REPLIES RESPONSE</div>
                             </div>
                         </div>
@@ -403,8 +407,8 @@ function renderSequenceAnalytics() {
                 </div>
 
                 <!-- Right: Channel comparisons -->
-                <div style="background: #111115; border: 1px solid #222227; border-radius: 12px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
-                    <h4 style="margin: 0 0 16px 0; font-size: 16px; color: white; font-family: var(--font-heading); font-weight: 800; border-bottom: 1px solid #222227; padding-bottom: 12px;">
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); color: #0f172a;">
+                    <h4 style="margin: 0 0 16px 0; font-size: 16px; color: #0f172a; font-family: var(--font-heading); font-weight: 800; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;">
                         📊 Channel Performance Index
                     </h4>
                     
@@ -539,7 +543,7 @@ export function bindEmailSequencesEvents() {
                     container.innerHTML = listItems.map((item, idx) => {
                         const p = item.professionals || {};
                         return `
-                            <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:13px; color:white; padding: 4px 0;">
+                            <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:13px; color:#0f172a; padding: 4px 0;">
                                 <input type="checkbox" class="enrollment-lead-checkbox" data-id="${p.id}" checked />
                                 <span>${p.name || 'Lead'} (${p.category || 'N/A'} - ${p.area || 'Mumbai'})</span>
                             </label>

@@ -161,10 +161,10 @@ export function renderDashboardShell(activeTab = 'crm') {
 
                         ${State.user ? `
                         <div class="user-profile-dropdown-container" style="position: relative; display: inline-block; padding-bottom: 14px; margin-bottom: -14px;">
-                            <div class="user-profile-badge" id="dashboardUserProfileBtn" style="cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 6px 12px; border-radius: 8px; background: #09090b; border: 1px solid rgba(255, 255, 255, 0.08); transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='#09090b'">
+                            <div class="user-profile-badge" id="dashboardUserProfileBtn" style="cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 6px 12px; border-radius: 8px; background: #ffffff; border: 1px solid #cbd5e1; transition: all 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#ffffff'">
                                 <span class="user-avatar-circle" style="width: 28px; height: 28px; border-radius: 50%; background: ${tierColor}; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; text-transform: uppercase; font-family: var(--font-mono); font-size: 12px;">${initials}</span>
                                 <div class="user-meta-info" style="display: flex; flex-direction: column; align-items: flex-start;">
-                                    <span class="user-email" style="font-size: 12.5px; font-weight: 600; color: #ffffff; display: flex; align-items: center; gap: 4px; line-height: 1.2;">
+                                    <span class="user-email" style="font-size: 12.5px; font-weight: 600; color: #0f172a; display: flex; align-items: center; gap: 4px; line-height: 1.2;">
                                         ${displayName}
                                         <i data-lucide="chevron-down" style="width:12px; height:12px; opacity:0.7;"></i>
                                     </span>
@@ -172,13 +172,13 @@ export function renderDashboardShell(activeTab = 'crm') {
                                 </div>
                             </div>
                             <!-- Dropdown Menu with Hover Bridge -->
-                            <div class="dashboard-profile-dropdown" id="dashboardProfileDropdownMenu" style="position: absolute; right: 0; top: calc(100% - 6px); width: 230px; background: #0f172a; border: 1px solid #334155; border-radius: var(--radius-md, 8px); padding: 14px; display: none; flex-direction: column; gap: 10px; z-index: 99999; box-shadow: 0 14px 35px -5px rgba(0,0,0,0.65), 0 8px 10px -6px rgba(0,0,0,0.5); text-align: left;">
+                            <div class="dashboard-profile-dropdown" id="dashboardProfileDropdownMenu" style="position: absolute; right: 0; top: calc(100% - 6px); width: 230px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: var(--radius-md, 8px); padding: 14px; display: none; flex-direction: column; gap: 10px; z-index: 99999; box-shadow: 0 10px 25px rgba(0,0,0,0.08); text-align: left;">
                                 <div style="display: flex; flex-direction: column; gap: 2px;">
-                                    <span style="font-size: 11px; font-family: var(--font-mono); color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Account</span>
-                                    <span style="font-size: 13px; color: #f8fafc; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${userEmail}">${userEmail}</span>
+                                    <span style="font-size: 11px; font-family: var(--font-mono); color: #475569; text-transform: uppercase; letter-spacing: 0.5px;">Account</span>
+                                    <span style="font-size: 13px; color: #0f172a; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${userEmail}">${userEmail}</span>
                                 </div>
-                                <hr style="border: none; border-top: 1px solid #334155; margin: 4px 0;">
-                                <a href="#/dashboard/settings" style="font-size: 13px; color: #cbd5e1; text-decoration: none; display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 6px; transition: all 0.2s;" onmouseover="this.style.background='#1e293b'; this.style.color='#ffffff'" onmouseout="this.style.background='transparent'; this.style.color='#cbd5e1'">
+                                <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 4px 0;">
+                                <a href="#/dashboard/settings" style="font-size: 13px; color: #0f172a; text-decoration: none; display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 6px; transition: all 0.2s;" onmouseover="this.style.background='#f1f5f9'; this.style.color='#0f172a'" onmouseout="this.style.background='transparent'; this.style.color='#0f172a'">
                                     ⚙️ Settings Profile
                                 </a>
                                 <button id="dashboardSignOutBtn" class="secondary-btn" style="width: 100%; padding: 8px 10px; font-size: 12.5px; border-radius: var(--radius-sm); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; background: rgba(239, 68, 68, 0.08); text-align: center; justify-content: center; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='rgba(239, 68, 68, 0.2)'" onmouseout="this.style.background='rgba(239, 68, 68, 0.08)'">

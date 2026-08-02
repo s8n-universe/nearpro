@@ -30,15 +30,16 @@ export function renderFloatingScratchTrigger(remainingCount = 58) {
                 align-items: center;
                 gap: 8px;
                 padding: 6px 14px;
-                background: linear-gradient(135deg, rgba(20, 20, 26, 0.95), rgba(9, 9, 11, 0.98));
+                background: #ffffff;
                 border: 1.5px solid rgba(255, 160, 0, 0.6);
                 border-radius: 50px;
                 backdrop-filter: blur(16px);
-                color: #ffffff;
+                color: #0f172a;
                 cursor: pointer;
                 animation: pulseGlowRing 3s infinite ease-in-out;
                 transition: all 0.2s ease;
                 user-select: none;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.06);
             }
             .floating-top-right-scratch:hover {
                 transform: translateY(-1px) scale(1.05) !important;
@@ -149,30 +150,30 @@ export function renderScratchModal() {
     if (!State.scratch_modal_open) return '';
 
     return `
-        <div class="modal-overlay open" id="scratchModalOverlay" style="z-index: 100050; background: rgba(0, 0, 0, 0.85) !important; backdrop-filter: blur(14px) !important; -webkit-backdrop-filter: blur(14px) !important;">
-            <div class="modal-card" style="max-width: 480px; width: 92%; padding: 32px; text-align: center; position: relative; background: #09090b !important; color: #ffffff !important; border: 1.5px solid rgba(255, 160, 0, 0.4) !important; box-shadow: 0 25px 60px rgba(0,0,0,0.8), 0 0 35px rgba(255,160,0,0.18); border-radius: 20px;">
+        <div class="modal-overlay open" id="scratchModalOverlay" style="z-index: 100050; background: rgba(0, 0, 0, 0.45) !important; backdrop-filter: blur(14px) !important; -webkit-backdrop-filter: blur(14px) !important;">
+            <div class="modal-card" style="max-width: 480px; width: 92%; padding: 32px; text-align: center; position: relative; background: #ffffff !important; color: #0f172a !important; border: 1.5px solid rgba(255, 160, 0, 0.45) !important; box-shadow: 0 25px 60px rgba(0,0,0,0.1), 0 0 35px rgba(255,160,0,0.08); border-radius: 20px;">
                 
-                <button class="modal-close-btn" id="closeScratchModalBtn" style="position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #94a3b8; font-size: 20px; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">&times;</button>
+                <button class="modal-close-btn" id="closeScratchModalBtn" style="position: absolute; top: 16px; right: 16px; background: rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.08); color: #475569; font-size: 20px; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">&times;</button>
                 
                 <!-- Header Badge -->
-                <div style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; background: rgba(255, 160, 0, 0.15); border: 1px solid rgba(255, 160, 0, 0.4); border-radius: 20px; color: var(--accent-gold, #ffa000); font-size: 11px; font-family: var(--font-mono); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 14px;">
+                <div style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; background: rgba(255, 160, 0, 0.1); border: 1px solid rgba(255, 160, 0, 0.25); border-radius: 20px; color: var(--accent-gold, #ffa000); font-size: 11px; font-family: var(--font-mono); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 14px;">
                     🔥 LAUNCH SPECIAL • FIRST 100 USERS GET SCOUT PLAN FREE
                 </div>
 
-                <h3 style="font-family: var(--font-heading); font-size: 22px; font-weight: 800; color: #ffffff; margin: 0 0 8px 0;">
+                <h3 style="font-family: var(--font-heading); font-size: 22px; font-weight: 800; color: #0f172a; margin: 0 0 8px 0;">
                     Scratch Below to Claim Free Access! 🎁
                 </h3>
-                <p style="font-size: 13px; color: var(--text-secondary, #94a3b8); margin: 0 0 20px 0; line-height: 1.5;">
+                <p style="font-size: 13px; color: #475569; margin: 0 0 20px 0; line-height: 1.5;">
                     Scratch off the silver card below to reveal your secret 100% OFF coupon code.
                 </p>
 
                 <!-- Scratch Canvas Container -->
-                <div style="position: relative; width: 290px; height: 80px; margin: 0 auto 20px; border-radius: 14px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.6); user-select: none;">
+                <div style="position: relative; width: 290px; height: 80px; margin: 0 auto 20px; border-radius: 14px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.15); user-select: none;">
                     
                     <!-- Underneath Revealed Secret Code -->
-                    <div id="scratchCodeSecret" style="position: absolute; inset: 0; background: linear-gradient(135deg, #09090b, #18181b); border: 2px dashed var(--accent-gold, #ffa000); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1;">
+                    <div id="scratchCodeSecret" style="position: absolute; inset: 0; background: #f8fafc; border: 2px dashed var(--accent-gold, #ffa000); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1;">
                         <span style="font-size: 10px; font-family: var(--font-mono); color: var(--accent-gold); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Your Secret 100% OFF Code</span>
-                        <span style="font-size: 26px; font-family: var(--font-mono); font-weight: 900; color: #ffffff; letter-spacing: 3px;">LAUNCH100</span>
+                        <span style="font-size: 26px; font-family: var(--font-mono); font-weight: 900; color: #0f172a; letter-spacing: 3px;">LAUNCH100</span>
                     </div>
 
                     <!-- Interactive Canvas Foil Overlay -->
@@ -180,14 +181,14 @@ export function renderScratchModal() {
                 </div>
 
                 <!-- Claim Status Bar -->
-                <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 10px 14px; border-radius: 10px; font-size: 12.5px; margin-bottom: 20px;">
-                    <span style="color: var(--text-secondary);">⚡ Remaining Free Coupons:</span>
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #f8fafc; border: 1px solid #cbd5e1; padding: 10px 14px; border-radius: 10px; font-size: 12.5px; margin-bottom: 20px;">
+                    <span style="color: #475569;">⚡ Remaining Free Coupons:</span>
                     <span style="font-family: var(--font-mono); font-weight: 800; color: #22c55e;" id="modalScratchRemainingText">Loading...</span>
                 </div>
 
                 <!-- Action Buttons -->
                 <div style="display: flex; gap: 10px;">
-                    <button id="copyScratchCodeBtn" class="secondary-btn" style="flex: 1; padding: 11px; font-size: 12.5px; border-radius: 10px; justify-content: center; display: flex; align-items: center; gap: 6px;">
+                    <button id="copyScratchCodeBtn" class="secondary-btn" style="flex: 1; padding: 11px; font-size: 12.5px; border-radius: 10px; justify-content: center; display: flex; align-items: center; gap: 6px; background: #f8fafc; border: 1px solid #cbd5e1; color: #0f172a;">
                         📋 Copy Secret Code
                     </button>
                     <button id="claimScratchCodeBtn" class="brand-btn" style="flex: 1.2; padding: 11px; font-size: 13px; font-weight: 700; border-radius: 10px; justify-content: center; display: flex; align-items: center; gap: 6px; background: linear-gradient(135deg, var(--accent-gold, #ffa000), #ea580c); color: white;">

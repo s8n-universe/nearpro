@@ -37,7 +37,7 @@ function renderMarketplaceList() {
     });
 
     const pluginCardsHTML = filtered.length === 0 ? `
-        <div style="grid-column: 1 / -1; padding: 40px; text-align: center; color: #a1a1aa; font-size:13.5px; border: 1px dashed rgba(255,255,255,0.08); border-radius: 8px; background: #111115;">
+        <div style="grid-column: 1 / -1; padding: 40px; text-align: center; color: #475569; font-size:13.5px; border: 1px dashed #cbd5e1; border-radius: 8px; background: #ffffff;">
             No plugins match your search criteria.
         </div>
     ` : filtered.map(p => {
@@ -45,27 +45,27 @@ function renderMarketplaceList() {
         const icon = p.category === 'integration' ? '🔌' : p.category === 'outreach' ? '✉️' : p.category === 'analytics' ? '📊' : '🧩';
 
         return `
-            <div class="plugin-card-item" data-slug="${p.slug}" style="background: #111115; border: 1px solid #222227; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.25s ease; cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+            <div class="plugin-card-item" data-slug="${p.slug}" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.25s ease; cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
                 <div>
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
                         <span style="font-size: 24px;">${icon}</span>
                         <div style="display: flex; gap: 6px;">
-                            ${p.is_official ? `<span style="font-size: 9px; background: rgba(37,99,235,0.15); border: 1px solid rgba(37,99,235,0.3); color: #3b82f6; font-weight: 800; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono);">OFFICIAL</span>` : ''}
-                            ${p.is_verified ? `<span style="font-size: 9px; background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.3); color: #22c55e; font-weight: 800; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono);">VERIFIED</span>` : ''}
+                            ${p.is_official ? `<span style="font-size: 9px; background: rgba(37,99,235,0.1); border: 1px solid rgba(37,99,235,0.2); color: #3b82f6; font-weight: 800; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono);">OFFICIAL</span>` : ''}
+                            ${p.is_verified ? `<span style="font-size: 9px; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2); color: #22c55e; font-weight: 800; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono);">VERIFIED</span>` : ''}
                         </div>
                     </div>
 
-                    <h4 style="margin: 0 0 6px 0; color: white; font-family: var(--font-heading); font-size: 15px; font-weight: 800;">${p.name}</h4>
-                    <p style="margin: 0 0 16px 0; color: #a1a1aa; font-size: 12.5px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 35px;">${p.description || ''}</p>
+                    <h4 style="margin: 0 0 6px 0; color: #0f172a; font-family: var(--font-heading); font-size: 15px; font-weight: 800;">${p.name}</h4>
+                    <p style="margin: 0 0 16px 0; color: #475569; font-size: 12.5px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 35px;">${p.description || ''}</p>
                 </div>
 
-                <div style="border-top: 1px solid #222227; padding-top: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                <div style="border-top: 1px solid #e2e8f0; padding-top: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
                     <div style="display:flex; flex-direction:column;">
-                        <span style="font-size: 11px; color:#a1a1aa; font-weight:600;">by ${p.author_name || 'NearPro'}</span>
+                        <span style="font-size: 11px; color:#475569; font-weight:600;">by ${p.author_name || 'NearPro'}</span>
                         <span style="font-size: 11px; color:var(--accent-gold); margin-top:2px; font-weight:700;">★ ${p.avg_rating || '5.0'} (${p.install_count || 0} installs)</span>
                     </div>
 
-                    <button class="brand-btn plugin-install-toggle-btn" data-id="${p.id}" data-installed="${isInstalled ? 'true' : 'false'}" style="padding: 6px 12px; font-size: 11.5px; font-weight: 700; background: ${isInstalled ? 'rgba(255,255,255,0.06)' : '#2563eb'}; border: ${isInstalled ? '1px solid rgba(255,255,255,0.08)' : 'none'}; color: white;">
+                    <button class="brand-btn plugin-install-toggle-btn" data-id="${p.id}" data-installed="${isInstalled ? 'true' : 'false'}" style="padding: 6px 12px; font-size: 11.5px; font-weight: 700; background: ${isInstalled ? '#f8fafc' : '#2563eb'}; border: ${isInstalled ? '1px solid #cbd5e1' : 'none'}; color: ${isInstalled ? '#0f172a' : 'white'};">
                         ${isInstalled ? 'Uninstall' : 'Install'}
                     </button>
                 </div>
@@ -84,7 +84,7 @@ function renderMarketplaceList() {
     const categoryTabsHTML = categories.map(cat => {
         const isActive = activeCategoryFilter === cat.id;
         return `
-            <button class="brand-btn cat-filter-btn" data-cat="${cat.id}" style="padding: 8px 16px; font-size: 12.5px; font-weight: 700; background: ${isActive ? 'rgba(255, 160, 0, 0.1)' : 'rgba(255,255,255,0.04)'}; border: 1px solid ${isActive ? 'rgba(255, 160, 0, 0.25)' : 'rgba(255,255,255,0.06)'}; color: ${isActive ? 'var(--accent-gold)' : 'white'};">
+            <button class="brand-btn cat-filter-btn" data-cat="${cat.id}" style="padding: 8px 16px; font-size: 12.5px; font-weight: 700; background: ${isActive ? 'rgba(255, 160, 0, 0.1)' : '#f8fafc'}; border: 1px solid ${isActive ? 'rgba(255, 160, 0, 0.25)' : '#cbd5e1'}; color: ${isActive ? 'var(--accent-gold)' : '#475569'};">
                 ${cat.label}
             </button>
         `;
@@ -93,20 +93,20 @@ function renderMarketplaceList() {
     return `
         <style>
             .plugin-card-item:hover {
-                border-color: #33333f !important;
+                border-color: #cbd5e1 !important;
                 transform: translateY(-2px);
-                box-shadow: 0 8px 30px rgba(0,0,0,0.3) !important;
+                box-shadow: 0 8px 30px rgba(0,0,0,0.06) !important;
             }
         </style>
         
-        <div style="max-width: 1200px; display: flex; flex-direction: column; gap: 24px; color: white; padding-bottom: 40px;">
+        <div style="max-width: 1200px; display: flex; flex-direction: column; gap: 24px; color: #0f172a; padding-bottom: 40px;">
             
             <!-- Welcome Banner Header -->
-            <div style="background: linear-gradient(135deg, rgba(236,72,153,0.05) 0%, rgba(37,99,235,0.02) 100%); border: 1px solid #222227; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 14px;">
-                <h3 style="margin: 0; font-size: 20px; font-weight: 800; font-family: var(--font-heading);">
+            <div style="background: linear-gradient(135deg, rgba(236,72,153,0.04) 0%, rgba(37,99,235,0.01) 100%); border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 4px 30px rgba(0,0,0,0.02);">
+                <h3 style="margin: 0; font-size: 20px; font-weight: 800; font-family: var(--font-heading); color: #0f172a;">
                     🧩 S8N Plugin Marketplace
                 </h3>
-                <p style="margin: 0; font-size: 13.5px; color: #a1a1aa; max-width: 800px; line-height: 1.5;">
+                <p style="margin: 0; font-size: 13.5px; color: #475569; max-width: 800px; line-height: 1.5;">
                     Extend NearPro features. Install first-party & community plugins using the Model Context Protocol (MCP) server architecture.
                 </p>
             </div>
@@ -117,13 +117,13 @@ function renderMarketplaceList() {
                     ${categoryTabsHTML}
                 </div>
                 <div style="position: relative; width: 280px;">
-                    <input type="text" id="marketplaceSearchInput" value="${searchFilter}" placeholder="Search plugins..." style="width: 100%; padding: 10px 14px; background: #111115; border: 1.5px solid #222227; border-radius: 8px; color: white; font-size: 13px; outline: none;" />
+                    <input type="text" id="marketplaceSearchInput" value="${searchFilter}" placeholder="Search plugins..." style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; color: #0f172a; font-size: 13px; outline: none;" />
                 </div>
             </div>
 
             <!-- Plugins Grid -->
             <div>
-                <h3 style="margin: 0 0 16px 0; font-size: 17px; font-family: var(--font-heading); font-weight: 800;">Available Plugins</h3>
+                <h3 style="margin: 0 0 16px 0; font-size: 17px; font-family: var(--font-heading); font-weight: 800; color: #0f172a;">Available Plugins</h3>
                 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
                     ${pluginCardsHTML}
                 </div>
@@ -141,34 +141,34 @@ function renderPluginDetailPage() {
     const tools = typeof p.tools_provided === 'string' ? JSON.parse(p.tools_provided) : p.tools_provided || [];
 
     const toolsHTML = tools.length === 0 ? `
-        <div style="color: #a1a1aa; font-size: 12.5px;">No tools declared by this plugin.</div>
+        <div style="color: #475569; font-size: 12.5px;">No tools declared by this plugin.</div>
     ` : tools.map(t => `
-        <div style="background: #09090b; border: 1px solid #222227; border-radius: 8px; padding: 16px; margin-bottom: 12px;">
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 12px;">
             <div style="font-family: var(--font-mono, monospace); font-size: 13px; font-weight: 700; color: var(--accent-gold); margin-bottom: 6px;">
                 🔧 ${t.name}
             </div>
-            <div style="font-size: 12.5px; color: #a1a1aa; line-height: 1.4;">${t.description}</div>
+            <div style="font-size: 12.5px; color: #475569; line-height: 1.4;">${t.description}</div>
         </div>
     `).join('');
 
     const configKeys = p.slug === 'hubspot-crm-sync' ? ['hubspot_access_token', 'hubspot_pipeline_id'] : p.slug === 'slack-deal-notifier' ? ['slack_webhook_url'] : p.slug === 'google-sheets-export' ? ['google_sheet_id'] : [];
     
     const configHTML = !isInstalled ? `
-        <div style="text-align: center; color: #a1a1aa; font-size: 13px; padding: 20px;">
+        <div style="text-align: center; color: #475569; font-size: 13px; padding: 20px;">
             Please install this plugin first to configure its keys.
         </div>
     ` : configKeys.length === 0 ? `
-        <div style="text-align: center; color: #a1a1aa; font-size: 13px; padding: 20px;">
+        <div style="text-align: center; color: #475569; font-size: 13px; padding: 20px;">
             This plugin requires no authentication credentials setup.
         </div>
     ` : `
         <div style="display: flex; flex-direction: column; gap: 14px; max-width: 460px;">
             ${configKeys.map(key => `
                 <div>
-                    <label style="display: block; font-size: 12.5px; font-weight: 700; color: #a1a1aa; margin-bottom: 6px;">
+                    <label style="display: block; font-size: 12.5px; font-weight: 700; color: #475569; margin-bottom: 6px;">
                         ${key.replace(/_/g, ' ').toUpperCase()}
                     </label>
-                    <input type="password" class="plugin-config-input" data-key="${key}" value="${(isInstalled.config || {})[key] || ''}" style="width: 100%; padding: 10px 14px; background: #09090b; border: 1.5px solid #222227; border-radius: 6px; color: white; font-size: 13.5px; outline: none;" />
+                    <input type="password" class="plugin-config-input" data-key="${key}" value="${(isInstalled.config || {})[key] || ''}" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 6px; color: #0f172a; font-size: 13.5px; outline: none;" />
                 </div>
             `).join('')}
             <button class="brand-btn" id="savePluginConfigBtn" data-id="${p.id}" style="background: #2563eb; color: white; font-weight: 800; padding: 10px 20px; align-self: flex-start; margin-top: 8px;">
@@ -178,11 +178,11 @@ function renderPluginDetailPage() {
     `;
 
     return `
-        <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; color: white; padding-bottom: 40px;">
+        <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; color: #0f172a; padding-bottom: 40px;">
             
             <!-- Detail Header -->
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222227; padding-bottom: 16px;">
-                <button class="brand-btn" id="detailBackToMarketplace" style="padding: 6px 14px; font-size: 12.5px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); color: white; font-weight: 700;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 16px;">
+                <button class="brand-btn" id="detailBackToMarketplace" style="padding: 6px 14px; font-size: 12.5px; background: #f8fafc; border: 1px solid #cbd5e1; color: #0f172a; font-weight: 700;">
                     ← Back to Marketplace
                 </button>
 
@@ -192,11 +192,11 @@ function renderPluginDetailPage() {
             </div>
 
             <!-- Plugin Metadata Banner -->
-            <div style="background: #111115; border: 1px solid #222227; border-radius: 12px; padding: 24px; display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
-                <div style="font-size: 48px; padding: 16px; background: rgba(255,255,255,0.04); border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">🔌</div>
+            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; display: flex; gap: 20px; align-items: center; flex-wrap: wrap; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                <div style="font-size: 48px; padding: 16px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">🔌</div>
                 <div style="flex: 1; min-width: 240px; display: flex; flex-direction: column; gap: 4px;">
-                    <div style="font-size: 18px; font-weight: 800; font-family: var(--font-heading);">${p.name}</div>
-                    <div style="font-size: 12px; color: #a1a1aa;">
+                    <div style="font-size: 18px; font-weight: 800; font-family: var(--font-heading); color: #0f172a;">${p.name}</div>
+                    <div style="font-size: 12px; color: #475569;">
                         Version ${p.version} • Published by ${p.author_name || 'NearPro'} • ${p.install_count || 0} active integrations
                     </div>
                     <div style="font-size: 12px; color: var(--accent-gold); margin-top: 4px; font-weight: 700;">
@@ -209,16 +209,16 @@ function renderPluginDetailPage() {
             <div style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; align-items: start;">
                 
                 <!-- Left: Tools & Capabilities list -->
-                <div style="background: #111115; border: 1px solid #222227; border-radius: 12px; padding: 24px;">
-                    <h3 style="margin: 0 0 16px 0; font-size: 16px; font-family: var(--font-heading); font-weight: 800; border-bottom: 1px solid #222227; padding-bottom: 12px;">
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                    <h3 style="margin: 0 0 16px 0; font-size: 16px; font-family: var(--font-heading); font-weight: 800; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; color: #0f172a;">
                         🔧 Plugin MCP Tools Provided
                     </h3>
                     ${toolsHTML}
                 </div>
 
                 <!-- Right: Config settings -->
-                <div style="background: #111115; border: 1px solid #222227; border-radius: 12px; padding: 24px;">
-                    <h3 style="margin: 0 0 16px 0; font-size: 16px; font-family: var(--font-heading); font-weight: 800; border-bottom: 1px solid #222227; padding-bottom: 12px;">
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                    <h3 style="margin: 0 0 16px 0; font-size: 16px; font-family: var(--font-heading); font-weight: 800; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; color: #0f172a;">
                         ⚙️ Integration Configuration
                     </h3>
                     ${configHTML}

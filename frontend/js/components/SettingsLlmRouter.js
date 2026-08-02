@@ -126,20 +126,20 @@ export function renderSettingsLlmRouter() {
                     </div>
 
                     <!-- Marketplace teaser card -->
-                    <div style="background: linear-gradient(135deg, #09090b 0%, #18181b 100%); border-radius: 12px; padding: 20px; color: white; border: 1px solid #27272a; position: relative;">
-                        <span style="position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,0.08); font-size: 10px; font-family: var(--font-mono); padding: 2px 8px; border-radius: 4px; font-weight: 700;">Local registry</span>
-                        <h5 style="margin: 0 0 6px 0; font-size: 14px; font-weight: 800; font-family: var(--font-heading);">🦙 Ollama Model Registry</h5>
-                        <p style="font-size: 12px; color: #a1a1aa; line-height: 1.4; margin: 0 0 12px 0;">
+                    <div style="background: #ffffff; border-radius: 12px; padding: 20px; color: #0f172a; border: 1px solid #cbd5e1; position: relative; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                        <span style="position: absolute; top: 12px; right: 12px; background: #f8fafc; border: 1px solid #cbd5e1; font-size: 10px; font-family: var(--font-mono); padding: 2px 8px; border-radius: 4px; font-weight: 700; color: #475569;">Local registry</span>
+                        <h5 style="margin: 0 0 6px 0; font-size: 14px; font-weight: 800; font-family: var(--font-heading); color: #0f172a;">🦙 Ollama Model Registry</h5>
+                        <p style="font-size: 12px; color: #475569; line-height: 1.4; margin: 0 0 12px 0;">
                             Get optimal hinges/English speeds using the latest small models:
                         </p>
                         <div style="display: flex; flex-direction: column; gap: 8px;">
-                            <div style="display: flex; justify-content: space-between; font-size: 11.5px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 6px 10px; border-radius: 6px;">
+                            <div style="display: flex; justify-content: space-between; font-size: 11.5px; background: #f8fafc; border: 1px solid #cbd5e1; padding: 6px 10px; border-radius: 6px; color: #0f172a;">
                                 <span>llama3.2:1b (Fast Hinglish)</span>
-                                <strong style="color: #34d399;">1.3 GB</strong>
+                                <strong style="color: #16a34a;">1.3 GB</strong>
                             </div>
-                            <div style="display: flex; justify-content: space-between; font-size: 11.5px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 6px 10px; border-radius: 6px;">
+                            <div style="display: flex; justify-content: space-between; font-size: 11.5px; background: #f8fafc; border: 1px solid #cbd5e1; padding: 6px 10px; border-radius: 6px; color: #0f172a;">
                                 <span>gemma2:2b (Google Local)</span>
-                                <strong style="color: #34d399;">1.6 GB</strong>
+                                <strong style="color: #16a34a;">1.6 GB</strong>
                             </div>
                         </div>
                     </div>
