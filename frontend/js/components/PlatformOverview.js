@@ -5,281 +5,178 @@ export function renderPlatformOverviewLayout() {
     const userTier = (State.profile?.subscription_tier || State.profile?.tier || 'free').toLowerCase();
     const userName = State.profile?.full_name || State.user?.email?.split('@')[0] || 'Agency Founder';
 
-    const features = [
+    // Onboarding task lists state tracking
+    const taskDirectory = localStorage.getItem('nearpro_task_directory') === 'true';
+    const taskSaveLead = localStorage.getItem('nearpro_task_save_lead') === 'true';
+    const taskProposal = localStorage.getItem('nearpro_task_proposal') === 'true';
+    const taskEnrichmentKeys = localStorage.getItem('nearpro_task_enrichment_keys') === 'true';
+    const taskSequence = localStorage.getItem('nearpro_task_sequence') === 'true';
+    const taskAudit = localStorage.getItem('nearpro_task_audit') === 'true';
+
+    const tasks = [
         {
-            id: 'directory',
-            title: '🔍 Browse Directory',
-            badge: 'ALL PLANS',
-            badgeBg: '#e0f2fe',
-            badgeColor: '#0369a1',
-            requiredTier: 'free',
-            desc: 'Search verified local Indian business listings across Mumbai, Delhi & major hubs. Filter by Google review volume gaps and un-optimized websites.',
-            cta: 'Open Directory ➔'
+            id: 'task_directory',
+            completed: taskDirectory,
+            title: 'Search local leads in the business directory',
+            desc: 'Find verified local businesses with review counts or unoptimized websites.',
+            btnText: 'Go to directory',
+            hash: '#/dashboard/directory'
         },
         {
-            id: 'crm',
-            title: '📋 Outreach Pipeline (CRM)',
-            badge: 'SCOUT+',
-            badgeBg: '#fef3c7',
-            badgeColor: '#b45309',
-            requiredTier: 'scout',
-            desc: 'Organize target leads into custom deal stages (New, Contacted, Pitched, Closed). Keep client notes and set follow-up due dates.',
-            cta: 'Manage Pipeline ➔'
+            id: 'task_save_lead',
+            completed: taskSaveLead,
+            title: 'Save a lead to start building your pipeline',
+            desc: 'Add contacts from searches to your workspace lead database.',
+            btnText: 'Save a prospect',
+            hash: '#/dashboard/directory'
         },
         {
-            id: 'proposals',
-            title: '📄 1-Click PDF Proposals',
-            badge: 'SCOUT+',
-            badgeBg: '#fef3c7',
-            badgeColor: '#b45309',
-            requiredTier: 'scout',
-            desc: 'Generate 3-page corporate audit proposals featuring Google Maps social proof, competitor review gap analysis, revenue loss math & 3-tier pricing.',
-            cta: 'Create Proposal ➔'
+            id: 'task_proposal',
+            completed: taskProposal,
+            title: 'Generate a 1-click PDF proposal for a prospect',
+            desc: 'Create personalized audits featuring revenue loss estimates and competitor comparison grids.',
+            btnText: 'Create proposal',
+            hash: '#/dashboard/proposals'
         },
         {
-            id: 'call-scripts',
-            title: '📞 Tele-Sales Call Scripts',
-            badge: 'SCOUT+',
-            badgeBg: '#fef3c7',
-            badgeColor: '#b45309',
-            requiredTier: 'scout',
-            desc: 'Category-specific cold calling teleprompter scripts with 30-second pattern interrupts, empathy probes, live objection cards & WhatsApp follow-ups.',
-            cta: 'Generate Script ➔'
+            id: 'task_enrichment_keys',
+            completed: taskEnrichmentKeys,
+            title: 'Configure your personalized API keys to bypass limits',
+            desc: 'Add personal credential keys (Hunter.io or Apollo) to run waterfall enrichment logs.',
+            btnText: 'Configure keys',
+            hash: '#/dashboard/enrichment'
         },
         {
-            id: 'outreach',
-            title: '⚡ AI Outreach Studio',
-            badge: 'SCOUT+',
-            badgeBg: '#fef3c7',
-            badgeColor: '#b45309',
-            requiredTier: 'scout',
-            desc: 'Craft multi-day cold email & WhatsApp pitch sequences in Hinglish or English tailored for local business verticals (Dentists, Decorators, Salons).',
-            cta: 'Launch Studio ➔'
+            id: 'task_sequence',
+            completed: taskSequence,
+            title: 'Launch an automated outreach sequence campaign',
+            desc: 'Set up multi-channel email, WhatsApp, or twilio drip sequences.',
+            btnText: 'Create sequence',
+            hash: '#/dashboard/sequences'
         },
         {
-            id: 'prompts',
-            title: '🎯 Website Prompt Engine',
-            badge: 'SCOUT+',
-            badgeBg: '#fef3c7',
-            badgeColor: '#b45309',
-            requiredTier: 'scout',
-            desc: 'Generate production-ready code prompts for React/Next.js/Vite to create high-converting client demo websites with 1-tap WhatsApp booking engines.',
-            cta: 'Generate Prompt ➔'
-        },
-        {
-            id: 'integrations',
-            title: '🔌 Connection Hub & Webhooks',
-            badge: 'SCOUT+',
-            badgeBg: '#fef3c7',
-            badgeColor: '#b45309',
-            requiredTier: 'scout',
-            desc: 'Auto-sync tracked leads and generated proposals to n8n, Make.com, Google Sheets, HubSpot, or Zoho CRM via automated webhooks.',
-            cta: 'Configure Hub ➔'
-        },
-        {
-            id: 'audit',
-            title: '🏥 Business Health Check',
-            badge: 'SCOUT+',
-            badgeBg: '#fef3c7',
-            badgeColor: '#b45309',
-            requiredTier: 'scout',
-            desc: 'Run comprehensive technical SEO, mobile load performance, and conversion audit reports for any client website URL.',
-            cta: 'Run Health Check ➔'
-        },
-        {
-            id: 'documents',
-            title: '📁 Documents Library',
-            badge: 'SCOUT+',
-            badgeBg: '#fef3c7',
-            badgeColor: '#b45309',
-            requiredTier: 'scout',
-            desc: 'Access saved client proposals and tele-sales scripts with permanent 10-year signed links for seamless sharing on WhatsApp.',
-            cta: 'View Library ➔'
-        },
-        {
-            id: 'team',
-            title: '👥 Team Workspace',
-            badge: 'AGENCY+',
-            badgeBg: '#dbeafe',
-            badgeColor: '#1d4ed8',
-            requiredTier: 'agency',
-            desc: 'Collaborate with agency team members, assign lead research tasks, and share workspace quotas across your agency staff.',
-            cta: 'Team Workspace ➔'
+            id: 'task_audit',
+            completed: taskAudit,
+            title: 'Run a technical SEO & website health check audit',
+            desc: 'Perform technical lighthouse, mobile speed, and security check scans.',
+            btnText: 'Run audit',
+            hash: '#/dashboard/audit'
         }
     ];
 
+    const completedCount = tasks.filter(t => t.completed).length;
+    const progressPercent = Math.round((completedCount / tasks.length) * 100);
+
     return `
-        <!-- CORPORATE LIGHT SAAS THEME OVERRIDE FOR THIS PAGE -->
-        <div class="platform-overview-container" style="display: flex; flex-direction: column; gap: 28px; padding: 32px; background: #f8fafc; color: #0f172a; border-radius: var(--radius-lg); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+        <div class="platform-overview-container" style="display: flex; flex-direction: column; gap: 32px; padding: 24px; background: #f8fafc; color: #0f172a; border-radius: 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 1000px; margin: 0 auto; width:100%;">
             
-            <!-- HERO WELCOME BANNER -->
-            <div style="background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%); border: 1px solid #e2e8f0; border-radius: 16px; padding: 36px; box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05); position: relative; overflow: hidden;">
-                <div style="position: absolute; top: -50px; right: -50px; width: 260px; height: 260px; background: rgba(37, 99, 235, 0.06); border-radius: 50%; filter: blur(40px); pointer-events: none;"></div>
+            <!-- HEADER SECTION -->
+            <div>
+                <h1 style="font-size: 24px; font-weight: 800; color: #0f172a; margin: 0 0 6px 0; font-family: var(--font-heading);">
+                    Get started with NearPro
+                </h1>
+                <p style="color: #475569; font-size: 13.5px; margin: 0; line-height: 1.5;">
+                    Complete these tasks in your first 14 days to earn up to 75 credits and start reaching prospects and booking meetings.
+                </p>
+            </div>
+
+            <!-- TASK LIST COMPONENT CARD -->
+            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 20px;">
                 
-                <div style="max-width: 820px; position: relative; z-index: 1;">
-                    <div style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 99px; background: #eff6ff; border: 1px solid #bfdbfe; color: #2563eb; font-size: 12px; font-weight: 700; font-family: var(--font-mono); margin-bottom: 16px;">
-                        🚀 PLATFORM MASTERY & AGENCY LAUNCHPAD
+                <!-- PROGRESS BAR HEADER -->
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; color: #475569;">
+                        <span>Start reaching the right prospects (Earn 30 credits)</span>
+                        <span>${completedCount} of ${tasks.length} completed</span>
                     </div>
-                    
-                    <h1 style="font-size: 28px; font-weight: 800; margin: 0 0 12px 0; color: #0f172a; font-family: var(--font-heading); letter-spacing: -0.5px;">
-                        Welcome, ${userName}!
-                    </h1>
-                    
-                    <p style="color: #475569; font-size: 15px; margin: 0 0 24px 0; line-height: 1.6; max-width: 720px;">
-                        NearPro by S8N AI Services is your professional B2B client acquisition suite. Discover local Indian business leads, analyze competitor review gaps, generate 3-page audit proposals, and close deals with teleprompter scripts.
-                    </p>
-                    
-                    <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
-                        <a href="#/dashboard/directory" style="background: #2563eb; color: white; padding: 12px 24px; font-size: 14px; font-weight: 700; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3); transition: all 0.2s ease;">
-                            <i data-lucide="search" style="width: 16px; height: 16px;"></i> Browse Directory Leads ➔
-                        </a>
-                        <div style="font-size: 12.5px; color: #64748b; font-family: var(--font-mono); background: #ffffff; padding: 8px 16px; border-radius: 8px; border: 1px solid #cbd5e1;">
-                            Active Subscription: <strong style="color: #0f172a; text-transform: uppercase;">${userTier} PLAN</strong>
+                    <div style="height: 6px; background: #e2e8f0; border-radius: 10px; overflow: hidden; position: relative;">
+                        <div style="width: ${progressPercent}%; height: 100%; background: #10b981; border-radius: 10px; transition: width 0.3s ease;"></div>
+                    </div>
+                </div>
+
+                <!-- CHECKLIST GRID -->
+                <div style="display: flex; flex-direction: column; border-top: 1px solid #f1f5f9;">
+                    ${tasks.map(t => `
+                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 0; border-bottom: 1.5px solid #f1f5f9;">
+                            <div style="display: flex; align-items: flex-start; gap: 12px; flex: 1;">
+                                <!-- Custom Styled Checkbox -->
+                                <div class="onboarding-checkbox" data-id="${t.id}" style="width: 20px; height: 20px; border-radius: 4px; border: 1.5px solid ${t.completed ? '#10b981' : '#cbd5e1'}; background: ${t.completed ? '#e8f5e9' : '#ffffff'}; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; margin-top: 2px;">
+                                    ${t.completed ? '<span style="color:#10b981; font-weight:900; font-size:12px;">✓</span>' : ''}
+                                </div>
+                                <div style="display: flex; flex-direction: column; gap: 3px;">
+                                    <h4 style="margin: 0; font-size: 13.5px; font-weight: 700; color: #0f172a; text-decoration: ${t.completed ? 'line-through' : 'none'};">${t.title}</h4>
+                                    <p style="margin: 0; font-size: 12px; color: #64748b;">${t.desc}</p>
+                                </div>
+                            </div>
+                            <a href="${t.hash}" class="onboarding-btn" data-task-id="${t.id}" style="padding: 7px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 6px; color: #0f172a; font-size: 12px; font-weight: 700; text-decoration: none; display: inline-block; white-space: nowrap; transition: all 0.2s;">
+                                ${t.btnText}
+                            </a>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <!-- Load more trigger -->
+                <div style="text-align: center; padding-top: 4px;">
+                    <span style="font-size: 12px; font-weight: 800; color: #475569; cursor: pointer; text-decoration: underline;">Load more</span>
+                </div>
+            </div>
+
+            <!-- RESOURCES TO MASTER NEARPRO -->
+            <div>
+                <h3 style="font-size: 15px; font-weight: 800; color: #0f172a; margin: 0 0 16px 0; font-family: var(--font-heading);">
+                    More resources to help you master NearPro
+                </h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+                    <!-- Resource 1 -->
+                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 15px rgba(0,0,0,0.01);">
+                        <div style="background: linear-gradient(135deg, #eff6ff, #dbeafe); height: 110px; display: flex; align-items: center; justify-content: center; position: relative;">
+                            <div style="width: 48px; height: 48px; border-radius: 12px; background: #2563eb; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(37,99,235,0.2);">
+                                <span style="font-size: 20px; color: white;">🎓</span>
+                            </div>
+                        </div>
+                        <div style="padding: 18px; display: flex; flex-direction: column; gap: 12px; flex: 1; justify-content: space-between;">
+                            <div>
+                                <h4 style="margin: 0; font-size: 14px; font-weight: 800; color: #0f172a;">Learn with NearPro Academy</h4>
+                                <p style="margin: 6px 0 0 0; font-size: 12px; color: #475569; line-height: 1.45;">Explore tutorials and best practices designed to help you get started with sales automation.</p>
+                            </div>
+                            <button class="secondary-btn" style="width: 100%; padding: 8px; font-size: 12px; border-radius: 6px; font-weight: 700; border: 1px solid #cbd5e1; background: #ffffff; color: #0f172a; cursor: pointer;">Visit Academy</button>
+                        </div>
+                    </div>
+
+                    <!-- Resource 2 -->
+                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 15px rgba(0,0,0,0.01);">
+                        <div style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); height: 110px; display: flex; align-items: center; justify-content: center; position: relative;">
+                            <div style="width: 48px; height: 48px; border-radius: 12px; background: #10b981; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(16,185,129,0.2);">
+                                <span style="font-size: 20px; color: white;">▶</span>
+                            </div>
+                        </div>
+                        <div style="padding: 18px; display: flex; flex-direction: column; gap: 12px; flex: 1; justify-content: space-between;">
+                            <div>
+                                <h4 style="margin: 0; font-size: 14px; font-weight: 800; color: #0f172a;">Watch a webinar</h4>
+                                <p style="margin: 6px 0 0 0; font-size: 12px; color: #475569; line-height: 1.45;">See NearPro in action through live sessions or on-demand walkthroughs you can watch anytime.</p>
+                            </div>
+                            <button class="secondary-btn" style="width: 100%; padding: 8px; font-size: 12px; border-radius: 6px; font-weight: 700; border: 1px solid #cbd5e1; background: #ffffff; color: #0f172a; cursor: pointer;">Browse webinars</button>
+                        </div>
+                    </div>
+
+                    <!-- Resource 3 -->
+                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 15px rgba(0,0,0,0.01);">
+                        <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); height: 110px; display: flex; align-items: center; justify-content: center; position: relative;">
+                            <div style="width: 48px; height: 48px; border-radius: 12px; background: #f59e0b; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(245,158,11,0.2);">
+                                <span style="font-size: 20px; color: white;">💡</span>
+                            </div>
+                        </div>
+                        <div style="padding: 18px; display: flex; flex-direction: column; gap: 12px; flex: 1; justify-content: space-between;">
+                            <div>
+                                <h4 style="margin: 0; font-size: 14px; font-weight: 800; color: #0f172a;">Go deeper with help docs</h4>
+                                <p style="margin: 6px 0 0 0; font-size: 12px; color: #475569; line-height: 1.45;">Find detailed answers, setup guidance, and platform tutorials at your own pace.</p>
+                            </div>
+                            <button class="secondary-btn" style="width: 100%; padding: 8px; font-size: 12px; border-radius: 6px; font-weight: 700; border: 1px solid #cbd5e1; background: #ffffff; color: #0f172a; cursor: pointer;">Search help docs</button>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- 4-STEP CORPORATE EXECUTION WORKFLOW -->
-            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px; box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);">
-                <div style="font-size: 11.5px; color: #2563eb; font-weight: 700; font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;">
-                    EXECUTIVE WORKFLOW
-                </div>
-                <h3 style="font-size: 20px; font-weight: 800; margin: 0 0 20px 0; color: #0f172a; font-family: var(--font-heading);">
-                    4-Step Agency Growth Architecture
-                </h3>
-
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
-                    
-                    <!-- Step 1 -->
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; transition: transform 0.2s ease;">
-                        <div style="font-size: 12px; font-weight: 800; color: #2563eb; font-family: var(--font-mono); background: #eff6ff; display: inline-block; padding: 2px 8px; border-radius: 4px; margin-bottom: 12px;">STEP 01</div>
-                        <h4 style="font-size: 15px; font-weight: 700; margin: 0 0 6px 0; color: #0f172a;">Search Local Leads</h4>
-                        <p style="font-size: 13px; color: #475569; margin: 0 0 14px 0; line-height: 1.5;">
-                            Find local Indian businesses with rating deficits, low review counts, or unoptimized websites.
-                        </p>
-                        <a href="#/dashboard/directory" class="overview-action-link" data-id="directory" style="font-size: 12px; color: #2563eb; text-decoration: none; font-family: var(--font-mono); font-weight: 700;">
-                            Go to Directory ↗
-                        </a>
-                    </div>
-
-                    <!-- Step 2 -->
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; transition: transform 0.2s ease;">
-                        <div style="font-size: 12px; font-weight: 800; color: #059669; font-family: var(--font-mono); background: #ecfdf5; display: inline-block; padding: 2px 8px; border-radius: 4px; margin-bottom: 12px;">STEP 02</div>
-                        <h4 style="font-size: 15px; font-weight: 700; margin: 0 0 6px 0; color: #0f172a;">Track in 360° AI Deal Hub</h4>
-                        <p style="font-size: 13px; color: #475569; margin: 0 0 14px 0; line-height: 1.5;">
-                            Save prospects into your pipeline to view 360° audits, proposals, scripts, pitches, and notes.
-                        </p>
-                        <a href="#/dashboard/crm" class="overview-action-link" data-id="crm" style="font-size: 12px; color: #059669; text-decoration: none; font-family: var(--font-mono); font-weight: 700;">
-                            Open 360° Deal Workstation ➔
-                        </a>
-                    </div>
-
-                    <!-- Step 3 -->
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; transition: transform 0.2s ease;">
-                        <div style="font-size: 12px; font-weight: 800; color: #d97706; font-family: var(--font-mono); background: #fffbeb; display: inline-block; padding: 2px 8px; border-radius: 4px; margin-bottom: 12px;">STEP 03</div>
-                        <h4 style="font-size: 15px; font-weight: 700; margin: 0 0 6px 0; color: #0f172a;">Build Proposal & Script</h4>
-                        <p style="font-size: 13px; color: #475569; margin: 0 0 14px 0; line-height: 1.5;">
-                            Generate 3-page PDF proposals and cold call teleprompters with live objection handlers.
-                        </p>
-                        <a href="#/dashboard/proposals" class="overview-action-link" data-id="proposals" style="font-size: 12px; color: #d97706; text-decoration: none; font-family: var(--font-mono); font-weight: 700;">
-                            Create Proposal ↗
-                        </a>
-                    </div>
-
-                    <!-- Step 4 -->
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; transition: transform 0.2s ease;">
-                        <div style="font-size: 12px; font-weight: 800; color: #7c3aed; font-family: var(--font-mono); background: #f5f3ff; display: inline-block; padding: 2px 8px; border-radius: 4px; margin-bottom: 12px;">STEP 04</div>
-                        <h4 style="font-size: 15px; font-weight: 700; margin: 0 0 6px 0; color: #0f172a;">Pitch & Close Deals</h4>
-                        <p style="font-size: 13px; color: #475569; margin: 0 0 14px 0; line-height: 1.5;">
-                            Dispatch 1-click WhatsApp proposal links and lock in paid strategy consultation calls.
-                        </p>
-                        <a href="#/dashboard/call-scripts" class="overview-action-link" data-id="call-scripts" style="font-size: 12px; color: #7c3aed; text-decoration: none; font-family: var(--font-mono); font-weight: 700;">
-                            Open Teleprompter ↗
-                        </a>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- CORPORATE FEATURE CATALOG GRID -->
-            <div>
-                <div style="margin-bottom: 20px;">
-                    <h3 style="font-size: 20px; font-weight: 800; margin: 0 0 4px 0; color: #0f172a; font-family: var(--font-heading);">
-                        Enterprise Platform Modules
-                    </h3>
-                    <p style="color: #64748b; font-size: 13.5px; margin: 0;">
-                        Comprehensive overview of tools available in your NearPro workspace.
-                    </p>
-                </div>
-
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
-                    ${features.map(f => {
-                        const isUnlocked = currentUserHasAccess(f.requiredTier);
-                        return `
-                            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03); transition: all 0.2s ease; ${!isUnlocked ? 'opacity: 0.75;' : ''}">
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-                                        <h4 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0; font-family: var(--font-heading);">${f.title}</h4>
-                                        <span style="font-size: 10.5px; font-weight: 800; font-family: var(--font-mono); padding: 3px 10px; border-radius: 99px; background: ${f.badgeBg}; color: ${f.badgeColor};">
-                                            ${f.badge}
-                                        </span>
-                                    </div>
-                                    <p style="font-size: 13.5px; color: #475569; line-height: 1.55; margin: 0 0 20px 0;">
-                                        ${f.desc}
-                                    </p>
-                                </div>
-
-                                <div style="border-top: 1px solid #f1f5f9; padding-top: 16px; display: flex; justify-content: space-between; align-items: center;">
-                                    ${isUnlocked ? `
-                                        <a href="#/dashboard/${f.id}" class="overview-action-link" data-id="${f.id}" style="background: #0f172a; color: white; padding: 8px 18px; font-size: 12.5px; font-weight: 600; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: background 0.2s ease;">
-                                            ${f.cta}
-                                        </a>
-                                    ` : `
-                                        <a href="#/checkout" class="overview-upgrade-link" style="font-size: 12.5px; color: #d97706; text-decoration: underline; font-family: var(--font-mono); font-weight: 700; display: flex; align-items: center; gap: 4px;">
-                                            <i data-lucide="lock" style="width: 13px; height: 13px;"></i> Upgrade to Access ↗
-                                        </a>
-                                    `}
-                                </div>
-                            </div>
-                        `;
-                    }).join('')}
-                </div>
-            </div>
-
-            <!-- CORPORATE STRATEGY PLAYBOOK (ACCORDION) -->
-            <details style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 22px 28px; box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);">
-                <summary style="font-weight: 700; color: #0f172a; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 15px; font-family: var(--font-heading);">
-                    <span style="display: flex; align-items: center; gap: 10px;">
-                        <i data-lucide="briefcase" style="width: 18px; height: 18px; color: #2563eb;"></i>
-                        💼 Corporate Agency Playbook: Closing Local Business Owners in India
-                    </span>
-                    <span style="font-size: 11.5px; color: #2563eb; font-family: var(--font-mono); font-weight: 700;">Click to Expand / Collapse</span>
-                </summary>
-
-                <div style="display: flex; flex-direction: column; gap: 18px; margin-top: 20px; border-top: 1px solid #f1f5f9; padding-top: 20px;">
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px;">
-                        <h5 style="font-size: 14px; font-weight: 700; color: #0f172a; margin: 0 0 6px 0;">1. Professional Pricing & Positioning</h5>
-                        <p style="font-size: 13px; color: #475569; margin: 0; line-height: 1.6;">
-                            Charge <strong>₹15,000 to ₹35,000 upfront</strong> for local business digital builds + Google Maps SEO optimization. Always present your service as a revenue leak solution, not just an aesthetic website project.
-                        </p>
-                    </div>
-
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px;">
-                        <h5 style="font-size: 14px; font-weight: 700; color: #0f172a; margin: 0 0 6px 0;">2. Live Objection Pivots</h5>
-                        <p style="font-size: 13px; color: #475569; margin: 0; line-height: 1.6;">
-                            When a client says <em>"Humari saari enquiries word-of-mouth se aati hain"</em>, pivot by praising their service quality first, then explain: <em>"Word-of-mouth clients still verify your rating on Google before calling. A low review count causes 40% silent drop-off."</em>
-                        </p>
-                    </div>
-
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px;">
-                        <h5 style="font-size: 14px; font-weight: 700; color: #0f172a; margin: 0 0 6px 0;">3. High-Converting WhatsApp Integration</h5>
-                        <p style="font-size: 13px; color: #475569; margin: 0; line-height: 1.6;">
-                            Indian business owners convert best over WhatsApp. Incorporating a 1-tap WhatsApp booking trigger on custom client landing pages increases lead conversion by over 2.5x compared to traditional contact forms.
-                        </p>
-                    </div>
-                </div>
-            </details>
 
         </div>
     `;
@@ -289,28 +186,52 @@ export function bindPlatformOverviewEvents() {
     localStorage.setItem('nearpro_onboarding_completed', 'true');
     if (window.refreshLucideIcons) window.refreshLucideIcons();
 
-    if (!State.user) {
-        // Intercept all workflow action links except directory
-        const actionLinks = document.querySelectorAll('.overview-action-link');
-        actionLinks.forEach(link => {
-            const dest = link.getAttribute('data-id');
-            if (dest !== 'directory') {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    State.setExplorerPlanModal(true);
-                });
+    // Bind onboarding buttons to automatically check tasks when clicked
+    document.querySelectorAll('.onboarding-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const taskId = btn.getAttribute('data-task-id');
+            const keyMap = {
+                'task_directory': 'nearpro_task_directory',
+                'task_save_lead': 'nearpro_task_save_lead',
+                'task_proposal': 'nearpro_task_proposal',
+                'task_enrichment_keys': 'nearpro_task_enrichment_keys',
+                'task_sequence': 'nearpro_task_sequence',
+                'task_audit': 'nearpro_task_audit'
+            };
+            
+            const storageKey = keyMap[taskId];
+            if (storageKey) {
+                localStorage.setItem(storageKey, 'true');
             }
         });
+    });
 
-        // Intercept all Upgrade to Access links
-        const upgradeLinks = document.querySelectorAll('.overview-upgrade-link');
-        upgradeLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                State.setExplorerPlanModal(true);
-            });
+    // Also allow manual toggling of the checkboxes
+    document.querySelectorAll('.onboarding-checkbox').forEach(box => {
+        box.addEventListener('click', () => {
+            const taskId = box.getAttribute('data-id');
+            const keyMap = {
+                'task_directory': 'nearpro_task_directory',
+                'task_save_lead': 'nearpro_task_save_lead',
+                'task_proposal': 'nearpro_task_proposal',
+                'task_enrichment_keys': 'nearpro_task_enrichment_keys',
+                'task_sequence': 'nearpro_task_sequence',
+                'task_audit': 'nearpro_task_audit'
+            };
+            
+            const storageKey = keyMap[taskId];
+            if (storageKey) {
+                const current = localStorage.getItem(storageKey) === 'true';
+                localStorage.setItem(storageKey, (!current).toString());
+                
+                // Refresh view dynamically
+                const content = document.getElementById('dashboardContent');
+                if (content) {
+                    content.innerHTML = renderPlatformOverviewLayout();
+                    bindPlatformOverviewEvents();
+                }
+            }
         });
-    }
+    });
 }
+
