@@ -350,7 +350,7 @@ function renderMarketingLayout() {
             <div id="cancelSubscriptionModalPlaceholder"></div>
             ${renderFloatingScratchTrigger(58)}
             <footer class="main-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid var(--border); font-size: 13px; color: var(--text-muted); flex-wrap: wrap; gap: 12px;">
-                <div>NearPro™ — Made with ❤️ by S8N</div>
+                <div>NearPro™ v1.0.0 — Made with ❤️ by S8N AI Services</div>
                 <div style="display: flex; gap: 20px;">
                     <a href="#/privacy" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Privacy Policy</a>
                     <a href="#/terms" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Terms Of Service</a>
@@ -429,7 +429,7 @@ async function renderDirectoryLayout() {
             <div id="cancelSubscriptionModalPlaceholder"></div>
             
             <footer class="main-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid var(--border); font-size: 13px; color: var(--text-muted); flex-wrap: wrap; gap: 12px;">
-                <div>NearPro™ — Made with ❤️ by S8N</div>
+                <div>NearPro™ v1.0.0 — Made with ❤️ by S8N AI Services</div>
                 <div style="display: flex; gap: 20px;">
                     <a href="#/privacy" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Privacy Policy</a>
                     <a href="#/terms" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Terms Of Service</a>

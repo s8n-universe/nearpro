@@ -1374,6 +1374,10 @@
     display: none !important;
 }
 
+.dashboard-sidebar.collapsed .sidebar-version-badge {
+    display: none !important;
+}
+
 .dashboard-sidebar.collapsed .sidebar-logo {
     height: 32px !important; /* Emphasize brand logo when collapsed */
 }
@@ -1440,6 +1444,10 @@
 }
 
 .dashboard-sidebar.collapsed:hover .sidebar-brand {
+    display: block !important;
+}
+
+.dashboard-sidebar.collapsed:hover .sidebar-version-badge {
     display: block !important;
 }
 

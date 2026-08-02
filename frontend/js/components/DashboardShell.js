@@ -93,9 +93,12 @@ export function renderDashboardShell(activeTab = 'crm') {
     return `
         <div class="dashboard-shell">
             <aside class="dashboard-sidebar ${sidebarCollapsedClass}">
-                <a href="#/" class="sidebar-header" style="text-decoration: none; color: inherit; cursor: pointer;" title="Go to NearPro Marketing Homepage">
-                    <img src="/NearPro_logo_nobg.png" alt="NearPro" class="sidebar-logo">
-                    <span class="sidebar-brand" style="font-size: 13px; font-weight: 800; font-family: var(--font-heading);">NearPro™ • AI Agency OS</span>
+                <a href="#/" class="sidebar-header" style="text-decoration: none; color: inherit; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; gap: 4px;" title="Go to NearPro Marketing Homepage">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <img src="/NearPro_logo_nobg.png" alt="NearPro" class="sidebar-logo">
+                        <span class="sidebar-brand" style="font-size: 13px; font-weight: 800; font-family: var(--font-heading);">NearPro™ • AI Agency OS</span>
+                    </div>
+                    <span class="sidebar-version-badge" style="font-size: 9px; color: var(--text-muted); font-family: var(--font-mono); margin-left: 40px; background: rgba(255,255,255,0.06); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">v1.0.0 (Launch Version)</span>
                 </a>
                 
                 <nav class="sidebar-nav">
