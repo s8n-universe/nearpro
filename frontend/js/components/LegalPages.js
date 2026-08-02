@@ -172,6 +172,7 @@ export function renderPrivacyPolicyPage() {
                 <div style="display: flex; gap: 20px;">
                     <a href="#/privacy" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Privacy Policy</a>
                     <a href="#/terms" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Terms Of Service</a>
+                    <a href="https://www.linkedin.com/company/s8n-nearpro" target="_blank" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">LinkedIn</a>
                     <a href="mailto:support@s8n.in" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Contact Support</a>
                 </div>
             </footer>
@@ -273,6 +274,7 @@ export function renderTermsOfServicePage() {
                     <a href="#/privacy" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Privacy Policy</a>
                     <a href="#/terms" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Terms Of Service</a>
                     <a href="#/opt-out" style="color: var(--accent-gold); text-decoration: none; font-weight: 500;">Business Opt-Out</a>
+                    <a href="https://www.linkedin.com/company/s8n-nearpro" target="_blank" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">LinkedIn</a>
                     <a href="mailto:support@s8n.in" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Contact Support</a>
                 </div>
             </footer>
@@ -360,6 +362,7 @@ export function renderOptOutPage() {
                     <a href="#/privacy" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Privacy Policy</a>
                     <a href="#/terms" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Terms Of Service</a>
                     <a href="#/opt-out" style="color: var(--accent-gold); text-decoration: none; font-weight: 500;">Business Opt-Out</a>
+                    <a href="https://www.linkedin.com/company/s8n-nearpro" target="_blank" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">LinkedIn</a>
                     <a href="mailto:support@s8n.in" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Contact Support</a>
                 </div>
             </footer>

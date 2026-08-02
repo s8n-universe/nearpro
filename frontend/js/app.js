@@ -46,6 +46,7 @@ import { renderCallScriptGeneratorLayout, bindCallScriptGeneratorEvents } from '
 import { renderPlatformOverviewLayout, bindPlatformOverviewEvents } from './components/PlatformOverview.js';
 import { renderExplorerPlanModal, bindExplorerPlanModalEvents } from './components/ExplorerPlanModal.js';
 import { renderWaitlistModal, bindWaitlistModalEvents } from './components/WaitlistModal.js';
+import { renderVoiceAgentModal, bindVoiceAgentModalEvents } from './components/VoiceAgentModal.js';
 import { renderFloatingScratchTrigger, renderScratchModal, bindScratchModalEvents } from './components/ScratchCard.js';
 import { renderCancelSubscriptionModal, bindCancelSubscriptionModalEvents } from './components/CancelSubscriptionModal.js';
 import { initCustomSelect } from './components/CustomSelect.js';
@@ -149,6 +150,13 @@ State.subscribe(async (currentState) => {
     if (waitlistPlaceholder) {
         waitlistPlaceholder.innerHTML = renderWaitlistModal();
         bindWaitlistModalEvents();
+    }
+
+    // Dynamically render/update Voice Agent Modal
+    const voiceAgentPlaceholder = document.getElementById('voiceAgentModalPlaceholder');
+    if (voiceAgentPlaceholder) {
+        voiceAgentPlaceholder.innerHTML = renderVoiceAgentModal();
+        bindVoiceAgentModalEvents();
     }
 
     // Dynamically render/update Scratch Modal
@@ -337,6 +345,7 @@ function renderMarketingLayout() {
             <div id="upgradeModalPlaceholder"></div>
             <div id="checkoutConsentModalPlaceholder"></div>
             <div id="waitlistModalPlaceholder"></div>
+            <div id="voiceAgentModalPlaceholder"></div>
             <div id="scratchModalPlaceholder"></div>
             <div id="cancelSubscriptionModalPlaceholder"></div>
             ${renderFloatingScratchTrigger(58)}
@@ -346,6 +355,7 @@ function renderMarketingLayout() {
                     <a href="#/privacy" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Privacy Policy</a>
                     <a href="#/terms" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Terms Of Service</a>
                     <a href="#/opt-out" style="color: var(--accent-gold); text-decoration: none; font-weight: 500;">Business Opt-Out</a>
+                    <a href="https://www.linkedin.com/company/s8n-nearpro" target="_blank" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">LinkedIn</a>
                     <a href="mailto:support@s8n.in" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Contact Support</a>
                 </div>
             </footer>
@@ -415,6 +425,7 @@ async function renderDirectoryLayout() {
             <div id="upgradeModalPlaceholder"></div>
             <div id="checkoutConsentModalPlaceholder"></div>
             <div id="waitlistModalPlaceholder"></div>
+            <div id="voiceAgentModalPlaceholder"></div>
             <div id="cancelSubscriptionModalPlaceholder"></div>
             
             <footer class="main-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid var(--border); font-size: 13px; color: var(--text-muted); flex-wrap: wrap; gap: 12px;">
@@ -422,6 +433,7 @@ async function renderDirectoryLayout() {
                 <div style="display: flex; gap: 20px;">
                     <a href="#/privacy" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Privacy Policy</a>
                     <a href="#/terms" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Terms Of Service</a>
+                    <a href="https://www.linkedin.com/company/s8n-nearpro" target="_blank" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">LinkedIn</a>
                     <a href="mailto:support@s8n.in" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Contact Support</a>
                 </div>
             </footer>

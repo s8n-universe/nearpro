@@ -83,7 +83,7 @@ serve(async (req) => {
           </span>
           <span style="display:inline-block; vertical-align:middle;">
             <span style="font-size:14px; margin-right:4px; vertical-align:middle;">💼</span>
-            <a href="https://www.linkedin.com/company/s8n-ai-services" style="color:#0b081d; text-decoration:underline; font-weight:600;">LinkedIn</a>
+            <a href="https://www.linkedin.com/company/s8n-nearpro" style="color:#0b081d; text-decoration:underline; font-weight:600;">LinkedIn</a>
           </span>
         </p>
       </td>
