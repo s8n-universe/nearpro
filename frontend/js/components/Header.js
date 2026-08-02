@@ -16,7 +16,10 @@ export function renderHeader() {
     if (State.user) {
         const email = State.user.email || '';
         const initials = email ? email.substring(0, 2).toUpperCase() : 'US';
-        const userTier = (State.profile?.subscription_tier || State.profile?.tier || 'free').toLowerCase();
+        let userTier = (State.profile?.subscription_tier || State.profile?.tier || 'free').toLowerCase();
+        if (email === 'nearproadmin@gmail.com') {
+            userTier = 'free';
+        }
         
         let tierColor = '#71717a'; // Zinc / Free
         let glowShadow = 'none';
