@@ -16,7 +16,7 @@ import { renderCategorySidebar, bindCategorySidebarEvents } from './components/C
 import { renderSearchBar, bindSearchBarEvents } from './components/SearchBar.js';
 import { renderFilterPanel, bindFilterPanelEvents } from './components/FilterPanel.js';
 import { renderProfessionalCard, bindProfessionalCardEvents } from './components/ProfessionalCard.js';
-import { renderProfessionalModal, bindProfessionalModalEvents } from './components/ProfessionalModal.js';
+import { renderProfessionalModal, bindProfessionalModalEvents, setActiveModalTab } from './components/ProfessionalModal.js';
 import { renderComparePanel, renderCompareModalContent, bindComparePanelEvents } from './components/CompareModal.js';
 import { renderMapView, initFullMap } from './components/MapView.js';
 import { renderMarketingHero } from './components/MarketingHero.js';
@@ -48,8 +48,16 @@ import { renderExplorerPlanModal, bindExplorerPlanModalEvents } from './componen
 import { renderWaitlistModal, bindWaitlistModalEvents } from './components/WaitlistModal.js';
 import { renderVoiceAgentModal, bindVoiceAgentModalEvents } from './components/VoiceAgentModal.js';
 import { renderFloatingScratchTrigger, renderScratchModal, bindScratchModalEvents } from './components/ScratchCard.js';
+import { renderSettingsLlmRouter, initSettingsLlmRouter } from './components/SettingsLlmRouter.js';
 import { renderCancelSubscriptionModal, bindCancelSubscriptionModalEvents } from './components/CancelSubscriptionModal.js';
 import { initCustomSelect } from './components/CustomSelect.js';
+import { renderAdminPanel, bindAdminPanelEvents } from './components/AdminPanel.js';
+import { renderEmailSequences, bindEmailSequencesEvents } from './components/EmailSequences.js';
+import { renderDeliverabilityHub, bindDeliverabilityHubEvents } from './components/DeliverabilityHub.js';
+import { renderDataEnrichment, bindDataEnrichmentEvents } from './components/DataEnrichment.js';
+import { renderPluginMarketplace, bindPluginMarketplaceEvents } from './components/PluginMarketplace.js';
+import { renderIntentSignals, bindIntentSignalsEvents } from './components/IntentSignals.js';
+import { renderVoiceAgentDashboard, bindVoiceAgentDashboardEvents } from './components/VoiceAgentDashboard.js';
 
 // Main Application shell reference
 const appShell = document.getElementById('app');
@@ -261,6 +269,32 @@ function initRoutes() {
             window._isSigningOut = false;
             Router.navigate('#/dashboard/directory');
         } else {
+            // Guard check for S8N Admin Panel route
+            if (tab === 'admin') {
+                if (!State.user || State.user.email !== 'nearproadmin@gmail.com') {
+                    Router.navigate('#/dashboard/directory');
+                    return;
+                }
+            }
+            // Guard check for v2 features
+            const v2FlagMap = {
+                'sequences': 'email_sequences',
+                'deliverability': 'email_warmup',
+                'enrichment': 'waterfall_enrichment',
+                'plugins': 'mcp_plugins',
+                'signals': 'intent_signals',
+                'voice-agent': 'voice_calling'
+            };
+            const associatedFlag = v2FlagMap[tab];
+            if (associatedFlag) {
+                const isAdmin = State.user?.email === 'nearproadmin@gmail.com';
+                const isEnabled = State.featureFlags && State.featureFlags[associatedFlag] === true;
+                if (!isEnabled && !isAdmin) {
+                    Router.navigate('#/dashboard/directory');
+                    return;
+                }
+            }
+
             // Synchronize parameters for directory filter state if routed to dashboard directory
             if (tab === 'directory') {
                 const searchParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
@@ -899,13 +933,14 @@ function renderFeedContent(hasMore) {
 /* --- Modals Handlers --- */
 
 // Detail modal logic
-async function showDetailModal(id) {
+async function showDetailModal(id, initialTab = 'details') {
     const overlay = document.getElementById('detailModalOverlay');
     overlay.innerHTML = `<div class="spinner" style="margin: auto;"></div>`;
     overlay.className = 'modal-overlay open';
 
     try {
         const lead = await Api.getProfessional(id);
+        setActiveModalTab(initialTab);
         overlay.innerHTML = renderProfessionalModal(lead);
         bindProfessionalModalEvents(lead, () => {
             overlay.className = 'modal-overlay';
@@ -915,6 +950,7 @@ async function showDetailModal(id) {
         overlay.className = 'modal-overlay';
     }
 }
+window.showDetailModal = showDetailModal;
 
 // Compare Modal logic
 function showCompareModal(professionalsList) {
@@ -1316,7 +1352,14 @@ async function renderDashboardLayout(tab) {
         prompts: 'free',
         integrations: 'scout',
         team: 'free',
-        settings: 'free'
+        settings: 'free',
+        admin: 'free',
+        sequences: 'scout',
+        deliverability: 'scout',
+        enrichment: 'scout',
+        plugins: 'free',
+        signals: 'scout',
+        'voice-agent': 'hunter'
     };
 
     const requiredTier = requiredTiers[tab] || 'free';
@@ -2109,376 +2152,484 @@ async function renderDashboardLayout(tab) {
     } else if (tab === 'settings') {
         if (titleEl) titleEl.innerText = 'Workspace Settings';
         if (content) {
-            const role = State.profile?.role || 'freelancer';
-            const name = State.profile?.full_name || '';
-            const company = State.profile?.company_name || '';
-            const portfolio = State.profile?.portfolio_url || '';
-            const booking = State.profile?.booking_url || '';
-            const serviceBlurb = State.profile?.sender_service_blurb || '';
-
-            // Calculate initial profile completion score
-            const calcScore = (n, c, s, p, b) => {
-                let score = 20; // Base role score
-                if (n && n.trim().length > 0) score += 20;
-                if ((c && c.trim().length > 0) || (s && s.trim().length > 0)) score += 20;
-                if (p && p.trim().length > 0) score += 20;
-                if (b && b.trim().length > 0) score += 20;
-                return score;
-            };
-
-            const initialScore = calcScore(name, company, serviceBlurb, portfolio, booking);
+            const isLlmEnabled = (State.featureFlags && State.featureFlags['self_hosted_llm'] === true) || (State.user?.email === 'nearproadmin@gmail.com');
+            const aiRoutingBtnHTML = isLlmEnabled ? `
+                <button id="settingsTabAiRoutingBtn" style="padding: 10px 20px; font-size: 14px; font-weight: 700; border: none; background: transparent; cursor: pointer; color: #64748b; border-bottom: 3px solid transparent; transition: all 0.2s ease; font-family: var(--font-heading); display: flex; align-items: center; gap: 6px;">
+                    🧠 AI Routing Settings
+                </button>
+            ` : '';
 
             content.innerHTML = `
-                <div class="settings-container" style="max-width: 1100px; display: flex; flex-direction: column; gap: 20px;">
-                    
-                    <!-- Top Section: Interactive Profile Progress & Timeline Header -->
-                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 24px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);">
-                        
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 12px;">
-                            <div>
-                                <h3 style="margin: 0 0 4px 0; font-size: 18px; color: #0f172a; font-family: var(--font-heading); font-weight: 800; display: flex; align-items: center; gap: 8px;">
-                                    <span>Workspace Personalization Index</span>
-                                </h3>
-                                <div id="profileGuidanceText" style="font-size: 13px; color: #475569; font-weight: 500; line-height: 1.4;">
-                                    ${initialScore >= 80 ? '⚡ Maximum Personalization: Your AI pitches and outreach assets are fully optimized.' : 'Complete your profile milestones to unlock automated brochure links and targeted AI outreach.'}
-                                </div>
-                            </div>
-                            
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <div id="profileScoreBadge" style="background: #fef3c7; border: 1px solid #fcd34d; color: #b45309; font-size: 13px; font-weight: 800; font-family: var(--font-mono); padding: 6px 14px; border-radius: 50px;">
-                                    ${initialScore}% Complete
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Dynamic Progress Bar -->
-                        <div style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 20px;">
-                            <div id="profileProgressFill" style="width: ${initialScore}%; height: 100%; background: linear-gradient(90deg, #d97706 0%, #16a34a 100%); border-radius: 10px; transition: width 0.4s ease;"></div>
-                        </div>
-
-                        <!-- 4-Step Interactive Milestone Timeline -->
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;" id="settingsTimelineStack">
-                            
-                            <!-- Step 1 -->
-                            <div class="timeline-step-node" data-target="settingsFullName" style="background: #f8fafc; border: 1px solid ${name ? '#86efac' : '#cbd5e1'}; padding: 14px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s ease;">
-                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-                                    <span style="font-size: 11px; font-family: var(--font-mono); color: #64748b; font-weight: 800;">STEP 01</span>
-                                    <span id="step1Icon" style="font-size: 14px;">${name ? '✅' : '👤'}</span>
-                                </div>
-                                <div style="font-size: 13.5px; font-weight: 700; color: #0f172a; font-family: var(--font-heading); margin-bottom: 2px;">Identity & Role</div>
-                                <div style="font-size: 11.5px; color: #475569; font-weight: 500;">Unlocks AI Message Signatures</div>
-                            </div>
-
-                            <!-- Step 2 -->
-                            <div class="timeline-step-node" data-target="settingsCompanyName" style="background: #f8fafc; border: 1px solid ${company || serviceBlurb ? '#86efac' : '#cbd5e1'}; padding: 14px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s ease;">
-                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-                                    <span style="font-size: 11px; font-family: var(--font-mono); color: #64748b; font-weight: 800;">STEP 02</span>
-                                    <span id="step2Icon" style="font-size: 14px;">${company || serviceBlurb ? '✅' : '🎯'}</span>
-                                </div>
-                                <div style="font-size: 13.5px; font-weight: 700; color: #0f172a; font-family: var(--font-heading); margin-bottom: 2px;">Brand & Service</div>
-                                <div style="font-size: 11.5px; color: #475569; font-weight: 500;">Unlocks WhatsApp AI Pitching</div>
-                            </div>
-
-                            <!-- Step 3 -->
-                            <div class="timeline-step-node" data-target="settingsPortfolioUrl" style="background: #f8fafc; border: 1px solid ${portfolio && booking ? '#86efac' : '#cbd5e1'}; padding: 14px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s ease;">
-                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-                                    <span style="font-size: 11px; font-family: var(--font-mono); color: #64748b; font-weight: 800;">STEP 03</span>
-                                    <span id="step3Icon" style="font-size: 14px;">${portfolio && booking ? '✅' : '🔗'}</span>
-                                </div>
-                                <div style="font-size: 13.5px; font-weight: 700; color: #0f172a; font-family: var(--font-heading); margin-bottom: 2px;">Outreach Assets</div>
-                                <div style="font-size: 11.5px; color: #475569; font-weight: 500;">Unlocks Auto-Brochure & Scheduling</div>
-                            </div>
-
-                            <!-- Step 4 -->
-                            <div class="timeline-step-node" data-target="changeBillingPlanBtn" style="background: #fffbeb; border: 1px solid #fcd34d; padding: 14px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s ease;">
-                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-                                    <span style="font-size: 11px; font-family: var(--font-mono); color: #b45309; font-weight: 800;">STEP 04</span>
-                                    <span style="font-size: 14px;">👑</span>
-                                </div>
-                                <div style="font-size: 13.5px; font-weight: 700; color: #0f172a; font-family: var(--font-heading); margin-bottom: 2px;">Growth Tier</div>
-                                <div style="font-size: 11.5px; color: #b45309; font-weight: 700;">${userTier.toUpperCase()} Plan Active</div>
-                            </div>
-
-                        </div>
+                <div class="settings-tab-bar-container" style="max-width: 1100px; margin-bottom: 8px;">
+                    <div style="display: flex; gap: 12px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 0px; margin-bottom: 20px;">
+                        <button id="settingsTabPersonalizationBtn" style="padding: 10px 20px; font-size: 14px; font-weight: 700; border: none; background: transparent; cursor: pointer; color: #2563eb; border-bottom: 3px solid #2563eb; transition: all 0.2s ease; font-family: var(--font-heading);">
+                            👤 Identity & Personalization
+                        </button>
+                        ${aiRoutingBtnHTML}
                     </div>
-
-                    <!-- Split-Screen Main Content Layout -->
-                    <div style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 20px; align-items: start;">
-                        
-                        <!-- Left Column: Form Configurations Card -->
-                        <div class="settings-wrap" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 24px; display: flex; flex-direction: column; gap: 18px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);">
-                            
-                            <h4 style="margin: 0; color: #0f172a; font-family: var(--font-heading); font-size: 16px; font-weight: 800; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;">
-                                Workspace Configurations
-                            </h4>
-                            
-                            <div>
-                                <label style="display: block; font-size: 12.5px; font-weight: 700; color: #334155; font-family: var(--font-heading); margin-bottom: 6px;">My Professional Role</label>
-                                <select id="settingsRole" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none; transition: all 0.2s ease; margin-bottom: 8px;">
-                                    <option value="freelancer" ${role === 'freelancer' ? 'selected' : ''}>💻 Freelancer</option>
-                                    <option value="agency" ${role === 'agency' ? 'selected' : ''}>🏢 Agency Owner</option>
-                                    <option value="sales_team" ${role === 'sales_team' ? 'selected' : ''}>📈 Sales Representative</option>
-                                    <option value="startup" ${role === 'startup' ? 'selected' : ''}>🚀 Startup Founder</option>
-                                    <option value="other" ${role && !['freelancer', 'agency', 'sales_team', 'startup'].includes(role) ? 'selected' : ''}>❓ Other...</option>
-                                </select>
-                                <div id="settingsCustomRoleContainer" style="display: ${role && !['freelancer', 'agency', 'sales_team', 'startup'].includes(role) ? 'block' : 'none'};">
-                                    <input type="text" id="settingsCustomRole" value="${role && !['freelancer', 'agency', 'sales_team', 'startup'].includes(role) ? role : ''}" placeholder="Enter your professional role..." style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none;" />
-                                </div>
-                            </div>
-
-                            <h4 style="margin: 6px 0 0 0; color: #0f172a; font-family: var(--font-heading); font-size: 16px; font-weight: 800; border-top: 1px solid #e2e8f0; padding-top: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;">
-                                Personalization Settings
-                            </h4>
-                            
-                            <div>
-                                <label style="display: block; font-size: 12.5px; font-weight: 700; color: #334155; font-family: var(--font-heading); margin-bottom: 6px;">Your Full Name</label>
-                                <input type="text" id="settingsFullName" value="${name}" placeholder="e.g. Shri Naik" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none; transition: all 0.2s ease;" />
-                            </div>
-
-                            <div>
-                                <label style="display: block; font-size: 12.5px; font-weight: 700; color: #334155; font-family: var(--font-heading); margin-bottom: 6px;">Agency / Company Name</label>
-                                <input type="text" id="settingsCompanyName" value="${company}" placeholder="e.g. NearPro Agency" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none; transition: all 0.2s ease;" />
-                            </div>
-
-                            <div>
-                                <label style="display: block; font-size: 12.5px; font-weight: 700; color: #334155; font-family: var(--font-heading); margin-bottom: 6px;">My Primary Service Blurb</label>
-                                <select id="settingsServiceSelect" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none; margin-bottom: 8px;">
-                                    <option value="I build websites for local businesses" ${serviceBlurb === 'I build websites for local businesses' ? 'selected' : ''}>💻 Web Design ("I build websites for local businesses")</option>
-                                    <option value="I help businesses improve their Google ranking" ${serviceBlurb === 'I help businesses improve their Google ranking' ? 'selected' : ''}>📈 SEO ("I help businesses improve their Google ranking")</option>
-                                    <option value="I offer tax and accounting services to businesses" ${serviceBlurb === 'I offer tax and accounting services to businesses' ? 'selected' : ''}>⚖️ CA/Finance ("I offer tax and accounting services to businesses")</option>
-                                    <option value="I help businesses get more customers through digital marketing" ${serviceBlurb === 'I help businesses get more customers through digital marketing' ? 'selected' : ''}>🎯 Marketing ("I help businesses get more customers through digital marketing")</option>
-                                    <option value="I'm a commercial real estate consultant" ${serviceBlurb === "I'm a commercial real estate consultant" ? 'selected' : ''}>🏢 Real Estate ("I'm a commercial real estate consultant")</option>
-                                    <option value="custom" ${!['I build websites for local businesses', 'I help businesses improve their Google ranking', 'I offer tax and accounting services to businesses', 'I help businesses get more customers through digital marketing', "I'm a commercial real estate consultant"].includes(serviceBlurb) && serviceBlurb ? 'selected' : ''}>💼 Custom Service...</option>
-                                </select>
-                                <div id="settingsCustomServiceContainer" style="display: ${!['I build websites for local businesses', 'I help businesses improve their Google ranking', 'I offer tax and accounting services to businesses', 'I help businesses get more customers through digital marketing', "I'm a commercial real estate consultant"].includes(serviceBlurb) && serviceBlurb ? 'block' : 'none'};">
-                                    <input type="text" id="settingsCustomService" value="${!['I build websites for local businesses', 'I help businesses improve their Google ranking', 'I offer tax and accounting services to businesses', 'I help businesses get more customers through digital marketing', "I'm a commercial real estate consultant"].includes(serviceBlurb) ? serviceBlurb : ''}" placeholder="Describe your service in one sentence..." style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none;" />
-                                </div>
-                            </div>
-
-                            <div>
-                                <label style="display: block; font-size: 12.5px; font-weight: 700; color: #334155; font-family: var(--font-heading); margin-bottom: 6px;">Custom Portfolio URL</label>
-                                <input type="url" id="settingsPortfolioUrl" value="${portfolio}" placeholder="e.g. https://myagency.com" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none; transition: all 0.2s ease;" />
-                            </div>
-
-                            <div>
-                                <label style="display: block; font-size: 12.5px; font-weight: 700; color: #334155; font-family: var(--font-heading); margin-bottom: 6px;">Meeting Booking Link</label>
-                                <input type="url" id="settingsBookingUrl" value="${booking}" placeholder="e.g. https://calendly.com/shri" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none; transition: all 0.2s ease;" />
-                            </div>
-                            
-                            <div style="border-top: 1px solid #e2e8f0; padding-top: 16px;">
-                                <label style="display: block; font-size: 12.5px; font-weight: 700; color: #334155; font-family: var(--font-heading); margin-bottom: 6px;">Billing Information</label>
-                                <div style="padding: 12px 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-sm); font-size: 13px; color: #334155; font-weight: 600; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-                                    <div>Current Tier: <strong style="color: #d97706; font-weight: 800; text-transform: uppercase;">${userTier} Plan</strong></div>
-                                    <div style="display: flex; gap: 8px; align-items: center;">
-                                        ${userTier !== 'free' ? `
-                                            <button id="cancelBillingPlanBtn" style="padding: 6px 14px; font-size: 11.5px; cursor: pointer; background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; border-radius: 6px; font-weight: 700; transition: all 0.2s;" onmouseover="this.style.background='rgba(239, 68, 68, 0.16)'" onmouseout="this.style.background='rgba(239, 68, 68, 0.08)'">Cancel Subscription</button>
-                                        ` : ''}
-                                        <button class="brand-btn" id="changeBillingPlanBtn" style="padding: 6px 14px; font-size: 11.5px; cursor: pointer; background: #2563eb; color: white; border: none; border-radius: 6px; font-weight: 700;">Upgrade Subscription</button>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <button class="brand-btn" id="saveSettingsBtn" style="width: 100%; padding: 12px; font-weight: 800; cursor: pointer; font-size: 14px; background: #2563eb; color: white; border: none; border-radius: 8px; box-shadow: 0 4px 12px rgba(37,99,235,0.25); margin-top: 6px;">Save Configuration</button>
-                        </div>
-
-                        <!-- Right Column: Live AI Pitch Preview Box -->
-                        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 24px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04); position: sticky; top: 20px;">
-                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-                                <div style="font-size: 15px; font-weight: 800; color: #0f172a; font-family: var(--font-heading);">Live AI Pitch Preview</div>
-                                <span style="font-size: 11px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #059669; font-weight: 800; padding: 2px 8px; border-radius: 4px; font-family: var(--font-mono);">Real-Time</span>
-                            </div>
-
-                            <p style="font-size: 12.5px; color: #475569; font-weight: 500; line-height: 1.4; margin-bottom: 16px;">
-                                This is how your WhatsApp & Email outreach messages will automatically look when reaching out to leads:
-                            </p>
-
-                            <!-- Live Card -->
-                            <div style="background: #f8fafc; border: 1px solid #bfdbfe; padding: 18px; border-radius: var(--radius-md); font-family: var(--font-mono); font-size: 12px; line-height: 1.6; color: #0f172a; font-weight: 500; white-space: pre-wrap;" id="liveAiPitchPreviewBox">Loading live preview...</div>
-
-                            <div style="margin-top: 16px; font-size: 11.5px; color: #64748b; font-weight: 500; display: flex; align-items: center; gap: 6px;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                                <span>Changes update dynamically as you fill in your profile fields.</span>
-                            </div>
-                        </div>
-
-                    </div>
+                    <div id="settingsTabContentArea"></div>
                 </div>
             `;
 
-            // Dynamic real-time preview updater function
-            const updateLivePreviewAndProgress = () => {
-                const n = document.getElementById('settingsFullName')?.value.trim() || '';
-                const c = document.getElementById('settingsCompanyName')?.value.trim() || '';
-                const p = document.getElementById('settingsPortfolioUrl')?.value.trim() || '';
-                const b = document.getElementById('settingsBookingUrl')?.value.trim() || '';
-                const rSel = document.getElementById('settingsRole')?.value || 'freelancer';
-                const custRole = document.getElementById('settingsCustomRole')?.value.trim() || '';
-                const r = rSel === 'other' ? custRole : rSel;
-                
-                const sel = document.getElementById('settingsServiceSelect')?.value;
-                const cust = document.getElementById('settingsCustomService')?.value.trim();
-                const s = sel === 'custom' ? cust : sel;
+            const personalizationBtn = document.getElementById('settingsTabPersonalizationBtn');
+            const aiRoutingBtn = document.getElementById('settingsTabAiRoutingBtn');
+            const tabContentArea = document.getElementById('settingsTabContentArea');
 
-                // Update score
-                const score = calcScore(n, c, s, p, b);
-                const scoreBadge = document.getElementById('profileScoreBadge');
-                const progressFill = document.getElementById('profileProgressFill');
-                const guidanceText = document.getElementById('profileGuidanceText');
-
-                if (scoreBadge) scoreBadge.innerText = `${score}% Complete`;
-                if (progressFill) progressFill.style.width = `${score}%`;
-                if (guidanceText) {
-                    if (score >= 80) {
-                        guidanceText.innerText = '⚡ Maximum Personalization: Your AI pitches and outreach assets are fully optimized.';
-                    } else if (!p || !b) {
-                        guidanceText.innerText = 'Fill out Portfolio URL & Booking Link to unlock automated brochure and scheduling links in AI pitches.';
-                    } else {
-                        guidanceText.innerText = 'Complete your profile milestones to unlock automated brochure links and targeted AI outreach.';
-                    }
+            const showPersonalization = () => {
+                personalizationBtn.style.color = '#2563eb';
+                personalizationBtn.style.borderBottomColor = '#2563eb';
+                if (aiRoutingBtn) {
+                    aiRoutingBtn.style.color = '#64748b';
+                    aiRoutingBtn.style.borderBottomColor = 'transparent';
                 }
 
-                // Update Timeline icons
-                const step1Icon = document.getElementById('step1Icon');
-                const step2Icon = document.getElementById('step2Icon');
-                const step3Icon = document.getElementById('step3Icon');
+                const role = State.profile?.role || 'freelancer';
+                const name = State.profile?.full_name || '';
+                const company = State.profile?.company_name || '';
+                const portfolio = State.profile?.portfolio_url || '';
+                const booking = State.profile?.booking_url || '';
+                const serviceBlurb = State.profile?.sender_service_blurb || '';
 
-                if (step1Icon) step1Icon.innerText = n ? '✅' : '👤';
-                if (step2Icon) step2Icon.innerText = (c || s) ? '✅' : '🎯';
-                if (step3Icon) step3Icon.innerText = (p && b) ? '✅' : '🔗';
+                const calcScore = (n, c, s, p, b) => {
+                    let score = 20; // Base role score
+                    if (n && n.trim().length > 0) score += 20;
+                    if ((c && c.trim().length > 0) || (s && s.trim().length > 0)) score += 20;
+                    if (p && p.trim().length > 0) score += 20;
+                    if (b && b.trim().length > 0) score += 20;
+                    return score;
+                };
 
-                // Render live AI message preview
-                const previewBox = document.getElementById('liveAiPitchPreviewBox');
-                if (previewBox) {
-                    const senderName = n || '[Your Name]';
-                    const senderCompany = c || '[Your Company]';
-                    const serviceDesc = s || 'I build websites for local businesses';
-                    let roleTitle = 'representing';
-                    if (r === 'agency') {
-                        roleTitle = 'founder of';
-                    } else if (r && !['freelancer', 'startup', 'sales_team'].includes(r)) {
-                        roleTitle = `${r} at`;
-                    }
+                const initialScore = calcScore(name, company, serviceBlurb, portfolio, booking);
 
-                    let msg = `Namaste Dr. Mehta!\n\nI noticed your listing for Mehta Dental Clinic on Google Maps. I am ${senderName}, ${roleTitle} ${senderCompany}.\n\n${serviceDesc}. We help local clinics rank #1 in maps and convert inquiries into booked appointments.`;
+                tabContentArea.innerHTML = `
+                    <div class="settings-container" style="display: flex; flex-direction: column; gap: 20px;">
+                        
+                        <!-- Top Section: Interactive Profile Progress & Timeline Header -->
+                        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 24px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);">
+                            
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 12px;">
+                                <div>
+                                    <h3 style="margin: 0 0 4px 0; font-size: 18px; color: #0f172a; font-family: var(--font-heading); font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                                        <span>Workspace Personalization Index</span>
+                                    </h3>
+                                    <div id="profileGuidanceText" style="font-size: 13px; color: #475569; font-weight: 500; line-height: 1.4;">
+                                        ${initialScore >= 80 ? '⚡ Maximum Personalization: Your AI pitches and outreach assets are fully optimized.' : 'Complete your profile milestones to unlock automated brochure links and targeted AI outreach.'}
+                                    </div>
+                                </div>
+                                
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div id="profileScoreBadge" style="background: #fef3c7; border: 1px solid #fcd34d; color: #b45309; font-size: 13px; font-weight: 800; font-family: var(--font-mono); padding: 6px 14px; border-radius: 50px;">
+                                        ${initialScore}% Complete
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Dynamic Progress Bar -->
+                            <div style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 20px;">
+                                <div id="profileProgressFill" style="width: ${initialScore}%; height: 100%; background: linear-gradient(90deg, #d97706 0%, #16a34a 100%); border-radius: 10px; transition: width 0.4s ease;"></div>
+                            </div>
+
+                            <!-- 4-Step Interactive Milestone Timeline -->
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;" id="settingsTimelineStack">
+                                
+                                <!-- Step 1 -->
+                                <div class="timeline-step-node" data-target="settingsFullName" style="background: #f8fafc; border: 1px solid ${name ? '#86efac' : '#cbd5e1'}; padding: 14px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s ease;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                                        <span style="font-size: 11px; font-family: var(--font-mono); color: #64748b; font-weight: 800;">STEP 01</span>
+                                        <span id="step1Icon" style="font-size: 14px;">${name ? '✅' : '👤'}</span>
+                                    </div>
+                                    <div style="font-size: 13.5px; font-weight: 700; color: #0f172a; font-family: var(--font-heading); margin-bottom: 2px;">Identity & Role</div>
+                                    <div style="font-size: 11.5px; color: #475569; font-weight: 500;">Unlocks AI Message Signatures</div>
+                                </div>
+
+                                <!-- Step 2 -->
+                                <div class="timeline-step-node" data-target="settingsCompanyName" style="background: #f8fafc; border: 1px solid ${company || serviceBlurb ? '#86efac' : '#cbd5e1'}; padding: 14px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s ease;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                                        <span style="font-size: 11px; font-family: var(--font-mono); color: #64748b; font-weight: 800;">STEP 02</span>
+                                        <span id="step2Icon" style="font-size: 14px;">${company || serviceBlurb ? '✅' : '🎯'}</span>
+                                    </div>
+                                    <div style="font-size: 13.5px; font-weight: 700; color: #0f172a; font-family: var(--font-heading); margin-bottom: 2px;">Brand & Service</div>
+                                    <div style="font-size: 11.5px; color: #475569; font-weight: 500;">Unlocks WhatsApp AI Pitching</div>
+                                </div>
+
+                                <!-- Step 3 -->
+                                <div class="timeline-step-node" data-target="settingsPortfolioUrl" style="background: #f8fafc; border: 1px solid ${portfolio && booking ? '#86efac' : '#cbd5e1'}; padding: 14px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s ease;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                                        <span style="font-size: 11px; font-family: var(--font-mono); color: #64748b; font-weight: 800;">STEP 03</span>
+                                        <span id="step3Icon" style="font-size: 14px;">${portfolio && booking ? '✅' : '🔗'}</span>
+                                    </div>
+                                    <div style="font-size: 13.5px; font-weight: 700; color: #0f172a; font-family: var(--font-heading); margin-bottom: 2px;">Outreach Assets</div>
+                                    <div style="font-size: 11.5px; color: #475569; font-weight: 500;">Unlocks Auto-Brochure & Scheduling</div>
+                                </div>
+
+                                <!-- Step 4 -->
+                                <div class="timeline-step-node" data-target="changeBillingPlanBtn" style="background: #fffbeb; border: 1px solid #fcd34d; padding: 14px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s ease;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                                        <span style="font-size: 11px; font-family: var(--font-mono); color: #b45309; font-weight: 800;">STEP 04</span>
+                                        <span style="font-size: 14px;">👑</span>
+                                    </div>
+                                    <div style="font-size: 13.5px; font-weight: 700; color: #0f172a; font-family: var(--font-heading); margin-bottom: 2px;">Growth Tier</div>
+                                    <div style="font-size: 11.5px; color: #b45309; font-weight: 700;">${userTier.toUpperCase()} Plan Active</div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Split-Screen Main Content Layout -->
+                        <div style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 20px; align-items: start;">
+                            
+                            <!-- Left Column: Form Configurations Card -->
+                            <div class="settings-wrap" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 24px; display: flex; flex-direction: column; gap: 18px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);">
+                                
+                                <h4 style="margin: 0; color: #0f172a; font-family: var(--font-heading); font-size: 16px; font-weight: 800; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;">
+                                    Workspace Configurations
+                                </h4>
+                                
+                                <div>
+                                    <label style="display: block; font-size: 12.5px; font-weight: 700; color: #334155; font-family: var(--font-heading); margin-bottom: 6px;">My Professional Role</label>
+                                    <select id="settingsRole" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none; transition: all 0.2s ease; margin-bottom: 8px;">
+                                        <option value="freelancer" ${role === 'freelancer' ? 'selected' : ''}>💻 Freelancer</option>
+                                        <option value="agency" ${role === 'agency' ? 'selected' : ''}>🏢 Agency Owner</option>
+                                        <option value="sales_team" ${role === 'sales_team' ? 'selected' : ''}>📈 Sales Representative</option>
+                                        <option value="startup" ${role === 'startup' ? 'selected' : ''}>🚀 Startup Founder</option>
+                                        <option value="other" ${role && !['freelancer', 'agency', 'sales_team', 'startup'].includes(role) ? 'selected' : ''}>❓ Other...</option>
+                                    </select>
+                                    <div id="settingsCustomRoleContainer" style="display: ${role && !['freelancer', 'agency', 'sales_team', 'startup'].includes(role) ? 'block' : 'none'};">
+                                        <input type="text" id="settingsCustomRole" value="${role && !['freelancer', 'agency', 'sales_team', 'startup'].includes(role) ? role : ''}" placeholder="Enter your professional role..." style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none;" />
+                                    </div>
+                                </div>
+
+                                <h4 style="margin: 6px 0 0 0; color: #0f172a; font-family: var(--font-heading); font-size: 16px; font-weight: 800; border-top: 1px solid #e2e8f0; padding-top: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;">
+                                    Personalization Settings
+                                </h4>
+                                
+                                <div>
+                                    <label style="display: block; font-size: 12.5px; font-weight: 700; color: #334155; font-family: var(--font-heading); margin-bottom: 6px;">Your Full Name</label>
+                                    <input type="text" id="settingsFullName" value="${name}" placeholder="e.g. Shri Naik" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none; transition: all 0.2s ease;" />
+                                </div>
+
+                                <div>
+                                    <label style="display: block; font-size: 12.5px; font-weight: 700; color: #334155; font-family: var(--font-heading); margin-bottom: 6px;">Agency / Company Name</label>
+                                    <input type="text" id="settingsCompanyName" value="${company}" placeholder="e.g. NearPro Agency" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none; transition: all 0.2s ease;" />
+                                </div>
+
+                                <div>
+                                    <label style="display: block; font-size: 12.5px; font-weight: 700; color: #334155; font-family: var(--font-heading); margin-bottom: 6px;">My Primary Service Blurb</label>
+                                    <select id="settingsServiceSelect" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none; margin-bottom: 8px;">
+                                        <option value="I build websites for local businesses" ${serviceBlurb === 'I build websites for local businesses' ? 'selected' : ''}>💻 Web Design ("I build websites for local businesses")</option>
+                                        <option value="I help businesses improve their Google ranking" ${serviceBlurb === 'I help businesses improve their Google ranking' ? 'selected' : ''}>📈 SEO ("I help businesses improve their Google ranking")</option>
+                                        <option value="I offer tax and accounting services to businesses" ${serviceBlurb === 'I offer tax and accounting services to businesses' ? 'selected' : ''}>⚖️ CA/Finance ("I offer tax and accounting services to businesses")</option>
+                                        <option value="I help businesses get more customers through digital marketing" ${serviceBlurb === 'I help businesses get more customers through digital marketing' ? 'selected' : ''}>🎯 Marketing ("I help businesses get more customers through digital marketing")</option>
+                                        <option value="I'm a commercial real estate consultant" ${serviceBlurb === "I'm a commercial real estate consultant" ? 'selected' : ''}>🏢 Real Estate ("I'm a commercial real estate consultant")</option>
+                                        <option value="custom" ${!['I build websites for local businesses', 'I help businesses improve their Google ranking', 'I offer tax and accounting services to businesses', 'I help businesses get more customers through digital marketing', "I'm a commercial real estate consultant"].includes(serviceBlurb) && serviceBlurb ? 'selected' : ''}>💼 Custom Service...</option>
+                                    </select>
+                                    <div id="settingsCustomServiceContainer" style="display: ${!['I build websites for local businesses', 'I help businesses improve their Google ranking', 'I offer tax and accounting services to businesses', 'I help businesses get more customers through digital marketing', "I'm a commercial real estate consultant"].includes(serviceBlurb) && serviceBlurb ? 'block' : 'none'};">
+                                        <input type="text" id="settingsCustomService" value="${!['I build websites for local businesses', 'I help businesses improve their Google ranking', 'I offer tax and accounting services to businesses', 'I help businesses get more customers through digital marketing', "I'm a commercial real estate consultant"].includes(serviceBlurb) ? serviceBlurb : ''}" placeholder="Describe your service in one sentence..." style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none;" />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label style="display: block; font-size: 12.5px; font-weight: 700; color: #334155; font-family: var(--font-heading); margin-bottom: 6px;">Custom Portfolio URL</label>
+                                    <input type="url" id="settingsPortfolioUrl" value="${portfolio}" placeholder="e.g. https://myagency.com" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none; transition: all 0.2s ease;" />
+                                </div>
+
+                                <div>
+                                    <label style="display: block; font-size: 12.5px; font-weight: 700; color: #334155; font-family: var(--font-heading); margin-bottom: 6px;">Meeting Booking Link</label>
+                                    <input type="url" id="settingsBookingUrl" value="${booking}" placeholder="e.g. https://calendly.com/shri" style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none; transition: all 0.2s ease;" />
+                                </div>
+                                
+                                <div style="border-top: 1px solid #e2e8f0; padding-top: 16px;">
+                                    <label style="display: block; font-size: 12.5px; font-weight: 700; color: #334155; font-family: var(--font-heading); margin-bottom: 6px;">Billing Information</label>
+                                    <div style="padding: 12px 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-sm); font-size: 13px; color: #334155; font-weight: 600; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                                        <div>Current Tier: <strong style="color: #d97706; font-weight: 800; text-transform: uppercase;">${userTier} Plan</strong></div>
+                                        <div style="display: flex; gap: 8px; align-items: center;">
+                                            ${userTier !== 'free' ? `
+                                                <button id="cancelBillingPlanBtn" style="padding: 6px 14px; font-size: 11.5px; cursor: pointer; background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; border-radius: 6px; font-weight: 700; transition: all 0.2s;" onmouseover="this.style.background='rgba(239, 68, 68, 0.16)'" onmouseout="this.style.background='rgba(239, 68, 68, 0.08)'">Cancel Subscription</button>
+                                            ` : ''}
+                                            <button class="brand-btn" id="changeBillingPlanBtn" style="padding: 6px 14px; font-size: 11.5px; cursor: pointer; background: #2563eb; color: white; border: none; border-radius: 6px; font-weight: 700;">Upgrade Subscription</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <button class="brand-btn" id="saveSettingsBtn" style="width: 100%; padding: 12px; font-weight: 800; cursor: pointer; font-size: 14px; background: #2563eb; color: white; border: none; border-radius: 8px; box-shadow: 0 4px 12px rgba(37,99,235,0.25); margin-top: 6px;">Save Configuration</button>
+                            </div>
+
+                            <!-- Right Column: Live AI Pitch Preview Box -->
+                            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 24px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04); position: sticky; top: 20px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                                    <div style="font-size: 15px; font-weight: 800; color: #0f172a; font-family: var(--font-heading);">Live AI Pitch Preview</div>
+                                    <span style="font-size: 11px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #059669; font-weight: 800; padding: 2px 8px; border-radius: 4px; font-family: var(--font-mono);">Real-Time</span>
+                                </div>
+
+                                <p style="font-size: 12.5px; color: #475569; font-weight: 500; line-height: 1.4; margin-bottom: 16px;">
+                                    This is how your WhatsApp & Email outreach messages will automatically look when reaching out to leads:
+                                </p>
+
+                                <!-- Live Card -->
+                                <div style="background: #f8fafc; border: 1px solid #bfdbfe; padding: 18px; border-radius: var(--radius-md); font-family: var(--font-mono); font-size: 12px; line-height: 1.6; color: #0f172a; font-weight: 500; white-space: pre-wrap;" id="liveAiPitchPreviewBox">Loading live preview...</div>
+
+                                <div style="margin-top: 16px; font-size: 11.5px; color: #64748b; font-weight: 500; display: flex; align-items: center; gap: 6px;">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                    <span>Changes update dynamically as you fill in your profile fields.</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                `;
+
+                // Dynamic real-time preview updater function
+                const updateLivePreviewAndProgress = () => {
+                    const n = document.getElementById('settingsFullName')?.value.trim() || '';
+                    const c = document.getElementById('settingsCompanyName')?.value.trim() || '';
+                    const p = document.getElementById('settingsPortfolioUrl')?.value.trim() || '';
+                    const b = document.getElementById('settingsBookingUrl')?.value.trim() || '';
+                    const rSel = document.getElementById('settingsRole')?.value || 'freelancer';
+                    const custRole = document.getElementById('settingsCustomRole')?.value.trim() || '';
+                    const r = rSel === 'other' ? custRole : rSel;
                     
-                    if (p) {
-                        msg += `\n\n🌐 View our portfolio:\n${p}`;
-                    }
-                    if (b) {
-                        msg += `\n\n📅 Book a 10-min intro call:\n${b}`;
+                    const sel = document.getElementById('settingsServiceSelect')?.value;
+                    const cust = document.getElementById('settingsCustomService')?.value.trim();
+                    const s = sel === 'custom' ? cust : sel;
+
+                    // Update score
+                    const score = calcScore(n, c, s, p, b);
+                    const scoreBadge = document.getElementById('profileScoreBadge');
+                    const progressFill = document.getElementById('profileProgressFill');
+                    const guidanceText = document.getElementById('profileGuidanceText');
+
+                    if (scoreBadge) scoreBadge.innerText = `${score}% Complete`;
+                    if (progressFill) progressFill.style.width = `${score}%`;
+                    if (guidanceText) {
+                        if (score >= 80) {
+                            guidanceText.innerText = '⚡ Maximum Personalization: Your AI pitches and outreach assets are fully optimized.';
+                        } else if (!p || !b) {
+                            guidanceText.innerText = 'Fill out Portfolio URL & Booking Link to unlock automated brochure and scheduling links in AI pitches.';
+                        } else {
+                            guidanceText.innerText = 'Complete your profile milestones to unlock automated brochure links and targeted AI outreach.';
+                        }
                     }
 
-                    previewBox.innerText = msg;
+                    // Update Timeline icons
+                    const step1Icon = document.getElementById('step1Icon');
+                    const step2Icon = document.getElementById('step2Icon');
+                    const step3Icon = document.getElementById('step3Icon');
+
+                    if (step1Icon) step1Icon.innerText = n ? '✅' : '👤';
+                    if (step2Icon) step2Icon.innerText = (c || s) ? '✅' : '🎯';
+                    if (step3Icon) step3Icon.innerText = (p && b) ? '✅' : '🔗';
+
+                    // Render live AI message preview
+                    const previewBox = document.getElementById('liveAiPitchPreviewBox');
+                    if (previewBox) {
+                        const senderName = n || '[Your Name]';
+                        const senderCompany = c || '[Your Company]';
+                        const serviceDesc = s || 'I build websites for local businesses';
+                        let roleTitle = 'representing';
+                        if (r === 'agency') {
+                            roleTitle = 'founder of';
+                        } else if (r && !['freelancer', 'startup', 'sales_team'].includes(r)) {
+                            roleTitle = `${r} at`;
+                        }
+
+                        let msg = `Namaste Dr. Mehta!\n\nI noticed your listing for Mehta Dental Clinic on Google Maps. I am ${senderName}, ${roleTitle} ${senderCompany}.\n\n${serviceDesc}. We help local clinics rank #1 in maps and convert inquiries into booked appointments.`;
+                        
+                        if (p) {
+                            msg += `\n\n🌐 View our portfolio:\n${p}`;
+                        }
+                        if (b) {
+                            msg += `\n\n📅 Book a 10-min intro call:\n${b}`;
+                        }
+
+                        previewBox.innerText = msg;
+                    }
+                };
+
+                // Bind real-time input event listeners
+                const inputsToTrack = ['settingsFullName', 'settingsCompanyName', 'settingsPortfolioUrl', 'settingsBookingUrl', 'settingsCustomService', 'settingsCustomRole'];
+                inputsToTrack.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.addEventListener('input', updateLivePreviewAndProgress);
+                        el.addEventListener('focus', () => {
+                            el.style.borderColor = 'var(--accent-gold)';
+                            el.style.boxShadow = '0 0 12px rgba(255, 160, 0, 0.25)';
+                        });
+                        el.addEventListener('blur', () => {
+                            el.style.borderColor = 'var(--border)';
+                            el.style.boxShadow = 'none';
+                        });
+                    }
+                });
+
+                const serviceSelect = document.getElementById('settingsServiceSelect');
+                const customServiceContainer = document.getElementById('settingsCustomServiceContainer');
+                if (serviceSelect && customServiceContainer) {
+                    serviceSelect.addEventListener('change', () => {
+                        customServiceContainer.style.display = serviceSelect.value === 'custom' ? 'block' : 'none';
+                        updateLivePreviewAndProgress();
+                    });
+                }
+
+                const roleSelect = document.getElementById('settingsRole');
+                const customRoleContainer = document.getElementById('settingsCustomRoleContainer');
+                if (roleSelect && customRoleContainer) {
+                    roleSelect.addEventListener('change', () => {
+                        customRoleContainer.style.display = roleSelect.value === 'other' ? 'block' : 'none';
+                        updateLivePreviewAndProgress();
+                    });
+                }
+
+                // Timeline click-to-focus interactivity
+                document.querySelectorAll('.timeline-step-node').forEach(node => {
+                    node.addEventListener('click', () => {
+                        const targetId = node.getAttribute('data-target');
+                        if (targetId) {
+                            const targetEl = document.getElementById(targetId);
+                            if (targetEl) {
+                                targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                targetEl.focus();
+                                targetEl.style.borderColor = 'var(--accent-gold)';
+                                targetEl.style.boxShadow = '0 0 16px rgba(255, 160, 0, 0.3)';
+                                setTimeout(() => {
+                                    targetEl.style.borderColor = 'var(--border)';
+                                    targetEl.style.boxShadow = 'none';
+                                }, 2000);
+                            }
+                        }
+                    });
+                });
+
+                // Initial live preview calculation
+                updateLivePreviewAndProgress();
+
+                document.getElementById('changeBillingPlanBtn').addEventListener('click', () => {
+                    State.setPricingModal(true);
+                });
+
+                const cancelBtn = document.getElementById('cancelBillingPlanBtn');
+                if (cancelBtn) {
+                    cancelBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        State.setCancelSubscriptionModal(true);
+                    });
+                }
+
+                document.getElementById('saveSettingsBtn').addEventListener('click', async () => {
+                    const roleSel = document.getElementById('settingsRole').value;
+                    const customRole = document.getElementById('settingsCustomRole')?.value.trim() || '';
+                    const newRole = roleSel === 'other' ? customRole : roleSel;
+                    const newName = document.getElementById('settingsFullName').value.trim();
+                    const newCompany = document.getElementById('settingsCompanyName').value.trim();
+                    const newPortfolio = document.getElementById('settingsPortfolioUrl').value.trim();
+                    const newBooking = document.getElementById('settingsBookingUrl').value.trim();
+                    const selectedService = document.getElementById('settingsServiceSelect').value;
+                    const customService = document.getElementById('settingsCustomService').value.trim();
+                    const newServiceBlurb = selectedService === 'custom' ? customService : selectedService;
+
+                    try {
+                        const { data, error } = await Api.supabase
+                            .from('profiles')
+                            .update({ 
+                                role: newRole,
+                                full_name: newName,
+                                company_name: newCompany,
+                                portfolio_url: newPortfolio,
+                                booking_url: newBooking,
+                                sender_service_blurb: newServiceBlurb,
+                                updated_at: new Date().toISOString() 
+                            })
+                            .eq('id', State.user.id)
+                            .select()
+                            .single();
+                        if (error) throw error;
+                        State.profile = data;
+                        State.notify();
+                        alert("Configurations saved successfully!");
+                    } catch (err) {
+                        console.error("Failed to save settings: ", err);
+                        alert("Failed to save configuration.");
+                    }
+                });
+            };
+
+            const showAiRouting = async () => {
+                personalizationBtn.style.color = '#64748b';
+                personalizationBtn.style.borderBottomColor = 'transparent';
+                aiRoutingBtn.style.color = '#2563eb';
+                aiRoutingBtn.style.borderBottomColor = '#2563eb';
+
+                try {
+                    tabContentArea.innerHTML = renderSettingsLlmRouter();
+                    await initSettingsLlmRouter();
+                } catch (err) {
+                    console.error("Failed to initialize AI router panel: ", err);
+                    tabContentArea.innerHTML = `
+                        <div style="padding: 40px; text-align: center; background: rgba(239, 68, 68, 0.05); border: 1.5px dashed rgba(239, 68, 68, 0.2); border-radius: 12px; margin: 20px 0;">
+                            <div style="font-size: 32px; margin-bottom: 12px;">⚠️</div>
+                            <h3 style="color: var(--text-primary); font-size: 16px; font-weight: 600; margin-bottom: 8px;">Failed to Load AI Routing Configuration</h3>
+                            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px; max-width: 400px; margin-left: auto; margin-right: auto;">
+                                There was a connection issue loading your LLM routing profiles. Please make sure your Supabase instance is active and try again.
+                            </p>
+                            <button id="retry-ai-routing-load-btn" style="padding: 8px 16px; background: var(--accent-gold); color: #000; border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">
+                                Retry Loading
+                            </button>
+                        </div>
+                    `;
+                    document.getElementById('retry-ai-routing-load-btn')?.addEventListener('click', showAiRouting);
                 }
             };
 
-            // Bind real-time input event listeners
-            const inputsToTrack = ['settingsFullName', 'settingsCompanyName', 'settingsPortfolioUrl', 'settingsBookingUrl', 'settingsCustomService', 'settingsCustomRole'];
-            inputsToTrack.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) {
-                    el.addEventListener('input', updateLivePreviewAndProgress);
-                    el.addEventListener('focus', () => {
-                        el.style.borderColor = 'var(--accent-gold)';
-                        el.style.boxShadow = '0 0 12px rgba(255, 160, 0, 0.25)';
-                    });
-                    el.addEventListener('blur', () => {
-                        el.style.borderColor = 'var(--border)';
-                        el.style.boxShadow = 'none';
-                    });
-                }
-            });
-
-            const serviceSelect = document.getElementById('settingsServiceSelect');
-            const customServiceContainer = document.getElementById('settingsCustomServiceContainer');
-            if (serviceSelect && customServiceContainer) {
-                serviceSelect.addEventListener('change', () => {
-                    customServiceContainer.style.display = serviceSelect.value === 'custom' ? 'block' : 'none';
-                    updateLivePreviewAndProgress();
-                });
+            personalizationBtn.addEventListener('click', showPersonalization);
+            if (aiRoutingBtn) {
+                aiRoutingBtn.addEventListener('click', showAiRouting);
             }
 
-            const roleSelect = document.getElementById('settingsRole');
-            const customRoleContainer = document.getElementById('settingsCustomRoleContainer');
-            if (roleSelect && customRoleContainer) {
-                roleSelect.addEventListener('change', () => {
-                    customRoleContainer.style.display = roleSelect.value === 'other' ? 'block' : 'none';
-                    updateLivePreviewAndProgress();
-                });
-            }
-
-            // Timeline click-to-focus interactivity
-            document.querySelectorAll('.timeline-step-node').forEach(node => {
-                node.addEventListener('click', () => {
-                    const targetId = node.getAttribute('data-target');
-                    if (targetId) {
-                        const targetEl = document.getElementById(targetId);
-                        if (targetEl) {
-                            targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            targetEl.focus();
-                            targetEl.style.borderColor = 'var(--accent-gold)';
-                            targetEl.style.boxShadow = '0 0 16px rgba(255, 160, 0, 0.3)';
-                            setTimeout(() => {
-                                targetEl.style.borderColor = 'var(--border)';
-                                targetEl.style.boxShadow = 'none';
-                            }, 2000);
-                        }
-                    }
-                });
-            });
-
-            // Initial live preview calculation
-            updateLivePreviewAndProgress();
-
-            document.getElementById('changeBillingPlanBtn').addEventListener('click', () => {
-                State.setPricingModal(true);
-            });
-
-            const cancelBtn = document.getElementById('cancelBillingPlanBtn');
-            if (cancelBtn) {
-                cancelBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    State.setCancelSubscriptionModal(true);
-                });
-            }
-
-            document.getElementById('saveSettingsBtn').addEventListener('click', async () => {
-                const roleSel = document.getElementById('settingsRole').value;
-                const customRole = document.getElementById('settingsCustomRole')?.value.trim() || '';
-                const newRole = roleSel === 'other' ? customRole : roleSel;
-                const newName = document.getElementById('settingsFullName').value.trim();
-                const newCompany = document.getElementById('settingsCompanyName').value.trim();
-                const newPortfolio = document.getElementById('settingsPortfolioUrl').value.trim();
-                const newBooking = document.getElementById('settingsBookingUrl').value.trim();
-                const selectedService = document.getElementById('settingsServiceSelect').value;
-                const customService = document.getElementById('settingsCustomService').value.trim();
-                const newServiceBlurb = selectedService === 'custom' ? customService : selectedService;
-
-                try {
-                    const { data, error } = await Api.supabase
-                        .from('profiles')
-                        .update({ 
-                            role: newRole,
-                            full_name: newName,
-                            company_name: newCompany,
-                            portfolio_url: newPortfolio,
-                            booking_url: newBooking,
-                            sender_service_blurb: newServiceBlurb,
-                            updated_at: new Date().toISOString() 
-                        })
-                        .eq('id', State.user.id)
-                        .select()
-                        .single();
-                    if (error) throw error;
-                    State.profile = data;
-                    State.notify();
-                    alert("Configurations saved successfully!");
-                } catch (err) {
-                    console.error("Failed to save settings: ", err);
-                    alert("Failed to save configuration.");
-                }
-            });
+            // Default to Personalization view
+            showPersonalization();
+        }
+    } else if (tab === 'sequences') {
+        if (titleEl) titleEl.innerText = '✉️ Automated Sequences';
+        if (content) {
+            content.innerHTML = renderEmailSequences();
+            bindEmailSequencesEvents();
+        }
+    } else if (tab === 'deliverability') {
+        if (titleEl) titleEl.innerText = '🛡️ Deliverability Hub';
+        if (content) {
+            content.innerHTML = renderDeliverabilityHub();
+            bindDeliverabilityHubEvents();
+        }
+    } else if (tab === 'enrichment') {
+        if (titleEl) titleEl.innerText = '🔬 Data Enrichment';
+        if (content) {
+            content.innerHTML = renderDataEnrichment();
+            bindDataEnrichmentEvents();
+        }
+    } else if (tab === 'plugins') {
+        if (titleEl) titleEl.innerText = '🧩 Plugin Marketplace';
+        if (content) {
+            content.innerHTML = renderPluginMarketplace();
+            bindPluginMarketplaceEvents();
+        }
+    } else if (tab === 'signals') {
+        if (titleEl) titleEl.innerText = '🔥 Intent Signals';
+        if (content) {
+            content.innerHTML = renderIntentSignals();
+            bindIntentSignalsEvents();
+        }
+    } else if (tab === 'voice-agent') {
+        if (titleEl) titleEl.innerText = '📞 AI Voice Agent';
+        if (content) {
+            content.innerHTML = renderVoiceAgentDashboard();
+            bindVoiceAgentDashboardEvents();
+        }
+    } else if (tab === 'admin') {
+        if (titleEl) titleEl.innerText = '🛠️ S8N Control Center';
+        if (content) {
+            content.innerHTML = renderAdminPanel();
+            bindAdminPanelEvents();
         }
     } else {
         if (titleEl) titleEl.innerText = tab.toUpperCase();
@@ -2694,6 +2845,13 @@ async function initApp() {
         
     } catch (e) {
         console.error("Initialization check failed. Database offline: ", e);
+    }
+
+    // 2.5 Fetch Feature Flags
+    try {
+        await State.fetchFeatureFlags();
+    } catch (e) {
+        console.warn("Failed to fetch feature flags: ", e);
     }
 
     // 3. Now initialize Router with active session ready!

@@ -21,11 +21,21 @@ export function renderDashboardShell(activeTab = 'crm') {
     }
 
     // Sidebar items configuration
+    const isAdmin = State.user?.email === 'nearproadmin@gmail.com';
     const sidebarItems = [
         { id: 'overview', label: 'Getting Started', requiredTier: 'free', icon: 'compass' },
         { id: 'crm', label: '🤖 360° AI Deal Hub', requiredTier: 'free', icon: 'clipboard-list' },
         { id: 'directory', label: 'Browse Directory', requiredTier: 'free', icon: 'search' },
         { id: 'lists', label: 'Smart Lists', requiredTier: 'free', icon: 'folder' },
+        
+        // V2 Gated Features
+        { id: 'sequences', label: 'Email Sequences', requiredTier: 'scout', icon: 'git-branch', flag: 'email_sequences' },
+        { id: 'deliverability', label: 'Deliverability Hub', requiredTier: 'scout', icon: 'shield-check', flag: 'email_warmup' },
+        { id: 'enrichment', label: 'Data Enrichment', requiredTier: 'scout', icon: 'database', flag: 'waterfall_enrichment' },
+        { id: 'plugins', label: 'Plugin Marketplace', requiredTier: 'free', icon: 'puzzle', flag: 'mcp_plugins' },
+        { id: 'signals', label: '🔥 Intent Signals', requiredTier: 'scout', icon: 'trending-up', flag: 'intent_signals' },
+        { id: 'voice-agent', label: 'AI Voice Agent', requiredTier: 'hunter', icon: 'phone-call', flag: 'voice_calling' },
+        
         { id: 'proposals', label: 'PDF Proposals', requiredTier: 'free', icon: 'file-text' },
         { id: 'call-scripts', label: 'Tele-Sales Scripts', requiredTier: 'free', icon: 'phone-call' },
         { id: 'documents', label: 'Documents Library', requiredTier: 'free', icon: 'paperclip' },
@@ -37,7 +47,16 @@ export function renderDashboardShell(activeTab = 'crm') {
         { id: 'settings', label: 'Settings', requiredTier: 'free', icon: 'settings' }
     ];
 
-    const sidebarHTML = sidebarItems.map(item => {
+    if (isAdmin) {
+        sidebarItems.push({ id: 'admin', label: '🛠️ S8N Control Center', requiredTier: 'free', icon: 'shield' });
+    }
+
+    const filteredSidebarItems = sidebarItems.filter(item => {
+        if (!item.flag) return true;
+        return (State.featureFlags && State.featureFlags[item.flag] === true) || isAdmin;
+    });
+
+    const sidebarHTML = filteredSidebarItems.map(item => {
         const isUnlocked = hasAccess(userTier, item.requiredTier);
         const isActive = activeTab === item.id;
         const activeClass = isActive ? 'active' : '';
@@ -46,14 +65,22 @@ export function renderDashboardShell(activeTab = 'crm') {
         
         // Navigation targets
         const href = `#/dashboard/${item.id}`;
-
+                let badge = '';
+        if (item.id === 'settings') {
+            badge = `<span class="new-feature-badge" style="margin-left: 6px; font-size: 8.5px; font-weight: 800; color: #78350f; background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); padding: 1.5px 5px; border-radius: 99px; text-transform: uppercase; font-family: var(--font-mono, monospace); line-height: 1;">NEW</span>`;
+        } else if (item.flag && State.featureFlags && State.featureFlags[item.flag] === true) {
+            const dismissed = localStorage.getItem(`dismissed_badge_${item.id}`);
+            if (!dismissed) {
+                badge = `<span class="new-feature-badge" style="margin-left: 6px; font-size: 8.5px; font-weight: 800; color: #ffffff; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); padding: 1.5px 5px; border-radius: 99px; text-transform: uppercase; font-family: var(--font-mono, monospace); line-height: 1;">NEW</span>`;
+            }
+        }
         return `
             <a href="${isUnlocked ? href : 'javascript:void(0)'}" 
                class="dashboard-nav-item ${activeClass} ${isUnlocked ? '' : 'locked'}" 
                data-id="${item.id}"
                data-required="${item.requiredTier}">
                 <i data-lucide="${item.icon}" class="nav-icon" style="width:18px; height:18px; stroke-width:2px; flex-shrink:0;"></i>
-                <span class="nav-label">${item.label}</span>
+                <span class="nav-label" style="display: flex; align-items: center;">${item.label}${badge}</span>
                 ${arrowIcon || lockIcon}
             </a>
         `;
@@ -293,4 +320,19 @@ export function bindDashboardShellEvents() {
             }
         });
     }
+
+    // Autohealing: Listen to clicks on active nav items to dynamically dismiss "NEW" badges
+    const activeNavs = document.querySelectorAll('.dashboard-nav-item:not(.locked)');
+    activeNavs.forEach(nav => {
+        nav.addEventListener('click', () => {
+            const tabId = nav.getAttribute('data-id');
+            if (tabId) {
+                localStorage.setItem(`dismissed_badge_${tabId}`, 'true');
+                const badge = nav.querySelector('.new-feature-badge');
+                if (badge && tabId !== 'settings') {
+                    badge.remove();
+                }
+            }
+        });
+    });
 }

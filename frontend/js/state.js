@@ -21,6 +21,7 @@ export const State = {
     billing_cycle: 'monthly',
     category_sidebar_collapsed: localStorage.getItem('nearpro_cat_sidebar_collapsed') === 'true',
     dashboard_sidebar_collapsed: localStorage.getItem('nearpro_dashboard_sidebar_collapsed') === 'true',
+    featureFlags: {},
     
     // Filters state
     filters: {
@@ -283,6 +284,51 @@ export const State = {
         if (this.waitlist_modal_open === isOpen && this.waitlist_city === city) return;
         this.waitlist_modal_open = isOpen;
         if (city) this.waitlist_city = city;
+        this.notify();
+    },
+
+    // Voice Calling Agent state
+    voice_campaigns: [],
+    voice_credits: 0,
+    voice_modal_open: false,
+    selected_campaign_leads: [],
+
+    setVoiceModal(isOpen, leads = []) {
+        this.voice_modal_open = isOpen;
+        if (isOpen) {
+            this.selected_campaign_leads = leads;
+            // Initialize voice credits from user profile if not already set
+            if (this.profile && this.profile.voice_call_credits !== undefined) {
+                this.voice_credits = this.profile.voice_call_credits;
+            }
+        }
+        this.notify();
+    },
+
+    async fetchFeatureFlags() {
+        try {
+            const { supabase } = await import('./supabase.js');
+            const { data, error } = await supabase.from('feature_flags').select('name, is_enabled');
+            if (error) throw error;
+            
+            const flags = {};
+            if (data) {
+                data.forEach(flag => {
+                    flags[flag.name] = flag.is_enabled;
+                });
+            }
+            this.featureFlags = flags;
+            this.notify();
+        } catch (e) {
+            console.warn("Failed to load feature flags:", e);
+        }
+    },
+
+    updateVoiceCredits(credits) {
+        this.voice_credits = credits;
+        if (this.profile) {
+            this.profile.voice_call_credits = credits;
+        }
         this.notify();
     }
 };
