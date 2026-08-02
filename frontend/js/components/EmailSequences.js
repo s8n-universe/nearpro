@@ -18,6 +18,8 @@ export function renderEmailSequences() {
         return renderSequenceBuilder();
     } else if (activeView === 'analytics') {
         return renderSequenceAnalytics();
+    } else if (activeView === 'diagnostics') {
+        return renderSequenceDiagnostics();
     }
     return renderSequencesDashboard();
 }
@@ -33,15 +35,50 @@ function renderSequencesDashboard() {
         avg_reply_rate: 0
     };
 
+    // Mailbox warning banner mimicking Apollo's alerts
+    const alertBannerHTML = `
+        <div style="background: #fff7ed; border: 1.5px solid #ffedd5; border-radius: 8px; padding: 12px 18px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; box-shadow: 0 2px 8px rgba(249,115,22,0.04);">
+            <div style="display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: #c2410c; font-weight: 500;">
+                <span style="font-size: 16px;">⚠️</span>
+                <span>You have no mailboxes linked. Please connect your email account to start managing and sending emails via NearPro.</span>
+            </div>
+            <a href="#/dashboard/deliverability" style="font-size: 12px; font-weight: 800; color: #c2410c; text-decoration: underline; white-space: nowrap;">Link mailbox</a>
+        </div>
+    `;
+
+    // Horizontal Sub-Tabs under page title
+    const subtabsHTML = `
+        <div style="display: flex; gap: 20px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 0px; margin-bottom: 20px; align-items: center;">
+            <button onclick="activeView = 'list'; refreshSequencesView();" style="background: none; border: none; font-size: 12.5px; font-weight: 700; color: ${activeView === 'list' ? '#2563eb' : '#475569'}; padding: 0 0 10px 0; border-bottom: 2px solid ${activeView === 'list' ? '#2563eb' : 'transparent'}; cursor: pointer; transition: all 0.2s; font-family: var(--font-heading);">
+                All Sequences
+            </button>
+            <button onclick="activeView = 'analytics'; refreshSequencesView();" style="background: none; border: none; font-size: 12.5px; font-weight: 700; color: ${activeView === 'analytics' ? '#2563eb' : '#475569'}; padding: 0 0 10px 0; border-bottom: 2px solid ${activeView === 'analytics' ? '#2563eb' : 'transparent'}; cursor: pointer; transition: all 0.2s; font-family: var(--font-heading);">
+                Analytics
+            </button>
+            <button onclick="activeView = 'diagnostics'; refreshSequencesView();" style="background: none; border: none; font-size: 12.5px; font-weight: 700; color: ${activeView === 'diagnostics' ? '#2563eb' : '#475569'}; padding: 0 0 10px 0; border-bottom: 2px solid ${activeView === 'diagnostics' ? '#2563eb' : 'transparent'}; cursor: pointer; transition: all 0.2s; font-family: var(--font-heading);">
+                Diagnostics
+            </button>
+        </div>
+    `;
+
     const cardsHTML = list.length === 0 ? `
-        <div style="grid-column: 1 / -1; padding: 60px 24px; text-align: center; border: 1px dashed #cbd5e1; border-radius: var(--radius-lg); background: #ffffff;">
-            <div style="font-size: 48px; margin-bottom: 20px; animation: bounce 2s infinite;">✉️</div>
-            <h3 style="color: #0f172a; font-family: var(--font-heading); font-size: 18px; margin-bottom: 8px;">Create Your First Multi-Channel Sequence</h3>
-            <p style="color: #475569; font-size: 13.5px; max-width: 440px; margin: 0 auto 24px auto; line-height: 1.5;">
-                Engage prospects via Email, WhatsApp messages, LinkedIn connection tasks, and manual twilio scripts automatically.
+        <div style="grid-column: 1 / -1; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 40px 24px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.03); max-width:820px; margin: 0 auto; width:100%;">
+            <div style="display:inline-block; border-radius: 8px; border: 1px solid #e2e8f0; padding:12px; background:#f8fafc; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                <!-- Simulated flow video thumbnail -->
+                <div style="width: 280px; height: 130px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border-radius: 6px; display: flex; align-items: center; justify-content: center; position: relative; color: white;">
+                    <span style="font-size: 12px; font-family: var(--font-mono); font-weight:700; background:rgba(0,0,0,0.4); padding: 4px 10px; border-radius:4px;">Outreach Sequencer Guide</span>
+                    <div style="position: absolute; bottom: 8px; left: 8px; font-size: 10px; font-family: var(--font-mono); background: rgba(0,0,0,0.6); padding: 2px 6px; border-radius: 4px;">▶ 1:05</div>
+                </div>
+            </div>
+            <h3 style="color: #0f172a; font-family: var(--font-heading); font-size: 18px; font-weight:800; margin: 0 0 8px 0;">Create your first sequence</h3>
+            <p style="color: #475569; font-size: 12.5px; max-width: 440px; margin: 0 auto 24px auto; line-height: 1.5;">
+                Build custom campaigns to automate emails, set more meetings, and convert more customers with AI-crafted drafts.
             </p>
             <div style="display: flex; gap: 12px; justify-content: center;">
-                <button class="brand-btn" id="adminCreateSeqScratch" style="background: #2563eb; color: white;">Start From Scratch</button>
+                <button class="secondary-btn" id="adminCreateSeqScratch" style="padding: 10px 18px; font-size: 12.5px; border-radius: 6px; font-weight: 700; border: 1px solid #cbd5e1; color: #0f172a; background:#f8fafc;">Create sequence</button>
+                <button class="brand-btn" id="adminCreateSeqAI" style="padding: 10px 18px; font-size: 12.5px; border-radius: 6px; font-weight: 700; background: #2563eb; color: white; display: flex; align-items: center; gap: 6px;">
+                    ✨ Create with AI
+                </button>
             </div>
         </div>
     ` : list.map(seq => {
@@ -82,9 +119,9 @@ function renderSequencesDashboard() {
                     </div>
 
                     <div style="display: flex; gap: 8px; justify-content: flex-end;">
-                        <button class="brand-btn seq-action-btn edit" data-id="${seq.id}" style="padding: 6px 12px; font-size: 12px; font-weight: 700; background: #f8fafc; border: 1px solid #cbd5e1; color: #0f172a;">Edit</button>
-                        <button class="brand-btn seq-action-btn enroll" data-id="${seq.id}" style="padding: 6px 12px; font-size: 12px; font-weight: 700; background: #2563eb; color: white; border: none;">Enroll Leads</button>
-                        <button class="brand-btn seq-action-btn analytics" data-id="${seq.id}" style="padding: 6px 12px; font-size: 12px; font-weight: 700; background: rgba(255,160,0,0.1); border: 1px solid rgba(255,160,0,0.25); color: var(--accent-gold);">Stats</button>
+                        <button class="brand-btn seq-action-btn edit" data-id="${seq.id}" style="padding: 6px 12px; font-size: 12px; font-weight: 700; background: #f8fafc; border: 1px solid #cbd5e1; color: #0f172a; border-radius: 6px;">Edit</button>
+                        <button class="brand-btn seq-action-btn enroll" data-id="${seq.id}" style="padding: 6px 12px; font-size: 12px; font-weight: 700; background: #2563eb; color: white; border: none; border-radius: 6px;">Enroll Leads</button>
+                        <button class="brand-btn seq-action-btn analytics" data-id="${seq.id}" style="padding: 6px 12px; font-size: 12px; font-weight: 700; background: rgba(255,160,0,0.1); border: 1px solid rgba(255,160,0,0.25); color: var(--accent-gold); border-radius: 6px;">Stats</button>
                     </div>
                 </div>
             </div>
@@ -92,49 +129,54 @@ function renderSequencesDashboard() {
     }).join('');
 
     return `
-        <div style="max-width: 1200px; display: flex; flex-direction: column; gap: 24px; color: #0f172a; padding-bottom: 40px;">
+        <div style="max-width: 1200px; display: flex; flex-direction: column; gap: 20px; color: #0f172a; padding-bottom: 40px;">
             
-            <!-- Dashboard Stats Overview Banner -->
-            <div style="background: linear-gradient(135deg, rgba(37,99,235,0.04) 0%, rgba(236,72,153,0.01) 100%); border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; box-shadow: 0 4px 30px rgba(0,0,0,0.02);">
+            <!-- Mailbox Warning Alert -->
+            ${alertBannerHTML}
+
+            <!-- Page Title Header section -->
+            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
                 <div style="display: flex; flex-direction: column; gap: 4px;">
-                    <h3 style="margin: 0; font-size: 20px; font-weight: 800; font-family: var(--font-heading); display: flex; align-items: center; gap: 8px; color: #0f172a;">
-                        <span>✉️ Multi-Channel Outreach Dashboard</span>
-                        <span style="font-size: 10px; background: rgba(37,99,235,0.1); border: 1px solid rgba(37,99,235,0.2); color: #3b82f6; font-weight: 800; padding: 2px 8px; border-radius: 50px; text-transform: uppercase; font-family: var(--font-mono);">Scout Gated</span>
+                    <h3 style="margin: 0; font-size: 18px; font-weight: 800; font-family: var(--font-heading); display: flex; align-items: center; gap: 8px; color: #0f172a;">
+                        <span>Sequences</span>
                     </h3>
-                    <p style="margin: 0; font-size: 13.5px; color: #475569;">Set up automated cross-channel drip sequences, schedule follow-ups, and monitor deliverability rates.</p>
+                    <p style="margin: 0; font-size: 12.5px; color: #475569;">Set up automated cross-channel drip sequences, schedule follow-ups, and monitor open/reply metrics.</p>
                 </div>
-                <button class="brand-btn" id="dashboardNewSeqBtn" style="background: #2563eb; color: white; font-weight: 800; padding: 10px 20px;">
-                    + New Sequence
+                <button class="brand-btn" id="dashboardNewSeqBtn" style="background: #2563eb; color: white; font-weight: 700; padding: 9px 18px; font-size:12.5px; border-radius:6px;">
+                    Create sequence
                 </button>
             </div>
+
+            <!-- Tabs list -->
+            ${subtabsHTML}
 
             <!-- Dashboard Analytics Grid -->
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;">
                 <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
-                    <div style="font-size: 11px; color: #475569; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Total Sequences</div>
-                    <div style="font-size: 24px; font-weight: 800; font-family: var(--font-mono); color: #0f172a;">${stats.total_sequences}</div>
+                    <div style="font-size: 10px; color: #475569; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Total Sequences</div>
+                    <div style="font-size: 20px; font-weight: 800; font-family: var(--font-mono); color: #0f172a;">${stats.total_sequences}</div>
                 </div>
                 <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
-                    <div style="font-size: 11px; color: #475569; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Active Campaigns</div>
-                    <div style="font-size: 24px; font-weight: 800; font-family: var(--font-mono); color: #22c55e;">${stats.active_sequences}</div>
+                    <div style="font-size: 10px; color: #475569; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Active Campaigns</div>
+                    <div style="font-size: 20px; font-weight: 800; font-family: var(--font-mono); color: #22c55e;">${stats.active_sequences}</div>
                 </div>
                 <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
-                    <div style="font-size: 11px; color: #475569; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Enrolled Leads</div>
-                    <div style="font-size: 24px; font-weight: 800; font-family: var(--font-mono); color: #0f172a;">${stats.total_enrolled}</div>
+                    <div style="font-size: 10px; color: #475569; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Enrolled Leads</div>
+                    <div style="font-size: 20px; font-weight: 800; font-family: var(--font-mono); color: #0f172a;">${stats.total_enrolled}</div>
                 </div>
                 <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
-                    <div style="font-size: 11px; color: #475569; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Average Open Rate</div>
-                    <div style="font-size: 24px; font-weight: 800; font-family: var(--font-mono); color: var(--accent-gold);">${Math.round(stats.avg_open_rate)}%</div>
+                    <div style="font-size: 10px; color: #475569; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Average Open Rate</div>
+                    <div style="font-size: 20px; font-weight: 800; font-family: var(--font-mono); color: var(--accent-gold);">${Math.round(stats.avg_open_rate)}%</div>
                 </div>
                 <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
-                    <div style="font-size: 11px; color: #475569; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Average Reply Rate</div>
-                    <div style="font-size: 24px; font-weight: 800; font-family: var(--font-mono); color: #ec4899;">${Math.round(stats.avg_reply_rate)}%</div>
+                    <div style="font-size: 10px; color: #475569; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Average Reply Rate</div>
+                    <div style="font-size: 20px; font-weight: 800; font-family: var(--font-mono); color: #ec4899;">${Math.round(stats.avg_reply_rate)}%</div>
                 </div>
             </div>
 
             <!-- Sequences List Grid -->
             <div>
-                <h3 style="margin: 0 0 16px 0; font-size: 17px; font-family: var(--font-heading); font-weight: 800; color: #0f172a;">My Sequences</h3>
+                <h3 style="margin: 0 0 16px 0; font-size: 15px; font-family: var(--font-heading); font-weight: 800; color: #0f172a;">My Sequences</h3>
                 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;">
                     ${cardsHTML}
                 </div>
@@ -785,6 +827,67 @@ async function loadCampaignData() {
     }
 }
 
+function renderSequenceDiagnostics() {
+    const subtabsHTML = `
+        <div style="display: flex; gap: 20px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 0px; margin-bottom: 20px; align-items: center;">
+            <button onclick="activeView = 'list'; refreshSequencesView();" style="background: none; border: none; font-size: 12.5px; font-weight: 700; color: ${activeView === 'list' ? '#2563eb' : '#475569'}; padding: 0 0 10px 0; border-bottom: 2px solid ${activeView === 'list' ? '#2563eb' : 'transparent'}; cursor: pointer; transition: all 0.2s; font-family: var(--font-heading);">
+                All Sequences
+            </button>
+            <button onclick="activeView = 'analytics'; refreshSequencesView();" style="background: none; border: none; font-size: 12.5px; font-weight: 700; color: ${activeView === 'analytics' ? '#2563eb' : '#475569'}; padding: 0 0 10px 0; border-bottom: 2px solid ${activeView === 'analytics' ? '#2563eb' : 'transparent'}; cursor: pointer; transition: all 0.2s; font-family: var(--font-heading);">
+                Analytics
+            </button>
+            <button onclick="activeView = 'diagnostics'; refreshSequencesView();" style="background: none; border: none; font-size: 12.5px; font-weight: 700; color: ${activeView === 'diagnostics' ? '#2563eb' : '#475569'}; padding: 0 0 10px 0; border-bottom: 2px solid ${activeView === 'diagnostics' ? '#2563eb' : 'transparent'}; cursor: pointer; transition: all 0.2s; font-family: var(--font-heading);">
+                Diagnostics
+            </button>
+        </div>
+    `;
+
+    return `
+        <div style="max-width: 1200px; display: flex; flex-direction: column; gap: 20px; color: #0f172a; padding-bottom: 40px;">
+            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <h3 style="margin: 0; font-size: 18px; font-weight: 800; font-family: var(--font-heading); color: #0f172a;">
+                        Sequences
+                    </h3>
+                    <p style="margin: 0; font-size: 12.5px; color: #475569;">Set up automated cross-channel drip sequences, schedule follow-ups, and monitor open/reply metrics.</p>
+                </div>
+            </div>
+
+            ${subtabsHTML}
+
+            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
+                <h3 style="margin: 0 0 8px 0; font-size: 15px; font-family: var(--font-heading); font-weight: 800; color: #0f172a;">Domain Health Scan & Diagnostics</h3>
+                <p style="margin: 0 0 20px 0; font-size: 12px; color: #475569; line-height:1.5;">Check authentication tags status, tracking domains setup, and DMARC enforcement level configurations across connected inboxes.</p>
+                
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:16px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <div style="font-size:13.5px; font-weight:700; color:#0f172a;">cloudripple.org</div>
+                            <div style="font-size:11.5px; color:#475569; margin-top:4px;">Mailboxes connected: 2 • Tracking Domain: Active</div>
+                        </div>
+                        <div style="display:flex; gap:8px;">
+                            <span style="font-size:11px; background:#ecfdf5; border:1px solid #a7f3d0; color:#059669; font-weight:700; padding:2px 6px; border-radius:4px; font-family:var(--font-mono);">SPF: PASS</span>
+                            <span style="font-size:11px; background:#ecfdf5; border:1px solid #a7f3d0; color:#059669; font-weight:700; padding:2px 6px; border-radius:4px; font-family:var(--font-mono);">DKIM: PASS</span>
+                            <span style="font-size:11px; background:#ecfdf5; border:1px solid #a7f3d0; color:#059669; font-weight:700; padding:2px 6px; border-radius:4px; font-family:var(--font-mono);">DMARC: PASS</span>
+                        </div>
+                    </div>
+                    <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:16px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <div style="font-size:13.5px; font-weight:700; color:#0f172a;">apollo.io</div>
+                            <div style="font-size:11.5px; color:#475569; margin-top:4px;">Mailboxes connected: 3 • Tracking Domain: Needs Setup</div>
+                        </div>
+                        <div style="display:flex; gap:8px;">
+                            <span style="font-size:11px; background:#ecfdf5; border:1px solid #a7f3d0; color:#059669; font-weight:700; padding:2px 6px; border-radius:4px; font-family:var(--font-mono);">SPF: PASS</span>
+                            <span style="font-size:11px; background:#ecfdf5; border:1px solid #a7f3d0; color:#059669; font-weight:700; padding:2px 6px; border-radius:4px; font-family:var(--font-mono);">DKIM: PASS</span>
+                            <span style="font-size:11px; background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; font-weight:700; padding:2px 6px; border-radius:4px; font-family:var(--font-mono);">DMARC: WARNING</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
 function refreshView() {
     const content = document.getElementById('dashboardContent');
     if (content) {
@@ -793,6 +896,7 @@ function refreshView() {
         if (window.refreshLucideIcons) window.refreshLucideIcons();
     }
 }
+window.refreshSequencesView = refreshView;
 
 // Initial fetch on mount
 (async () => {
