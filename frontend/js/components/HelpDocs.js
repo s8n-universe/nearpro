@@ -14,6 +14,7 @@ const ARTICLE_CATEGORIES = [
 const ARTICLES = [
     {
         category: 'getting-started',
+        id: 'workspace-setup',
         title: 'How to setup your NearPro agency workspace',
         desc: 'Step-by-step guide to configuring your profile, default billing currency, and invite team members.',
         content: `
@@ -30,7 +31,54 @@ const ARTICLES = [
         `
     },
     {
+        category: 'getting-started',
+        id: 'api-keys',
+        title: 'How to configure your personal Hunter & Apollo API keys',
+        desc: 'Unlock waterfall data enrichment by adding your credentials.',
+        content: `
+            <h5>Bypassing Standard Quota Limits:</h5>
+            <p>You can hook your own Hunter.io or Apollo keys to perform free waterfall lookups directly through NearPro:</p>
+            <ol>
+                <li>Navigate to <strong>Prospect & Enrich ➔ Data Enrichment</strong>.</li>
+                <li>Under the <strong>API Keys</strong> configuration settings pane, enter your API token credentials.</li>
+                <li>Click <strong>Test Connection</strong> to run a live credential diagnostic validation check.</li>
+                <li>NearPro will fall back to using your custom keys to bypass daily limits.</li>
+            </ol>
+        `
+    },
+    {
+        category: 'getting-started',
+        id: 'subscriptions',
+        title: 'Subscriptions and credit pricing tiers overview',
+        desc: 'Understand credit consumption limits, billing periods, and pricing updates.',
+        content: `
+            <h5>Pricing & Credit Consumption Rules:</h5>
+            <ul>
+                <li><strong>Free Explorer:</strong> 15 credits balance for directory search previews.</li>
+                <li><strong>Scout Plan (₹499/mo):</strong> 500 leads exports, proposal builder tools access.</li>
+                <li><strong>Hunter Plan (₹999/mo):</strong> 2000 leads exports, email drip automation sequence campaigns.</li>
+                <li><strong>Agency Plan (₹2999/mo):</strong> Shared quotas, priority email sequences, custom webhook destinations.</li>
+            </ul>
+        `
+    },
+    {
+        category: 'getting-started',
+        id: 'connected-mailboxes',
+        title: 'Connecting and rotating outbound sender mailboxes',
+        desc: 'Set up custom G-Suite or Microsoft Office senders to run campaigns.',
+        content: `
+            <h5>Mailbox Setup Protocol:</h5>
+            <ol>
+                <li>Go to <strong>Engage & Sequences ➔ Email Sequences</strong>.</li>
+                <li>Under the settings banner, click <strong>Connect Sender Mailbox</strong>.</li>
+                <li>Enter your IMAP/SMTP parameters. Always configure an <strong>App Password</strong> instead of your primary password.</li>
+                <li>Activate rotating sender schedules to distribute outbound emails across up to 5 linked mailboxes.</li>
+            </ol>
+        `
+    },
+    {
         category: 'prospecting',
+        id: 'rating-deficits',
         title: 'How to find leads with rating deficits in Mumbai & Delhi',
         desc: 'Advanced search criteria to locate businesses with critical review volume gaps.',
         content: `
@@ -51,7 +99,39 @@ const ARTICLES = [
         `
     },
     {
+        category: 'prospecting',
+        id: 'waterfall-enrichment',
+        title: 'Running waterfall enrichment for mobile number lookups',
+        desc: 'How the multi-provider verification pipeline extracts business numbers.',
+        content: `
+            <h5>Waterfall Data Lookup Workflow:</h5>
+            <p>NearPro triggers consecutive API provider queries (Waterfall Model) to ensure maximum validation rates:</p>
+            <ol>
+                <li>Select your saved leads in the <strong>Lead CRM Dashboard</strong>.</li>
+                <li>Click <strong>Enrich Numbers</strong>.</li>
+                <li>The server will contact Google Maps API first, fall back to website scraper regexes, and verify details via global database partners.</li>
+                <li>Verified results are tagged with validation scores (e.g., <code>[DELIVERABLE]</code>, <code>[RISKY]</code>).</li>
+            </ol>
+        `
+    },
+    {
+        category: 'prospecting',
+        id: 'intent-signals',
+        title: 'Configuring custom intent signals triggers',
+        desc: 'Receive alerts when prospects register reviews drop-offs or domain expirations.',
+        content: `
+            <h5>Tracking High-Intent Signals:</h5>
+            <p>Set up automatic filters under <strong>Intent Signals</strong> to notify your sales team immediately when:</p>
+            <ul>
+                <li>A premium dentist or clinic in Mumbai falls below 4.0★ due to a recent negative review.</li>
+                <li>A target business website loses its SSL certificate security tag.</li>
+                <li>A domain is flagged for expiration within 30 days.</li>
+            </ul>
+        `
+    },
+    {
         category: 'sequences',
+        id: 'hinglish-sequences',
         title: 'Drafting multi-channel Hinglish sequences for outreach',
         desc: 'Designing campaign outlines combining emails, WhatsApp, and Twilio scripts.',
         content: `
@@ -73,6 +153,7 @@ const ARTICLES = [
     },
     {
         category: 'deliverability',
+        id: 'dns-configuration',
         title: 'Setting up SPF, DKIM, and DMARC tags for custom mailboxes',
         desc: 'Authentication standards required to achieve 100% inbox placement.',
         content: `
@@ -88,6 +169,7 @@ const ARTICLES = [
     },
     {
         category: 'proposals',
+        id: 'pdf-proposals',
         title: 'Generating 3-page PDF proposals with revenue loss estimates',
         desc: 'Designing high-impact proposal audit links to share on WhatsApp.',
         content: `
@@ -108,12 +190,13 @@ const ARTICLES = [
     },
     {
         category: 'voice-agent',
+        id: 'priya-compliance',
         title: 'Setting up TRAI compliant AI calling campaigns',
         desc: 'Configuration steps for Priya Hinglish voice agent campaigns.',
         content: `
             <h5>Compliance & Setup Walkthrough:</h5>
             <ol>
-                <li>Navigate to <strong>Engage & Sequences ➔ AI Voice Agent</strong>.</li>
+                <li>Navigate to <strong>Win Deals & CRM ➔ AI Voice Agent</strong>.</li>
                 <li>Configure your compliance credentials:
                     <ul>
                         <li>Verify that DND scrub toggle is active (to bypass NDNC listings).</li>
@@ -133,6 +216,7 @@ const ARTICLES = [
     },
     {
         category: 'integrations',
+        id: 'n8n-webhooks',
         title: 'Configuring n8n webhook sync for HubSpot & Google Sheets',
         desc: 'Syncing pipeline contacts and closed deals to external CRMs automatically.',
         content: `
@@ -153,6 +237,7 @@ const ARTICLES = [
     },
     {
         category: 'integrations',
+        id: 'local-ollama',
         title: 'Running local Ollama models for hybrid offline prompt routing',
         desc: 'Testing latency benchmarks and custom prompt templates routing configuration.',
         content: `
@@ -169,13 +254,13 @@ const ARTICLES = [
     }
 ];
 
-let selectedCategory = 'all';
+let selectedCategory = 'landing'; // default to landing page
 let searchQuery = '';
 
 export function renderHelpDocs() {
-    // Filter articles based on category and query search input
+    // If not on landing page, we display the filtered guides page
     const filteredArticles = ARTICLES.filter(a => {
-        const matchesCategory = selectedCategory === 'all' || a.category === selectedCategory;
+        const matchesCategory = selectedCategory === 'all' || a.category === selectedCategory || selectedCategory === 'landing';
         const matchesSearch = searchQuery === '' || 
             a.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
             a.desc.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -193,17 +278,17 @@ export function renderHelpDocs() {
     `).join('');
 
     const articlesHTML = filteredArticles.length === 0 ? `
-        <div style="padding: 40px; text-align: center; border: 1px dashed #cbd5e1; border-radius: 12px; background: #ffffff;">
+        <div style="padding: 40px; text-align: center; border: 1px dashed #cbd5e1; border-radius: 12px; background: #ffffff; width: 100%;">
             <div style="font-size: 36px; margin-bottom: 12px;">🔍</div>
             <h4 style="margin: 0 0 6px 0; color: #0f172a; font-weight: 800;">No articles match your query</h4>
             <p style="margin: 0; color: #475569; font-size: 12.5px;">Try checking for typos or clear search parameters filter.</p>
         </div>
     ` : filteredArticles.map((art, idx) => `
-        <details style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.02); margin-bottom: 12px;" ${idx === 0 && searchQuery !== '' ? 'open' : ''}>
+        <details id="art-${art.id}" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.02); margin-bottom: 12px; width: 100%;" ${idx === 0 || searchQuery !== '' ? 'open' : ''}>
             <summary style="padding: 16px 20px; font-weight: 800; font-size: 14px; color: #0f172a; cursor: pointer; display: flex; flex-direction: column; gap: 4px; outline: none; list-style: none;">
                 <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                     <span style="font-family: var(--font-heading);">${art.title}</span>
-                    <span style="font-size: 12px; color: #64748b; font-family: var(--font-mono);">Read ➔</span>
+                    <span style="font-size: 12px; color: #2563eb; font-family: var(--font-mono);">Read ➔</span>
                 </div>
                 <span style="font-weight: 500; font-size: 12px; color: #475569; margin-top:2px;">${art.desc}</span>
             </summary>
@@ -213,41 +298,191 @@ export function renderHelpDocs() {
         </details>
     `).join('');
 
-    return `
-        <div class="help-docs-workspace" style="display: flex; flex-direction: column; gap: 24px; width: 100%; color: #0f172a; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding-bottom: 40px;">
+    const landingHTML = `
+        <!-- DUAL CARDS SECTION (mimics docs.apollo.io build columns) -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 24px; margin-bottom: 32px; width: 100%;">
             
-            <!-- HEADER SEARCH AREA -->
-            <div style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border: 1px solid #bfdbfe; border-radius: 12px; padding: 36px 24px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; box-shadow: 0 4px 15px rgba(37,99,235,0.04);">
-                <div>
-                    <h2 style="margin: 0; font-size: 20px; font-weight: 900; font-family: var(--font-heading); color: #1e3a8a;">NearPro Help Center & Knowledge Base</h2>
-                    <p style="margin: 4px 0 0 0; font-size: 13px; color: #1e40af;">Search configuration tutorials, outbound strategies, and pipeline APIs.</p>
-                </div>
-                <div style="width: 100%; max-width: 500px; position: relative; display: flex; gap: 8px;">
-                    <input type="text" id="helpDocsSearchInput" placeholder="Search for articles, DNS parameters, codes..." value="${searchQuery}" style="width: 100%; padding: 10px 16px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; background: #ffffff; color: #0f172a; box-shadow: 0 2px 8px rgba(0,0,0,0.03);" />
-                </div>
-            </div>
-
-            <!-- MAIN SIDEBAR & ARTICLES SPLIT LAYOUT -->
-            <div style="display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap;">
-                
-                <!-- Left Sidebar Categories -->
-                <div style="width: 250px; display: flex; flex-direction: column; gap: 8px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.01); flex-shrink: 0;">
-                    <h4 style="margin: 0 0 10px 0; font-size: 11.5px; font-weight: 800; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px; font-family: var(--font-mono);">Categories</h4>
-                    ${categoryListHTML}
-                </div>
-
-                <!-- Right Articles Stack -->
-                <div style="flex: 1; min-width: 320px; display: flex; flex-direction: column;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                        <h4 style="margin:0; font-size: 14px; font-weight: 800; color: #0f172a; font-family: var(--font-heading);">
-                            Showing ${filteredArticles.length} guides
-                        </h4>
+            <!-- Build with AI -->
+            <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 16px; padding: 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between; gap: 20px;">
+                <div style="display:flex; flex-direction:column; gap:12px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-size:24px;">🤖</span>
+                        <h3 style="margin:0; font-size:18px; font-weight:800; color:#0f172a; font-family:var(--font-heading);">Build with AI</h3>
                     </div>
+                    <p style="margin:0; font-size:13px; color:#475569; line-height:1.5;">NearPro integrates with hybrid LLMs. Route queries to local Ollama servers or public AI models offline.</p>
                     
-                    ${articlesHTML}
-                </div>
+                    <!-- Interactive badges -->
+                    <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;">
+                        <span style="font-size:11px; font-weight:700; color:#2563eb; background:#eff6ff; padding:4px 10px; border-radius:99px; font-family:var(--font-mono);">Ollama</span>
+                        <span style="font-size:11px; font-weight:700; color:#2563eb; background:#eff6ff; padding:4px 10px; border-radius:99px; font-family:var(--font-mono);">Llama-3</span>
+                        <span style="font-size:11px; font-weight:700; color:#2563eb; background:#eff6ff; padding:4px 10px; border-radius:99px; font-family:var(--font-mono);">Mistral</span>
+                        <span style="font-size:11px; font-weight:700; color:#2563eb; background:#eff6ff; padding:4px 10px; border-radius:99px; font-family:var(--font-mono);">GPT-4o</span>
+                    </div>
 
+                    <!-- Prompt sandbox preview visual -->
+                    <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; padding:16px; font-family:var(--font-mono); font-size:12px; color:#334155; margin-top:8px;">
+                        <span style="color:#64748b;">// Run prompt command</span><br>
+                        Find target dentists in <span style="color:#0f766e;">Mumbai</span> under <span style="color:#b45309;">4.0★</span> review rating deficit.
+                    </div>
+                </div>
+                <button class="primary-btn help-nav-btn" data-id="integrations" style="width:100%; padding:12px; font-weight:700; border-radius:8px; background:#0f172a; color:#ffffff; border:none; cursor:pointer;">Learn about LLM Routing ➔</button>
             </div>
+
+            <!-- Build with Webhooks -->
+            <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 16px; padding: 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between; gap: 20px;">
+                <div style="display:flex; flex-direction:column; gap:12px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-size:24px;">🔌</span>
+                        <h3 style="margin:0; font-size:18px; font-weight:800; color:#0f172a; font-family:var(--font-heading);">Connect with Webhooks</h3>
+                    </div>
+                    <p style="margin:0; font-size:13px; color:#475569; line-height:1.5;">Dispatch live deal notifications and lead exports directly to n8n, Make.com, or HubSpot pipelines.</p>
+                    
+                    <!-- Interactive badges -->
+                    <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;">
+                        <span style="font-size:11px; font-weight:700; color:#10b981; background:#ecfdf5; padding:4px 10px; border-radius:99px; font-family:var(--font-mono);">n8n</span>
+                        <span style="font-size:11px; font-weight:700; color:#10b981; background:#ecfdf5; padding:4px 10px; border-radius:99px; font-family:var(--font-mono);">Make.com</span>
+                        <span style="font-size:11px; font-weight:700; color:#10b981; background:#ecfdf5; padding:4px 10px; border-radius:99px; font-family:var(--font-mono);">HubSpot</span>
+                        <span style="font-size:11px; font-weight:700; color:#10b981; background:#ecfdf5; padding:4px 10px; border-radius:99px; font-family:var(--font-mono);">Webhooks</span>
+                    </div>
+
+                    <!-- Code block cURL preview -->
+                    <div style="background:#fafafa; border:1px solid #cbd5e1; border-radius:8px; padding:16px; font-family:var(--font-mono); font-size:11.5px; color:#0f172a; overflow-x:auto;">
+                        curl -X POST https://api.nearpro.com/v1/webhooks \\<br>
+                        &nbsp;&nbsp;-d '{"event":"lead_saved"}'
+                    </div>
+                </div>
+                <button class="primary-btn help-nav-btn" data-id="integrations" style="width:100%; padding:12px; font-weight:700; border-radius:8px; background:#0f172a; color:#ffffff; border:none; cursor:pointer;">Explore Webhook Specs ➔</button>
+            </div>
+
+        </div>
+
+        <!-- 3 COLUMNS QUICK STARTERS (mimics docs.apollo.io categories layout) -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 40px; width: 100%;">
+            
+            <!-- Get Started -->
+            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.01);">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
+                    <span style="font-size:18px;">🏁</span>
+                    <h4 style="margin:0; font-size:15px; font-weight:800; color:#0f172a;">Get Started</h4>
+                </div>
+                <ul style="display:flex; flex-direction:column; gap:10px; padding:0; margin:0; list-style:none; font-size:13px;">
+                    <li><a href="javascript:void(0)" class="help-article-link" data-cat="getting-started" data-id="workspace-setup" style="color:#2563eb; text-decoration:none; font-weight:700;">NearPro workspace setup</a></li>
+                    <li><a href="javascript:void(0)" class="help-article-link" data-cat="getting-started" data-id="api-keys" style="color:#2563eb; text-decoration:none; font-weight:700;">API keys configuration</a></li>
+                    <li><a href="javascript:void(0)" class="help-article-link" data-cat="getting-started" data-id="subscriptions" style="color:#2563eb; text-decoration:none; font-weight:700;">Subscriptions & credits</a></li>
+                    <li><a href="javascript:void(0)" class="help-article-link" data-cat="getting-started" data-id="connected-mailboxes" style="color:#2563eb; text-decoration:none; font-weight:700;">Connected mailboxes</a></li>
+                </ul>
+            </div>
+
+            <!-- See What You Can Do -->
+            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.01);">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
+                    <span style="font-size:18px;">🔍</span>
+                    <h4 style="margin:0; font-size:15px; font-weight:800; color:#0f172a;">Prospect & Enrich</h4>
+                </div>
+                <ul style="display:flex; flex-direction:column; gap:10px; padding:0; margin:0; list-style:none; font-size:13px;">
+                    <li><a href="javascript:void(0)" class="help-article-link" data-cat="prospecting" data-id="rating-deficits" style="color:#2563eb; text-decoration:none; font-weight:700;">Directory leads search</a></li>
+                    <li><a href="javascript:void(0)" class="help-article-link" data-cat="prospecting" data-id="waterfall-enrichment" style="color:#2563eb; text-decoration:none; font-weight:700;">Waterfall enrichment</a></li>
+                    <li><a href="javascript:void(0)" class="help-article-link" data-cat="prospecting" data-id="intent-signals" style="color:#2563eb; text-decoration:none; font-weight:700;">Intent signals alerts</a></li>
+                    <li><a href="javascript:void(0)" class="help-article-link" data-cat="sequences" data-id="hinglish-sequences" style="color:#2563eb; text-decoration:none; font-weight:700;">Multi-channel campaigns</a></li>
+                </ul>
+            </div>
+
+            <!-- Win Deals & CRM -->
+            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.01);">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
+                    <span style="font-size:18px;">💼</span>
+                    <h4 style="margin:0; font-size:15px; font-weight:800; color:#0f172a;">Win Deals & CRM</h4>
+                </div>
+                <ul style="display:flex; flex-direction:column; gap:10px; padding:0; margin:0; list-style:none; font-size:13px;">
+                    <li><a href="javascript:void(0)" class="help-article-link" data-cat="proposals" data-id="pdf-proposals" style="color:#2563eb; text-decoration:none; font-weight:700;">3-page PDF proposals</a></li>
+                    <li><a href="javascript:void(0)" class="help-article-link" data-cat="voice-agent" data-id="priya-compliance" style="color:#2563eb; text-decoration:none; font-weight:700;">AI voice calling Priya</a></li>
+                    <li><a href="javascript:void(0)" class="help-article-link" data-cat="integrations" data-id="n8n-webhooks" style="color:#2563eb; text-decoration:none; font-weight:700;">Webhook payload schemas</a></li>
+                    <li><a href="javascript:void(0)" class="help-article-link" data-cat="integrations" data-id="local-ollama" style="color:#2563eb; text-decoration:none; font-weight:700;">Local Ollama models</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- EXPLORE API ENDPOINTS SECTION (mimics bottom index list of apollo docs) -->
+        <div style="border-top: 1px solid #e2e8f0; padding-top: 32px; width: 100%;">
+            <h3 style="margin:0 0 20px 0; font-size:16px; font-weight:900; color:#0f172a; font-family:var(--font-heading);">Explore and Test API Endpoints</h3>
+            
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px;">
+                <div>
+                    <h5 style="margin:0 0 10px 0; font-size:12px; font-weight:800; text-transform:uppercase; color:#64748b; font-family:var(--font-mono);">API Setup</h5>
+                    <ul style="padding:0; margin:0; list-style:none; font-size:13px; display:flex; flex-direction:column; gap:8px;">
+                        <li><a href="javascript:void(0)" class="help-cat-nav-btn" data-id="integrations" style="color:#475569; text-decoration:none;">API Authorization</a></li>
+                        <li><a href="javascript:void(0)" class="help-cat-nav-btn" data-id="integrations" style="color:#475569; text-decoration:none;">Webhook Configurations</a></li>
+                        <li><a href="javascript:void(0)" class="help-cat-nav-btn" data-id="integrations" style="color:#475569; text-decoration:none;">LLM Router Settings</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 style="margin:0 0 10px 0; font-size:12px; font-weight:800; text-transform:uppercase; color:#64748b; font-family:var(--font-mono);">Search & Enrich</h5>
+                    <ul style="padding:0; margin:0; list-style:none; font-size:13px; display:flex; flex-direction:column; gap:8px;">
+                        <li><a href="javascript:void(0)" class="help-cat-nav-btn" data-id="prospecting" style="color:#475569; text-decoration:none;">Directory Leads Search</a></li>
+                        <li><a href="javascript:void(0)" class="help-cat-nav-btn" data-id="prospecting" style="color:#475569; text-decoration:none;">Reviews Gap Analytics</a></li>
+                        <li><a href="javascript:void(0)" class="help-cat-nav-btn" data-id="prospecting" style="color:#475569; text-decoration:none;">Waterfall Lookup Log</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 style="margin:0 0 10px 0; font-size:12px; font-weight:800; text-transform:uppercase; color:#64748b; font-family:var(--font-mono);">Engage Prospects</h5>
+                    <ul style="padding:0; margin:0; list-style:none; font-size:13px; display:flex; flex-direction:column; gap:8px;">
+                        <li><a href="javascript:void(0)" class="help-cat-nav-btn" data-id="sequences" style="color:#475569; text-decoration:none;">Email Sequences</a></li>
+                        <li><a href="javascript:void(0)" class="help-cat-nav-btn" data-id="voice-agent" style="color:#475569; text-decoration:none;">Voice Agent Priya</a></li>
+                        <li><a href="javascript:void(0)" class="help-cat-nav-btn" data-id="deliverability" style="color:#475569; text-decoration:none;">Deliverability Diagnostic</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 style="margin:0 0 10px 0; font-size:12px; font-weight:800; text-transform:uppercase; color:#64748b; font-family:var(--font-mono);">Analyze Performance</h5>
+                    <ul style="padding:0; margin:0; list-style:none; font-size:13px; display:flex; flex-direction:column; gap:8px;">
+                        <li><a href="javascript:void(0)" class="help-cat-nav-btn" data-id="proposals" style="color:#475569; text-decoration:none;">CRM Deal Pipelines</a></li>
+                        <li><a href="javascript:void(0)" class="help-cat-nav-btn" data-id="deliverability" style="color:#475569; text-decoration:none;">Diagnostic Checklists</a></li>
+                        <li><a href="javascript:void(0)" class="help-cat-nav-btn" data-id="getting-started" style="color:#475569; text-decoration:none;">Credits Reports</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    `;
+
+    return `
+        <div class="help-docs-workspace" style="display: flex; flex-direction: column; gap: 24px; width: 100%; color: #0f172a; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding-bottom: 60px; max-width: 1000px; margin: 0 auto;">
+            
+            <!-- HEADER SEARCH AREA (mimics premium apollo docs top bar) -->
+            <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 1px solid #e2e8f0; border-radius: 12px; padding: 28px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; box-shadow: 0 4px 15px rgba(0,0,0,0.01);">
+                <div style="display:flex; align-items:center; gap:10px; cursor:pointer;" onclick="window.location.hash='#/dashboard/help-docs'; window.location.reload();">
+                    <span style="font-size:22px; font-weight:800; color:#0f172a; font-family:var(--font-heading);">⚡ NearPro docs</span>
+                </div>
+                <div style="width: 100%; max-width: 420px; position: relative;">
+                    <input type="text" id="helpDocsSearchInput" placeholder="Search guides, payload variables, SPF details..." value="${searchQuery}" style="width: 100%; padding: 8px 16px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; background: #ffffff; color: #0f172a; box-shadow: 0 2px 8px rgba(0,0,0,0.02);" />
+                </div>
+            </div>
+
+            ${selectedCategory === 'landing' && searchQuery === '' ? landingHTML : `
+                <!-- SEARCH RESULTS OR CATEGORY SELECTED BROWSE VIEW -->
+                <div style="display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap;">
+                    
+                    <!-- Left Sidebar Categories -->
+                    <div style="width: 240px; display: flex; flex-direction: column; gap: 6px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.01); flex-shrink: 0;">
+                        <h4 style="margin: 0 0 10px 0; font-size: 11px; font-weight: 800; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px; font-family: var(--font-mono);">Categories</h4>
+                        ${categoryListHTML}
+                        <button class="help-cat-btn" onclick="window.location.hash='#/dashboard/help-docs'; window.location.reload();" style="width: 100%; text-align: left; padding: 10px 14px; font-size: 13px; font-weight: 700; color: #475569; background: none; border: none; border-radius: 6px; cursor: pointer; margin-top: 10px; text-decoration: underline;">
+                            ➔ Back to Docs Home
+                        </button>
+                    </div>
+
+                    <!-- Right Articles Stack -->
+                    <div style="flex: 1; min-width: 320px; display: flex; flex-direction: column;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <h4 style="margin:0; font-size: 14px; font-weight: 800; color: #0f172a; font-family: var(--font-heading);">
+                                ${searchQuery !== '' ? 'Search Results' : ARTICLE_CATEGORIES.find(c => c.id === selectedCategory)?.name || 'Guides'}
+                            </h4>
+                        </div>
+                        
+                        ${articlesHTML}
+                    </div>
+
+                </div>
+            `}
 
         </div>
     `;
@@ -256,10 +491,44 @@ export function renderHelpDocs() {
 export function bindHelpDocsEvents() {
     if (window.refreshLucideIcons) window.refreshLucideIcons();
 
+    // Landing nav cards click handlers
+    document.querySelectorAll('.help-nav-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            selectedCategory = btn.getAttribute('data-id');
+            refreshHelpView();
+        });
+    });
+
+    // Quick starter links click handlers (scroll to specific article)
+    document.querySelectorAll('.help-article-link').forEach(link => {
+        link.addEventListener('click', () => {
+            const cat = link.getAttribute('data-cat');
+            const articleId = link.getAttribute('data-id');
+            selectedCategory = cat;
+            refreshHelpView();
+            setTimeout(() => {
+                const el = document.getElementById(`art-${articleId}`);
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth' });
+                    el.setAttribute('open', 'true');
+                }
+            }, 100);
+        });
+    });
+
+    // Explore endpoints links click handlers
+    document.querySelectorAll('.help-cat-nav-btn').forEach(link => {
+        link.addEventListener('click', () => {
+            selectedCategory = link.getAttribute('data-id');
+            refreshHelpView();
+        });
+    });
+
     // Category button toggles
     document.querySelectorAll('.help-cat-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            selectedCategory = btn.getAttribute('data-id');
+            const id = btn.getAttribute('data-id');
+            selectedCategory = id;
             refreshHelpView();
         });
     });
@@ -276,7 +545,6 @@ export function bindHelpDocsEvents() {
 
         searchInput.addEventListener('input', (e) => {
             searchQuery = e.target.value;
-            // Debounce or immediate refresh
             refreshHelpView();
         });
     }
