@@ -98,7 +98,7 @@ export function generateInvoiceHTML(upgradeData) {
             <!-- Seller Credentials -->
             <div style="background: rgba(255,160,0,0.03); border: 1px solid rgba(255,160,0,0.15); border-radius: 8px; padding: 14px; font-size: 12px; color: var(--text-secondary); margin-bottom: 24px;">
                 <strong style="color: white; font-family: var(--font-mono);">ISSUER / SELLER DETAILS:</strong><br>
-                S8N Technologies — NearPro Platform<br>
+                S8N AI Services — NearPro Platform<br>
                 Mumbai Metropolitan Region, Maharashtra, India • Email: s8nservice@gmail.com • Web: https://nearpro.s8n.in
             </div>
         </div>

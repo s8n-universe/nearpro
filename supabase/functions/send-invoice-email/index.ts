@@ -66,7 +66,7 @@ serve(async (req) => {
     <tr>
       <td style="padding:28px 36px; border-top:1px solid #e8e8f0; background-color:#ffffff;">
         <p style="font-size:15px; color:#0b081d; margin:0 0 4px 0; font-family:'Plus Jakarta Sans', sans-serif; font-weight:800;">NearPro Platform Team</p>
-        <p style="font-size:13px; color:#666480; margin:0 0 16px 0; font-family:'Inter', sans-serif;">S8N Technologies &bull; India's Trusted B2B Lead OS</p>
+        <p style="font-size:13px; color:#666480; margin:0 0 16px 0; font-family:'Inter', sans-serif;">S8N AI Services &bull; India's Trusted B2B Lead OS</p>
         
         <p style="margin:0; font-family:'Inter', sans-serif; font-size:13px; line-height:1.8; color:#475569;">
           <span style="display:inline-block; margin-right:16px; vertical-align:middle;">
@@ -393,7 +393,7 @@ serve(async (req) => {
                       </td>
                       <td style="vertical-align:top; text-align:right; font-size:13.5px; color:#2d2b3d; line-height:1.6; font-family:'Inter', sans-serif;">
                         <strong style="color:#0b081d; font-size:12px; text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:4px;">Seller Info:</strong>
-                        <strong>S8N Technologies</strong><br>
+                        <strong>S8N AI Services</strong><br>
                         NearPro Platform<br>
                         Mumbai, Maharashtra, India
                       </td>
