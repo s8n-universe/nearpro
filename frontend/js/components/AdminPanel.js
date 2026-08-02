@@ -111,13 +111,13 @@ export function renderAdminPanel() {
     const featureCards = features.map(f => {
         const isEnabled = flags[f.id] === true;
         const fileList = f.files.map(file => `
-            <div style="font-family: var(--font-mono, monospace); font-size: 11px; padding: 4px 8px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; color: #a1a1aa; margin-top: 4px; word-break: break-all; display: flex; align-items: center; gap: 6px;">
+            <div style="font-family: var(--font-mono, monospace); font-size: 11px; padding: 4px 8px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; color: #475569; margin-top: 4px; word-break: break-all; display: flex; align-items: center; gap: 6px;">
                 <span style="color: var(--accent-gold); font-size: 8px;">●</span> ${file}
             </div>
         `).join('');
 
         return `
-            <div class="admin-feature-card ${isEnabled ? 'enabled' : ''}" style="background: #111115; border: 1px solid #222227; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.25s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+            <div class="admin-feature-card ${isEnabled ? 'enabled' : ''}" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.25s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
                 <div>
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
                         <span style="font-family: var(--font-mono, monospace); font-size: 11px; background: rgba(255, 160, 0, 0.1); border: 1px solid rgba(255, 160, 0, 0.2); color: var(--accent-gold); font-weight: 700; padding: 2px 8px; border-radius: 4px;">${f.code}</span>
@@ -125,18 +125,18 @@ export function renderAdminPanel() {
                         <!-- Premium Switch Toggle Slider -->
                         <label class="s8n-switch-toggle" style="position: relative; display: inline-block; width: 44px; height: 24px; cursor: pointer;">
                             <input type="checkbox" class="feature-toggle-checkbox" data-flag="${f.id}" ${isEnabled ? 'checked' : ''} style="opacity: 0; width: 0; height: 0;">
-                            <span class="s8n-slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #2e2e38; transition: .3s; border-radius: 34px;"></span>
+                            <span class="s8n-slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 34px;"></span>
                         </label>
                     </div>
                     
-                    <h4 style="margin: 0 0 6px 0; font-size: 15px; color: white; font-weight: 700; font-family: var(--font-heading);">${f.name}</h4>
-                    <p style="margin: 0 0 16px 0; font-size: 12.5px; color: #a1a1aa; line-height: 1.5; font-weight: 500;">${f.desc}</p>
+                    <h4 style="margin: 0 0 6px 0; font-size: 15px; color: #0f172a; font-weight: 700; font-family: var(--font-heading);">${f.name}</h4>
+                    <p style="margin: 0 0 16px 0; font-size: 12.5px; color: #475569; line-height: 1.5; font-weight: 500;">${f.desc}</p>
                 </div>
 
                 <div>
                     <!-- Collapsible Manifest Section -->
-                    <details class="admin-file-details" style="cursor: pointer; border-top: 1px solid #222227; padding-top: 12px;">
-                        <summary style="font-size: 12px; color: #a1a1aa; font-weight: 600; list-style: none; display: flex; align-items: center; justify-content: space-between; outline: none; user-select: none;">
+                    <details class="admin-file-details" style="cursor: pointer; border-top: 1px solid #e2e8f0; padding-top: 12px;">
+                        <summary style="font-size: 12px; color: #475569; font-weight: 600; list-style: none; display: flex; align-items: center; justify-content: space-between; outline: none; user-select: none;">
                             <span>📦 Inspect Code Manifest (${f.files.length} files)</span>
                             <span class="summary-arrow" style="font-size: 10px; transition: transform 0.2s;">▼</span>
                         </summary>
@@ -152,13 +152,13 @@ export function renderAdminPanel() {
     return `
         <style>
             .admin-feature-card:hover {
-                border-color: #33333f !important;
+                border-color: #cbd5e1 !important;
                 transform: translateY(-2px);
-                box-shadow: 0 8px 30px rgba(0,0,0,0.3) !important;
+                box-shadow: 0 8px 30px rgba(0,0,0,0.06) !important;
             }
             .admin-feature-card.enabled {
-                border-color: rgba(255, 160, 0, 0.4) !important;
-                box-shadow: 0 8px 30px rgba(255, 160, 0, 0.04) !important;
+                border-color: rgba(255, 160, 0, 0.45) !important;
+                box-shadow: 0 8px 30px rgba(255, 160, 0, 0.05) !important;
             }
             .s8n-slider:before {
                 position: absolute;
@@ -170,7 +170,7 @@ export function renderAdminPanel() {
                 background-color: white;
                 transition: .3s;
                 border-radius: 50%;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+                box-shadow: 0 2px 4px rgba(0,0,0,0.15);
             }
             .feature-toggle-checkbox:checked + .s8n-slider {
                 background-color: var(--accent-gold, #ffa000);
@@ -186,22 +186,22 @@ export function renderAdminPanel() {
             }
         </style>
 
-        <div style="max-width: 1200px; display: flex; flex-direction: column; gap: 24px; padding: 4px 0 40px 0; color: white;">
+        <div style="max-width: 1200px; display: flex; flex-direction: column; gap: 24px; padding: 4px 0 40px 0; color: #0f172a;">
             
             <!-- Welcome Header Alert Banner -->
-            <div style="background: linear-gradient(135deg, rgba(255, 160, 0, 0.08) 0%, rgba(236, 72, 153, 0.03) 100%); border: 1px solid rgba(255, 160, 0, 0.25); border-radius: 12px; padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; box-shadow: 0 4px 30px rgba(0,0,0,0.2);">
+            <div style="background: linear-gradient(135deg, rgba(255, 160, 0, 0.05) 0%, rgba(236, 72, 153, 0.02) 100%); border: 1px solid rgba(255, 160, 0, 0.15); border-radius: 12px; padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; box-shadow: 0 4px 30px rgba(0,0,0,0.03);">
                 <div style="display: flex; flex-direction: column; gap: 4px;">
-                    <div style="font-size: 20px; font-weight: 800; font-family: var(--font-heading); display: flex; align-items: center; gap: 8px; color: white;">
+                    <div style="font-size: 20px; font-weight: 800; font-family: var(--font-heading); display: flex; align-items: center; gap: 8px; color: #0f172a;">
                         <span>🛠️ S8N Control Center</span>
-                        <span style="font-size: 11px; background: rgba(255, 160, 0, 0.15); border: 1px solid rgba(255, 160, 0, 0.3); color: var(--accent-gold); font-weight: 700; padding: 2px 8px; border-radius: 50px; font-family: var(--font-mono);">HOSTED v2 ADMIN</span>
+                        <span style="font-size: 11px; background: rgba(255, 160, 0, 0.1); border: 1px solid rgba(255, 160, 0, 0.2); color: var(--accent-gold); font-weight: 700; padding: 2px 8px; border-radius: 50px; font-family: var(--font-mono);">HOSTED v2 ADMIN</span>
                     </div>
-                    <div style="font-size: 13.5px; color: #a1a1aa; font-weight: 500;">
+                    <div style="font-size: 13.5px; color: #475569; font-weight: 500;">
                         Manage NextGen AI OS features deployed locally and configure telemetry endpoints.
                     </div>
                 </div>
 
                 <div style="display: flex; gap: 10px; align-items: center;">
-                    <div style="background: #111115; border: 1px solid #222227; border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                    <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; color: #0f172a;">
                         <span style="width: 8px; height: 8px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 10px rgba(34, 197, 94, 0.6); animation: pulse 2s infinite;"></span>
                         <span>DB Ping: <strong id="adminDbPing" style="font-family: var(--font-mono);">-- ms</strong></span>
                     </div>
@@ -213,7 +213,7 @@ export function renderAdminPanel() {
 
             <!-- Main Feature Switchboard Grid -->
             <div>
-                <h3 style="margin: 0 0 16px 0; font-size: 17px; color: white; font-family: var(--font-heading); font-weight: 800;">
+                <h3 style="margin: 0 0 16px 0; font-size: 17px; color: #0f172a; font-family: var(--font-heading); font-weight: 800;">
                     V2 Feature Toggle Switchboard
                 </h3>
                 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
@@ -225,36 +225,36 @@ export function renderAdminPanel() {
             <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 24px; align-items: start; flex-wrap: wrap;">
                 
                 <!-- Left: Telemetry & Grafana Dashboard Embed -->
-                <div style="background: #111115; border: 1px solid #222227; border-radius: 12px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
-                    <h4 style="margin: 0 0 12px 0; font-size: 16px; color: white; font-family: var(--font-heading); font-weight: 800; border-bottom: 1px solid #222227; padding-bottom: 12px;">
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                    <h4 style="margin: 0 0 12px 0; font-size: 16px; color: #0f172a; font-family: var(--font-heading); font-weight: 800; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;">
                         📊 Grafana Analytics Embed (Operational Telemetry)
                     </h4>
                     
                     <!-- Hardening: Tab Switcher to monitor different telemetry dimensions in Grafana -->
-                    <div class="grafana-tab-bar" style="display: flex; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid #222227; padding-bottom: 8px; overflow-x: auto;">
-                        <button class="grafana-tab-btn active" data-tab="operational" style="padding: 6px 12px; background: rgba(255, 160, 0, 0.1); color: var(--accent-gold); border: 1px solid rgba(255, 160, 0, 0.2); border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; font-family: var(--font-mono);">⚡ OPERATIONAL</button>
-                        <button class="grafana-tab-btn" data-tab="ai" style="padding: 6px 12px; background: transparent; color: #a1a1aa; border: 1px solid transparent; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; font-family: var(--font-mono);">🧠 AI PERFORMANCE</button>
-                        <button class="grafana-tab-btn" data-tab="sync" style="padding: 6px 12px; background: transparent; color: #a1a1aa; border: 1px solid transparent; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; font-family: var(--font-mono);">🔄 SCRAPER ETL</button>
-                        <button class="grafana-tab-btn" data-tab="warmup" style="padding: 6px 12px; background: transparent; color: #a1a1aa; border: 1px solid transparent; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; font-family: var(--font-mono);">🛡️ DELIVERABILITY</button>
+                    <div class="grafana-tab-bar" style="display: flex; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; overflow-x: auto;">
+                        <button class="grafana-tab-btn active" data-tab="operational" style="padding: 6px 12px; background: rgba(255, 160, 0, 0.1); color: var(--accent-gold); border: 1px solid rgba(255, 160, 0, 0.25); border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; font-family: var(--font-mono);">⚡ OPERATIONAL</button>
+                        <button class="grafana-tab-btn" data-tab="ai" style="padding: 6px 12px; background: transparent; color: #475569; border: 1px solid transparent; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; font-family: var(--font-mono);">🧠 AI PERFORMANCE</button>
+                        <button class="grafana-tab-btn" data-tab="sync" style="padding: 6px 12px; background: transparent; color: #475569; border: 1px solid transparent; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; font-family: var(--font-mono);">🔄 SCRAPER ETL</button>
+                        <button class="grafana-tab-btn" data-tab="warmup" style="padding: 6px 12px; background: transparent; color: #475569; border: 1px solid transparent; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; font-family: var(--font-mono);">🛡️ DELIVERABILITY</button>
                     </div>
 
-                    <p id="grafanaTabDesc" style="margin: 0 0 16px 0; font-size: 13px; color: #a1a1aa; line-height: 1.5; font-weight: 500; min-height: 38px;">
+                    <p id="grafanaTabDesc" style="margin: 0 0 16px 0; font-size: 13px; color: #475569; line-height: 1.5; font-weight: 500; min-height: 38px;">
                         Live iframe embedding connected to your hosted Grafana dashboard. Tracks request latency, queue lag, and edge function CPU consumption.
                     </p>
                     
                     <!-- Premium Mock Charts placeholder or actual Grafana Iframe -->
-                    <div style="background: #09090b; border: 1px dashed #2e2e38; border-radius: 8px; height: 320px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; position: relative; overflow: hidden;">
+                    <div style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px; height: 320px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; position: relative; overflow: hidden;">
                         
                         <!-- Premium abstract mock graphic representation of a chart -->
-                        <div id="grafanaMockChartArea" style="display: flex; align-items: flex-end; gap: 16px; width: 80%; height: 160px; border-bottom: 1px solid #2e2e38; border-left: 1px solid #2e2e38; padding: 0 20px 10px 20px; margin-bottom: 10px;">
-                            <div class="grafana-bar" style="flex: 1; height: 40%; background: linear-gradient(180deg, rgba(255, 160, 0, 0.4) 0%, rgba(255, 160, 0, 0.05) 100%); border-top: 2px solid var(--accent-gold); border-radius: 2px 2px 0 0; transition: height 0.4s ease;"></div>
-                            <div class="grafana-bar" style="flex: 1; height: 65%; background: linear-gradient(180deg, rgba(236, 72, 153, 0.4) 0%, rgba(236, 72, 153, 0.05) 100%); border-top: 2px solid #ec4899; border-radius: 2px 2px 0 0; transition: height 0.4s ease;"></div>
-                            <div class="grafana-bar" style="flex: 1; height: 30%; background: linear-gradient(180deg, rgba(255, 160, 0, 0.4) 0%, rgba(255, 160, 0, 0.05) 100%); border-top: 2px solid var(--accent-gold); border-radius: 2px 2px 0 0; transition: height 0.4s ease;"></div>
-                            <div class="grafana-bar" style="flex: 1; height: 85%; background: linear-gradient(180deg, rgba(34, 197, 94, 0.4) 0%, rgba(34, 197, 94, 0.05) 100%); border-top: 2px solid #22c55e; border-radius: 2px 2px 0 0; transition: height 0.4s ease;"></div>
-                            <div class="grafana-bar" style="flex: 1; height: 50%; background: linear-gradient(180deg, rgba(236, 72, 153, 0.4) 0%, rgba(236, 72, 153, 0.05) 100%); border-top: 2px solid #ec4899; border-radius: 2px 2px 0 0; transition: height 0.4s ease;"></div>
+                        <div id="grafanaMockChartArea" style="display: flex; align-items: flex-end; gap: 16px; width: 80%; height: 160px; border-bottom: 1px solid #cbd5e1; border-left: 1px solid #cbd5e1; padding: 0 20px 10px 20px; margin-bottom: 10px;">
+                            <div class="grafana-bar" style="flex: 1; height: 40%; background: linear-gradient(180deg, rgba(255, 160, 0, 0.5) 0%, rgba(255, 160, 0, 0.1) 100%); border-top: 2px solid var(--accent-gold); border-radius: 2px 2px 0 0; transition: height 0.4s ease;"></div>
+                            <div class="grafana-bar" style="flex: 1; height: 65%; background: linear-gradient(180deg, rgba(236, 72, 153, 0.5) 0%, rgba(236, 72, 153, 0.1) 100%); border-top: 2px solid #ec4899; border-radius: 2px 2px 0 0; transition: height 0.4s ease;"></div>
+                            <div class="grafana-bar" style="flex: 1; height: 30%; background: linear-gradient(180deg, rgba(255, 160, 0, 0.5) 0%, rgba(255, 160, 0, 0.1) 100%); border-top: 2px solid var(--accent-gold); border-radius: 2px 2px 0 0; transition: height 0.4s ease;"></div>
+                            <div class="grafana-bar" style="flex: 1; height: 85%; background: linear-gradient(180deg, rgba(34, 197, 94, 0.5) 0%, rgba(34, 197, 94, 0.1) 100%); border-top: 2px solid #22c55e; border-radius: 2px 2px 0 0; transition: height 0.4s ease;"></div>
+                            <div class="grafana-bar" style="flex: 1; height: 50%; background: linear-gradient(180deg, rgba(236, 72, 153, 0.5) 0%, rgba(236, 72, 153, 0.1) 100%); border-top: 2px solid #ec4899; border-radius: 2px 2px 0 0; transition: height 0.4s ease;"></div>
                         </div>
 
-                        <div id="grafanaTabStatusText" style="font-size: 13px; color: #a1a1aa; font-weight: 600; text-align: center;">
+                        <div id="grafanaTabStatusText" style="font-size: 13px; color: #475569; font-weight: 600; text-align: center;">
                             Grafana Share Link not configured in settings.
                         </div>
                         <button class="brand-btn" style="padding: 8px 16px; font-size: 12px; font-weight: 700; background: #2563eb; color: white; border: none; border-radius: 6px;">
@@ -264,45 +264,45 @@ export function renderAdminPanel() {
                 </div>
 
                 <!-- Right: Active API keys and quota statuses -->
-                <div style="background: #111115; border: 1px solid #222227; border-radius: 12px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); display: flex; flex-direction: column; gap: 16px;">
-                    <h4 style="margin: 0; font-size: 16px; color: white; font-family: var(--font-heading); font-weight: 800; border-bottom: 1px solid #222227; padding-bottom: 12px;">
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); display: flex; flex-direction: column; gap: 16px;">
+                    <h4 style="margin: 0; font-size: 16px; color: #0f172a; font-family: var(--font-heading); font-weight: 800; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;">
                         🔑 System API Key Statuses
                     </h4>
                     
                     <div style="display: flex; flex-direction: column; gap: 12px;">
                         
                         <!-- Gemini API -->
-                        <div style="background: #09090b; border: 1px solid #222227; border-radius: 8px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
                             <div>
-                                <div style="font-size: 13px; font-weight: 700; color: white;">Gemini AI Key</div>
-                                <div style="font-size: 11px; color: #a1a1aa;">Used for core content parsing</div>
+                                <div style="font-size: 13px; font-weight: 700; color: #0f172a;">Gemini AI Key</div>
+                                <div style="font-size: 11px; color: #475569;">Used for core content parsing</div>
                             </div>
-                            <span style="font-size: 11px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.25); color: #22c55e; font-weight: 700; padding: 2px 8px; border-radius: 4px; font-family: var(--font-mono);">ACTIVE</span>
+                            <span style="font-size: 11px; background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.3); color: #22c55e; font-weight: 700; padding: 2px 8px; border-radius: 4px; font-family: var(--font-mono);">ACTIVE</span>
                         </div>
 
                         <!-- Twilio API -->
-                        <div style="background: #09090b; border: 1px solid #222227; border-radius: 8px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
                             <div>
-                                <div style="font-size: 13px; font-weight: 700; color: white;">Twilio Voice API</div>
-                                <div style="font-size: 11px; color: #a1a1aa;">Required for voice call agent (F08)</div>
+                                <div style="font-size: 13px; font-weight: 700; color: #0f172a;">Twilio Voice API</div>
+                                <div style="font-size: 11px; color: #475569;">Required for voice call agent (F08)</div>
                             </div>
                             <span style="font-size: 11px; background: rgba(255, 160, 0, 0.1); border: 1px solid rgba(255, 160, 0, 0.25); color: var(--accent-gold); font-weight: 700; padding: 2px 8px; border-radius: 4px; font-family: var(--font-mono);">BYOK GATED</span>
                         </div>
 
                         <!-- Resend SMTP -->
-                        <div style="background: #09090b; border: 1px solid #222227; border-radius: 8px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
                             <div>
-                                <div style="font-size: 13px; font-weight: 700; color: white;">Resend Email API</div>
-                                <div style="font-size: 11px; color: #a1a1aa;">Handles sequences & drips (F01)</div>
+                                <div style="font-size: 13px; font-weight: 700; color: #0f172a;">Resend Email API</div>
+                                <div style="font-size: 11px; color: #475569;">Handles sequences & drips (F01)</div>
                             </div>
-                            <span style="font-size: 11px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.25); color: #22c55e; font-weight: 700; padding: 2px 8px; border-radius: 4px; font-family: var(--font-mono);">ACTIVE</span>
+                            <span style="font-size: 11px; background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.3); color: #22c55e; font-weight: 700; padding: 2px 8px; border-radius: 4px; font-family: var(--font-mono);">ACTIVE</span>
                         </div>
 
                         <!-- Hunter Data API -->
-                        <div style="background: #09090b; border: 1px solid #222227; border-radius: 8px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
                             <div>
-                                <div style="font-size: 13px; font-weight: 700; color: white;">Hunter API Key</div>
-                                <div style="font-size: 11px; color: #a1a1aa;">Email enrichment (F03)</div>
+                                <div style="font-size: 13px; font-weight: 700; color: #0f172a;">Hunter API Key</div>
+                                <div style="font-size: 11px; color: #475569;">Email enrichment (F03)</div>
                             </div>
                             <span style="font-size: 11px; background: rgba(255, 160, 0, 0.1); border: 1px solid rgba(255, 160, 0, 0.25); color: var(--accent-gold); font-weight: 700; padding: 2px 8px; border-radius: 4px; font-family: var(--font-mono);">BYOK GATED</span>
                         </div>
