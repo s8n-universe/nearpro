@@ -507,51 +507,60 @@ export function renderLeadCRM(pipelineData, stats) {
 
     // AI Deal Intelligence Overlay Sheet Modal
     const dealIntelModalHTML = `
-        <div id="dealIntelModal" class="modal-backdrop" style="display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; backdrop-filter: blur(4px);">
-            <div style="background: #ffffff; border-radius: 16px; width: 100%; max-width: 680px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; display: flex; flex-direction: column; overflow: hidden; max-height: 90vh;">
+        <style>
+            @keyframes slideInFromRight {
+                from { transform: translateX(100%); }
+                to { transform: translateX(0); }
+            }
+            .slide-drawer-card {
+                animation: slideInFromRight 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            }
+        </style>
+        <div id="dealIntelModal" class="modal-backdrop" style="display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.4); display: flex; align-items: stretch; justify-content: flex-end; z-index: 100050; padding: 0; backdrop-filter: blur(4px);">
+            <div class="slide-drawer-card" style="background: #ffffff; border-radius: 16px 0 0 16px; width: 100%; max-width: 520px; box-shadow: -10px 0 35px rgba(0,0,0,0.1); border-left: 1px solid #e2e8f0; display: flex; flex-direction: column; overflow: hidden; height: 100vh;">
                 <!-- Header -->
-                <div style="padding: 18px 24px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; background: #fafafa;">
+                <div style="padding: 20px 24px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; background: #fafafa; flex-shrink:0;">
                     <div>
-                        <h3 id="diModalLeadName" style="margin: 0; font-size: 18px; font-weight: 800; color: #0f172a;">Dr. Mehta Clinic</h3>
-                        <span id="diModalCategory" style="font-size: 12px; color: #64748b;">Healthcare &middot; Mumbai</span>
+                        <h3 id="diModalLeadName" style="margin: 0; font-size: 16px; font-weight: 800; color: #0f172a; font-family: var(--font-heading);">Dr. Mehta Clinic</h3>
+                        <span id="diModalCategory" style="font-size: 11px; color: #64748b; font-family: var(--font-mono); font-weight:700; text-transform:uppercase; margin-top:2px; display:block;">Healthcare &middot; Mumbai</span>
                     </div>
-                    <button id="closeDiModalBtn" style="background: none; border: none; font-size: 24px; color: #64748b; cursor: pointer; line-height: 1;">&times;</button>
+                    <button id="closeDiModalBtn" style="background: rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.06); font-size: 20px; color: #64748b; cursor: pointer; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">&times;</button>
                 </div>
                 <!-- Body -->
-                <div style="padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px;">
+                <div style="padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; flex: 1;">
                     <!-- Prob score & Stage value slider -->
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                            <span style="font-size: 11px; font-family: var(--font-mono); color: #64748b; font-weight: 700; text-transform: uppercase;">Close Probability</span>
-                            <div id="diModalProbMeter" style="font-size: 32px; font-weight: 900; color: #16a34a; margin-top: 4px;">85%</div>
-                            <span style="font-size: 11px; color: #059669; font-weight: 700;">🟢 Improving Trend</span>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px;">
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                            <span style="font-size: 10px; font-family: var(--font-mono); color: #64748b; font-weight: 700; text-transform: uppercase;">Close Probability</span>
+                            <div id="diModalProbMeter" style="font-size: 28px; font-weight: 900; color: #16a34a; margin-top: 4px;">85%</div>
+                            <span style="font-size: 10.5px; color: #059669; font-weight: 700; margin-top:2px;">🟢 Improving Trend</span>
                         </div>
-                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; justify-content: center;">
-                            <span style="font-size: 11px; font-family: var(--font-mono); color: #64748b; font-weight: 700; text-transform: uppercase;">Deal Parameters</span>
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; display: flex; flex-direction: column; justify-content: center;">
+                            <span style="font-size: 10px; font-family: var(--font-mono); color: #64748b; font-weight: 700; text-transform: uppercase;">Deal Value</span>
                             <div style="display: flex; gap: 8px; align-items: center; margin-top: 6px;">
-                                <span style="font-size: 14px; font-weight: 700;">₹</span>
-                                <input type="number" id="diModalDealValue" style="width: 100px; padding: 4px 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-weight: 700;" value="25000">
-                                <button id="diModalSaveParams" style="padding: 4px 10px; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer;">Save</button>
+                                <span style="font-size: 13px; font-weight: 700;">₹</span>
+                                <input type="number" id="diModalDealValue" style="width: 100%; max-width:110px; padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12.5px; font-weight: 700;" value="25000">
+                                <button id="diModalSaveParams" style="padding: 6px 12px; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer;">Save</button>
                             </div>
                         </div>
                     </div>
 
                     <!-- AI Insights Box -->
-                    <div style="background: linear-gradient(135deg, #f5f3ff, #ede9fe); border: 1px solid #ddd6fe; border-radius: 12px; padding: 18px;">
+                    <div style="background: linear-gradient(135deg, #f5f3ff, #ede9fe); border: 1px solid #ddd6fe; border-radius: 8px; padding: 16px;">
                         <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
-                            <span style="font-size: 16px;">🤖</span>
-                            <h4 style="margin: 0; font-size: 14.5px; font-weight: 800; color: #6b21a8;">AI Research Insights & Objections</h4>
+                            <span style="font-size: 15px;">🤖</span>
+                            <h4 style="margin: 0; font-size: 13.5px; font-weight: 800; color: #6b21a8; font-family: var(--font-heading);">AI Research Insights & Objections</h4>
                         </div>
-                        <p id="diModalInsightsText" style="margin: 0; font-size: 12.5px; color: #475569; line-height: 1.5; font-style: italic;">
+                        <p id="diModalInsightsText" style="margin: 0; font-size: 12px; color: #475569; line-height: 1.5; font-style: italic;">
                             "Prospect has opened proposal PDF attachments 3 times in the last 24 hours. High buying signals detected. Recommended next step is to call during the responsive window (2-4 PM) today and handle potential cost-objections by pitching local SEO competitors case-studies."
                         </p>
 
                         <!-- Live Objection Handler Input -->
                         <div style="margin-top: 12px; padding-top: 12px; border-top: 1px dashed rgba(107,33,168,0.2);">
-                            <span style="font-size: 11.5px; font-weight: 800; color: #5b21b6; display: block; margin-bottom: 6px;">Objection Rebuttal Assistant (DeepSeek model)</span>
+                            <span style="font-size: 11px; font-weight: 800; color: #5b21b6; display: block; margin-bottom: 6px; font-family: var(--font-heading);">Objection Rebuttal Assistant (DeepSeek model)</span>
                             <div style="display: flex; gap: 8px;">
-                                <input type="text" id="objectionInput" placeholder="Enter objection (e.g. 'Too expensive' or 'No time')" style="flex: 1; padding: 6px 12px; border: 1px solid #ddd6fe; border-radius: 6px; font-size: 12px; outline: none; background: #ffffff;">
-                                <button id="handleObjectionBtn" style="padding: 6px 12px; background: #7c3aed; color: white; border: none; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#6d28d9'" onmouseout="this.style.background='#7c3aed'">Solve</button>
+                                <input type="text" id="objectionInput" placeholder="Enter objection (e.g. 'Too expensive' or 'No time')" style="flex: 1; padding: 6px 12px; border: 1px solid #ddd6fe; border-radius: 6px; font-size: 11.5px; outline: none; background: #ffffff;">
+                                <button id="handleObjectionBtn" style="padding: 6px 12px; background: #7c3aed; color: white; border: none; border-radius: 6px; font-size: 11.5px; font-weight: 700; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#6d28d9'" onmouseout="this.style.background='#7c3aed'">Solve</button>
                             </div>
                             <div id="objectionResult" style="display: none; margin-top: 10px; padding: 10px; background: #ffffff; border-radius: 6px; border: 1px solid #e9d5ff; font-size: 11.5px; color: #4b5563; line-height: 1.4;"></div>
                         </div>
@@ -559,7 +568,7 @@ export function renderLeadCRM(pipelineData, stats) {
 
                     <!-- Engagement Timeline -->
                     <div>
-                        <h4 style="margin: 0 0 10px 0; font-size: 14px; font-weight: 800; color: #0f172a; font-family: var(--font-heading);">Engagement Activity Timeline</h4>
+                        <h4 style="margin: 0 0 10px 0; font-size: 13.5px; font-weight: 800; color: #0f172a; font-family: var(--font-heading);">Engagement Activity Timeline</h4>
                         <div id="diModalTimeline" style="display: flex; flex-direction: column; gap: 12px; border-left: 2px solid #e2e8f0; padding-left: 16px; margin-left: 8px;">
                             <!-- Activity list will render here -->
                         </div>
@@ -567,7 +576,7 @@ export function renderLeadCRM(pipelineData, stats) {
 
                     <!-- Health Trend Graph (SVG) -->
                     <div>
-                        <h4 style="margin: 0 0 10px 0; font-size: 14px; font-weight: 800; color: #0f172a; font-family: var(--font-heading);">Close Probability Trend (30 days)</h4>
+                        <h4 style="margin: 0 0 10px 0; font-size: 13.5px; font-weight: 800; color: #0f172a; font-family: var(--font-heading);">Close Probability Trend (30 days)</h4>
                         <div style="width: 100%; height: 120px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; display: flex; align-items: center; justify-content: center; position: relative;">
                             <svg id="diTrendSvg" viewBox="0 0 400 100" style="width: 100%; height: 100%; overflow: visible;">
                                 <path d="M 0 80 Q 80 75, 160 50 T 320 20 L 400 15" fill="none" stroke="#2563eb" stroke-width="3" />

@@ -10,6 +10,19 @@ let currentListLeads = [];
 let selectedListLeads = [];
 let leadLists = [];
 
+let activeSubTab = 'health';
+
+// Global hook registration for the tab switcher
+window.setDataEnrichmentTab = (tab) => {
+    activeSubTab = tab;
+    const content = document.getElementById('dashboardContent');
+    if (content) {
+        content.innerHTML = renderDataEnrichment();
+        bindDataEnrichmentEvents();
+        if (window.refreshLucideIcons) window.refreshLucideIcons();
+    }
+};
+
 export function renderDataEnrichment() {
     const stats = enrichmentStats || {
         credits_remaining: 50,
@@ -22,6 +35,27 @@ export function renderDataEnrichment() {
 
     const monthlyLimit = State.profile?.monthly_enrichments_limit || 50;
     const creditPct = Math.min(100, Math.round((stats.credits_remaining / monthlyLimit) * 100));
+
+    // Sub-tab navigation bar HTML
+    const subtabsHTML = `
+        <div style="display: flex; gap: 20px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 0px; margin-bottom: 24px; align-items: center;">
+            <button onclick="window.setDataEnrichmentTab('health')" style="background: none; border: none; font-size: 12.5px; font-weight: 700; color: ${activeSubTab === 'health' ? '#2563eb' : '#475569'}; padding: 0 0 10px 0; border-bottom: 2px solid ${activeSubTab === 'health' ? '#2563eb' : 'transparent'}; cursor: pointer; transition: all 0.2s; font-family: var(--font-heading);">
+                Data Health Center
+            </button>
+            <button onclick="window.setDataEnrichmentTab('crm')" style="background: none; border: none; font-size: 12.5px; font-weight: 700; color: ${activeSubTab === 'crm' ? '#2563eb' : '#475569'}; padding: 0 0 10px 0; border-bottom: 2px solid ${activeSubTab === 'crm' ? '#2563eb' : 'transparent'}; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; font-family: var(--font-heading);">
+                CRM Sync <span style="font-size: 8px; font-weight: 800; color: #15803d; background: #dcfce7; padding: 1.5px 5px; border-radius: 99px; text-transform: uppercase; font-family: var(--font-mono);">NEW</span>
+            </button>
+            <button onclick="window.setDataEnrichmentTab('csv')" style="background: none; border: none; font-size: 12.5px; font-weight: 700; color: ${activeSubTab === 'csv' ? '#2563eb' : '#475569'}; padding: 0 0 10px 0; border-bottom: 2px solid ${activeSubTab === 'csv' ? '#2563eb' : 'transparent'}; cursor: pointer; transition: all 0.2s; font-family: var(--font-heading);">
+                CSV Import
+            </button>
+            <button onclick="window.setDataEnrichmentTab('alerts')" style="background: none; border: none; font-size: 12.5px; font-weight: 700; color: ${activeSubTab === 'alerts' ? '#2563eb' : '#475569'}; padding: 0 0 10px 0; border-bottom: 2px solid ${activeSubTab === 'alerts' ? '#2563eb' : 'transparent'}; cursor: pointer; transition: all 0.2s; font-family: var(--font-heading);">
+                Job Alerts
+            </button>
+            <button onclick="window.setDataEnrichmentTab('forms')" style="background: none; border: none; font-size: 12.5px; font-weight: 700; color: ${activeSubTab === 'forms' ? '#2563eb' : '#475569'}; padding: 0 0 10px 0; border-bottom: 2px solid ${activeSubTab === 'forms' ? '#2563eb' : 'transparent'}; cursor: pointer; transition: all 0.2s; font-family: var(--font-heading);">
+                Form Enrichment
+            </button>
+        </div>
+    `;
 
     // Providers waterfall HTML list
     const waterfallHTML = providers.map((prov, idx) => {
@@ -88,38 +122,25 @@ export function renderDataEnrichment() {
         `;
     }).join('');
 
-    return `
-        <div style="max-width: 1200px; display: flex; flex-direction: column; gap: 24px; color: #0f172a; padding-bottom: 40px;">
-            
-            <!-- Header section -->
-            <div style="background: linear-gradient(135deg, rgba(255,160,0,0.04) 0%, rgba(236,72,153,0.01) 100%); border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; box-shadow: 0 4px 30px rgba(0,0,0,0.02);">
-                <div style="display: flex; flex-direction: column; gap: 4px;">
-                    <h3 style="margin: 0; font-size: 20px; font-weight: 800; font-family: var(--font-heading); display: flex; align-items: center; gap: 8px; color: #0f172a;">
-                        <span>🔬 Data Enrichment Engine</span>
-                        <span style="font-size: 10px; background: rgba(255, 160, 0, 0.1); border: 1px solid rgba(255, 160, 0, 0.2); color: var(--accent-gold); font-weight: 800; padding: 2px 8px; border-radius: 50px; text-transform: uppercase; font-family: var(--font-mono);">Scout Gated</span>
-                    </h3>
-                    <p style="margin: 0; font-size: 13.5px; color: #475569;">Setup provider waterfall cascading lookups to automatically enrich missing emails, phone numbers, and social links.</p>
-                </div>
-                <button class="brand-btn" id="enrichLeadsActionBtn" style="background: #2563eb; color: white; font-weight: 800; padding: 10px 20px;">
-                    Enrich Leads Batch
-                </button>
-            </div>
+    let tabContentHTML = '';
 
+    if (activeSubTab === 'health') {
+        tabContentHTML = `
             <!-- Credits Card + Stats Grid -->
             <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 20px; flex-wrap: wrap; align-items: start;">
                 
                 <!-- Credit Balance Progress -->
                 <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 12.5px; color:#475569; font-weight:700; text-transform:uppercase;">Enrichment Credit Balance</span>
-                        <span style="font-family:var(--font-mono, monospace); font-size:14px; font-weight:800; color:#0f172a;">🪙 ${stats.credits_remaining} / ${monthlyLimit}</span>
+                        <span style="font-size: 12px; color:#475569; font-weight:700; text-transform:uppercase;">Enrichment Credit Balance</span>
+                        <span style="font-family:var(--font-mono, monospace); font-size:13.5px; font-weight:800; color:#0f172a;">🪙 ${stats.credits_remaining} / ${monthlyLimit}</span>
                     </div>
 
                     <div style="height: 8px; background: #f1f5f9; border-radius: 10px; overflow: hidden; position: relative;">
                         <div style="width: ${creditPct}%; height: 100%; background: linear-gradient(90deg, #d97706 0%, #2563eb 100%); border-radius: 10px;"></div>
                     </div>
                     
-                    <div style="font-size: 12px; color: #475569; line-height: 1.4;">
+                    <div style="font-size: 11.5px; color: #475569; line-height: 1.4;">
                         Credits reset monthly. Gated lookups deduct 1 credit per successfully enriched business.
                     </div>
                 </div>
@@ -127,16 +148,16 @@ export function renderDataEnrichment() {
                 <!-- Stats Summary -->
                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
                     <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:16px; text-align:center; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
-                        <div style="font-size: 10px; color:#475569; font-weight:700; text-transform:uppercase; margin-bottom:4px;">Emails Found</div>
-                        <div style="font-size: 20px; font-weight: 800; font-family: var(--font-mono); color: #0f172a;">${stats.emails_found}</div>
+                        <div style="font-size: 9.5px; color:#475569; font-weight:700; text-transform:uppercase; margin-bottom:4px;">Emails Found</div>
+                        <div style="font-size: 18px; font-weight: 800; font-family: var(--font-mono); color: #0f172a;">${stats.emails_found}</div>
                     </div>
                     <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:16px; text-align:center; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
-                        <div style="font-size: 10px; color:#475569; font-weight:700; text-transform:uppercase; margin-bottom:4px;">Phones Found</div>
-                        <div style="font-size: 20px; font-weight: 800; font-family: var(--font-mono); color: #22c55e;">${stats.phones_found}</div>
+                        <div style="font-size: 9.5px; color:#475569; font-weight:700; text-transform:uppercase; margin-bottom:4px;">Phones Found</div>
+                        <div style="font-size: 18px; font-weight: 800; font-family: var(--font-mono); color: #22c55e;">${stats.phones_found}</div>
                     </div>
                     <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:16px; text-align:center; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
-                        <div style="font-size: 10px; color:#475569; font-weight:700; text-transform:uppercase; margin-bottom:4px;">Avg Match Score</div>
-                        <div style="font-size: 20px; font-weight: 800; font-family: var(--font-mono); color: var(--accent-gold);">${Math.round(stats.avg_confidence)}%</div>
+                        <div style="font-size: 9.5px; color:#475569; font-weight:700; text-transform:uppercase; margin-bottom:4px;">Avg Match Score</div>
+                        <div style="font-size: 18px; font-weight: 800; font-family: var(--font-mono); color: var(--accent-gold);">${Math.round(stats.avg_confidence)}%</div>
                     </div>
                 </div>
 
@@ -147,7 +168,7 @@ export function renderDataEnrichment() {
                 
                 <!-- Left: Waterfall list -->
                 <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
-                    <h3 style="margin: 0 0 16px 0; font-size: 16px; font-family: var(--font-heading); font-weight: 800; border-bottom:1px solid #e2e8f0; padding-bottom:12px; color: #0f172a;">
+                    <h3 style="margin: 0 0 16px 0; font-size: 15px; font-family: var(--font-heading); font-weight: 800; border-bottom:1px solid #e2e8f0; padding-bottom:12px; color: #0f172a;">
                         Provider Waterfall Chain Order (Cascading Logic)
                     </h3>
                     <div style="display: flex; flex-direction: column;">
@@ -157,7 +178,7 @@ export function renderDataEnrichment() {
 
                 <!-- Right: Recent jobs -->
                 <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
-                    <h3 style="margin: 0 0 16px 0; font-size: 16px; font-family: var(--font-heading); font-weight: 800; border-bottom:1px solid #e2e8f0; padding-bottom:12px; color: #0f172a;">
+                    <h3 style="margin: 0 0 16px 0; font-size: 15px; font-family: var(--font-heading); font-weight: 800; border-bottom:1px solid #e2e8f0; padding-bottom:12px; color: #0f172a;">
                         Recent Enrichment Batches
                     </h3>
                     <div style="display: flex; flex-direction: column;">
@@ -166,6 +187,127 @@ export function renderDataEnrichment() {
                 </div>
 
             </div>
+        `;
+    } else if (activeSubTab === 'crm') {
+        tabContentHTML = `
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:32px; text-align:center; max-width:800px; margin:0 auto; box-shadow:0 4px 20px rgba(0,0,0,0.03);">
+                <div style="display:flex; justify-content:center; gap:24px; margin-bottom:24px;">
+                    <div style="width:64px; height:64px; border-radius:12px; background:#f0fdf4; border:1.5px solid #bbf7d0; display:flex; align-items:center; justify-content:center; font-size:28px;" title="Salesforce">☁️</div>
+                    <div style="width:64px; height:64px; border-radius:12px; background:#fff7ed; border:1.5px solid #fed7aa; display:flex; align-items:center; justify-content:center; font-size:28px;" title="HubSpot">🎯</div>
+                </div>
+                <h3 style="font-family:var(--font-heading); font-size:20px; font-weight:800; color:#0f172a; margin:0 0 10px 0;">Build your CRM sync pipeline dashboard</h3>
+                <p style="font-size:13px; color:#475569; max-width:540px; margin:0 auto 24px; line-height:1.5;">
+                    Connect your CRM to automate contact creation, prevent duplication, and track the live quality of your accounts database.
+                </p>
+                <div style="display:flex; justify-content:center; gap:12px; margin-bottom:32px;">
+                    <button class="brand-btn" style="background:#0f172a; color:white; padding:9px 18px; font-size:12.5px; border-radius:6px; font-weight:700;">Connect Salesforce</button>
+                    <button class="brand-btn" style="background:#ffa000; color:white; padding:9px 18px; font-size:12.5px; border-radius:6px; font-weight:700;">Connect HubSpot</button>
+                </div>
+                <div style="border-top:1px solid #e2e8f0; padding-top:24px; text-align:left;">
+                    <h4 style="font-size:13px; font-weight:700; color:#0f172a; margin:0 0 14px 0;">Key Benefits</h4>
+                    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:16px;">
+                        <div>
+                            <div style="font-size:12px; font-weight:700; color:#0f172a; margin-bottom:4px;">✓ Automatic Enrichment</div>
+                            <div style="font-size:11px; color:#475569; line-height:1.4;">Newly created contacts are instantly enriched through the waterfall cascade.</div>
+                        </div>
+                        <div>
+                            <div style="font-size:12px; font-weight:700; color:#0f172a; margin-bottom:4px;">✓ Bidirectional Sync</div>
+                            <div style="font-size:11px; color:#475569; line-height:1.4;">Sync status changes back to your CRM to update leads conversion signals.</div>
+                        </div>
+                        <div>
+                            <div style="font-size:12px; font-weight:700; color:#0f172a; margin-bottom:4px;">✓ Deduplication Check</div>
+                            <div style="font-size:11px; color:#475569; line-height:1.4;">Bypass already enriched domain records to save credit budget balances.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    } else if (activeSubTab === 'csv') {
+        tabContentHTML = `
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:32px; text-align:center; max-width:800px; margin:0 auto; box-shadow:0 4px 20px rgba(0,0,0,0.03);">
+                <div style="border:2px dashed #cbd5e1; border-radius:12px; padding:40px; background:#f8fafc; cursor:pointer; margin-bottom:20px; transition:all 0.2s;" onmouseover="this.style.borderColor='#2563eb'" onmouseout="this.style.borderColor='#cbd5e1'">
+                    <div style="font-size:32px; margin-bottom:12px;">📁</div>
+                    <div style="font-size:14px; font-weight:700; color:#0f172a; margin-bottom:6px;">Drag and drop your CSV file here</div>
+                    <div style="font-size:11.5px; color:#475569;">or click to browse from local computer</div>
+                </div>
+                <div style="display:flex; justify-content:center; gap:16px;">
+                    <button class="secondary-btn" style="font-size:12px; padding:8px 16px; background:#ffffff; border:1px solid #cbd5e1; border-radius:6px; color:#0f172a;">📋 Download CSV Template</button>
+                    <button class="brand-btn" style="font-size:12px; padding:8px 16px; background:#2563eb; color:white; border-radius:6px;">Start CSV Upload</button>
+                </div>
+            </div>
+        `;
+    } else if (activeSubTab === 'alerts') {
+        tabContentHTML = `
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:24px; max-width:800px; margin:0 auto; box-shadow:0 4px 20px rgba(0,0,0,0.03);">
+                <h3 style="font-family:var(--font-heading); font-size:15px; font-weight:800; color:#0f172a; margin:0 0 10px 0;">Configure Job Change Watchlists</h3>
+                <p style="font-size:12px; color:#475569; margin:0 0 20px 0; line-height:1.5;">
+                    Receive instant Slack notifications or email alerts whenever target prospects change their job titles or transition to another organization.
+                </p>
+                <div style="display:flex; flex-direction:column; gap:12px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; border:1px solid #e2e8f0; padding:14px; border-radius:8px;">
+                        <div>
+                            <div style="font-size:13px; font-weight:700; color:#0f172a;">Weekly Slack Digests</div>
+                            <div style="font-size:11.5px; color:#475569; margin-top:2px;">Send alert logs compilation to #marketing-triggers every Friday.</div>
+                        </div>
+                        <input type="checkbox" checked style="width:16px; height:16px; accent-color:#ffa000;" />
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; border:1px solid #e2e8f0; padding:14px; border-radius:8px;">
+                        <div>
+                            <div style="font-size:13px; font-weight:700; color:#0f172a;">Instant Email Triggers</div>
+                            <div style="font-size:11.5px; color:#475569; margin-top:2px;">Email my personal account whenever VP-level leads change positions.</div>
+                        </div>
+                        <input type="checkbox" style="width:16px; height:16px; accent-color:#ffa000;" />
+                    </div>
+                </div>
+            </div>
+        `;
+    } else if (activeSubTab === 'forms') {
+        tabContentHTML = `
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:24px; max-width:800px; margin:0 auto; box-shadow:0 4px 20px rgba(0,0,0,0.03);">
+                <h3 style="font-family:var(--font-heading); font-size:15px; font-weight:800; color:#0f172a; margin:0 0 10px 0;">Smart Form Auto-Complete Code Integration</h3>
+                <p style="font-size:12px; color:#475569; margin:0 0 20px 0; line-height:1.5;">
+                    Shorten website sign-up forms. Ask only for their email address—our snippet will instantly enrich company details, job size, and profiles background in the database.
+                </p>
+                <div style="background:#1e1e2f; color:#38bdf8; border-radius:8px; padding:16px; font-family:var(--font-mono, monospace); font-size:11.5px; overflow-x:auto; margin-bottom:16px; line-height:1.6; border:1px solid #0f172a; text-align:left;">
+                    <span style="color:#64748b;">// Include the SDK in page head</span><br/>
+                    &lt;<span style="color:#f43f5e;">script</span> <span style="color:#fbbf24;">src</span>=<span style="color:#10b981;">"https://cdn.nearpro.ai/v1/enrich.js"</span>&gt;&lt;/<span style="color:#f43f5e;">script</span>&gt;<br/><br/>
+                    <span style="color:#64748b;">// Initialize form selector enrichment mappings</span><br/>
+                    &lt;<span style="color:#f43f5e;">script</span>&gt;<br/>
+                    &nbsp;&nbsp;<span style="color:#e879f9;">NearPro</span>.<span style="color:#60a5fa;">initForm</span>(<span style="color:#10b981;">"#signup-form"</span>, {<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;apiKey: <span style="color:#10b981;">"np_live_scout_xxxxxxxx"</span>,<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;autoFillFields: <span style="color:#fbbf24;">true</span><br/>
+                    &nbsp;&nbsp;});<br/>
+                    &lt;/<span style="color:#f43f5e;">script</span>&gt;
+                </div>
+                <button class="secondary-btn" style="font-size:12px; padding:10px 16px; background:#ffffff; border:1px solid #cbd5e1; border-radius:6px; width:100%; justify-content:center; color:#0f172a; font-weight:700;">📋 Copy Code Snippet</button>
+            </div>
+        `;
+    }
+
+    return `
+        <div style="max-width: 1200px; display: flex; flex-direction: column; gap: 20px; color: #0f172a; padding-bottom: 40px;">
+            
+            <!-- Header section -->
+            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <h3 style="margin: 0; font-size: 18px; font-weight: 800; font-family: var(--font-heading); display: flex; align-items: center; gap: 8px; color: #0f172a;">
+                        <span>Data Enrichment Engine</span>
+                        <span style="font-size: 9px; background: rgba(255, 160, 0, 0.1); border: 1px solid rgba(255, 160, 0, 0.25); color: var(--accent-gold); font-weight: 800; padding: 2.5px 8px; border-radius: 50px; text-transform: uppercase; font-family: var(--font-mono);">Scout Gated</span>
+                    </h3>
+                    <p style="margin: 0; font-size: 12.5px; color: #475569;">Configure provider waterfall cascading lookups to automatically enrich missing emails, phone numbers, and social links.</p>
+                </div>
+                ${activeSubTab === 'health' ? `
+                    <button class="brand-btn" id="enrichLeadsActionBtn" style="background: #2563eb; color: white; font-weight: 700; padding: 9px 18px; font-size:12.5px; border-radius:6px;">
+                        Enrich Leads Batch
+                    </button>
+                ` : ''}
+            </div>
+
+            <!-- Tabs list -->
+            ${subtabsHTML}
+
+            <!-- Active View Content -->
+            ${tabContentHTML}
 
         </div>
 
@@ -173,24 +315,24 @@ export function renderDataEnrichment() {
         <div id="configureKeyModalOverlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 10000; align-items: center; justify-content: center; padding: 24px;">
             <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; max-width: 440px; width: 100%; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.1); color: #0f172a;">
                 <div style="padding: 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
-                    <h3 style="margin:0; font-size: 16px; font-weight:800; font-family:var(--font-heading); color:#0f172a;" id="configModalTitle">Configure API Key</h3>
+                    <h3 style="margin:0; font-size: 15px; font-weight:800; font-family:var(--font-heading); color:#0f172a;" id="configModalTitle">Configure API Key</h3>
                     <button class="brand-btn" id="closeConfigKeyModal" style="background:none; border:none; padding:4px; font-size:18px; line-height:1; color:#475569; cursor:pointer;">×</button>
                 </div>
                 
                 <div style="padding: 20px; display: flex; flex-direction: column; gap: 14px;">
-                    <p style="margin: 0; font-size: 12.5px; color:#475569; line-height: 1.4;">
+                    <p style="margin: 0; font-size: 12px; color:#475569; line-height: 1.4;">
                         Enter your personal developer credential keys. Lookups will use your key and bypass platform-side credits constraints (BYOK Model).
                     </p>
                     
                     <div>
-                        <label style="display: block; font-size: 12.5px; font-weight:700; color:#475569; margin-bottom: 6px;">Provider API Key / Authentication Token</label>
-                        <input type="password" id="configApiKeyInput" placeholder="Enter key..." style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 6px; color: #0f172a; font-size: 13.5px; outline: none;" />
+                        <label style="display: block; font-size: 12px; font-weight:700; color:#475569; margin-bottom: 6px;">Provider API Key / Authentication Token</label>
+                        <input type="password" id="configApiKeyInput" placeholder="Enter key..." style="width: 100%; padding: 10px 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 6px; color: #0f172a; font-size: 13px; outline: none;" />
                     </div>
                 </div>
 
                 <div style="padding: 20px; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 10px;">
-                    <button class="brand-btn" id="cancelConfigKeyBtn" style="padding: 8px 16px; font-size:12.5px; background:#f8fafc; color:#0f172a; border: 1px solid #cbd5e1;">Cancel</button>
-                    <button class="brand-btn" id="confirmConfigKeyBtn" style="padding: 8px 16px; font-size:12.5px; background:#2563eb; color:white; border:none;">Save Key</button>
+                    <button class="brand-btn" id="cancelConfigKeyBtn" style="padding: 8px 16px; font-size:12px; background:#f8fafc; color:#0f172a; border: 1px solid #cbd5e1; border-radius:6px; font-weight:700;">Cancel</button>
+                    <button class="brand-btn" id="confirmConfigKeyBtn" style="padding: 8px 16px; font-size:12px; background:#2563eb; color:white; border:none; border-radius:6px; font-weight:700;">Save Key</button>
                 </div>
             </div>
         </div>
@@ -199,30 +341,27 @@ export function renderDataEnrichment() {
         <div id="batchEnrichModalOverlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 10000; align-items: center; justify-content: center; padding: 24px;">
             <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; max-width: 500px; width: 100%; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.1); color: #0f172a;">
                 <div style="padding: 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
-                    <h3 style="margin:0; font-size: 16px; font-weight:800; font-family:var(--font-heading); color:#0f172a;">Run Batch Enrichment</h3>
+                    <h3 style="margin:0; font-size: 15px; font-weight:800; font-family:var(--font-heading); color:#0f172a;">Run Batch Enrichment</h3>
                     <button class="brand-btn" id="closeBatchEnrichModal" style="background:none; border:none; padding:4px; font-size:18px; line-height:1; color:#475569; cursor:pointer;">×</button>
                 </div>
                 
                 <div style="padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px;">
                     <div>
-                        <label style="display: block; font-size: 12.5px; font-weight:700; color:#475569; margin-bottom: 6px;">Select Lead Source List</label>
-                        <select id="batchEnrichSourceSelect" style="width:100%; padding: 10px 14px; background:#ffffff; border:1px solid #cbd5e1; border-radius:6px; color:#0f172a; font-size:13.5px; outline:none;">
+                        <label style="display: block; font-size: 12px; font-weight:700; color:#475569; margin-bottom: 6px;">Select Lead Source List</label>
+                        <select id="batchEnrichSourceSelect" style="width:100%; padding: 10px 14px; background:#ffffff; border:1px solid #cbd5e1; border-radius:6px; color:#0f172a; font-size:13px; outline:none;">
                             <option value="">-- Choose List --</option>
                             ${leadLists.map(l => `<option value="${l.id}">${l.name} (${l.total_leads || 0} leads)</option>`).join('')}
                         </select>
                     </div>
 
                     <div style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="display: block; font-size: 12.5px; font-weight:700; color:#475569;">Leads checklist preview</label>
+                        <label style="display: block; font-size: 12px; font-weight:700; color:#475569;">Leads checklist preview</label>
                         <div id="batchEnrichLeadsListWrapper" style="border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px; max-height: 200px; overflow-y: auto; background:#f8fafc; display:flex; flex-direction:column; gap:8px;">
-                            <div style="color:#475569; font-size:12.5px; text-align:center; padding:12px;">Choose a source list first...</div>
+                            <div style="color:#475569; font-size:12px; text-align:center; padding:12px;">Choose a source list first...</div>
                         </div>
                     </div>
                 </div>
 
-                <div style="padding: 20px; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 10px;">
-                    <button class="brand-btn" id="cancelBatchEnrichBtn" style="padding: 8px 16px; font-size:12.5px; background:#f8fafc; color:#0f172a; border: 1px solid #cbd5e1;">Cancel</button>
-                    <button class="brand-btn" id="confirmBatchEnrichBtn" style="padding: 8px 16px; font-size:12.5px; background:#2563eb; color:white; border:none;" disabled>Confirm & Deduct Credits</button>
                 </div>
             </div>
         </div>
