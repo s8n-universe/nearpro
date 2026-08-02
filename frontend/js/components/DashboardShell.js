@@ -63,34 +63,75 @@ export function renderDashboardShell(activeTab = 'crm') {
         return (State.featureFlags && State.featureFlags[item.flag] === true) || isAdmin;
     });
 
-    const sidebarHTML = filteredSidebarItems.map(item => {
-        const isLocalTesting = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const isUnlocked = hasAccess(userTier, item.requiredTier) || isLocalTesting || userEmail === 'nearproadmin@gmail.com';
-        const isActive = activeTab === item.id;
-        const activeClass = isActive ? 'active' : '';
-        const lockIcon = isUnlocked ? '' : '<i data-lucide="lock" class="nav-lock" style="width:11px; height:11px; margin-left:auto; stroke-width:2.5px; opacity:0.6;"></i>';
-        const arrowIcon = item.id === 'directory' ? '<i data-lucide="chevron-right" class="nav-arrow" style="width:14px; height:14px; margin-left:auto; stroke-width:2.5px; opacity:0.7;"></i>' : '';
-        
-        // Navigation targets
-        const href = `#/dashboard/${item.id}`;
-                let badge = '';
-        if (item.id === 'settings') {
-            badge = `<span class="new-feature-badge" style="margin-left: 6px; font-size: 8.5px; font-weight: 800; color: #78350f; background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); padding: 1.5px 5px; border-radius: 99px; text-transform: uppercase; font-family: var(--font-mono, monospace); line-height: 1;">NEW</span>`;
-        } else if (item.flag && State.featureFlags && State.featureFlags[item.flag] === true) {
-            const dismissed = localStorage.getItem(`dismissed_badge_${item.id}`);
-            if (!dismissed) {
-                badge = `<span class="new-feature-badge" style="margin-left: 6px; font-size: 8.5px; font-weight: 800; color: #ffffff; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); padding: 1.5px 5px; border-radius: 99px; text-transform: uppercase; font-family: var(--font-mono, monospace); line-height: 1;">NEW</span>`;
-            }
+    const categories = [
+        {
+            title: 'Overview & Admin',
+            items: ['overview', 'admin']
+        },
+        {
+            title: 'Prospect & Enrich',
+            items: ['directory', 'lists', 'enrichment', 'signals']
+        },
+        {
+            title: 'Engage & Sequences',
+            items: ['sequences', 'deliverability', 'outreach', 'plugins']
+        },
+        {
+            title: 'Win Deals & CRM',
+            items: ['crm', 'voice-agent', 'proposals', 'call-scripts']
+        },
+        {
+            title: 'Workspace & Setup',
+            items: ['documents', 'audit', 'prompts', 'integrations', 'team', 'settings']
         }
+    ];
+
+    const sidebarHTML = categories.map(cat => {
+        const catItems = filteredSidebarItems.filter(item => cat.items.includes(item.id));
+        if (catItems.length === 0) return '';
+        
+        const itemsHTML = catItems.map(item => {
+            const isLocalTesting = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const isUnlocked = hasAccess(userTier, item.requiredTier) || isLocalTesting || userEmail === 'nearproadmin@gmail.com';
+            const isActive = activeTab === item.id;
+            const activeClass = isActive ? 'active' : '';
+            const lockIcon = isUnlocked ? '' : '<i data-lucide="lock" class="nav-lock" style="width:11px; height:11px; margin-left:auto; stroke-width:2.5px; opacity:0.6;"></i>';
+            const arrowIcon = item.id === 'directory' ? '<i data-lucide="chevron-right" class="nav-arrow" style="width:14px; height:14px; margin-left:auto; stroke-width:2.5px; opacity:0.7;"></i>' : '';
+            
+            // Navigation targets
+            const href = `#/dashboard/${item.id}`;
+            let badge = '';
+            if (item.id === 'settings') {
+                badge = `<span class="new-feature-badge" style="margin-left: 6px; font-size: 8.5px; font-weight: 800; color: #78350f; background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); padding: 1.5px 5px; border-radius: 99px; text-transform: uppercase; font-family: var(--font-mono, monospace); line-height: 1;">NEW</span>`;
+            } else if (item.flag && State.featureFlags && State.featureFlags[item.flag] === true) {
+                const dismissed = localStorage.getItem(`dismissed_badge_${item.id}`);
+                if (!dismissed) {
+                    badge = `<span class="new-feature-badge" style="margin-left: 6px; font-size: 8.5px; font-weight: 800; color: #ffffff; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); padding: 1.5px 5px; border-radius: 99px; text-transform: uppercase; font-family: var(--font-mono, monospace); line-height: 1;">NEW</span>`;
+                }
+            }
+
+            // Remove starting emojis and symbols for an extremely clean and premium enterprise feel
+            const cleanLabel = item.label.replace(/^[^\w\s\d]+/g, '').trim();
+
+            return `
+                <a href="${isUnlocked ? href : 'javascript:void(0)'}" 
+                   class="dashboard-nav-item ${activeClass} ${isUnlocked ? '' : 'locked'}" 
+                   data-id="${item.id}"
+                   data-required="${item.requiredTier}">
+                    <i data-lucide="${item.icon}" class="nav-icon" style="width:14px; height:14px; stroke-width:2px; flex-shrink:0;"></i>
+                    <span class="nav-label" style="display: flex; align-items: center;">${cleanLabel}${badge}</span>
+                    ${arrowIcon || lockIcon}
+                </a>
+            `;
+        }).join('');
+
         return `
-            <a href="${isUnlocked ? href : 'javascript:void(0)'}" 
-               class="dashboard-nav-item ${activeClass} ${isUnlocked ? '' : 'locked'}" 
-               data-id="${item.id}"
-               data-required="${item.requiredTier}">
-                <i data-lucide="${item.icon}" class="nav-icon" style="width:18px; height:18px; stroke-width:2px; flex-shrink:0;"></i>
-                <span class="nav-label" style="display: flex; align-items: center;">${item.label}${badge}</span>
-                ${arrowIcon || lockIcon}
-            </a>
+            <div class="sidebar-category">
+                <div class="sidebar-category-header">${cat.title}</div>
+                <div class="sidebar-category-items" style="display: flex; flex-direction: column; gap: 2px;">
+                    ${itemsHTML}
+                </div>
+            </div>
         `;
     }).join('');
 
