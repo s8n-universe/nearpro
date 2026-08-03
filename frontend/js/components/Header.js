@@ -194,21 +194,8 @@ export function renderHeader() {
                     </div>
                 </nav>
 
-                <!-- Right side: language + auth -->
+                <!-- Right side: auth -->
                 <div class="header-actions" style="display: flex; align-items: center; gap: 16px;">
-
-                    <!-- Language selector -->
-                    <div class="np-nav-dropdown" style="position: relative;">
-                        <button class="np-nav-trigger" id="langSelectorBtn" style="background: none; border: 1px solid rgba(255,255,255,0.1); color: var(--text-secondary); font-size: 13px; font-weight: 500; cursor: pointer; padding: 6px 10px; display: flex; align-items: center; gap: 6px; font-family: inherit; border-radius: 6px; transition: all 0.15s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.2)'; this.style.color='#ffffff'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.color='var(--text-secondary)'">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                            <span id="currentLangLabel">EN</span>
-                            <span style="font-size: 9px; opacity: 0.5;">▾</span>
-                        </button>
-                        <div class="np-mega-panel" style="position: absolute; top: calc(100% + 8px); right: 0; width: 150px; background: #0c0c0e; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 8px; display: none; z-index: 1000; box-shadow: 0 12px 40px rgba(0,0,0,0.5);">
-                            <button class="np-lang-option" data-lang="en" style="width: 100%; text-align: left; padding: 8px 12px; background: none; border: none; color: var(--accent-gold); font-size: 13px; font-weight: 600; cursor: pointer; border-radius: 6px; font-family: inherit; transition: background 0.1s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='none'">English</button>
-                            <button class="np-lang-option" data-lang="hi" style="width: 100%; text-align: left; padding: 8px 12px; background: none; border: none; color: rgba(255,255,255,0.7); font-size: 13px; font-weight: 500; cursor: pointer; border-radius: 6px; font-family: inherit; transition: background 0.1s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='none'">हिंदी</button>
-                        </div>
-                    </div>
 
                     <!-- Create an account -->
                     <button id="createAccountBtn" style="background: none; border: 1px solid rgba(255,255,255,0.15); color: #ffffff; font-size: 13px; font-weight: 600; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-family: inherit; transition: all 0.15s; white-space: nowrap;" onmouseover="this.style.borderColor='rgba(255,255,255,0.3)'; this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'; this.style.background='none'">
@@ -302,21 +289,4 @@ export function bindHeaderEvents() {
             }
         });
     }
-
-    // Language selector
-    document.querySelectorAll('.np-lang-option').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const lang = btn.dataset.lang;
-            const label = document.getElementById('currentLangLabel');
-            if (label) label.textContent = lang === 'hi' ? 'HI' : 'EN';
-            // Highlight selected
-            document.querySelectorAll('.np-lang-option').forEach(b => {
-                b.style.color = b.dataset.lang === lang ? 'var(--accent-gold)' : 'rgba(255,255,255,0.7)';
-                b.style.fontWeight = b.dataset.lang === lang ? '600' : '500';
-            });
-            // Close dropdown
-            const panel = btn.closest('.np-mega-panel');
-            if (panel) panel.style.display = 'none';
-        });
-    });
 }
