@@ -197,13 +197,34 @@ export function renderFeatureShowcase() {
     `).join('');
 
     return `
-        <section class="marketing-features" id="features-section">
+        <section class="marketing-features" id="features-section" style="padding-top: 64px; padding-bottom: 64px;">
             <div class="container">
-                <div class="features-title-wrap">
-                    <span class="features-overline">Everything You Get</span>
-                    <h2>Lead Intelligence &amp; Outreach Features</h2>
-                    <p>NearPro transforms raw business directory search results into actionable sales pipelines. Find leads, audit websites, generate AI outreach, and close deals.</p>
+                <div class="features-title-wrap" style="max-width: 720px; margin-bottom: 48px;">
+                    <span class="features-overline">Why Indian Agencies Choose NearPro</span>
+                    <h2 style="font-size: 36px; font-weight: 800; letter-spacing: -1.2px; line-height: 1.2; margin-top: 8px;">From Raw Leads to Closed Clients — In One Pipeline</h2>
+                    <p style="font-size: 15.5px; color: var(--text-secondary); line-height: 1.6; margin-top: 14px;">Stop buying generic cold databases. NearPro finds high-value local businesses, diagnoses their online profile gaps, drafts custom proposals, and launches automated campaigns.</p>
                 </div>
+
+                <!-- 3-Step Core Agency Workflow -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 64px;">
+                    <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 12px; padding: 24px; text-align: left; display: flex; flex-direction: column; gap: 12px;">
+                        <div style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; background: rgba(99, 102, 241, 0.15); color: #818cf8; font-size: 14px; font-weight: 700; font-family: monospace;">01</div>
+                        <h3 style="font-size: 16px; font-weight: 700; color: #ffffff; margin: 0;">Discover Gaps</h3>
+                        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin: 0;">Search the directory to locate businesses in target cities with poor ratings, missing websites, or incomplete profiles.</p>
+                    </div>
+                    <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 12px; padding: 24px; text-align: left; display: flex; flex-direction: column; gap: 12px;">
+                        <div style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; background: rgba(236, 72, 153, 0.15); color: #f472b6; font-size: 14px; font-weight: 700; font-family: monospace;">02</div>
+                        <h3 style="font-size: 16px; font-weight: 700; color: #ffffff; margin: 0;">Launch Audits</h3>
+                        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin: 0;">Run instant PageSpeed, mobile, and SSL health checks to calculate concrete monthly revenue loss estimators.</p>
+                    </div>
+                    <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 12px; padding: 24px; text-align: left; display: flex; flex-direction: column; gap: 12px;">
+                        <div style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; background: rgba(245, 158, 11, 0.15); color: #fbbf24; font-size: 14px; font-weight: 700; font-family: monospace;">03</div>
+                        <h3 style="font-size: 16px; font-weight: 700; color: #ffffff; margin: 0;">Pitch &amp; Close</h3>
+                        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin: 0;">Generate beautifully branded PDF audit proposals and start outreach sequences in English or Hinglish.</p>
+                    </div>
+                </div>
+
+                <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 24px;">Explore Core Workstation Features</div>
 
                 <div class="features-grid-v2">
                     ${featureCards}
