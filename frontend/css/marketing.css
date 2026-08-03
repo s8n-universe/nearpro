@@ -6,7 +6,7 @@
     padding: 20px 0 85px;
     text-align: center;
     background: 
-        linear-gradient(135deg, rgba(255, 153, 51, 0.09) 0%, rgba(255, 255, 255, 0.03) 50%, rgba(18, 136, 37, 0.09) 100%),
+        linear-gradient(135deg, rgba(255, 153, 51, 0.24) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(18, 136, 37, 0.24) 100%),
         radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.01) 0%, rgba(3, 3, 3, 0) 80%);
     overflow: hidden;
 }
