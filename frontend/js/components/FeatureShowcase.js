@@ -201,7 +201,7 @@ export function renderFeatureShowcase() {
             <div class="container">
                 <div class="features-title-wrap" style="max-width: 720px; margin-bottom: 48px;">
                     <span class="features-overline">Why Indian Agencies Choose NearPro</span>
-                    <h2 style="font-size: 36px; font-weight: 800; letter-spacing: -1.2px; line-height: 1.2; margin-top: 8px;">From Raw Leads to Closed Clients — In One Pipeline</h2>
+                    <h2 style="font-size: 36px; font-weight: 800; letter-spacing: -1.2px; line-height: 1.2; margin-top: 8px;">From Raw Leads to Closed Clients In One Pipeline</h2>
                     <p style="font-size: 15.5px; color: var(--text-secondary); line-height: 1.6; margin-top: 14px;">Stop buying generic cold databases. NearPro finds high-value local businesses, diagnoses their online profile gaps, drafts custom proposals, and launches automated campaigns.</p>
                 </div>
 
