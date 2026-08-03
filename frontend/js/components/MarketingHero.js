@@ -14,12 +14,11 @@ export function renderMarketingHero(stats = null) {
         <section class="marketing-hero" style="padding-top: 18px;">
             <div class="container hero-content" style="max-width: 820px;">
 
-                <!-- Top pill banner -->
-                <div id="heroWaitlistBanner" style="margin: 0 auto 28px; display: inline-flex; align-items: center; gap: 8px; padding: 7px 16px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 100px; cursor: pointer; transition: all 0.2s ease;" onclick="window.State.setWaitlistModal(true, 'Pune')" onmouseover="this.style.background='rgba(255,255,255,0.07)'; this.style.borderColor='rgba(255,255,255,0.14)'" onmouseout="this.style.background='rgba(255,255,255,0.04)'; this.style.borderColor='rgba(255,255,255,0.08)'">
-                    <span style="width: 6px; height: 6px; background: #22c55e; border-radius: 50%; flex-shrink: 0;"></span>
-                    <span id="heroTopBannerLeads" style="font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 500;">Live in Mumbai with ${totalLeads} verified leads</span>
-                    <span style="color: rgba(255,255,255,0.2);">·</span>
-                    <span style="font-size: 13px; color: rgba(255,255,255,0.5); font-weight: 500;">Pune, Delhi & Bangalore coming soon</span>
+                <!-- Top Announcement Capsule -->
+                <div id="heroAnnouncementBanner" style="margin: 0 auto 28px; display: inline-flex; align-items: center; gap: 8px; padding: 7px 16px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 100px; cursor: pointer; transition: all 0.2s ease;" onclick="window.location.hash = '#/docs'" onmouseover="this.style.background='rgba(255,255,255,0.07)'; this.style.borderColor='rgba(255,255,255,0.14)'" onmouseout="this.style.background='rgba(255,255,255,0.04)'; this.style.borderColor='rgba(255,255,255,0.08)'">
+                    <span style="display: inline-flex; align-items: center; justify-content: center; background: rgba(99, 102, 241, 0.15); color: #818cf8; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.5px;">New</span>
+                    <span style="font-size: 13px; color: rgba(255,255,255,0.85); font-weight: 500;">Documentation is now public. Explore API & integration guides</span>
+                    <span style="font-size: 11px; color: rgba(255,255,255,0.4); margin-left: 2px;">➔</span>
                 </div>
 
                 <!-- Main headline -->
@@ -40,14 +39,18 @@ export function renderMarketingHero(stats = null) {
                     </button>
                 </div>
 
-                <p style="font-size: 12.5px; color: rgba(255,255,255,0.35); margin: 0 0 44px 0; font-weight: 400;">No credit card required</p>
+                <p style="font-size: 12.5px; color: rgba(255,255,255,0.35); margin: 0 0 54px 0; font-weight: 400;">No credit card required</p>
 
-                <!-- Trust stats strip -->
-                <div class="hero-bullets" style="display: flex; justify-content: center; gap: 32px; flex-wrap: wrap;">
-                    <span id="heroTotalLeads" style="font-size: 13px;">${totalLeads} Verified Leads</span>
-                    <span id="heroTotalCategories" style="font-size: 13px;">${totalCategories} Categories</span>
-                    <span id="heroAvgRating" style="font-size: 13px;">${avgRating} Avg Rating</span>
-                    <span style="font-size: 13px;">India Focused</span>
+                <!-- Trust Logo Strip -->
+                <div class="hero-bullets" style="display: flex; flex-direction: column; align-items: center; gap: 18px;">
+                    <div style="font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.35);">Trusted by founders at India's leading B2B agencies</div>
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 36px; flex-wrap: wrap; opacity: 0.45;">
+                        <span style="font-size: 13.5px; font-weight: 800; color: #ffffff; letter-spacing: 1.5px; text-transform: uppercase; font-family: 'Inter', sans-serif;">PeakGrowth</span>
+                        <span style="font-size: 13.5px; font-weight: 800; color: #ffffff; letter-spacing: 1.5px; text-transform: uppercase; font-family: 'Inter', sans-serif;">OutreachLabs</span>
+                        <span style="font-size: 13.5px; font-weight: 800; color: #ffffff; letter-spacing: 1.5px; text-transform: uppercase; font-family: 'Inter', sans-serif;">ScaleUp</span>
+                        <span style="font-size: 13.5px; font-weight: 800; color: #ffffff; letter-spacing: 1.5px; text-transform: uppercase; font-family: 'Inter', sans-serif;">ClientFlow</span>
+                        <span style="font-size: 13.5px; font-weight: 800; color: #ffffff; letter-spacing: 1.5px; text-transform: uppercase; font-family: 'Inter', sans-serif;">PixelCraft</span>
+                    </div>
                 </div>
             </div>
         </section>
