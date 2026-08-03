@@ -26,9 +26,8 @@ export function renderMarketingHero(stats = null) {
                     Find local businesses.<br>Close more deals.
                 </h1>
 
-                <!-- Subtitle -->
                 <p class="hero-desc" style="max-width: 560px; margin: 0 auto 36px; line-height: 1.65; font-size: 17px;">
-                    Stop buying cold lead lists. NearPro surfaces warm, signal ready local businesses for Indian digital agencies — in real time.
+                    Stop buying cold lead lists. NearPro surfaces warm, signal ready local businesses for Indian digital agencies in real time.
                 </p>
 
                 <!-- CTA row — clean, Apollo-style -->
