@@ -62,20 +62,6 @@ export function renderHeader() {
         `;
     }
 
-    // ── Guest / Marketing navbar — Hunter.io style ──
-    // Ticker data
-    const tickerNames = ["CA Rahul", "Freelancer Priya", "Agency Head Amit", "Sales Rep Sneha", "Designer Rohit", "Developer Kiara", "Consultant Vivek", "Marketer Arjun", "Growth Hacker Riya"];
-    const tickerDeals = ["₹30,000 retainer", "₹45,000 website contract", "₹75,000 SEO project", "₹20,000 consulting gig", "₹60,000 design package", "₹50,000 HubSpot migration", "₹35,000 audit deal", "₹90,000 enterprise contract", "₹40,000 WhatsApp campaign"];
-    const tickerTips = ["Find local clients with 100% verified street address data!", "Unlocking 12 premium verified leads with direct numbers today!", "Pitch ₹30,000 mobile layout packages to target gap leads!", "Sync local business profiles to Google Sheets automatically!", "Create custom white-label proposal PDFs in 30 seconds!", "Bypass gatekeepers with direct owner mobile numbers!"];
-
-    const tickerItems = [];
-    for (let i = 0; i < tickerNames.length; i++) {
-        tickerItems.push(`<span style="color: var(--accent-gold); font-weight: 700;">${tickerNames[i]}</span> just closed a <span style="color: #3b82f6;">${tickerDeals[i % tickerDeals.length]}</span> using NearPro!`);
-        tickerItems.push(tickerTips[i % tickerTips.length]);
-    }
-    const singleSequence = tickerItems.join(' &bull; ');
-    const fullMarqueeContent = `${singleSequence} &bull; ${singleSequence} &bull;`;
-
     return `
         <header class="main-header" style="border-bottom: none;">
             <div class="container header-wrap">
@@ -210,28 +196,8 @@ export function renderHeader() {
             </div>
         </header>
 
-        <!-- Ticker bar -->
-        <div class="navbar-ticker-bar" style="background: rgba(255, 160, 0, 0.05); border-top: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 160, 0, 0.2); padding: 8px 0; overflow: hidden; width: 100%;">
-            <div class="container" style="display: flex; align-items: center; gap: 12px; max-width: var(--container-width); margin: 0 auto; padding: 0 16px;">
-                <span class="ticker-badge" style="background: rgba(255, 160, 0, 0.15); color: var(--accent-gold); padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 800; font-family: var(--font-mono); text-transform: uppercase; display: inline-block; animation: pulse 2s infinite; flex-shrink: 0; letter-spacing: 0.5px;">LIVE</span>
-                <div class="ticker-viewport" style="overflow: hidden; width: 100%; position: relative; height: 22px; display: flex; align-items: center;">
-                    <div class="ticker-track" style="display: inline-block; white-space: nowrap; position: absolute; animation: marquee-bar 45s linear infinite; width: max-content; font-size: 14px; font-weight: 600; color: #e2e8f0; will-change: transform; backface-visibility: hidden; transform: translate3d(-50%, 0, 0);">
-                        ${fullMarqueeContent}
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Dropdown hover styles -->
         <style>
-            @keyframes marquee-bar {
-                0% { transform: translate3d(-50%, 0, 0); }
-                100% { transform: translate3d(0%, 0, 0); }
-            }
-            @keyframes pulse {
-                0%, 100% { opacity: 1; }
-                50% { opacity: 0.6; }
-            }
             /* Dropdown show/hide via hover */
             .np-nav-dropdown { padding-bottom: 12px; margin-bottom: -12px; }
             .np-mega-panel::before { content: ''; position: absolute; top: -14px; left: 0; right: 0; height: 18px; background: transparent; }
