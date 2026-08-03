@@ -1,157 +1,241 @@
 import { State } from '../state.js';
 
 export function renderHeader() {
-    const isBrowseActive = window.location.hash.startsWith('#/browse') || window.location.hash.startsWith('#/category');
     const isDashboardActive = window.location.hash.startsWith('#/dashboard');
-    const isHomeActive = !isBrowseActive && !isDashboardActive;
-    
-    const viewToggleHTML = isBrowseActive ? `
-        <div class="view-toggle-wrap">
-            <button id="gridBtn" class="secondary-btn ${State.view === 'grid' ? 'brand-btn' : ''}" style="padding: 8px 16px; font-size: 13px; border-radius: var(--radius-sm);">Grid View</button>
-            <button id="mapBtn" class="secondary-btn ${State.view === 'map' ? 'brand-btn' : ''}" style="padding: 8px 16px; font-size: 13px; border-radius: var(--radius-sm);">Map View</button>
-        </div>
-    ` : '';
- 
-    let authActionsHTML = '';
+
+    // ── Logged-in users see a simple dashboard navbar ──
     if (State.user) {
         const email = State.user.email || '';
         const initials = email ? email.substring(0, 2).toUpperCase() : 'US';
         let userTier = (State.profile?.subscription_tier || State.profile?.tier || 'free').toLowerCase();
-        if (email === 'nearproadmin@gmail.com') {
-            userTier = 'free';
-        }
-        
-        let tierColor = '#71717a'; // Zinc / Free
+        if (email === 'nearproadmin@gmail.com') userTier = 'free';
+
+        let tierColor = '#71717a';
         let glowShadow = 'none';
         let tierLabel = 'Explorer';
+        if (userTier === 'scout') { tierColor = '#ffa000'; glowShadow = '0 0 8px rgba(255,160,0,0.4)'; tierLabel = 'Scout'; }
+        else if (userTier === 'hunter') { tierColor = '#f59e0b'; glowShadow = '0 0 10px rgba(245,158,11,0.5)'; tierLabel = 'Hunter'; }
+        else if (userTier === 'agency') { tierColor = '#ec4899'; glowShadow = '0 0 12px rgba(236,72,153,0.6)'; tierLabel = 'Agency'; }
 
-        if (userTier === 'scout') {
-            tierColor = '#ffa000'; // Gold
-            glowShadow = '0 0 8px rgba(255, 160, 0, 0.4)';
-            tierLabel = 'Scout';
-        } else if (userTier === 'hunter') {
-            tierColor = '#f59e0b'; // Amber
-            glowShadow = '0 0 10px rgba(245, 158, 11, 0.5)';
-            tierLabel = 'Hunter';
-        } else if (userTier === 'agency') {
-            tierColor = '#ec4899'; // Pink
-            glowShadow = '0 0 12px rgba(236, 72, 153, 0.6)';
-            tierLabel = 'Agency';
-        }
-
-        authActionsHTML = `
-            <div class="user-profile-dropdown-wrap" style="position: relative; display: inline-block; padding-bottom: 12px; margin-bottom: -12px;">
-                <div class="avatar-ring" id="headerProfileAvatarBtn" style="width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; border: 2px solid ${tierColor}; box-shadow: ${glowShadow};">
-                    <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--bg-surface, #18181b); color: white; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; text-transform: uppercase; font-family: var(--font-mono);">
-                        ${initials}
-                    </div>
-                </div>
-                <!-- Profile dropdown menu with hover bridge -->
-                <div class="profile-dropdown-content" id="headerProfileDropdownMenu" style="position: absolute; right: 0; top: calc(100% - 4px); width: 220px; background: #09090b; border: 1px solid var(--border, rgba(255,255,255,0.08)); border-radius: var(--radius-md, 8px); padding: 16px; display: none; flex-direction: column; gap: 12px; z-index: 10000; box-shadow: 0 10px 30px rgba(0,0,0,0.65); text-align: left;">
-                    <div style="display: flex; flex-direction: column; gap: 2px;">
-                        <div style="font-size: 12px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${email}</div>
-                        <div style="font-size: 11px; font-family: var(--font-mono); font-weight: bold; color: ${tierColor}; display: flex; align-items: center; gap: 4px;">
-                            <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: ${tierColor};"></span>
-                            ${tierLabel} Plan
-                        </div>
-                    </div>
-                    <hr style="border: none; border-top: 1px solid var(--border, rgba(255,255,255,0.08)); margin: 0;">
-                    <a href="#/dashboard" style="font-size: 13px; color: white; text-decoration: none; display: flex; align-items: center; gap: 6px; padding: 4px 0; transition: color 0.2s;" onmouseover="this.style.color='var(--accent-gold)'" onmouseout="this.style.color='white'">
-                        ⚙️ Dashboard Workspace
+        return `
+            <header class="main-header" style="border-bottom: none;">
+                <div class="container header-wrap">
+                    <a href="#/" class="header-brand">
+                        <img src="/NearPro_logo_nobg.png" alt="NearPro Logo" style="height: 32px; width: auto; object-fit: contain; margin-right: 4px;">
+                        <span>Near<span class="brand-text">Pro</span><sup style="font-size: 10px; font-weight: bold; color: var(--accent-gold); margin-left: 2px;">™</sup></span>
                     </a>
-                    <button id="signOutBtn" class="secondary-btn" style="width: 100%; padding: 8px; font-size: 12px; border-radius: var(--radius-sm); border-color: rgba(239, 68, 68, 0.2); color: #ef4444; background: rgba(239, 68, 68, 0.05); text-align: center; justify-content: center;">
-                        Sign Out
-                    </button>
+                    <nav class="header-nav">
+                        <a href="#/dashboard/directory" class="nav-link ${isDashboardActive ? 'active' : ''}">Dashboard Workspace</a>
+                    </nav>
+                    <div class="header-actions" style="display: flex; align-items: center; gap: 12px;">
+                        <div class="user-profile-dropdown-wrap" style="position: relative; display: inline-block; padding-bottom: 12px; margin-bottom: -12px;">
+                            <div class="avatar-ring" id="headerProfileAvatarBtn" style="width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; border: 2px solid ${tierColor}; box-shadow: ${glowShadow};">
+                                <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--bg-surface, #18181b); color: white; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; text-transform: uppercase; font-family: var(--font-mono);">
+                                    ${initials}
+                                </div>
+                            </div>
+                            <div class="profile-dropdown-content" id="headerProfileDropdownMenu" style="position: absolute; right: 0; top: calc(100% - 4px); width: 220px; background: #09090b; border: 1px solid var(--border, rgba(255,255,255,0.08)); border-radius: var(--radius-md, 8px); padding: 16px; display: none; flex-direction: column; gap: 12px; z-index: 10000; box-shadow: 0 10px 30px rgba(0,0,0,0.65); text-align: left;">
+                                <div style="display: flex; flex-direction: column; gap: 2px;">
+                                    <div style="font-size: 12px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${email}</div>
+                                    <div style="font-size: 11px; font-family: var(--font-mono); font-weight: bold; color: ${tierColor}; display: flex; align-items: center; gap: 4px;">
+                                        <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: ${tierColor};"></span>
+                                        ${tierLabel} Plan
+                                    </div>
+                                </div>
+                                <hr style="border: none; border-top: 1px solid var(--border, rgba(255,255,255,0.08)); margin: 0;">
+                                <a href="#/dashboard" style="font-size: 13px; color: white; text-decoration: none; display: flex; align-items: center; gap: 6px; padding: 4px 0; transition: color 0.2s;" onmouseover="this.style.color='var(--accent-gold)'" onmouseout="this.style.color='white'">
+                                    Dashboard Workspace
+                                </a>
+                                <button id="signOutBtn" class="secondary-btn" style="width: 100%; padding: 8px; font-size: 12px; border-radius: var(--radius-sm); border-color: rgba(239, 68, 68, 0.2); color: #ef4444; background: rgba(239, 68, 68, 0.05); text-align: center; justify-content: center;">
+                                    Sign Out
+                                </button>
+                            </div>
+                        </div>
+                        <style>
+                            .avatar-ring:hover { transform: scale(1.05); }
+                            .profile-dropdown-content::before { content: ''; position: absolute; top: -18px; left: 0; right: 0; height: 22px; background: transparent; }
+                            .user-profile-dropdown-wrap:hover .profile-dropdown-content, .profile-dropdown-content:hover { display: flex !important; }
+                        </style>
+                    </div>
                 </div>
-            </div>
-            
-            <style>
-                .avatar-ring:hover {
-                    transform: scale(1.05);
-                }
-                .profile-dropdown-content::before {
-                    content: '';
-                    position: absolute;
-                    top: -18px;
-                    left: 0;
-                    right: 0;
-                    height: 22px;
-                    background: transparent;
-                }
-                .user-profile-dropdown-wrap:hover .profile-dropdown-content,
-                .profile-dropdown-content:hover {
-                    display: flex !important;
-                }
-            </style>
-        `;
-    } else {
-        authActionsHTML = `
-            <button id="openLoginBtn" class="brand-btn" style="padding: 8px 16px; font-size: 13px; border-radius: var(--radius-sm);">Login</button>
+            </header>
         `;
     }
 
-    // Static marquee elements creation
-    const tickerNames = [
-        "CA Rahul", "Freelancer Priya", "Agency Head Amit", 
-        "Sales Rep Sneha", "Designer Rohit", "Developer Kiara", 
-        "Consultant Vivek", "Marketer Arjun", "Growth Hacker Riya"
-    ];
-    const tickerDeals = [
-        "₹30,000 retainer", "₹45,000 website contract", "₹75,000 SEO project", 
-        "₹20,000 consulting gig", "₹60,000 design package", "₹50,000 HubSpot migration", 
-        "₹35,000 audit deal", "₹90,000 enterprise contract", "₹40,000 WhatsApp campaign"
-    ];
-    const tickerTips = [
-        "Find local clients with 100% verified street address data!",
-        "Unlocking 12 premium verified leads with direct numbers today!",
-        "Pitch ₹30,000 mobile layout packages to target gap leads!",
-        "Sync local business profiles to Google Sheets automatically!",
-        "Create custom white-label proposal PDFs in 30 seconds!",
-        "Bypass gatekeepers with direct owner mobile numbers!"
-    ];
+    // ── Guest / Marketing navbar — Hunter.io style ──
+    // Ticker data
+    const tickerNames = ["CA Rahul", "Freelancer Priya", "Agency Head Amit", "Sales Rep Sneha", "Designer Rohit", "Developer Kiara", "Consultant Vivek", "Marketer Arjun", "Growth Hacker Riya"];
+    const tickerDeals = ["₹30,000 retainer", "₹45,000 website contract", "₹75,000 SEO project", "₹20,000 consulting gig", "₹60,000 design package", "₹50,000 HubSpot migration", "₹35,000 audit deal", "₹90,000 enterprise contract", "₹40,000 WhatsApp campaign"];
+    const tickerTips = ["Find local clients with 100% verified street address data!", "Unlocking 12 premium verified leads with direct numbers today!", "Pitch ₹30,000 mobile layout packages to target gap leads!", "Sync local business profiles to Google Sheets automatically!", "Create custom white-label proposal PDFs in 30 seconds!", "Bypass gatekeepers with direct owner mobile numbers!"];
 
     const tickerItems = [];
     for (let i = 0; i < tickerNames.length; i++) {
-        const deal = tickerDeals[i % tickerDeals.length];
-        const tip = tickerTips[i % tickerTips.length];
-        tickerItems.push(`🔥 <span style="color: var(--accent-gold);">${tickerNames[i]}</span> just closed a <span style="color: #3b82f6;">${deal}</span> using NearPro!`);
-        tickerItems.push(`🚀 ${tip}`);
+        tickerItems.push(`<span style="color: var(--accent-gold); font-weight: 700;">${tickerNames[i]}</span> just closed a <span style="color: #3b82f6;">${tickerDeals[i % tickerDeals.length]}</span> using NearPro!`);
+        tickerItems.push(tickerTips[i % tickerTips.length]);
     }
     const singleSequence = tickerItems.join(' &bull; ');
     const fullMarqueeContent = `${singleSequence} &bull; ${singleSequence} &bull;`;
- 
+
     return `
         <header class="main-header" style="border-bottom: none;">
             <div class="container header-wrap">
+
+                <!-- Brand -->
                 <a href="#/" class="header-brand">
                     <img src="/NearPro_logo_nobg.png" alt="NearPro Logo" style="height: 32px; width: auto; object-fit: contain; margin-right: 4px;">
                     <span>Near<span class="brand-text">Pro</span><sup style="font-size: 10px; font-weight: bold; color: var(--accent-gold); margin-left: 2px;">™</sup></span>
                 </a>
-                
-                <nav class="header-nav">
-                    ${State.user ? `
-                        <a href="#/dashboard/directory" class="nav-link ${isDashboardActive ? 'active' : ''}">Dashboard Workspace</a>
-                    ` : ''}
+
+                <!-- Nav links with dropdowns -->
+                <nav class="header-nav" style="display: flex; align-items: center; gap: 6px;">
+
+                    <!-- Product ▾ -->
+                    <div class="np-nav-dropdown" style="position: relative;">
+                        <button class="np-nav-trigger" style="background: none; border: none; color: var(--text-secondary); font-size: 14px; font-weight: 500; cursor: pointer; padding: 8px 12px; display: flex; align-items: center; gap: 4px; font-family: inherit; transition: color 0.15s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='var(--text-secondary)'">
+                            Product <span style="font-size: 10px; opacity: 0.6;">▾</span>
+                        </button>
+                        <div class="np-mega-panel" style="position: absolute; top: calc(100% + 8px); left: -40px; width: 560px; background: #0c0c0e; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 28px 32px; display: none; z-index: 1000; box-shadow: 0 20px 60px rgba(0,0,0,0.6);">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px;">
+                                <!-- Core Platform -->
+                                <div>
+                                    <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-gold); margin-bottom: 14px;">Core Platform</div>
+                                    <div style="display: flex; flex-direction: column; gap: 14px;">
+                                        <a href="#/dashboard/directory" class="np-mega-link" style="text-decoration: none; display: flex; flex-direction: column; gap: 2px;">
+                                            <span style="font-size: 13.5px; font-weight: 600; color: #ffffff;">B2B Directory</span>
+                                            <span style="font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.4;">Find verified local businesses across India.</span>
+                                        </a>
+                                        <a href="#/dashboard/crm" class="np-mega-link" style="text-decoration: none; display: flex; flex-direction: column; gap: 2px;">
+                                            <span style="font-size: 13.5px; font-weight: 600; color: #ffffff;">Outreach Pipeline</span>
+                                            <span style="font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.4;">Track leads from discovery to deal closed.</span>
+                                        </a>
+                                        <a href="#/dashboard/sequences" class="np-mega-link" style="text-decoration: none; display: flex; flex-direction: column; gap: 2px;">
+                                            <span style="font-size: 13.5px; font-weight: 600; color: #ffffff;">Email Sequences</span>
+                                            <span style="font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.4;">Multi-touch drip campaigns with Hinglish.</span>
+                                        </a>
+                                        <a href="#/dashboard/proposals" class="np-mega-link" style="text-decoration: none; display: flex; flex-direction: column; gap: 2px;">
+                                            <span style="font-size: 13.5px; font-weight: 600; color: #ffffff;">Proposal Builder</span>
+                                            <span style="font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.4;">AI-generated PDF proposals in 30 seconds.</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <!-- Intelligence -->
+                                <div>
+                                    <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-gold); margin-bottom: 14px;">Intelligence & AI</div>
+                                    <div style="display: flex; flex-direction: column; gap: 14px;">
+                                        <a href="#/dashboard/audit" class="np-mega-link" style="text-decoration: none; display: flex; flex-direction: column; gap: 2px;">
+                                            <span style="font-size: 13.5px; font-weight: 600; color: #ffffff;">Website Audit</span>
+                                            <span style="font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.4;">Instant SEO, speed & gap analysis reports.</span>
+                                        </a>
+                                        <a href="#/dashboard/voice-agent" class="np-mega-link" style="text-decoration: none; display: flex; flex-direction: column; gap: 2px;">
+                                            <span style="font-size: 13.5px; font-weight: 600; color: #ffffff;">AI Voice Agent</span>
+                                            <span style="font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.4;">Priya calls prospects with your pitch script.</span>
+                                        </a>
+                                        <a href="#/dashboard/enrichment" class="np-mega-link" style="text-decoration: none; display: flex; flex-direction: column; gap: 2px;">
+                                            <span style="font-size: 13.5px; font-weight: 600; color: #ffffff;">Data Enrichment</span>
+                                            <span style="font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.4;">Waterfall enrichment for emails & phones.</span>
+                                        </a>
+                                        <a href="#/dashboard/deliverability" class="np-mega-link" style="text-decoration: none; display: flex; flex-direction: column; gap: 2px;">
+                                            <span style="font-size: 13.5px; font-weight: 600; color: #ffffff;">Deliverability Hub</span>
+                                            <span style="font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.4;">SPF, DKIM, DMARC health monitoring.</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pricing (direct link) -->
+                    <a href="#/checkout?plan=scout&cycle=monthly" class="nav-link" style="padding: 8px 12px; font-size: 14px; font-weight: 500; color: var(--text-secondary); text-decoration: none; transition: color 0.15s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='var(--text-secondary)'">Pricing</a>
+
+                    <!-- Resources ▾ -->
+                    <div class="np-nav-dropdown" style="position: relative;">
+                        <button class="np-nav-trigger" style="background: none; border: none; color: var(--text-secondary); font-size: 14px; font-weight: 500; cursor: pointer; padding: 8px 12px; display: flex; align-items: center; gap: 4px; font-family: inherit; transition: color 0.15s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='var(--text-secondary)'">
+                            Resources <span style="font-size: 10px; opacity: 0.6;">▾</span>
+                        </button>
+                        <div class="np-mega-panel" style="position: absolute; top: calc(100% + 8px); left: -20px; width: 280px; background: #0c0c0e; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px 24px; display: none; z-index: 1000; box-shadow: 0 20px 60px rgba(0,0,0,0.6);">
+                            <div style="display: flex; flex-direction: column; gap: 14px;">
+                                <a href="#/docs" class="np-mega-link" style="text-decoration: none; display: flex; flex-direction: column; gap: 2px;">
+                                    <span style="font-size: 13.5px; font-weight: 600; color: #ffffff;">Documentation</span>
+                                    <span style="font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.4;">Guides, API references, and tutorials.</span>
+                                </a>
+                                <a href="#/docs" class="np-mega-link" style="text-decoration: none; display: flex; flex-direction: column; gap: 2px;">
+                                    <span style="font-size: 13.5px; font-weight: 600; color: #ffffff;">Integration Guides</span>
+                                    <span style="font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.4;">Connect with n8n, HubSpot, and Ollama.</span>
+                                </a>
+                                <a href="#/dashboard/overview" class="np-mega-link" style="text-decoration: none; display: flex; flex-direction: column; gap: 2px;">
+                                    <span style="font-size: 13.5px; font-weight: 600; color: #ffffff;">Getting Started</span>
+                                    <span style="font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.4;">Platform overview and quick-start guide.</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Company ▾ -->
+                    <div class="np-nav-dropdown" style="position: relative;">
+                        <button class="np-nav-trigger" style="background: none; border: none; color: var(--text-secondary); font-size: 14px; font-weight: 500; cursor: pointer; padding: 8px 12px; display: flex; align-items: center; gap: 4px; font-family: inherit; transition: color 0.15s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='var(--text-secondary)'">
+                            Company <span style="font-size: 10px; opacity: 0.6;">▾</span>
+                        </button>
+                        <div class="np-mega-panel" style="position: absolute; top: calc(100% + 8px); left: -20px; width: 260px; background: #0c0c0e; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px 24px; display: none; z-index: 1000; box-shadow: 0 20px 60px rgba(0,0,0,0.6);">
+                            <div style="display: flex; flex-direction: column; gap: 14px;">
+                                <a href="https://www.linkedin.com/company/s8n-nearpro" target="_blank" class="np-mega-link" style="text-decoration: none; display: flex; flex-direction: column; gap: 2px;">
+                                    <span style="font-size: 13.5px; font-weight: 600; color: #ffffff;">About S8N AI</span>
+                                    <span style="font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.4;">The team building NearPro.</span>
+                                </a>
+                                <a href="mailto:support@s8n.in" class="np-mega-link" style="text-decoration: none; display: flex; flex-direction: column; gap: 2px;">
+                                    <span style="font-size: 13.5px; font-weight: 600; color: #ffffff;">Contact Support</span>
+                                    <span style="font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.4;">Reach us at support@s8n.in</span>
+                                </a>
+                                <a href="#/privacy" class="np-mega-link" style="text-decoration: none; display: flex; flex-direction: column; gap: 2px;">
+                                    <span style="font-size: 13.5px; font-weight: 600; color: #ffffff;">Privacy & Terms</span>
+                                    <span style="font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.4;">Legal policies and data practices.</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </nav>
-                
-                <div class="header-actions" style="display: flex; align-items: center; gap: 12px;">
-                    ${viewToggleHTML}
-                    ${authActionsHTML}
+
+                <!-- Right side: language + auth -->
+                <div class="header-actions" style="display: flex; align-items: center; gap: 16px;">
+
+                    <!-- Language selector -->
+                    <div class="np-nav-dropdown" style="position: relative;">
+                        <button class="np-nav-trigger" id="langSelectorBtn" style="background: none; border: 1px solid rgba(255,255,255,0.1); color: var(--text-secondary); font-size: 13px; font-weight: 500; cursor: pointer; padding: 6px 10px; display: flex; align-items: center; gap: 6px; font-family: inherit; border-radius: 6px; transition: all 0.15s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.2)'; this.style.color='#ffffff'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.color='var(--text-secondary)'">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                            <span id="currentLangLabel">EN</span>
+                            <span style="font-size: 9px; opacity: 0.5;">▾</span>
+                        </button>
+                        <div class="np-mega-panel" style="position: absolute; top: calc(100% + 8px); right: 0; width: 150px; background: #0c0c0e; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 8px; display: none; z-index: 1000; box-shadow: 0 12px 40px rgba(0,0,0,0.5);">
+                            <button class="np-lang-option" data-lang="en" style="width: 100%; text-align: left; padding: 8px 12px; background: none; border: none; color: var(--accent-gold); font-size: 13px; font-weight: 600; cursor: pointer; border-radius: 6px; font-family: inherit; transition: background 0.1s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='none'">English</button>
+                            <button class="np-lang-option" data-lang="hi" style="width: 100%; text-align: left; padding: 8px 12px; background: none; border: none; color: rgba(255,255,255,0.7); font-size: 13px; font-weight: 500; cursor: pointer; border-radius: 6px; font-family: inherit; transition: background 0.1s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='none'">हिंदी</button>
+                        </div>
+                    </div>
+
+                    <!-- Create an account -->
+                    <button id="createAccountBtn" style="background: none; border: 1px solid rgba(255,255,255,0.15); color: #ffffff; font-size: 13px; font-weight: 600; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-family: inherit; transition: all 0.15s; white-space: nowrap;" onmouseover="this.style.borderColor='rgba(255,255,255,0.3)'; this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'; this.style.background='none'">
+                        Create an account
+                    </button>
+
+                    <!-- Log in -->
+                    <a href="javascript:void(0)" id="openLoginBtn" style="color: var(--accent-gold); font-size: 13px; font-weight: 600; text-decoration: none; white-space: nowrap; display: flex; align-items: center; gap: 4px; transition: opacity 0.15s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                        Log in <span style="font-size: 14px;">→</span>
+                    </a>
                 </div>
             </div>
         </header>
-        ${!State.user ? `
-            <div class="navbar-ticker-bar" style="background: rgba(255, 160, 0, 0.05); border-top: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 160, 0, 0.2); padding: 8px 0; overflow: hidden; width: 100%;">
-                <div class="container" style="display: flex; align-items: center; gap: 12px; max-width: var(--container-width); margin: 0 auto; padding: 0 16px;">
-                    <span class="ticker-badge" style="background: rgba(255, 160, 0, 0.15); color: var(--accent-gold); padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 800; font-family: var(--font-mono); text-transform: uppercase; display: inline-block; animation: pulse 2s infinite; flex-shrink: 0; letter-spacing: 0.5px;">HOT 🔥</span>
-                    <div class="ticker-viewport" style="overflow: hidden; width: 100%; position: relative; height: 22px; display: flex; align-items: center;">
-                        <div class="ticker-track" style="display: inline-block; white-space: nowrap; position: absolute; animation: marquee-bar 45s linear infinite; width: max-content; font-size: 14.5px; font-weight: 700; color: #e2e8f0; will-change: transform; backface-visibility: hidden; transform: translate3d(-50%, 0, 0);">
-                            ${fullMarqueeContent}
-                        </div>
+
+        <!-- Ticker bar -->
+        <div class="navbar-ticker-bar" style="background: rgba(255, 160, 0, 0.05); border-top: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 160, 0, 0.2); padding: 8px 0; overflow: hidden; width: 100%;">
+            <div class="container" style="display: flex; align-items: center; gap: 12px; max-width: var(--container-width); margin: 0 auto; padding: 0 16px;">
+                <span class="ticker-badge" style="background: rgba(255, 160, 0, 0.15); color: var(--accent-gold); padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 800; font-family: var(--font-mono); text-transform: uppercase; display: inline-block; animation: pulse 2s infinite; flex-shrink: 0; letter-spacing: 0.5px;">LIVE</span>
+                <div class="ticker-viewport" style="overflow: hidden; width: 100%; position: relative; height: 22px; display: flex; align-items: center;">
+                    <div class="ticker-track" style="display: inline-block; white-space: nowrap; position: absolute; animation: marquee-bar 45s linear infinite; width: max-content; font-size: 14px; font-weight: 600; color: #e2e8f0; will-change: transform; backface-visibility: hidden; transform: translate3d(-50%, 0, 0);">
+                        ${fullMarqueeContent}
                     </div>
                 </div>
             </div>
-        ` : ''}
+        </div>
+
+        <!-- Dropdown hover styles -->
         <style>
             @keyframes marquee-bar {
                 0% { transform: translate3d(-50%, 0, 0); }
@@ -161,6 +245,12 @@ export function renderHeader() {
                 0%, 100% { opacity: 1; }
                 50% { opacity: 0.6; }
             }
+            /* Dropdown show/hide via hover */
+            .np-nav-dropdown { padding-bottom: 12px; margin-bottom: -12px; }
+            .np-mega-panel::before { content: ''; position: absolute; top: -14px; left: 0; right: 0; height: 18px; background: transparent; }
+            .np-nav-dropdown:hover .np-mega-panel { display: block !important; }
+            .np-mega-link { padding: 6px 8px; border-radius: 6px; transition: background 0.12s; }
+            .np-mega-link:hover { background: rgba(255,255,255,0.04); }
         </style>
     `;
 }
@@ -169,26 +259,21 @@ export function bindHeaderEvents() {
     const gridBtn = document.getElementById('gridBtn');
     const mapBtn = document.getElementById('mapBtn');
     const openLoginBtn = document.getElementById('openLoginBtn');
+    const createAccountBtn = document.getElementById('createAccountBtn');
     const signOutBtn = document.getElementById('signOutBtn');
-    
+
     if (gridBtn) {
-        gridBtn.addEventListener('click', () => {
-            State.toggleView('grid');
-        });
+        gridBtn.addEventListener('click', () => { State.toggleView('grid'); });
     }
-    
     if (mapBtn) {
-        mapBtn.addEventListener('click', () => {
-            State.toggleView('map');
-        });
+        mapBtn.addEventListener('click', () => { State.toggleView('map'); });
     }
-
     if (openLoginBtn) {
-        openLoginBtn.addEventListener('click', () => {
-            State.setAuthModal(true);
-        });
+        openLoginBtn.addEventListener('click', () => { State.setAuthModal(true); });
     }
-
+    if (createAccountBtn) {
+        createAccountBtn.addEventListener('click', () => { State.setAuthModal(true); });
+    }
     if (signOutBtn) {
         signOutBtn.addEventListener('click', async () => {
             try {
@@ -202,6 +287,7 @@ export function bindHeaderEvents() {
         });
     }
 
+    // Profile avatar toggle (logged-in only)
     const profileAvatarBtn = document.getElementById('headerProfileAvatarBtn');
     const profileDropdownMenu = document.getElementById('headerProfileDropdownMenu');
     if (profileAvatarBtn && profileDropdownMenu) {
@@ -210,11 +296,27 @@ export function bindHeaderEvents() {
             const isVisible = profileDropdownMenu.style.display === 'flex';
             profileDropdownMenu.style.display = isVisible ? 'none' : 'flex';
         });
-
         document.addEventListener('click', (e) => {
             if (!profileAvatarBtn.contains(e.target) && !profileDropdownMenu.contains(e.target)) {
                 profileDropdownMenu.style.display = 'none';
             }
         });
     }
+
+    // Language selector
+    document.querySelectorAll('.np-lang-option').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const lang = btn.dataset.lang;
+            const label = document.getElementById('currentLangLabel');
+            if (label) label.textContent = lang === 'hi' ? 'HI' : 'EN';
+            // Highlight selected
+            document.querySelectorAll('.np-lang-option').forEach(b => {
+                b.style.color = b.dataset.lang === lang ? 'var(--accent-gold)' : 'rgba(255,255,255,0.7)';
+                b.style.fontWeight = b.dataset.lang === lang ? '600' : '500';
+            });
+            // Close dropdown
+            const panel = btn.closest('.np-mega-panel');
+            if (panel) panel.style.display = 'none';
+        });
+    });
 }

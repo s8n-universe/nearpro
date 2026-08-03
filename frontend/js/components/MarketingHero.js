@@ -4,75 +4,50 @@ export function renderMarketingHero(stats = null) {
         ? `${stats.total_professionals.toLocaleString('en-IN')}+` 
         : '12,358+';
     const avgRating = stats?.average_rating 
-        ? `${stats.average_rating}★` 
-        : '4.7★';
+        ? `${stats.average_rating}` 
+        : '4.7';
     const totalCategories = stats?.total_categories 
         ? `${stats.total_categories}+` 
         : '400+';
 
     return `
         <section class="marketing-hero" style="padding-top: 18px;">
-            <div class="container hero-content">
-                <div id="heroWaitlistBanner" style="margin: 0 auto 20px; display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px; background: rgba(255, 160, 0, 0.1); border: 1px solid rgba(255, 160, 0, 0.25); border-radius: 100px; backdrop-filter: blur(8px); cursor: pointer; transition: all 0.2s ease; flex-wrap: wrap; justify-content: center;" onclick="window.State.setWaitlistModal(true, 'Pune')" onmouseover="this.style.background='rgba(255, 160, 0, 0.18)'; this.style.borderColor='rgba(255, 160, 0, 0.4)'" onmouseout="this.style.background='rgba(255, 160, 0, 0.1)'; this.style.borderColor='rgba(255, 160, 0, 0.25)'">
-                    <span id="heroTopBannerLeads" style="font-size: 13px; color: var(--accent-gold); font-weight: 700;">📍 Live in Mumbai (${totalLeads} Verified Leads)</span>
-                    <span style="color: rgba(255,255,255,0.4);">•</span>
-                    <span style="font-size: 13px; color: #ffffff; font-weight: 500;">Pune, Delhi & Bangalore Dropping Next Month!</span>
-                    <span style="padding: 4px 10px; background: var(--accent-gold); color: #000; font-size: 11px; font-weight: 800; border-radius: 20px; font-family: var(--font-mono); text-transform: uppercase;">Join Waitlist 🚀</span>
+            <div class="container hero-content" style="max-width: 820px;">
+
+                <!-- Top pill banner -->
+                <div id="heroWaitlistBanner" style="margin: 0 auto 28px; display: inline-flex; align-items: center; gap: 8px; padding: 7px 16px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 100px; cursor: pointer; transition: all 0.2s ease;" onclick="window.State.setWaitlistModal(true, 'Pune')" onmouseover="this.style.background='rgba(255,255,255,0.07)'; this.style.borderColor='rgba(255,255,255,0.14)'" onmouseout="this.style.background='rgba(255,255,255,0.04)'; this.style.borderColor='rgba(255,255,255,0.08)'">
+                    <span style="width: 6px; height: 6px; background: #22c55e; border-radius: 50%; flex-shrink: 0;"></span>
+                    <span id="heroTopBannerLeads" style="font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 500;">Live in Mumbai with ${totalLeads} verified leads</span>
+                    <span style="color: rgba(255,255,255,0.2);">·</span>
+                    <span style="font-size: 13px; color: rgba(255,255,255,0.5); font-weight: 500;">Pune, Delhi & Bangalore coming soon</span>
                 </div>
-                <h1 class="hero-title">No More Inaccurate Directories. <br>Find, Pitch, and Close <span class="brand-text">Premium B2B Clients.</span></h1>
-                <p class="hero-desc" style="max-width: 680px; margin: 0 auto 32px; line-height: 1.6;">
-                    The AI-powered sales workstation for B2B agencies. Map verified leads, run automated audits, generate customized proposals, and sync deals to your CRM on autopilot.
+
+                <!-- Main headline -->
+                <h1 class="hero-title" style="font-size: 52px; font-weight: 700; line-height: 1.12; letter-spacing: -1.8px; margin-bottom: 20px;">
+                    Find local businesses.<br>Close more deals.
+                </h1>
+
+                <!-- Subtitle -->
+                <p class="hero-desc" style="max-width: 560px; margin: 0 auto 36px; line-height: 1.65; font-size: 17px;">
+                    Stop buying cold lead lists. NearPro surfaces warm, signal ready local businesses for Indian digital agencies — in real time.
                 </p>
-                <div class="hero-search-widget" style="max-width: 580px; margin: 0 auto 36px; padding: 6px; background: rgba(10, 10, 12, 0.65); border: 1.5px solid var(--border); border-radius: 100px; backdrop-filter: blur(12px); box-shadow: 0 16px 40px rgba(0,0,0,0.5); display: flex; gap: 4px; align-items: center;">
-                    <div style="flex: 1.2; padding-left: 16px; display: flex; align-items: center; gap: 8px; border-right: 1px solid rgba(255,255,255,0.08);">
-                        <span style="font-size: 14px;">🎯</span>
-                        <select id="heroSectorSelect" style="width: 100%; background: transparent; border: none; color: white; font-size: 13.5px; font-weight: 600; outline: none; cursor: pointer;">
-                            <option value="Healthcare" style="background:#0a0a0c;">🩺 Healthcare / Doctors</option>
-                            <option value="Beauty & Wellness" style="background:#0a0a0c;">💅 Beauty &amp; Wellness</option>
-                            <option value="Real Estate" style="background:#0a0a0c;">🏢 Real Estate Agents</option>
-                            <option value="Food & Dining" style="background:#0a0a0c;">🍕 Food &amp; Dining</option>
-                        </select>
-                    </div>
-                    <div style="flex: 1; padding-left: 12px; display: flex; align-items: center; gap: 8px;">
-                        <span style="font-size: 14px;">📍</span>
-                        <select id="heroAreaSelect" style="width: 100%; background: transparent; border: none; color: white; font-size: 13.5px; font-weight: 600; outline: none; cursor: pointer;">
-                            <option value="Bandra" style="background:#0a0a0c;">Bandra West</option>
-                            <option value="Andheri" style="background:#0a0a0c;">Andheri East</option>
-                            <option value="Worli" style="background:#0a0a0c;">Worli Suburb</option>
-                            <option value="Dadar" style="background:#0a0a0c;">Dadar Central</option>
-                            <option value="Juhu" style="background:#0a0a0c;">Juhu Beach</option>
-                        </select>
-                    </div>
-                    <button id="heroSearchBtn" class="brand-btn" style="padding: 12px 28px; font-size: 13.5px; font-weight: 700; border-radius: 100px; white-space: nowrap; box-shadow: 0 4px 15px rgba(255, 160, 0, 0.35);">
-                        Find Free Leads ➔
+
+                <!-- CTA row — clean, Apollo-style -->
+                <div class="hero-ctas" style="max-width: 460px; margin: 0 auto 20px; display: flex; gap: 0; align-items: center; background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.1); border-radius: 8px; overflow: hidden;">
+                    <input type="email" id="heroEmailInput" placeholder="Enter your work email" style="flex: 1; padding: 14px 18px; background: transparent; border: none; color: #ffffff; font-size: 14.5px; font-weight: 500; outline: none; font-family: inherit;" />
+                    <button id="heroSignupBtn" style="padding: 14px 28px; background: var(--accent-gold, #ffa000); color: #000000; font-size: 14px; font-weight: 700; border: none; cursor: pointer; white-space: nowrap; font-family: inherit; letter-spacing: 0.1px; transition: background 0.15s;" onmouseover="this.style.background='#ffb733'" onmouseout="this.style.background='var(--accent-gold, #ffa000)'">
+                        Get started free
                     </button>
                 </div>
-                <script>
-                    setTimeout(() => {
-                        const btn = document.getElementById('heroSearchBtn');
-                        if (btn) {
-                            btn.addEventListener('click', () => {
-                                const sector = document.getElementById('heroSectorSelect').value;
-                                const area = document.getElementById('heroAreaSelect').value;
-                                window.State.updateFilters({
-                                    parentCategory: sector,
-                                    area: area,
-                                    min_rating: "4.0",
-                                    has_email: true,
-                                    has_phone: true,
-                                    has_website: true,
-                                    website_filter: "has_website"
-                                });
-                                window.location.hash = '#/dashboard/directory';
-                            });
-                        }
-                    }, 100);
-                </script>
-                <div class="hero-bullets">
-                    <span id="heroTotalLeads">${totalLeads} Verified Leads</span>
-                    <span id="heroTotalCategories">${totalCategories} Sub Categories</span>
-                    <span id="heroAvgRating">${avgRating} Average Rating</span>
-                    <span>India Focused</span>
+
+                <p style="font-size: 12.5px; color: rgba(255,255,255,0.35); margin: 0 0 44px 0; font-weight: 400;">No credit card required</p>
+
+                <!-- Trust stats strip -->
+                <div class="hero-bullets" style="display: flex; justify-content: center; gap: 32px; flex-wrap: wrap;">
+                    <span id="heroTotalLeads" style="font-size: 13px;">${totalLeads} Verified Leads</span>
+                    <span id="heroTotalCategories" style="font-size: 13px;">${totalCategories} Categories</span>
+                    <span id="heroAvgRating" style="font-size: 13px;">${avgRating} Avg Rating</span>
+                    <span style="font-size: 13px;">India Focused</span>
                 </div>
             </div>
         </section>

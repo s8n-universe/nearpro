@@ -407,37 +407,15 @@ function renderMarketingLayout() {
     `;
     bindHeaderEvents();
     
-    const heroSearchBtn = document.getElementById('heroSearchBtn');
-    if (heroSearchBtn) {
-        heroSearchBtn.addEventListener('click', () => {
-            const sector = document.getElementById('heroSectorSelect').value;
-            const area = document.getElementById('heroAreaSelect').value;
-            Router.navigate('#/dashboard/directory');
-            setTimeout(() => {
-                State.updateFilters({
-                    parentCategory: sector,
-                    category: null,
-                    area: area,
-                    min_rating: "4.0",
-                    has_email: true,
-                    has_phone: true,
-                    has_website: true,
-                    website_filter: "has_website",
-                    no_website: false,
-                    search: ""
-                });
-            }, 100);
+    const heroSignupBtn = document.getElementById('heroSignupBtn');
+    if (heroSignupBtn) {
+        heroSignupBtn.addEventListener('click', () => {
+            State.setAuthModal(true);
         });
     }
-    
+
     bindFeatureShowcaseEvents();
     refreshLucideIcons();
-
-    // Initialize premium custom select dropdowns for Hero widget
-    const heroSectorSelect = document.getElementById('heroSectorSelect');
-    const heroAreaSelect = document.getElementById('heroAreaSelect');
-    if (heroSectorSelect) initCustomSelect(heroSectorSelect, 'hero-dropdown');
-    if (heroAreaSelect) initCustomSelect(heroAreaSelect, 'hero-dropdown');
 
     // Bind scratch modal & trigger events
     bindScratchModalEvents();
