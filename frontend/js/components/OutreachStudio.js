@@ -314,7 +314,7 @@ export function renderOutreachStudio(savedLeads, activeLeadId = null, templates 
                         ` : ''}
 
                         <!-- Message Textarea -->
-                        <div style="margin-top: 4px; display: flex; flex-direction: column; gap: 10px;">
+                        <div id="studioOutreachCopyContainer" style="margin-top: 4px; display: flex; flex-direction: column; gap: 10px;">
                             <label style="display:flex; align-items:center; gap:6px; font-size:12.5px; color:#0f172a; text-transform:uppercase; font-family:var(--font-mono); letter-spacing:1px; font-weight:700;">
                                 <i data-lucide="file-text" style="width:14px; height:14px; color: #b45309;"></i> Outreach Copy
                             </label>
@@ -636,16 +636,96 @@ export function bindOutreachStudioEvents(templates, onLeadSelectCallback, onTemp
             State.ai_outreach_language = language;
             State.ai_outreach_tone = tone;
 
-            if (textarea) {
-                textarea.value = "Writing your personalized Cold Sequence... please wait...";
-                textarea.disabled = true;
+            // Fetch lead details for animation labels
+            let lead = { name: 'Business' };
+            try {
+                lead = await Api.getProfessional(leadId) || lead;
+            } catch (err) {
+                console.warn("Failed to fetch lead details for animation:", err);
             }
+
+            // Swap textarea with AI Progress Console
+            const composerContainer = document.getElementById('studioOutreachCopyContainer');
+            if (composerContainer) {
+                composerContainer.innerHTML = `
+                    <label style="display:flex; align-items:center; gap:6px; font-size:12.5px; color:#0f172a; text-transform:uppercase; font-family:var(--font-mono); letter-spacing:1px; font-weight:700;">
+                        <i data-lucide="file-text" style="width:14px; height:14px; color: #b45309;"></i> Outreach Copy
+                    </label>
+                    <div id="studioAIProgressContainer" style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 22px; display: flex; flex-direction: column; gap: 14px; box-shadow: inset 0 2px 6px rgba(0,0,0,0.02); height: 220px; justify-content: center;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h4 style="margin: 0; font-size: 14px; color: #0f172a; font-family: var(--font-heading); font-weight: 800; display:flex; align-items:center; gap:8px;">
+                                <span class="spinner" style="width:16px; height:16px; border-width:2px; border-color: #d97706; border-top-color: transparent;"></span>
+                                <span>🤖 AI Sequence Writer active: Drafting Day 1, 3, & 7...</span>
+                            </h4>
+                            <span id="studioProgressPercent" style="font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: #d97706;">
+                                0% Complete
+                            </span>
+                        </div>
+
+                        <!-- Progress bar -->
+                        <div style="height: 6px; background: #e2e8f0; border-radius: 10px; overflow: hidden; position: relative;">
+                            <div id="studioProgressBar" style="width: 0%; height: 100%; background: #d97706; transition: width 0.4s ease; border-radius: 10px;"></div>
+                        </div>
+
+                        <!-- Live feed logs console -->
+                        <div id="studioLogsConsole" style="background: #0f172a; border-radius: 6px; padding: 12px; font-family: var(--font-mono, monospace); font-size: 11.5px; height: 100px; overflow-y: auto; color: #fbbf24; display: flex; flex-direction: column; gap: 6px;">
+                            <div>[0.5s] CONNECTING: Initializing AI sequence generator...</div>
+                        </div>
+                    </div>
+                `;
+                if (window.lucide) window.lucide.createIcons();
+            }
+
             generateAIPitchBtn.innerText = "Writing...";
             generateAIPitchBtn.disabled = true;
 
             try {
-                const response = await Api.generateAIOutreach(leadId, channel, language, tone);
-                
+                // Start API call in background
+                const apiPromise = Api.generateAIOutreach(leadId, channel, language, tone);
+
+                // Run progress ticks
+                const logSteps = [
+                    `[1.0s] ANALYZING: Reading lead profile, ratings and digital gaps for ${lead.name}...`,
+                    `[2.2s] DRAFTING DAY 1: Writing initial hook using Observation strategy...`,
+                    `[3.5s] DRAFTING DAY 3: Writing follow-up pitch addressing pain points...`,
+                    `[4.8s] DRAFTING DAY 7: Structuring final touch outreach message...`,
+                    `[6.0s] SYNCING: Formatting Hinglish/English tone adjustments and final checks...`
+                ];
+
+                let simulatedProgressPercent = 0;
+                let simulatedStatusLogs = [`[0.5s] CONNECTING: Initializing AI sequence generator...`];
+
+                for (let i = 0; i < logSteps.length; i++) {
+                    await new Promise(resolve => setTimeout(resolve, 1100));
+                    simulatedStatusLogs.push(logSteps[i]);
+                    simulatedProgressPercent = Math.min(99, Math.round(((i + 1) / logSteps.length) * 100));
+
+                    const percentEl = document.getElementById('studioProgressPercent');
+                    const barEl = document.getElementById('studioProgressBar');
+                    const consoleEl = document.getElementById('studioLogsConsole');
+                    if (percentEl) percentEl.innerText = `${simulatedProgressPercent}% Complete`;
+                    if (barEl) barEl.style.width = `${simulatedProgressPercent}%`;
+                    if (consoleEl) {
+                        consoleEl.innerHTML = simulatedStatusLogs.map(log => `<div>${log}</div>`).join('');
+                        consoleEl.scrollTop = consoleEl.scrollHeight;
+                    }
+                }
+
+                // Await API completion
+                const response = await apiPromise;
+
+                const percentEl = document.getElementById('studioProgressPercent');
+                const barEl = document.getElementById('studioProgressBar');
+                const consoleEl = document.getElementById('studioLogsConsole');
+                if (percentEl) percentEl.innerText = `100% Complete`;
+                if (barEl) barEl.style.width = `100%`;
+                if (consoleEl) {
+                    consoleEl.innerHTML += `<div>[7.2s] COMPLETE: 3-step sequence generated successfully!</div>`;
+                    consoleEl.scrollTop = consoleEl.scrollHeight;
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 500)); // Brief pause for UX
+
                 // Cache the sequence in global window storage
                 window._generatedSequence = {
                     hook_type: response.hook_type,
@@ -653,7 +733,7 @@ export function bindOutreachStudioEvents(templates, onLeadSelectCallback, onTemp
                     day3: response.day3,
                     day7: response.day7
                 };
-                
+
                 // Track lead and tag as AI-generated sequence
                 window._sequenceLeadId = leadId;
                 window._sequenceTemplateId = 'ai';
@@ -676,9 +756,8 @@ export function bindOutreachStudioEvents(templates, onLeadSelectCallback, onTemp
             } catch (err) {
                 console.error("AI Generation failed: ", err);
                 alert(err.message || "Failed to generate AI pitch. Please try again.");
-                if (textarea) textarea.value = "";
+                if (onLeadSelectCallback) onLeadSelectCallback(leadId);
             } finally {
-                if (textarea) textarea.disabled = false;
                 generateAIPitchBtn.innerText = "Write AI Pitch";
                 generateAIPitchBtn.disabled = false;
             }
