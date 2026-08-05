@@ -198,18 +198,18 @@ export function renderProfessionalModal(lead) {
                             <span class="spinner" style="width:16px; height:16px; border-width:2px;"></span>
                             <span>🤖 AI Agent Crawler active: ${lead.name}</span>
                         </h4>
-                        <span style="font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: #2563eb;">
+                        <span id="crawlerProgressPercent" style="font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: #2563eb;">
                             ${simulatedProgressPercent}% Complete
                         </span>
                     </div>
 
                     <!-- Progress bar -->
                     <div style="height: 6px; background: #e2e8f0; border-radius: 10px; overflow: hidden; position: relative;">
-                        <div style="width: ${simulatedProgressPercent}%; height: 100%; background: #2563eb; transition: width 0.4s ease; border-radius: 10px;"></div>
+                        <div id="crawlerProgressBar" style="width: ${simulatedProgressPercent}%; height: 100%; background: #2563eb; transition: width 0.4s ease; border-radius: 10px;"></div>
                     </div>
 
                     <!-- Live feed logs console -->
-                    <div style="background: #0f172a; border-radius: 8px; padding: 14px; font-family: var(--font-mono, monospace); font-size: 11px; height: 180px; overflow-y: auto; color: #38bdf8; display: flex; flex-direction: column; gap: 8px;">
+                    <div id="crawlerLogsConsole" style="background: #0f172a; border-radius: 8px; padding: 14px; font-family: var(--font-mono, monospace); font-size: 11px; height: 180px; overflow-y: auto; color: #38bdf8; display: flex; flex-direction: column; gap: 8px;">
                         ${simulatedStatusLogs.map(log => `<div>${log}</div>`).join('')}
                     </div>
 
@@ -453,7 +453,7 @@ export function bindProfessionalModalEvents(lead, onClose) {
                     await new Promise(resolve => setTimeout(resolve, 1000));
                     simulatedStatusLogs.push(logSteps[i]);
                     simulatedProgressPercent = Math.min(100, Math.round(((i + 1) / logSteps.length) * 100));
-                    refreshModalBody(lead, onClose);
+                    updateCrawlerProgressDOM();
                 }
 
                 // 3. Save report and complete
@@ -526,6 +526,23 @@ export function bindProfessionalModalEvents(lead, onClose) {
                 console.error("Failed to copy text: ", err);
             });
         });
+    }
+}
+
+function updateCrawlerProgressDOM() {
+    const percentEl = document.getElementById('crawlerProgressPercent');
+    const barEl = document.getElementById('crawlerProgressBar');
+    const consoleEl = document.getElementById('crawlerLogsConsole');
+
+    if (percentEl) {
+        percentEl.innerText = `${simulatedProgressPercent}% Complete`;
+    }
+    if (barEl) {
+        barEl.style.width = `${simulatedProgressPercent}%`;
+    }
+    if (consoleEl) {
+        consoleEl.innerHTML = simulatedStatusLogs.map(log => `<div>${log}</div>`).join('');
+        consoleEl.scrollTop = consoleEl.scrollHeight; // Auto-scroll to the bottom of the logs
     }
 }
 
