@@ -70,7 +70,7 @@ export const ResearchApi = {
                 
                 if (State.profile) {
                     State.profile.monthly_research_used = used + 1;
-                    State.notify();
+                    // State.notify(); // Commented out to prevent full page re-render from closing the active modal
                 }
 
                 return job;
@@ -88,7 +88,7 @@ export const ResearchApi = {
                 await atomicDecrement('profiles', State.user.id, 'monthly_research_used', 1);
                 if (State.profile) {
                     State.profile.monthly_research_used = Math.max(0, (State.profile.monthly_research_used || 1) - 1);
-                    State.notify();
+                    // State.notify(); // Commented out to prevent full page re-render from closing the active modal
                 }
             },
             null,
