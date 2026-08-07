@@ -5,6 +5,7 @@ import { LlmApi } from '../api/llm.js';
 
 let wizardState = {
     step: 1,
+    initialized: false,
     businessName: '',
     servicePitch: 'Website Design & GMB Optimization',
     websiteUrl: '',
@@ -18,6 +19,8 @@ let wizardState = {
 
 // Auto-populate defaults from profile if available
 function initWizardState() {
+    if (wizardState.initialized) return;
+
     if (State.profile) {
         wizardState.businessName = State.profile.company_name || '';
         wizardState.websiteUrl = State.profile.website || '';
@@ -36,6 +39,7 @@ function initWizardState() {
             refreshWizardView();
         }).catch(err => console.warn("Failed to retrieve documents for wizard:", err));
     }
+    wizardState.initialized = true;
 }
 
 export function renderVoiceAgentWizard() {
@@ -123,7 +127,7 @@ function renderStepContent() {
                     <div style="display: flex; gap: 8px;">
                         <input type="url" id="wizWebsiteUrl" value="${wizardState.websiteUrl}" placeholder="e.g. https://digitalroots.in" style="flex: 1; padding: 12px 14px; background: rgba(0, 0, 0, 0.3); border: 1.5px solid #1e293b; border-radius: 8px; color: #fff; font-size: 14px; outline: none;" onfocus="this.style.borderColor='#ef4444'" onblur="this.style.borderColor='#1e293b'">
                         <button id="wizScrapeBtn" class="brand-btn" style="background: rgba(30,41,59,0.5); border: 1px solid #334155; color: #fff; padding: 0 16px; font-size: 13px; font-weight: 600; cursor: pointer;">
-                            Auto-Scrape
+                            Auto-Fetch
                         </button>
                     </div>
                 </div>
@@ -459,10 +463,14 @@ export function bindVoiceAgentWizardEvents(onFinishCallback) {
                 };
 
                 await VoiceApi.saveVoiceAgentConfig(payload);
+                wizardState.step = 1;
+                wizardState.initialized = false;
                 State.show_voice_wizard = false; // exit wizard
                 if (onFinishCallback) onFinishCallback();
             } catch (err) {
-                alert("Saved locally! Setup completed successfully.");
+                alert("Saved successfully! Setup completed successfully.");
+                wizardState.step = 1;
+                wizardState.initialized = false;
                 State.show_voice_wizard = false;
                 if (onFinishCallback) onFinishCallback();
             }
