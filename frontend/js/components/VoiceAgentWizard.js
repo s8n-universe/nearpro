@@ -925,11 +925,12 @@ async function startLiveKitBrowserCall(livekitUrl, token) {
     });
 
     try {
-        if (typeof window.LiveKit === 'undefined') {
+        const LK = window.LiveKit || window.LiveKitClient;
+        if (!LK) {
             throw new Error("LiveKit Client SDK not loaded. Please reload your page.");
         }
 
-        const room = new window.LiveKit.Room({
+        const room = new LK.Room({
             adaptiveStream: true,
             dynacast: true,
         });
@@ -937,16 +938,16 @@ async function startLiveKitBrowserCall(livekitUrl, token) {
         activeLivekitRoom = room;
 
         room
-            .on(window.LiveKit.RoomEvent.Connected, () => {
+            .on(LK.RoomEvent.Connected, () => {
                 statusEl.innerText = "Connected! Opening microphone stream...";
                 iconEl.innerText = "🟢";
             })
-            .on(window.LiveKit.RoomEvent.Disconnected, () => {
+            .on(LK.RoomEvent.Disconnected, () => {
                 statusEl.innerText = "Call ended.";
                 clearInterval(timerInterval);
                 setTimeout(() => overlay.remove(), 1500);
             })
-            .on(window.LiveKit.RoomEvent.TrackSubscribed, (track) => {
+            .on(LK.RoomEvent.TrackSubscribed, (track) => {
                 if (track.kind === 'audio') {
                     statusEl.innerText = "Active connection! Talk to Priya now.";
                     timerEl.style.display = 'block';
