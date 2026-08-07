@@ -531,12 +531,12 @@ async function runCampaignSimulation(config) {
         }
 
         // Webhook finish
-        const callId = callRecord?.call_id || crypto.randomUUID();
+        const endCallId = callRecord?.call_id || crypto.randomUUID();
         try {
             await Api.supabase.functions.invoke('voice-agent-orchestrator', {
                 body: {
                     action: 'call_end',
-                    call_id: callId,
+                    call_id: endCallId,
                     duration_seconds: seconds,
                     call_status: 'ANSWERED',
                     call_outcome_tag: finalOutcome,

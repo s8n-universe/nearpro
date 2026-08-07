@@ -1,6 +1,7 @@
 import { State } from '../state.js';
 import { VoiceApi } from '../api/voice.js';
 import { Api } from '../api.js';
+import { LlmApi } from '../api/llm.js';
 
 let wizardState = {
     step: 1,
@@ -42,17 +43,17 @@ export function renderVoiceAgentWizard() {
                 <div style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; background: rgba(239, 68, 68, 0.08); border: 1.5px solid rgba(239, 68, 68, 0.25); border-radius: 50px; color: #ef4444; font-size: 12px; font-family: var(--font-mono); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px;">
                     MANDATORY AI SETUP
                 </div>
-                <h2 style="font-size: 28px; font-weight: 800; margin: 0 0 8px 0; color: #fff; font-family: var(--font-heading);">
+                <h2 style="font-size: 28px; font-weight: 800; margin: 0 0 8px 0; color: var(--text, #0f172a); font-family: var(--font-heading);">
                     Configure Your AI Voice Assistant
                 </h2>
-                <p style="color: #94a3b8; font-size: 14.5px; margin: 0; max-width: 500px; margin: 0 auto; line-height: 1.5;">
+                <p style="color: var(--text-secondary, #475569); font-size: 14.5px; margin: 0; max-width: 500px; margin: 0 auto; line-height: 1.5;">
                     Set up your natural Hinglish/English voice agent in under 90 seconds. Paste your website, choose a voice, and start calling.
                 </p>
             </div>
 
             <!-- Progress Bar -->
             <div style="margin-bottom: 36px;">
-                <div style="display: flex; justify-content: space-between; font-size: 12px; font-family: var(--font-mono); color: #64748b; margin-bottom: 8px; font-weight: 600; text-transform: uppercase;">
+                <div style="display: flex; justify-content: space-between; font-size: 12px; font-family: var(--font-mono); color: var(--text-muted, #64748b); margin-bottom: 8px; font-weight: 600; text-transform: uppercase;">
                     <span style="${step === 1 ? 'color: #ef4444;' : 'color: #38bdf8;'}">1. Business Profile</span>
                     <span style="${step === 2 ? 'color: #ef4444;' : step > 2 ? 'color: #38bdf8;' : ''}">2. AI Identity</span>
                     <span style="${step === 3 ? 'color: #ef4444;' : ''}">3. Call Verification</span>
@@ -259,38 +260,22 @@ export function bindVoiceAgentWizardEvents(onFinishCallback) {
             // Invoke real website audit scraper edge function
             Api.supabase.functions.invoke('audit-website', {
                 body: { url: url }
-            }).then(({ data, error }) => {
-                wizardState.scraping = false;
+            }).then(async ({ data, error }) => {
                 if (data && !error) {
-                    // Extract domain/brand context
-                    let fallbackName = '';
-                    try {
-                        fallbackName = new URL(url).hostname.replace('www.', '').split('.')[0];
-                    } catch (e) {
-                        fallbackName = 'My Business';
-                    }
+                    wizardState.scraping = false;
+                    const fallbackName = guessBusinessName(url);
                     wizardState.businessName = wizardState.businessName || data.site_title || fallbackName;
                     wizardState.servicePitch = data.gaps && data.gaps.length > 0 
                         ? `Fixing website gap: ${data.gaps[0]}` 
                         : "Website Conversion & GMB Reviews Growth";
+                    refreshWizardView();
                 } else {
-                    let fallbackName = 'My Business';
-                    try {
-                        fallbackName = new URL(url).hostname.replace('www.', '').split('.')[0];
-                    } catch (e) {}
-                    wizardState.businessName = wizardState.businessName || fallbackName;
-                    wizardState.servicePitch = "Custom Web Design & Conversion Audits";
+                    // Failover: Direct client-side Gemini call
+                    await runGeminiScraperFallback(url);
                 }
-                refreshWizardView();
-            }).catch(err => {
-                wizardState.scraping = false;
-                let fallbackName = 'My Business';
-                try {
-                    fallbackName = new URL(url).hostname.replace('www.', '').split('.')[0];
-                } catch (e) {}
-                wizardState.businessName = wizardState.businessName || fallbackName;
-                wizardState.servicePitch = "Custom Web Design & Conversion Audits";
-                refreshWizardView();
+            }).catch(async err => {
+                // Failover: Direct client-side Gemini call
+                await runGeminiScraperFallback(url);
             });
         });
     }
@@ -412,4 +397,79 @@ function refreshWizardView() {
         container.innerHTML = renderVoiceAgentWizard();
         bindVoiceAgentWizardEvents();
     }
+}
+
+// Fallback direct Gemini model scraper helper
+async function runGeminiScraperFallback(url) {
+    const fallbackName = guessBusinessName(url);
+    try {
+        const providers = await LlmApi.getProviders();
+        const gemini = providers.find(c => c.provider_type === 'gemini');
+        if (gemini && gemini.encrypted_api_key) {
+            const apiKey = gemini.encrypted_api_key;
+            const model = gemini.model_id || 'gemini-2.5-flash';
+            const testUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+            
+            const prompt = `Based on the local business website URL "${url}", guess a realistic professional Business Name and a single high-converting B2B outreach pitch service (e.g. Website Speed Optimization, SEO Audit, GMB Reviews Generation). Return your response strictly as a JSON object with keys "business_name" and "service_pitch". Do not return any markdown or code blocks.`;
+
+            const res = await fetch(testUrl, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'x-goog-api-key': apiKey
+                },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }]
+                })
+            });
+
+            if (res.ok) {
+                const resJson = await res.json();
+                const text = resJson.candidates?.[0]?.content?.parts?.[0]?.text || '';
+                const cleanJson = text.replace(/```json/g, '').replace(/```/g, '').trim();
+                const parsed = JSON.parse(cleanJson);
+                
+                wizardState.businessName = wizardState.businessName || parsed.business_name || fallbackName;
+                wizardState.servicePitch = parsed.service_pitch || "Website Conversion & Reviews Growth";
+                wizardState.scraping = false;
+                refreshWizardView();
+                return;
+            }
+        }
+    } catch (e) {
+        console.warn("[Gemini Scraper Fallback] execution failed", e);
+    }
+
+    // Default Smart Parsing Fallback
+    wizardState.businessName = wizardState.businessName || fallbackName;
+    wizardState.servicePitch = guessServiceFromDomain(url);
+    wizardState.scraping = false;
+    refreshWizardView();
+}
+
+function guessBusinessName(url) {
+    try {
+        let domain = new URL(url).hostname;
+        domain = domain.replace('www.', '').split('.')[0];
+        return domain.charAt(0).toUpperCase() + domain.slice(1);
+    } catch (e) {
+        return 'Local Business';
+    }
+}
+
+function guessServiceFromDomain(url) {
+    const lowercase = url.toLowerCase();
+    if (lowercase.includes('dental') || lowercase.includes('dentist')) {
+        return "GMB Google Reviews & Local SEO Audit";
+    }
+    if (lowercase.includes('clinic') || lowercase.includes('doctor') || lowercase.includes('health')) {
+        return "Patient Booking Widget & GMB Reviews";
+    }
+    if (lowercase.includes('restaurant') || lowercase.includes('food') || lowercase.includes('cafe')) {
+        return "WhatsApp Ordering Bot Setup";
+    }
+    if (lowercase.includes('legal') || lowercase.includes('law') || lowercase.includes('advocate')) {
+        return "Automated Lead Routing & Review System";
+    }
+    return "Custom Web Design & Conversion Audits";
 }
