@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 import { preCallComplianceCheck, hashPhone } from "./compliance.ts"
-import { createCallSession } from "./livekit.ts"
+import { createCallSession, initiateOutboundSipCall } from "./livekit.ts"
 import { AGENT_SYSTEM_PROMPT, CallParams } from "./agent.ts"
 
 const corsHeaders = {
@@ -166,6 +166,19 @@ serve(async (req) => {
 
       const systemPrompt = AGENT_SYSTEM_PROMPT(params);
 
+      // Trigger outbound dial through LiveKit SIP Service
+      let outboundResult = { success: true, sandbox: true, call_sid: null };
+      try {
+        const dialRes = await initiateOutboundSipCall(session.roomName, phone);
+        outboundResult = {
+          success: dialRes.success,
+          sandbox: dialRes.sandbox,
+          call_sid: dialRes.call_sid || null
+        };
+      } catch (err) {
+        console.error("Orchestrator: LiveKit SIP Outbound Call trigger failed", err);
+      }
+
       // Insert initiated call log
       const { data: auditRecord, error: auditErr } = await supabase
         .from('call_audit_log')
@@ -180,7 +193,7 @@ serve(async (req) => {
           virtual_did_used: Deno.env.get('EXOTEL_VIRTUAL_DID') || '+911400000000',
           dnd_status_at_call: 'NOT_DND',
           calling_hour_ist: istHour,
-          call_status: 'INITIATED',
+          call_status: outboundResult.sandbox ? 'INITIATED' : 'INITIATED',
           duration_seconds: 0,
         }])
         .select()
@@ -200,7 +213,9 @@ serve(async (req) => {
         call_id: auditRecord.id,
         room_name: session.roomName,
         token: session.token,
-        system_prompt: systemPrompt
+        system_prompt: systemPrompt,
+        sandbox: outboundResult.sandbox,
+        call_sid: outboundResult.call_sid
       }), {
         status: 200,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
