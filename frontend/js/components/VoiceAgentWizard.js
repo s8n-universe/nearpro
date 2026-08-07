@@ -591,50 +591,7 @@ function startInteractiveCallConsole(widget, overlay) {
     const repliesBox = document.getElementById('simRepliesContainer');
 
     let dialogIndex = 0;
-    const script = [
-        {
-            role: 'AI',
-            text: `Hi, kya meri baat ${wizardState.businessName || 'Owner'} ji se ho rahi hai? Main Priya baat kar rahi hoon, AI assistant representing S8N Services. Quick 60 seconds milenge?`,
-            replies: [
-                { text: "Haan, boliye. Kya kaam hai?", next: 1 },
-                { text: "Nahi, abhi main busy hoon.", next: 2 },
-                { text: "Wrong number, stop calling me.", next: 3 }
-            ]
-        },
-        // Path 1: Interested (Index 1)
-        {
-            role: 'AI',
-            text: `Ji, hum aapki website ${wizardState.websiteUrl || 'business profile'} review kar rahe the, aur hume vahan local visibility boost karne ka ek simple deficit mila. Kya hum aapko short PDF audit proposal share kar sakte hain?`,
-            replies: [
-                { text: "Sure, WhatsApp par send kardo.", next: 4 },
-                { text: "Nahi interest hai, thank you.", next: 2 }
-            ]
-        },
-        // Path 2: Busy / No interest (Index 2)
-        {
-            role: 'AI',
-            text: "Main samajh sakti hoon. No problem! Aapka time dene ke liye shukriya. Have a great day!",
-            replies: [],
-            end: true,
-            outcome: 'NOT_INTERESTED'
-        },
-        // Path 3: Wrong number / Opt-out (Index 3)
-        {
-            role: 'AI',
-            text: "Apologies! Maine note kar liya hai, hum aapko aage se call nahi karenge. Thank you.",
-            replies: [],
-            end: true,
-            outcome: 'OPT_OUT'
-        },
-        // Path 4: WhatsApp Callback requested (Index 4)
-        {
-            role: 'AI',
-            text: `Perfect! Main WhatsApp par complete audit proposal send kar rahi hoon, aur humare senior teammate ko aapse connect karne ke liye follow-up mark kar deti hoon. Thank you so much!`,
-            replies: [],
-            end: true,
-            outcome: 'INTERESTED_CALLBACK'
-        }
-    ];
+    const script = generateDynamicScript();
 
     function printAILine(index) {
         if (!container || !repliesBox) return;
@@ -718,4 +675,90 @@ function startInteractiveCallConsole(widget, overlay) {
     setTimeout(() => {
         printAILine(0);
     }, 1500);
+}
+
+function generateDynamicScript() {
+    const isHinglish = wizardState.voiceId === 'nova' || wizardState.voiceId === 'shimmer';
+    const voiceName = wizardState.voiceId === 'nova' ? 'Priya' : wizardState.voiceId === 'shimmer' ? 'Amit' : wizardState.voiceId === 'echo' ? 'Rahul' : 'Sneha';
+    
+    // Dynamic opening
+    const openingText = isHinglish
+        ? `Namaste! Kya meri baat ${wizardState.businessName || 'Owner'} ji se ho rahi hai? Main ${voiceName} bol rahi hoon, AI assistant calling on behalf of ${wizardState.businessName}. Kaise hain aap?`
+        : `Hello, am I speaking with the business owner at ${wizardState.businessName || 'your company'}? This is ${voiceName} calling on behalf of ${wizardState.businessName}. How are you doing today?`;
+
+    // Dynamic pitch based on campaignGoal and servicePitch
+    let pitchText = '';
+    if (wizardState.campaignGoal === 'REPUTATION_AND_REVENUE') {
+        pitchText = isHinglish
+            ? `Ji, hum aapki local profile verify kar rahe the. Humne notice kiya ki aapki reviews and ratings competitor se thodi peeche hain. Hum digital reviews boost karne ke liye ${wizardState.servicePitch} help offer karte hain. Kya iske regarding PDF details send kar doon?`
+            : `I was auditing your local business listings and noticed a review rating gap compared to competitors in your area. We specialize in ${wizardState.servicePitch} to fix this. Can I share a quick audit proposal with you?`;
+    } else if (wizardState.campaignGoal === 'NO_WEBSITE_VISIBILITY') {
+        pitchText = isHinglish
+            ? `Ji, hum aapki business visibility check kar rahe the. Google par aapki functional website and mobile-friendly visibility missing mili, jiski wajah se client loss ho sakta hai. Hum ${wizardState.servicePitch} optimize karte hain. Kya main iski details share kar sakti hoon?`
+            : `I was reviewing search visibility for your brand and noticed a lack of mobile-friendly web layout which could cause lead leaks. We help businesses configure ${wizardState.servicePitch} to optimize conversions. Can I share our pricing sheet?`;
+    } else {
+        pitchText = isHinglish
+            ? `Ji, hum verify kar rahe the ki aap dynamic client queries handle kaise karte hain. Humne notice kiya ki business queries par instant WhatsApp follow-up absent hai. Hum ${wizardState.servicePitch} set up karte hain. Kya aap detailed roadmap dekhna chahenge?`
+            : `We were auditing consumer touchpoints for your niche and found a lag in instant WhatsApp response for new queries. We build automated frameworks for ${wizardState.servicePitch}. Would you like to review a quick 1-page setup plan?`;
+    }
+
+    // Dynamic Busy Response
+    const busyText = isHinglish
+        ? `Haan bilkul, main samajh sakti hoon ki aap abhi busy hain. No problem, hum email ya WhatsApp par details drop kar dete hain. Thank you so much, bye!`
+        : `I completely understand that you are busy right now. I will drop the details over email. Thank you for your time and have a great day!`;
+
+    // Dynamic Opt Out
+    const optOutText = isHinglish
+        ? `Aapki DND request note kar li hai. Hum aapko future mein call nahi karenge. Have a nice day.`
+        : `Understood. I have flagged your number on our Do Not Call list. We will not reach out again. Thank you.`;
+
+    // Dynamic Callback confirmation
+    const callbackText = isHinglish
+        ? `Bahut badiya! Main WhatsApp number aur details forward kar rahi hoon, aur humare senior local strategist ko connect karne ke liye mark kar deti hoon. Dhanyawad!`
+        : `Excellent! I have queued the details to your inbox and assigned our senior representative to contact you shortly. Thank you!`;
+
+    return [
+        {
+            role: 'AI',
+            text: openingText,
+            replies: [
+                { text: isHinglish ? "Haan, boliye. Kya kaam hai?" : "Yes, tell me. What is this about?", next: 1 },
+                { text: isHinglish ? "Nahi, abhi main busy hoon." : "No, I am busy right now.", next: 2 },
+                { text: isHinglish ? "Wrong number, don't call." : "Wrong number, stop calling me.", next: 3 }
+            ]
+        },
+        // Path 1: Interested (Index 1)
+        {
+            role: 'AI',
+            text: pitchText,
+            replies: [
+                { text: isHinglish ? "Sure, WhatsApp par details bhej do." : "Sure, send details on WhatsApp.", next: 4 },
+                { text: isHinglish ? "Nahi, interest nahi hai." : "No, not interested.", next: 2 }
+            ]
+        },
+        // Path 2: Busy / No interest (Index 2)
+        {
+            role: 'AI',
+            text: busyText,
+            replies: [],
+            end: true,
+            outcome: 'NOT_INTERESTED'
+        },
+        // Path 3: Wrong number / Opt-out (Index 3)
+        {
+            role: 'AI',
+            text: optOutText,
+            replies: [],
+            end: true,
+            outcome: 'OPT_OUT'
+        },
+        // Path 4: WhatsApp Callback requested (Index 4)
+        {
+            role: 'AI',
+            text: callbackText,
+            replies: [],
+            end: true,
+            outcome: 'INTERESTED_CALLBACK'
+        }
+    ];
 }
