@@ -45,14 +45,14 @@ serve(async (req) => {
     // -------------------------------------------------------------
     // ACTION: START CALL
     // -------------------------------------------------------------
-    if (action === 'start_call' || isStartCall) {
+    if (action === 'start_call' || action === 'test_call' || isStartCall) {
       const {
         phone,
         lead_id,          // professional_id
         saved_lead_id,    // saved_lead_id
         campaign_id,
-        lead_name,
-        lead_business_name,
+        lead_name = 'Test Recipient',
+        lead_business_name = 'Test Business',
         lead_area = 'Mumbai',
         lead_category = 'Local Business',
         lead_rating,
@@ -64,15 +64,18 @@ serve(async (req) => {
         language = 'hinglish'
       } = body;
 
-      if (!phone || !lead_business_name) {
-        return new Response(JSON.stringify({ error: 'phone and lead_business_name are required' }), {
+      if (!phone) {
+        return new Response(JSON.stringify({ error: 'phone parameter is required' }), {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         });
       }
 
-      // Check pre-call compliance
-      const compliance = await preCallComplianceCheck(supabase, phone, user.id);
+      // Check pre-call compliance (bypass compliance hour gates for self-test calls)
+      const compliance = action === 'test_call'
+        ? { passed: true, reason: undefined, code: undefined }
+        : await preCallComplianceCheck(supabase, phone, user.id);
+
       const phoneHash = await hashPhone(phone);
       const utcDate = new Date();
       const kolkataTime = new Date(utcDate.getTime() + (5.5 * 60 * 60 * 1000));

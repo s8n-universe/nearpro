@@ -1,5 +1,6 @@
 import { State } from '../state.js';
 import { VoiceApi } from '../api/voice.js';
+import { renderVoiceAgentWizard, bindVoiceAgentWizardEvents } from './VoiceAgentWizard.js';
 
 let agentConfig = {
     name: 'S8N AI Representative',
@@ -17,6 +18,10 @@ let agentConfig = {
 let recentCalls = [];
 
 export function renderVoiceAgentDashboard() {
+    if (State.show_voice_wizard) {
+        return renderVoiceAgentWizard();
+    }
+
     const credits = State.voice_credits || 45;
     const isHunter = State.userTier === 'hunter' || State.userTier === 'agency';
 
@@ -74,6 +79,9 @@ export function renderVoiceAgentDashboard() {
                         <span style="font-size:10px; color:#475569; text-transform:uppercase; font-weight:700;">Voice Credits</span>
                         <div style="font-size:16px; font-weight:800; color:#22c55e;">🪙 ${credits} remaining</div>
                     </div>
+                    <button class="brand-btn" id="voiceRelaunchWizardBtn" style="background: rgba(255,255,255,0.05); border: 1.5px solid #334155; color: #fff; font-weight: 800; padding: 12px 20px; border-radius:8px; cursor:pointer;">
+                        Configure Wizard 🪄
+                    </button>
                     <button class="brand-btn" id="voiceOpenCampaignModalBtn" style="background: #ef4444; color: white; font-weight: 800; padding: 12px 20px; border:none; border-radius:8px;">
                         + New Calling Campaign
                     </button>
@@ -171,6 +179,24 @@ export function renderVoiceAgentDashboard() {
 }
 
 export function bindVoiceAgentDashboardEvents() {
+    if (State.show_voice_wizard) {
+        bindVoiceAgentWizardEvents(() => {
+            loadVoiceConfigAndLogs().then(() => {
+                refreshView();
+            });
+        });
+        return;
+    }
+
+    // Relaunch Setup Wizard trigger
+    const relaunchBtn = document.getElementById('voiceRelaunchWizardBtn');
+    if (relaunchBtn) {
+        relaunchBtn.addEventListener('click', () => {
+            State.show_voice_wizard = true;
+            refreshView();
+        });
+    }
+
     // 1. Launch Campaign Modal Trigger
     const openCampaignBtn = document.getElementById('voiceOpenCampaignModalBtn');
     if (openCampaignBtn) {
@@ -318,11 +344,15 @@ export function bindVoiceAgentDashboardEvents() {
     });
 }
 
-async function loadVoiceLogs() {
+async function loadVoiceConfigAndLogs() {
     try {
         recentCalls = await VoiceApi.getCallLogs();
+        const configs = await VoiceApi.getVoiceAgentConfigs();
+        if (configs.length === 0 && State.show_voice_wizard === undefined) {
+            State.show_voice_wizard = true;
+        }
     } catch (e) {
-        console.warn("Failed to load voice logs:", e);
+        console.warn("Failed to load voice logs or config:", e);
         recentCalls = [];
     }
 }
@@ -336,7 +366,7 @@ function refreshView() {
     }
 }
 
-// Pre-load logs
+// Pre-load configs and logs
 (async () => {
-    await loadVoiceLogs();
+    await loadVoiceConfigAndLogs();
 })();

@@ -419,7 +419,53 @@ async function runCampaignSimulation(config) {
 
         statAnswered++;
         statAnsweredObj.innerText = statAnswered;
-        addLog(`Call answered by ${lead.name || 'Lead'}. Simulating LiveKit conversation...`);
+        addLog(`Call answered by ${lead.name || 'Lead'}. Connecting LiveKit monitoring channel...`);
+
+        // Realtime Subscription to live transcript updates
+        const callId = callRecord?.call_id || null;
+        let realtimeChannel = null;
+        if (callId && Api.supabase) {
+            realtimeChannel = Api.supabase
+                .channel(`call_live_monitor_${callId}`)
+                .on('postgres_changes', {
+                    event: '*',
+                    schema: 'public',
+                    table: 'call_transcripts',
+                    filter: `call_log_id=eq.${callId}`
+                }, payload => {
+                    const data = payload.new;
+                    if (data && data.transcript) {
+                        transcriptContainer.innerHTML = '';
+                        const lines = Array.isArray(data.transcript) ? data.transcript : [];
+                        lines.forEach(l => {
+                            const bubble = document.createElement('div');
+                            bubble.style.display = 'flex';
+                            bubble.style.flexDirection = 'column';
+                            bubble.style.marginBottom = '8px';
+                            bubble.style.maxWidth = '80%';
+                            bubble.style.padding = '8px 12px';
+                            bubble.style.borderRadius = '8px';
+                            
+                            const isAI = l.role === 'assistant' || l.role === 'agent' || l.role === 'AI';
+                            if (isAI) {
+                                bubble.style.alignSelf = 'flex-start';
+                                bubble.style.background = 'rgba(239, 68, 68, 0.15)';
+                                bubble.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+                                bubble.innerHTML = `<span style="font-size: 10px; color: #f87171; font-weight: 700; font-family: var(--font-mono); margin-bottom: 2px;">Priya (AI):</span>${l.text}`;
+                            } else {
+                                bubble.style.alignSelf = 'flex-end';
+                                bubble.style.background = 'rgba(30, 41, 59, 0.6)';
+                                bubble.style.border = '1px solid #1e293b';
+                                bubble.style.marginLeft = 'auto';
+                                bubble.innerHTML = `<span style="font-size: 10px; color: #94a3b8; font-weight: 700; font-family: var(--font-mono); margin-bottom: 2px;">Recipient:</span>${l.text}`;
+                            }
+                            transcriptContainer.appendChild(bubble);
+                        });
+                        transcriptContainer.scrollTop = transcriptContainer.scrollHeight;
+                    }
+                })
+                .subscribe();
+        }
 
         // Load conversation script
         const scriptLines = getSimulatedTranscripts(lead.name, campaignGoal, senderCompany);
@@ -501,6 +547,10 @@ async function runCampaignSimulation(config) {
             addLog(`Database synced. Call audit recorded.`);
         } catch (webhookErr) {
             console.error("Failed to call webhook endpoint:", webhookErr);
+        }
+
+        if (realtimeChannel && Api.supabase) {
+            Api.supabase.removeChannel(realtimeChannel);
         }
 
         // Update local state voice credits if successfully charged
