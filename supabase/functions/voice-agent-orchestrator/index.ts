@@ -215,7 +215,8 @@ serve(async (req) => {
         token: session.token,
         system_prompt: systemPrompt,
         sandbox: outboundResult.sandbox,
-        call_sid: outboundResult.call_sid
+        call_sid: outboundResult.call_sid,
+        livekit_url: Deno.env.get('LIVEKIT_API_URL') || ''
       }), {
         status: 200,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }

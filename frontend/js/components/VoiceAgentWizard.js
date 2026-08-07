@@ -222,6 +222,19 @@ function renderStepContent() {
                     <span style="color: #e2e8f0; font-style: italic;">"${openingScript}"</span>
                 </div>
 
+                <!-- WebRTC Browser mic direct connection widget -->
+                <div style="display: flex; flex-direction: column; gap: 10px; padding: 16px; background: rgba(56, 189, 248, 0.05); border: 1px dashed rgba(56, 189, 248, 0.25); border-radius: 8px;">
+                    <div style="font-size: 13px; font-weight: 700; color: #38bdf8; display: flex; align-items: center; gap: 6px;">
+                        🎙️ Direct Browser Audio Test (Free)
+                    </div>
+                    <p style="color: #94a3b8; font-size: 12px; line-height: 1.4; margin: 0;">
+                        Connect to the live AI agent room using your computer's microphone and speakers. Talk to the actual voice agent in real-time.
+                    </p>
+                    <button id="wizBrowserMicBtn" class="brand-btn" style="background: #0284c7; color: white; border: none; padding: 12px; font-weight: 700; cursor: pointer; border-radius: 6px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.2); display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        Start Browser Mic Call 🎙️
+                    </button>
+                </div>
+
                 <div>
                     <label style="display: block; font-size: 11px; font-family: var(--font-mono); color: #94a3b8; text-transform: uppercase; margin-bottom: 6px; font-weight: 600;">Your Phone Number (Include country code)</label>
                     <div style="display: flex; gap: 8px;">
@@ -332,6 +345,32 @@ export function bindVoiceAgentWizardEvents(onFinishCallback) {
     if (testPhoneInput) {
         testPhoneInput.addEventListener('input', () => {
             wizardState.testPhone = testPhoneInput.value.trim();
+        });
+    }
+
+    const browserMicBtn = document.getElementById('wizBrowserMicBtn');
+    if (browserMicBtn) {
+        browserMicBtn.addEventListener('click', async () => {
+            const phone = testPhoneInput ? testPhoneInput.value.trim() : '+919999999999';
+            browserMicBtn.disabled = true;
+            browserMicBtn.innerHTML = 'Connecting WebRTC...';
+
+            try {
+                // Call voice orchestrator to spawn room session and get joining token
+                const res = await VoiceApi.triggerTestCall(phone);
+                
+                if (res && res.token && res.livekit_url) {
+                    await startLiveKitBrowserCall(res.livekit_url, res.token);
+                } else {
+                    alert("Could not initialize voice session room. Please verify that LiveKit credentials are configured on your Supabase dashboard!");
+                }
+            } catch (err) {
+                console.error("Browser mic call initialization failed", err);
+                alert("Session failed: " + err.message);
+            } finally {
+                browserMicBtn.disabled = false;
+                browserMicBtn.innerHTML = 'Start Browser Mic Call 🎙️';
+            }
         });
     }
 
@@ -794,3 +833,135 @@ function generateDynamicScript() {
         }
     ];
 }
+
+let activeLivekitRoom = null;
+
+async function startLiveKitBrowserCall(livekitUrl, token) {
+    if (activeLivekitRoom) {
+        try {
+            await activeLivekitRoom.disconnect();
+        } catch (e) {}
+        activeLivekitRoom = null;
+    }
+
+    const overlay = document.createElement('div');
+    overlay.id = 'browser-live-mic-overlay';
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(15, 23, 42, 0.9);
+        backdrop-filter: blur(10px);
+        z-index: 999999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #f8fafc;
+        font-family: system-ui, sans-serif;
+    `;
+
+    const widget = document.createElement('div');
+    widget.style.cssText = `
+        width: 400px;
+        background: #0d1117;
+        border: 1.5px solid #0284c7;
+        border-radius: 16px;
+        padding: 30px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    `;
+
+    widget.innerHTML = `
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+            <div id="micStatusIcon" style="font-size: 48px; filter: drop-shadow(0 0 10px rgba(2,132,199,0.3)); animation: pulse 1.5s infinite;">🎙️</div>
+            <h3 style="margin: 8px 0 2px 0; color: #fff; font-size: 20px; font-weight: 800; font-family: var(--font-heading);">Live Voice Agent Call</h3>
+            <p style="margin: 0; color: #0284c7; font-family: var(--font-mono); font-size: 11px; font-weight: 700; text-transform: uppercase;">Direct WebRTC Session</p>
+        </div>
+
+        <div id="liveCallStatus" style="font-size: 13.5px; color: #e2e8f0; line-height: 1.5;">
+            Connecting to your LiveKit Cloud voice room...
+        </div>
+
+        <div id="liveCallTimer" style="font-size: 18px; color: #22c55e; font-family: var(--font-mono); font-weight: 700; display: none;">00:00</div>
+
+        <div style="display: flex; justify-content: center;">
+            <button id="endLiveMicBtn" class="brand-btn" style="background: #ef4444; border: none; color: #fff; padding: 12px 36px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 14px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.35);">
+                Disconnect 📞
+            </button>
+        </div>
+    `;
+
+    overlay.appendChild(widget);
+    document.body.appendChild(overlay);
+
+    const statusEl = document.getElementById('liveCallStatus');
+    const timerEl = document.getElementById('liveCallTimer');
+    const iconEl = document.getElementById('micStatusIcon');
+
+    let timerInterval = null;
+
+    document.getElementById('endLiveMicBtn').addEventListener('click', async () => {
+        if (activeLivekitRoom) {
+            try {
+                await activeLivekitRoom.disconnect();
+            } catch (e) {}
+            activeLivekitRoom = null;
+        }
+        clearInterval(timerInterval);
+        overlay.remove();
+    });
+
+    try {
+        if (typeof window.LiveKit === 'undefined') {
+            throw new Error("LiveKit Client SDK not loaded. Please reload your page.");
+        }
+
+        const room = new window.LiveKit.Room({
+            adaptiveStream: true,
+            dynacast: true,
+        });
+
+        activeLivekitRoom = room;
+
+        room
+            .on(window.LiveKit.RoomEvent.Connected, () => {
+                statusEl.innerText = "Connected! Opening microphone stream...";
+                iconEl.innerText = "🟢";
+            })
+            .on(window.LiveKit.RoomEvent.Disconnected, () => {
+                statusEl.innerText = "Call ended.";
+                clearInterval(timerInterval);
+                setTimeout(() => overlay.remove(), 1500);
+            })
+            .on(window.LiveKit.RoomEvent.TrackSubscribed, (track) => {
+                if (track.kind === 'audio') {
+                    statusEl.innerText = "Active connection! Talk to Priya now.";
+                    timerEl.style.display = 'block';
+                    let seconds = 0;
+                    timerInterval = setInterval(() => {
+                        seconds++;
+                        const mins = Math.floor(seconds / 60);
+                        const secs = seconds % 60;
+                        timerEl.innerText = `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+                    }, 1000);
+                    
+                    const element = track.attach();
+                    document.body.appendChild(element);
+                }
+            });
+
+        await room.connect(livekitUrl, token);
+        await room.localParticipant.setMicrophoneEnabled(true);
+        statusEl.innerText = "Microphone online. Priya is listening...";
+
+    } catch (err) {
+        console.error("LiveKit connection error:", err);
+        statusEl.innerHTML = `<span style="color: #ef4444;">Connection failed: ${err.message}</span>`;
+    }
+}
+
