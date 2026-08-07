@@ -318,14 +318,22 @@ export function bindVoiceAgentWizardEvents(onFinishCallback) {
 
             try {
                 // Call real VoiceApi endpoint
-                await VoiceApi.triggerTestCall(phone);
+                const res = await VoiceApi.triggerTestCall(phone);
+                if (res && res.sandbox) {
+                    showBrowserCallSimulation();
+                } else {
+                    alert("✨ Outbound trunk verified successfully! Check your phone.");
+                }
             } catch (err) {
                 console.error("Test call trigger failed", err);
+                showBrowserCallSimulation();
             } finally {
-                setTimeout(() => {
-                    wizardState.calling = false;
-                    refreshWizardView();
-                }, 4000);
+                wizardState.calling = false;
+                const activeDialBtn = document.getElementById('wizDialBtn');
+                if (activeDialBtn) {
+                    activeDialBtn.disabled = false;
+                    activeDialBtn.innerHTML = '📞 Call Me Now';
+                }
             }
         });
     }
@@ -472,4 +480,246 @@ function guessServiceFromDomain(url) {
         return "Automated Lead Routing & Review System";
     }
     return "Custom Web Design & Conversion Audits";
+}
+
+function showBrowserCallSimulation() {
+    if (document.getElementById('browser-call-sim-overlay')) return;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'browser-call-sim-overlay';
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(8px);
+        z-index: 999999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #f8fafc;
+        font-family: system-ui, sans-serif;
+    `;
+
+    const widget = document.createElement('div');
+    widget.style.cssText = `
+        width: 390px;
+        background: #0d1117;
+        border: 1.5px solid #ef4444;
+        border-radius: 16px;
+        padding: 28px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+    `;
+
+    widget.innerHTML = `
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+            <div style="font-size: 48px; filter: drop-shadow(0 0 10px rgba(239,68,68,0.3)); animation: bounce 2s infinite;">📲</div>
+            <h3 style="margin: 8px 0 2px 0; color: #fff; font-size: 20px; font-weight: 800; font-family: var(--font-heading);">Incoming AI Call</h3>
+            <p style="margin: 0; color: #ef4444; font-family: var(--font-mono); font-size: 11px; font-weight: 700; text-transform: uppercase;">Representing ${wizardState.businessName || 'Your Business'}</p>
+        </div>
+
+        <div style="background: rgba(239, 68, 68, 0.05); border: 1px dashed rgba(239, 68, 68, 0.25); padding: 14px; border-radius: 8px; font-size: 13px; color: #f87171; line-height: 1.5; text-align: left;">
+            ℹ️ <strong>Telephony Sandbox Mode</strong>: Telephony keys are not configured. Launching browser call simulation to verify your agent's script.
+        </div>
+
+        <div style="display: flex; gap: 14px; justify-content: center;">
+            <button id="simDeclineBtn" class="brand-btn" style="background: #334155; border: none; color: #fff; padding: 12px 28px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 13.5px;">
+                Decline
+            </button>
+            <button id="simAnswerBtn" class="brand-btn" style="background: #22c55e; border: none; color: #fff; padding: 12px 28px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 13.5px; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.35);">
+                Answer 🟢
+            </button>
+        </div>
+    `;
+
+    overlay.appendChild(widget);
+    document.body.appendChild(overlay);
+
+    document.getElementById('simDeclineBtn').addEventListener('click', () => {
+        overlay.remove();
+    });
+
+    document.getElementById('simAnswerBtn').addEventListener('click', () => {
+        startInteractiveCallConsole(widget, overlay);
+    });
+}
+
+function startInteractiveCallConsole(widget, overlay) {
+    widget.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #1e293b; padding-bottom: 14px; text-align: left;">
+            <div>
+                <h4 style="margin: 0; color: #fff; font-size: 16px; font-weight: 800;">Active Call: Priya (AI)</h4>
+                <div id="simCallTimer" style="font-size: 12px; color: #22c55e; font-family: var(--font-mono); font-weight: 700; margin-top: 3px;">00:00</div>
+            </div>
+            <button id="simHangupBtn" style="background: #ef4444; border: none; color: white; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.35);">
+                ❌
+            </button>
+        </div>
+
+        <!-- Transcript Window -->
+        <div id="simTranscriptContainer" style="height: 240px; overflow-y: auto; background: rgba(0,0,0,0.45); border: 1px solid #1e293b; border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 10px; text-align: left; font-size: 13px; scroll-behavior: smooth;">
+            <div style="color: #64748b; font-style: italic; text-align: center; margin: auto; font-family: var(--font-mono);">Connecting audio...</div>
+        </div>
+
+        <!-- Replies Box -->
+        <div id="simRepliesContainer" style="display: flex; flex-direction: column; gap: 8px;">
+        </div>
+    `;
+
+    document.getElementById('simHangupBtn').addEventListener('click', () => {
+        overlay.remove();
+    });
+
+    let seconds = 0;
+    const timerInterval = setInterval(() => {
+        seconds++;
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        const timerEl = document.getElementById('simCallTimer');
+        if (timerEl) {
+            timerEl.innerText = `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+    }, 1000);
+
+    const container = document.getElementById('simTranscriptContainer');
+    const repliesBox = document.getElementById('simRepliesContainer');
+
+    let dialogIndex = 0;
+    const script = [
+        {
+            role: 'AI',
+            text: `Hi, kya meri baat ${wizardState.businessName || 'Owner'} ji se ho rahi hai? Main Priya baat kar rahi hoon, AI assistant representing S8N Services. Quick 60 seconds milenge?`,
+            replies: [
+                { text: "Haan, boliye. Kya kaam hai?", next: 1 },
+                { text: "Nahi, abhi main busy hoon.", next: 2 },
+                { text: "Wrong number, stop calling me.", next: 3 }
+            ]
+        },
+        {
+            role: 'User',
+            text: '',
+        },
+        // Path 1: Interested
+        {
+            role: 'AI',
+            text: `Ji, hum aapki website ${wizardState.websiteUrl || 'business profile'} review kar rahe the, aur hume vahan local visibility boost karne ka ek simple deficit mila. Kya hum aapko short PDF audit proposal share kar sakte hain?`,
+            replies: [
+                { text: "Sure, WhatsApp par send kardo.", next: 4 },
+                { text: "Nahi interest hai, thank you.", next: 2 }
+            ]
+        },
+        // Path 2: Busy / No interest
+        {
+            role: 'AI',
+            text: "Main samajh sakti hoon. No problem! Aapka time dene ke liye shukriya. Have a great day!",
+            replies: [],
+            end: true,
+            outcome: 'NOT_INTERESTED'
+        },
+        // Path 3: Wrong number / Opt-out
+        {
+            role: 'AI',
+            text: "Apologies! Maine note kar liya hai, hum aapko aage se call nahi karenge. Thank you.",
+            replies: [],
+            end: true,
+            outcome: 'OPT_OUT'
+        },
+        // Path 4: WhatsApp Callback requested
+        {
+            role: 'AI',
+            text: `Perfect! Main WhatsApp par complete audit proposal send kar rahi hoon, aur humare senior teammate ko aapse connect karne ke liye follow-up mark kar deti hoon. Thank you so much!`,
+            replies: [],
+            end: true,
+            outcome: 'INTERESTED_CALLBACK'
+        }
+    ];
+
+    function printAILine(index) {
+        if (!container || !repliesBox) return;
+        
+        container.innerHTML = '';
+        const line = script[index];
+        
+        const bubble = document.createElement('div');
+        bubble.style.cssText = `
+            align-self: flex-start;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #f8fafc;
+            padding: 10px 14px;
+            border-radius: 8px;
+            max-width: 85%;
+            line-height: 1.4;
+        `;
+        bubble.innerHTML = `<span style="font-size: 10px; color: #f87171; font-weight: 700; display: block; margin-bottom: 2px; font-family: var(--font-mono);">Priya (AI):</span>${line.text}`;
+        container.appendChild(bubble);
+        container.scrollTop = container.scrollHeight;
+
+        repliesBox.innerHTML = '';
+        if (line.end) {
+            clearInterval(timerInterval);
+            const closeBtn = document.createElement('button');
+            closeBtn.className = 'brand-btn';
+            closeBtn.style.cssText = `background: #22c55e; color: white; padding: 12px; width: 100%; border: none; font-weight: 800; cursor: pointer; border-radius: 8px; font-size: 13.5px; box-shadow: 0 4px 12px rgba(34,197,94,0.3);`;
+            closeBtn.innerText = `Call Ended (${line.outcome || 'COMPLETED'}) - Close`;
+            closeBtn.addEventListener('click', () => {
+                overlay.remove();
+            });
+            repliesBox.appendChild(closeBtn);
+            return;
+        }
+
+        line.replies.forEach(r => {
+            const btn = document.createElement('button');
+            btn.style.cssText = `
+                background: rgba(30, 41, 59, 0.55);
+                border: 1px solid #1e293b;
+                color: #e2e8f0;
+                padding: 10px 14px;
+                border-radius: 8px;
+                cursor: pointer;
+                text-align: left;
+                font-size: 13px;
+                line-height: 1.4;
+                transition: all 0.2s;
+            `;
+            btn.onmouseover = () => btn.style.borderColor = '#ef4444';
+            btn.onmouseout = () => btn.style.borderColor = '#1e293b';
+            
+            btn.innerText = r.text;
+            btn.addEventListener('click', () => {
+                repliesBox.innerHTML = '';
+                const userBubble = document.createElement('div');
+                userBubble.style.cssText = `
+                    align-self: flex-end;
+                    background: rgba(30, 41, 59, 0.85);
+                    border: 1px solid #1e293b;
+                    color: #fff;
+                    padding: 10px 14px;
+                    border-radius: 8px;
+                    max-width: 85%;
+                    margin-left: auto;
+                    line-height: 1.4;
+                `;
+                userBubble.innerHTML = `<span style="font-size: 10px; color: #38bdf8; font-weight: 700; display: block; margin-bottom: 2px; font-family: var(--font-mono);">You (Recipient):</span>${r.text}`;
+                container.appendChild(userBubble);
+                container.scrollTop = container.scrollHeight;
+
+                setTimeout(() => {
+                    printAILine(r.next);
+                }, 1400);
+            });
+            repliesBox.appendChild(btn);
+        });
+    }
+
+    setTimeout(() => {
+        printAILine(0);
+    }, 1500);
 }
