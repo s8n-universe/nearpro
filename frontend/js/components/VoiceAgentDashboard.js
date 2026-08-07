@@ -348,8 +348,25 @@ async function loadVoiceConfigAndLogs() {
     try {
         recentCalls = await VoiceApi.getCallLogs();
         const configs = await VoiceApi.getVoiceAgentConfigs();
-        if (configs.length === 0 && State.show_voice_wizard === undefined) {
+        if (configs.length > 0) {
+            const activeConfig = configs.find(c => c.is_default) || configs[0];
+            agentConfig = {
+                id: activeConfig.id,
+                name: activeConfig.name || 'S8N AI Representative',
+                voice_id: activeConfig.voice_id || 'nova',
+                language: activeConfig.language || 'hinglish',
+                speaking_rate: Number(activeConfig.speaking_rate) || 1.0,
+                opening_script: activeConfig.opening_script || "Hi {{name}}, Priya baat kar rahi hoon S8N Services se. Kaise hain aap?",
+                qualification_questions: Array.isArray(activeConfig.qualification_questions) ? activeConfig.qualification_questions : [],
+                objection_handling: activeConfig.objection_handling || {},
+                company_context: activeConfig.company_context || '',
+                pricing_info: activeConfig.pricing_info || '',
+                knowledge_document_id: activeConfig.knowledge_document_id || ''
+            };
+            refreshView();
+        } else if (State.show_voice_wizard === undefined) {
             State.show_voice_wizard = true;
+            refreshView();
         }
     } catch (e) {
         console.warn("Failed to load voice logs or config:", e);
