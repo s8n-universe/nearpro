@@ -100,6 +100,7 @@ export function renderVoiceAgentWizard() {
                 `}
             </div>
         </div>
+    `;
 }
 
 function renderStepContent() {
