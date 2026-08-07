@@ -181,28 +181,33 @@ serve(async (req) => {
         console.error("Orchestrator: LiveKit SIP Outbound Call trigger failed", err);
       }
 
-      // Insert initiated call log
-      const { data: auditRecord, error: auditErr } = await supabase
-        .from('call_audit_log')
-        .insert([{
-          campaign_id: campaign_id || null,
-          called_number_hash: phoneHash,
-          initiated_by_user: user.id,
-          professional_id: lead_id || null,
-          saved_lead_id: saved_lead_id || null,
-          pe_registration_id: Deno.env.get('DLT_PE_REGISTRATION_ID') || 'PE_MOCK_REG_123',
-          dlt_template_id: Deno.env.get('DLT_TEMPLATE_ID') || 'DLT_MOCK_TEMP_456',
-          virtual_did_used: Deno.env.get('EXOTEL_VIRTUAL_DID') || '+911400000000',
-          dnd_status_at_call: 'NOT_DND',
-          calling_hour_ist: istHour,
-          call_status: outboundResult.sandbox ? 'INITIATED' : 'INITIATED',
-          duration_seconds: 0,
-        }])
-        .select()
-        .single();
+      // Insert initiated call log (skip database write if guest/mock user session to prevent foreign key error)
+      let auditRecord = { id: '00000000-0000-0000-0000-000000000000' };
 
-      if (auditErr) {
-        throw new Error("Failed to create call audit record: " + auditErr.message);
+      if (user.id !== '00000000-0000-0000-0000-000000000000') {
+        const { data, error: auditErr } = await supabase
+          .from('call_audit_log')
+          .insert([{
+            campaign_id: campaign_id || null,
+            called_number_hash: phoneHash,
+            initiated_by_user: user.id,
+            professional_id: lead_id || null,
+            saved_lead_id: saved_lead_id || null,
+            pe_registration_id: Deno.env.get('DLT_PE_REGISTRATION_ID') || 'PE_MOCK_REG_123',
+            dlt_template_id: Deno.env.get('DLT_TEMPLATE_ID') || 'DLT_MOCK_TEMP_456',
+            virtual_did_used: Deno.env.get('EXOTEL_VIRTUAL_DID') || '+911400000000',
+            dnd_status_at_call: 'NOT_DND',
+            calling_hour_ist: istHour,
+            call_status: outboundResult.sandbox ? 'INITIATED' : 'INITIATED',
+            duration_seconds: 0,
+          }])
+          .select()
+          .single();
+
+        if (auditErr) {
+          throw new Error("Failed to create call audit record: " + auditErr.message);
+        }
+        auditRecord = data;
       }
 
       // If campaign_id is provided, increment total dialed leads

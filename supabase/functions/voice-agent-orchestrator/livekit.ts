@@ -1,4 +1,4 @@
-import { AccessToken, RoomServiceClient, SipServiceClient } from 'https://esm.sh/livekit-server-sdk@2.0.0'
+import { AccessToken, RoomServiceClient } from 'https://esm.sh/livekit-server-sdk@2.0.0'
 
 export async function createCallSession(userId: string) {
   let url = Deno.env.get('LIVEKIT_API_URL') || '';
@@ -53,22 +53,52 @@ export async function initiateOutboundSipCall(roomName: string, phone: string) {
     return { success: true, sandbox: true };
   }
 
-  try {
-    const sipClient = new SipServiceClient(url, apiKey, apiSecret);
-    const participant = await sipClient.createSipParticipant(
-      sipTrunkId,
-      phone,
-      roomName,
-      {
-        participantIdentity: `lead_${phone.replace('+', '')}`,
-        participantName: 'Lead Recipient',
-      }
-    );
+  // Normalize url to start with https:// for REST requests
+  let restUrl = url;
+  if (restUrl.startsWith('wss://')) {
+    restUrl = restUrl.replace('wss://', 'https://');
+  } else if (restUrl.startsWith('ws://')) {
+    restUrl = restUrl.replace('ws://', 'http://');
+  }
+  restUrl = restUrl.replace(/\/$/, '');
 
-    console.log(`[LiveKit Outbound SIP] Successfully dialed ${phone} in room ${roomName}. ID: ${participant.sipCallId}`);
-    return { success: true, sandbox: false, call_sid: participant.sipCallId };
+  try {
+    // Generate admin API access token for REST request
+    const at = new AccessToken(apiKey, apiSecret, {
+      identity: `sip_dialer_${Date.now()}`,
+      name: 'SIP Dialer Service',
+    });
+    at.addGrant({
+      roomJoin: false,
+      admin: true
+    });
+    const apiToken = await at.toJwt();
+
+    const response = await fetch(`${restUrl}/twirp/livekit.SIP/CreateSIPParticipant`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        sipTrunkId: sipTrunkId,
+        sipCallTo: phone,
+        roomName: roomName,
+        participantIdentity: `lead_${phone.replace('+', '')}`,
+        participantName: 'Lead Recipient'
+      })
+    });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      throw new Error(`LiveKit REST API error (${response.status}): ${errText}`);
+    }
+
+    const data = await response.json();
+    console.log(`[LiveKit Outbound SIP] Successfully dialed ${phone} in room ${roomName}. ID: ${data.sipCallId || 'N/A'}`);
+    return { success: true, sandbox: false, call_sid: data.sipCallId || null };
   } catch (err) {
-    console.error("[LiveKit Outbound SIP Error] Failed to place SIP call:", err);
+    console.error("[LiveKit Outbound SIP Error] Failed to place SIP call via REST:", err);
     throw err;
   }
 }
