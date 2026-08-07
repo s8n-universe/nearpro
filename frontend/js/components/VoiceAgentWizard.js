@@ -12,7 +12,8 @@ let wizardState = {
     voiceId: 'nova',
     campaignGoal: 'REPUTATION_AND_REVENUE',
     testPhone: '',
-    calling: false
+    calling: false,
+    knowledgeDocumentId: ''
 };
 
 // Auto-populate defaults from profile if available
@@ -26,6 +27,14 @@ function initWizardState() {
     }
     if (!wizardState.testPhone) {
         wizardState.testPhone = '+91';
+    }
+    // Background fetch user documents if not already loaded
+    if (State.user && !window._userDocuments) {
+        window._userDocuments = [];
+        Api.getDocuments(State.user.id).then(docs => {
+            window._userDocuments = docs;
+            refreshWizardView();
+        }).catch(err => console.warn("Failed to retrieve documents for wizard:", err));
     }
 }
 
@@ -117,6 +126,21 @@ function renderStepContent() {
                             Auto-Scrape
                         </button>
                     </div>
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 11px; font-family: var(--font-mono); color: #94a3b8; text-transform: uppercase; margin-bottom: 6px; font-weight: 600;">Company Knowledge Base Document</label>
+                    <select id="wizKnowledgeDocumentId" style="width: 100%; padding: 12px 14px; background: rgba(0, 0, 0, 0.3); border: 1.5px solid #1e293b; border-radius: 8px; color: #fff; font-size: 14px; outline: none;">
+                        <option value="">-- No document attached (Default behavior) --</option>
+                        ${(window._userDocuments || []).map(doc => `
+                            <option value="${doc.id}" ${wizardState.knowledgeDocumentId === doc.id ? 'selected' : ''}>
+                                📄 ${doc.name} (${(doc.file_size / 1024).toFixed(1)} KB)
+                            </option>
+                        `).join('')}
+                    </select>
+                    <p style="margin: 6px 0 0 0; color: #64748b; font-size: 12px; line-height: 1.4;">
+                        💡 Upload PDF brochures, product specs, or FAQs in the <a href="#/dashboard/documents" style="color: #ef4444; text-decoration: none; font-weight: 600;">Documents Library</a> to feed them directly into your agent's brain.
+                    </p>
                 </div>
 
                 ${wizardState.scraping ? `
@@ -241,6 +265,13 @@ export function bindVoiceAgentWizardEvents(onFinishCallback) {
     if (websiteUrlInput) {
         websiteUrlInput.addEventListener('input', () => {
             wizardState.websiteUrl = websiteUrlInput.value.trim();
+        });
+    }
+
+    const docSelect = document.getElementById('wizKnowledgeDocumentId');
+    if (docSelect) {
+        docSelect.addEventListener('change', () => {
+            wizardState.knowledgeDocumentId = docSelect.value;
         });
     }
 
@@ -384,6 +415,7 @@ export function bindVoiceAgentWizardEvents(onFinishCallback) {
                         "busy": "I can schedule a callback at a more convenient time."
                     },
                     company_context: `Representing ${wizardState.businessName} offering ${wizardState.servicePitch}. URL: ${wizardState.websiteUrl}`,
+                    knowledge_document_id: wizardState.knowledgeDocumentId || null,
                     is_default: true
                 };
 

@@ -112,6 +112,42 @@ serve(async (req) => {
       // Generate LiveKit token & session room
       const session = await createCallSession(user.id);
 
+      // Fetch user's voice agent configuration (default or specified by agent_config_id)
+      let agentConfig = null;
+      let knowledgeBaseText = "";
+
+      try {
+        const configQuery = supabase
+          .from('voice_agent_configs')
+          .select(`
+            *,
+            documents:knowledge_document_id (
+              id,
+              name,
+              content_json
+            )
+          `);
+
+        if (body.agent_config_id) {
+          configQuery.eq('id', body.agent_config_id);
+        } else {
+          configQuery.eq('user_id', user.id).eq('is_default', true);
+        }
+
+        const { data: configs, error: configError } = await configQuery;
+        if (!configError && configs && configs.length > 0) {
+          agentConfig = configs[0];
+          if (agentConfig.documents) {
+            const doc = agentConfig.documents;
+            if (doc.content_json && typeof doc.content_json === 'object') {
+              knowledgeBaseText = doc.content_json.text || doc.content_json.content || JSON.stringify(doc.content_json);
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Orchestrator: failed to fetch agent config", err);
+      }
+
       // Generate System Prompt
       const params: CallParams = {
         leadName: lead_name,
@@ -120,11 +156,12 @@ serve(async (req) => {
         leadCategory: lead_category,
         leadRating: lead_rating,
         leadReviews: lead_reviews,
-        callerCompany: caller_company,
-        callerService: caller_service,
-        callGoal: call_goal,
-        voiceName: voice_name,
-        language: language as 'hinglish' | 'english'
+        callerCompany: agentConfig?.company_context || caller_company,
+        callerService: agentConfig?.services_offered ? (typeof agentConfig.services_offered === 'string' ? agentConfig.services_offered : JSON.stringify(agentConfig.services_offered)) : caller_service,
+        callGoal: agentConfig?.name || call_goal,
+        voiceName: agentConfig?.voice_id || voice_name,
+        language: (agentConfig?.language || language) as 'hinglish' | 'english',
+        knowledgeBase: knowledgeBaseText || undefined
       };
 
       const systemPrompt = AGENT_SYSTEM_PROMPT(params);

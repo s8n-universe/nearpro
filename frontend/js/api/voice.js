@@ -43,6 +43,7 @@ export const VoiceApi = {
                         max_call_duration_s: config.max_call_duration_s || 180,
                         company_context: config.company_context || '',
                         pricing_info: config.pricing_info || '',
+                        knowledge_document_id: config.knowledge_document_id || null,
                         is_default: config.is_default || false
                     }])
                     .select()

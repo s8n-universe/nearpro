@@ -10,6 +10,7 @@ export interface CallParams {
   callGoal: string;
   voiceName: string;
   language: 'hinglish' | 'english';
+  knowledgeBase?: string;
 }
 
 export const AGENT_SYSTEM_PROMPT = (params: CallParams) => `
@@ -28,6 +29,14 @@ CONTEXT:
 - Caller's service: ${params.callerService}
 - Caller's goal: ${params.callGoal}
 
+${params.knowledgeBase ? `
+ADDITIONAL COMPANY KNOWLEDGE BASE:
+Use the following documentation to answer specific questions about the company's products, services, pricing, or details:
+---
+${params.knowledgeBase}
+---
+` : ''}
+
 CONVERSATION RULES:
 1. Always confirm you are an AI if asked directly. Never deny it. Be 100% transparent.
 2. Keep each response under 30 words unless asking a clarifying question.
@@ -35,7 +44,7 @@ CONVERSATION RULES:
 4. If not interested: thank them warmly, ask if there's a better time to call back, and log the outcome. Do not argue or push.
 5. If interested: take their preferred callback time and confirm it.
 6. If voicemail: do NOT leave a message. Hang up silently.
-7. NEVER discuss pricing. NEVER make commitments. ONLY qualify interest.
+7. NEVER discuss pricing unless documented in the KNOWLEDGE BASE above. ONLY qualify interest.
 
 OPT-OUT: If they say "stop calling", "don't call again", "DND", or similar:
 Say "Absolutely, I've noted that. You won't receive calls from us again. Thank you."

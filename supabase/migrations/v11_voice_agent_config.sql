@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS public.voice_agent_configs (
     system_prompt       TEXT,
     temperature         NUMERIC(3,2) DEFAULT 0.7,
     
+    knowledge_document_id UUID REFERENCES public.documents(id) ON DELETE SET NULL,
     is_default          BOOLEAN DEFAULT FALSE,
     created_at          TIMESTAMPTZ DEFAULT NOW(),
     updated_at          TIMESTAMPTZ DEFAULT NOW()
