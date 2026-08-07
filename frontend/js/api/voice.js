@@ -26,26 +26,31 @@ export const VoiceApi = {
         if (!State.user) throw new Error("User must be logged in to configure voice agents");
         return safeApiCall(
             async () => {
+                const payload = {
+                    user_id: State.user.id,
+                    name: config.name || 'Default Agent',
+                    voice_id: config.voice_id || 'alloy',
+                    voice_provider: config.voice_provider || 'openai',
+                    language: config.language || 'en-IN',
+                    speaking_rate: config.speaking_rate || 1.0,
+                    agent_persona: config.agent_persona || 'professional',
+                    opening_script: config.opening_script || 'Hi {{name}}, I am Priya calling from S8N Services...',
+                    qualification_questions: config.qualification_questions || [],
+                    objection_handling: config.objection_handling || {},
+                    max_call_duration_s: config.max_call_duration_s || 180,
+                    company_context: config.company_context || '',
+                    pricing_info: config.pricing_info || '',
+                    knowledge_document_id: config.knowledge_document_id || null,
+                    is_default: config.is_default || false
+                };
+
+                if (config.id) {
+                    payload.id = config.id;
+                }
+
                 const { data, error } = await supabase
                     .from('voice_agent_configs')
-                    .upsert([{
-                        id: config.id || undefined,
-                        user_id: State.user.id,
-                        name: config.name || 'Default Agent',
-                        voice_id: config.voice_id || 'alloy',
-                        voice_provider: config.voice_provider || 'openai',
-                        language: config.language || 'en-IN',
-                        speaking_rate: config.speaking_rate || 1.0,
-                        agent_persona: config.agent_persona || 'professional',
-                        opening_script: config.opening_script || 'Hi {{name}}, I am Priya calling from S8N Services...',
-                        qualification_questions: config.qualification_questions || [],
-                        objection_handling: config.objection_handling || {},
-                        max_call_duration_s: config.max_call_duration_s || 180,
-                        company_context: config.company_context || '',
-                        pricing_info: config.pricing_info || '',
-                        knowledge_document_id: config.knowledge_document_id || null,
-                        is_default: config.is_default || false
-                    }])
+                    .upsert([payload])
                     .select()
                     .single();
                 if (error) throw error;
