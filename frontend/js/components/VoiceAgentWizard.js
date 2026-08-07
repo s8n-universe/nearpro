@@ -10,6 +10,7 @@ let wizardState = {
     servicePitch: 'Website Design & GMB Optimization',
     websiteUrl: '',
     scraping: false,
+    lastFetchedResult: null,
     voiceId: 'nova',
     campaignGoal: 'REPUTATION_AND_REVENUE',
     testPhone: '',
@@ -27,7 +28,21 @@ function initWizardState() {
         if (State.profile.phone && !wizardState.testPhone) {
             wizardState.testPhone = State.profile.phone;
         }
+    } else if (State.user) {
+        Api.supabase.from('profiles').select('*').eq('id', State.user.id).single()
+            .then(({ data }) => {
+                if (data) {
+                    State.profile = data;
+                    wizardState.businessName = data.company_name || '';
+                    wizardState.websiteUrl = data.website || '';
+                    if (data.phone && !wizardState.testPhone) {
+                        wizardState.testPhone = data.phone;
+                    }
+                    refreshWizardView();
+                }
+            }).catch(err => console.warn("Failed background user profile load:", err));
     }
+
     if (!wizardState.testPhone) {
         wizardState.testPhone = '+91';
     }
@@ -142,6 +157,18 @@ function renderStepContent() {
                             </option>
                         `).join('')}
                     </select>
+                    
+                    <!-- Direct PDF Upload right in the wizard -->
+                    <div style="margin-top: 8px;">
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <input type="file" id="wizPdfUploadInput" accept=".pdf" style="display: none;">
+                            <button type="button" id="wizPdfUploadBtn" class="brand-btn" style="background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; padding: 6px 12px; font-size: 11.5px; font-weight: 600; cursor: pointer; border-radius: 6px; display: flex; align-items: center; gap: 6px;">
+                                📁 Upload PDF brochure
+                            </button>
+                            <span id="wizPdfUploadStatus" style="font-size: 11px; color: #64748b;">No file selected</span>
+                        </div>
+                    </div>
+
                     <p style="margin: 4px 0 0 0; color: #64748b; font-size: 11.5px; line-height: 1.4;">
                         💡 Upload PDF brochures, product specs, or FAQs in the <a href="#/dashboard/documents" style="color: #ef4444; text-decoration: none; font-weight: 600;">Documents Library</a> to feed them directly into your agent's brain.
                     </p>
@@ -151,6 +178,19 @@ function renderStepContent() {
                     <div style="background: rgba(2, 132, 199, 0.05); border: 1px dashed rgba(2, 132, 199, 0.25); padding: 10px 12px; border-radius: 6px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: #0284c7;">
                         <div style="width: 14px; height: 14px; border: 2px solid #0284c7; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
                         AI Assistant reading website context and generating customized system prompts...
+                    </div>
+                ` : ''}
+
+                ${wizardState.lastFetchedResult ? `
+                    <div id="wizFetchResultAlert" style="background: rgba(34, 197, 94, 0.05); border: 1px solid rgba(34, 197, 94, 0.2); padding: 12px; border-radius: 6px; display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #16a34a;">
+                        <div style="font-weight: 700; display: flex; align-items: center; gap: 4px;">
+                            ✨ Successfully Fetched Website Context!
+                        </div>
+                        <div style="color: #475569; font-size: 11px; line-height: 1.4; margin-top: 2px;">
+                            • <strong>Business Name:</strong> ${wizardState.lastFetchedResult.businessName}<br>
+                            • <strong>Identified Pitch:</strong> ${wizardState.lastFetchedResult.servicePitch}
+                            ${wizardState.lastFetchedResult.gaps && wizardState.lastFetchedResult.gaps.length > 0 ? `<br>• <strong>Gaps:</strong> ${wizardState.lastFetchedResult.gaps.join(', ')}` : ''}
+                        </div>
                     </div>
                 ` : ''}
             </div>
@@ -292,6 +332,53 @@ export function bindVoiceAgentWizardEvents(onFinishCallback) {
         });
     }
 
+    // PDF Upload triggers inside the wizard
+    const pdfInput = document.getElementById('wizPdfUploadInput');
+    const pdfBtn = document.getElementById('wizPdfUploadBtn');
+    const pdfStatus = document.getElementById('wizPdfUploadStatus');
+
+    if (pdfBtn && pdfInput) {
+        pdfBtn.addEventListener('click', () => pdfInput.click());
+    }
+
+    if (pdfInput) {
+        pdfInput.addEventListener('change', async () => {
+            const file = pdfInput.files[0];
+            if (!file) return;
+
+            if (file.type !== 'application/pdf' && !file.name.endsWith('.pdf')) {
+                alert("Please select a PDF document only.");
+                return;
+            }
+
+            pdfBtn.disabled = true;
+            pdfBtn.innerHTML = '<div style="width: 10px; height: 10px; border: 1.5px solid #334155; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block;"></div> Uploading...';
+            if (pdfStatus) pdfStatus.innerText = `Uploading "${file.name}"...`;
+
+            try {
+                const doc = await Api.uploadDocument(file);
+                if (doc && doc.id) {
+                    if (!window._userDocuments) {
+                        window._userDocuments = [];
+                    }
+                    window._userDocuments.push(doc);
+                    wizardState.knowledgeDocumentId = doc.id;
+                    refreshWizardView();
+                    showToast("PDF brochure uploaded and attached successfully!", "success");
+                }
+            } catch (err) {
+                console.error("PDF upload failed", err);
+                if (pdfStatus) {
+                    pdfStatus.innerText = "Upload failed. Try again.";
+                    pdfStatus.style.color = "#ef4444";
+                }
+            } finally {
+                pdfBtn.disabled = false;
+                pdfBtn.innerHTML = '📁 Upload PDF brochure';
+            }
+        });
+    }
+
     // Scrape URL button click handler
     const scrapeBtn = document.getElementById('wizScrapeBtn');
     if (scrapeBtn) {
@@ -303,6 +390,7 @@ export function bindVoiceAgentWizardEvents(onFinishCallback) {
             }
 
             wizardState.scraping = true;
+            wizardState.lastFetchedResult = null; // Clear previous results
             refreshWizardView();
 
             // Invoke real website audit scraper edge function
@@ -312,11 +400,26 @@ export function bindVoiceAgentWizardEvents(onFinishCallback) {
                 if (data && !error) {
                     wizardState.scraping = false;
                     const fallbackName = guessBusinessName(url);
-                    wizardState.businessName = wizardState.businessName || data.site_title || fallbackName;
-                    wizardState.servicePitch = data.gaps && data.gaps.length > 0 
+                    const name = data.site_title || fallbackName;
+                    const pitch = data.gaps && data.gaps.length > 0 
                         ? `Fixing website gap: ${data.gaps[0]}` 
                         : "Website Conversion & GMB Reviews Growth";
+
+                    wizardState.businessName = name;
+                    wizardState.servicePitch = pitch;
+                    wizardState.lastFetchedResult = {
+                        businessName: name,
+                        servicePitch: pitch,
+                        gaps: data.gaps || []
+                    };
                     refreshWizardView();
+                    showToast("Website context auto-fetched successfully!", "success");
+
+                    setTimeout(() => {
+                        wizardState.lastFetchedResult = null;
+                        const alertBox = document.getElementById('wizFetchResultAlert');
+                        if (alertBox) alertBox.remove();
+                    }, 8000);
                 } else {
                     // Failover: Direct client-side Gemini call
                     await runGeminiScraperFallback(url);
@@ -516,10 +619,25 @@ async function runGeminiScraperFallback(url) {
                 const cleanJson = text.replace(/```json/g, '').replace(/```/g, '').trim();
                 const parsed = JSON.parse(cleanJson);
                 
-                wizardState.businessName = wizardState.businessName || parsed.business_name || fallbackName;
-                wizardState.servicePitch = parsed.service_pitch || "Website Conversion & Reviews Growth";
+                const name = parsed.business_name || fallbackName;
+                const pitch = parsed.service_pitch || "Website Conversion & Reviews Growth";
+                
+                wizardState.businessName = name;
+                wizardState.servicePitch = pitch;
+                wizardState.lastFetchedResult = {
+                    businessName: name,
+                    servicePitch: pitch,
+                    gaps: ["Direct AI analysis fallback enabled"]
+                };
                 wizardState.scraping = false;
                 refreshWizardView();
+                showToast("Website context auto-fetched successfully!", "success");
+
+                setTimeout(() => {
+                    wizardState.lastFetchedResult = null;
+                    const alertBox = document.getElementById('wizFetchResultAlert');
+                    if (alertBox) alertBox.remove();
+                }, 8000);
                 return;
             }
         }
@@ -528,10 +646,23 @@ async function runGeminiScraperFallback(url) {
     }
 
     // Default Smart Parsing Fallback
+    const fallbackPitch = guessServiceFromDomain(url);
     wizardState.businessName = wizardState.businessName || fallbackName;
-    wizardState.servicePitch = guessServiceFromDomain(url);
+    wizardState.servicePitch = fallbackPitch;
+    wizardState.lastFetchedResult = {
+        businessName: wizardState.businessName,
+        servicePitch: fallbackPitch,
+        gaps: ["Local domain heuristics fallback enabled"]
+    };
     wizardState.scraping = false;
     refreshWizardView();
+    showToast("Website context parsed from URL domain!", "success");
+
+    setTimeout(() => {
+        wizardState.lastFetchedResult = null;
+        const alertBox = document.getElementById('wizFetchResultAlert');
+        if (alertBox) alertBox.remove();
+    }, 8000);
 }
 
 function guessBusinessName(url) {
