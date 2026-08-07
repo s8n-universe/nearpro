@@ -601,11 +601,7 @@ function startInteractiveCallConsole(widget, overlay) {
                 { text: "Wrong number, stop calling me.", next: 3 }
             ]
         },
-        {
-            role: 'User',
-            text: '',
-        },
-        // Path 1: Interested
+        // Path 1: Interested (Index 1)
         {
             role: 'AI',
             text: `Ji, hum aapki website ${wizardState.websiteUrl || 'business profile'} review kar rahe the, aur hume vahan local visibility boost karne ka ek simple deficit mila. Kya hum aapko short PDF audit proposal share kar sakte hain?`,
@@ -614,7 +610,7 @@ function startInteractiveCallConsole(widget, overlay) {
                 { text: "Nahi interest hai, thank you.", next: 2 }
             ]
         },
-        // Path 2: Busy / No interest
+        // Path 2: Busy / No interest (Index 2)
         {
             role: 'AI',
             text: "Main samajh sakti hoon. No problem! Aapka time dene ke liye shukriya. Have a great day!",
@@ -622,7 +618,7 @@ function startInteractiveCallConsole(widget, overlay) {
             end: true,
             outcome: 'NOT_INTERESTED'
         },
-        // Path 3: Wrong number / Opt-out
+        // Path 3: Wrong number / Opt-out (Index 3)
         {
             role: 'AI',
             text: "Apologies! Maine note kar liya hai, hum aapko aage se call nahi karenge. Thank you.",
@@ -630,7 +626,7 @@ function startInteractiveCallConsole(widget, overlay) {
             end: true,
             outcome: 'OPT_OUT'
         },
-        // Path 4: WhatsApp Callback requested
+        // Path 4: WhatsApp Callback requested (Index 4)
         {
             role: 'AI',
             text: `Perfect! Main WhatsApp par complete audit proposal send kar rahi hoon, aur humare senior teammate ko aapse connect karne ke liye follow-up mark kar deti hoon. Thank you so much!`,
