@@ -1,7 +1,12 @@
 import { AccessToken, RoomServiceClient, SipServiceClient } from 'https://esm.sh/livekit-server-sdk@2.0.0'
 
 export async function createCallSession(userId: string) {
-  const url = Deno.env.get('LIVEKIT_API_URL') || '';
+  let url = Deno.env.get('LIVEKIT_API_URL') || '';
+  if (url.startsWith('wss://')) {
+    url = url.replace('wss://', 'https://');
+  } else if (url.startsWith('ws://')) {
+    url = url.replace('ws://', 'http://');
+  }
   const apiKey = Deno.env.get('LIVEKIT_API_KEY') || '';
   const apiSecret = Deno.env.get('LIVEKIT_API_SECRET') || '';
 

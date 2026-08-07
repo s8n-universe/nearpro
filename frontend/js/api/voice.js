@@ -79,8 +79,8 @@ export const VoiceApi = {
                         )
                     `)
                     .eq('initiated_by_user', State.user.id)
-                    .order('initiated_at', { ascending: false }) // Fixed column ordering target
-                    .limit(50); // Pagination guard
+                    .order('initiated_at', { ascending: false })
+                    .limit(50);
                 if (error) throw error;
                 return data || [];
             },
@@ -89,14 +89,12 @@ export const VoiceApi = {
         );
     },
 
-    // 4. Trigger test call (Fixed H5 non-existent Edge Function crash vector)
+    // 4. Trigger test call
     async triggerTestCall(targetPhone) {
-        if (!State.user) throw new Error("Authentication required");
-        
         return safeApiCall(
             async () => {
                 try {
-                    // Try invoking the remote edge function
+                    // Bypass user check check to let guest/sandbox users invoke call
                     const { data, error } = await supabase.functions.invoke('voice-agent-orchestrator', {
                         body: {
                             action: 'test_call',
@@ -106,8 +104,8 @@ export const VoiceApi = {
                     if (error) throw error;
                     return data;
                 } catch (err) {
-                    // Autohealing / Sandboxed Fallback: If edge function 404s/fails,
-                    // intercept gracefully, trigger a beautiful simulated warning toast,
+                    // Autohealing / Sandboxed Fallback: If edge function fails,
+                    // intercept gracefully, trigger a simulated warning toast,
                     // and return a successful sandbox response structure instead of throwing.
                     console.warn("[Voice API Sandbox Autohealing] Falling back to dial simulation:", err);
                     showToast(`[Voice Simulation] Dialing ${targetPhone}... Sneha English Voice TTS trunk online. Qualification flow active.`, 'warning');
