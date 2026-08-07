@@ -58,6 +58,7 @@ import { renderDataEnrichment, bindDataEnrichmentEvents } from './components/Dat
 import { renderPluginMarketplace, bindPluginMarketplaceEvents } from './components/PluginMarketplace.js';
 import { renderIntentSignals, bindIntentSignalsEvents } from './components/IntentSignals.js';
 import { renderVoiceAgentDashboard, bindVoiceAgentDashboardEvents } from './components/VoiceAgentDashboard.js';
+import { UserTour } from './components/UserTour.js';
 import { renderHelpDocs, bindHelpDocsEvents, renderDocsLayout, bindDocsEvents } from './components/HelpDocs.js';
 
 // Main Application shell reference
@@ -2640,6 +2641,28 @@ async function renderDashboardLayout(tab) {
     
     // Refresh all Lucide SVG icons rendered in the content panel
     refreshLucideIcons();
+
+    // Check if an onboarding tour is active for the current tab and trigger it
+    const activeTour = localStorage.getItem('nearpro_active_tour');
+    if (activeTour) {
+        const tourTabMap = {
+            'task_directory': 'directory',
+            'task_save_lead': 'directory',
+            'task_proposal': 'proposals',
+            'task_enrichment_keys': 'enrichment',
+            'task_sequence': 'sequences',
+            'task_audit': 'audit'
+        };
+        
+        if (tourTabMap[activeTour] === tab) {
+            UserTour.start(activeTour);
+        } else {
+            // Cancel/end if they navigated away
+            UserTour.end();
+        }
+    } else {
+        UserTour.end();
+    }
 }
 
 /* --- Startup --- */
@@ -2789,6 +2812,12 @@ async function initApp() {
         if (session) {
             State.user = session.user;
             State.profile = await Api.getProfile(session.user.id);
+            try {
+                const savedLeads = await Api.getSavedLeads();
+                State.saved_lead_ids = (savedLeads || []).map(l => l.professional_id);
+            } catch (err) {
+                console.warn("Failed to preload saved leads:", err);
+            }
             State.auth_modal_open = false;
         }
 
@@ -2797,6 +2826,12 @@ async function initApp() {
             if (session) {
                 State.user = session.user;
                 State.profile = await Api.getProfile(session.user.id);
+                try {
+                    const savedLeads = await Api.getSavedLeads();
+                    State.saved_lead_ids = (savedLeads || []).map(l => l.professional_id);
+                } catch (err) {
+                    console.warn("Failed to preload saved leads:", err);
+                }
                 State.auth_modal_open = false;
 
                 hideOAuthAuthLoader();

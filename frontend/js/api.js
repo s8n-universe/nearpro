@@ -591,6 +591,40 @@ export const Api = {
         return data;
     },
 
+    async updateOnboardingTask(userId, taskId, completed) {
+        const profile = await this.getProfile(userId);
+        let completedTasks = profile.onboarding_tasks_completed || [];
+        if (completed) {
+            if (!completedTasks.includes(taskId)) {
+                completedTasks.push(taskId);
+            }
+        } else {
+            completedTasks = completedTasks.filter(id => id !== taskId);
+        }
+        
+        let updateData = { onboarding_tasks_completed: completedTasks };
+        
+        const allTasks = ['task_directory', 'task_save_lead', 'task_proposal', 'task_enrichment_keys', 'task_sequence', 'task_audit'];
+        const completedAll = allTasks.every(t => completedTasks.includes(t));
+        
+        let creditsAwarded = false;
+        if (completedAll && !profile.onboarding_credits_awarded) {
+            updateData.onboarding_credits_awarded = true;
+            updateData.enrichment_credits = (profile.enrichment_credits || 0) + 30;
+            creditsAwarded = true;
+        }
+        
+        const { data: updatedProfile, error } = await supabase
+            .from('profiles')
+            .update(updateData)
+            .eq('id', userId)
+            .select()
+            .single();
+            
+        if (error) throw error;
+        return { profile: updatedProfile, creditsAwarded };
+    },
+
     async updateProfileTier(userId, tier) {
         const { data, error } = await supabase.from('profiles').update({ 
             tier: tier,

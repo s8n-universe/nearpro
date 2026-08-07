@@ -172,6 +172,13 @@ export function showTrackLeadModal(professionalId, onSavedCallback) {
                 const tier = getUserTier();
                 const limits = TIER_LIMITS[tier] || TIER_LIMITS.free;
 
+                // 1. Check if lead is already tracked in CRM
+                if (State.saved_lead_ids && State.saved_lead_ids.includes(professionalId)) {
+                    errEl.innerText = "This lead is already saved in your pipeline.";
+                    errEl.style.display = 'block';
+                    return;
+                }
+
                 try {
                     let targetListId = null;
 
@@ -182,6 +189,14 @@ export function showTrackLeadModal(professionalId, onSavedCallback) {
                             errEl.style.display = 'block';
                             return;
                         }
+
+                        // 2. Check list limit if creating a new list
+                        if (lists && lists.length >= limits.maxLists) {
+                            errEl.innerText = `You have reached the maximum number of Smart Lists allowed on your plan (${limits.maxLists}). Please upgrade to create more lists.`;
+                            errEl.style.display = 'block';
+                            return;
+                        }
+
                         submitBtn.innerText = "Creating list...";
                         submitBtn.disabled = true;
 
@@ -229,7 +244,11 @@ export function showTrackLeadModal(professionalId, onSavedCallback) {
                     console.error("Failed to track lead: ", err);
                     submitBtn.disabled = false;
                     submitBtn.innerText = isCreatingNew ? 'Create & Save Lead' : 'Save to List';
-                    if (err.message && err.message.includes("unique_dedup")) {
+                    if (err.message && (
+                        err.message.includes("unique_dedup") || 
+                        err.message.includes("unique_user_professional_dedup") || 
+                        err.message.includes("user_id_professional_id")
+                    )) {
                         errEl.innerText = "This lead is already saved in your pipeline.";
                     } else {
                         errEl.innerText = err.message || "Error tracking lead. Please try again.";

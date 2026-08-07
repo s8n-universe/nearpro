@@ -230,3 +230,17 @@ button, input, select, textarea {
         filter: drop-shadow(0 0 20px rgba(255, 160, 0, 0.6)) drop-shadow(0 0 30px rgba(236, 72, 153, 0.45));
     }
 }
+
+/* Onboarding Interactive Tour Animations */
+@keyframes tour-pulse {
+    0% {
+        box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.7), 0 0 0 0px rgba(217, 119, 6, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.7), 0 0 0 10px rgba(217, 119, 6, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.7), 0 0 0 0px rgba(217, 119, 6, 0);
+    }
+}
+

@@ -5,18 +5,31 @@ export function renderPlatformOverviewLayout() {
     const userTier = (State.profile?.subscription_tier || State.profile?.tier || 'free').toLowerCase();
     const userName = State.profile?.full_name || State.user?.email?.split('@')[0] || 'Agency Founder';
 
-    // Onboarding task lists state tracking
-    const taskDirectory = localStorage.getItem('nearpro_task_directory') === 'true';
-    const taskSaveLead = localStorage.getItem('nearpro_task_save_lead') === 'true';
-    const taskProposal = localStorage.getItem('nearpro_task_proposal') === 'true';
-    const taskEnrichmentKeys = localStorage.getItem('nearpro_task_enrichment_keys') === 'true';
-    const taskSequence = localStorage.getItem('nearpro_task_sequence') === 'true';
-    const taskAudit = localStorage.getItem('nearpro_task_audit') === 'true';
+    // Onboarding task lists state tracking (DB-backed or local storage fallback)
+    const completedTasks = State.user && State.profile?.onboarding_tasks_completed
+        ? State.profile.onboarding_tasks_completed
+        : [];
+        
+    const isCompleted = (taskId) => {
+        if (State.user) {
+            return completedTasks.includes(taskId);
+        }
+        // Guest fallback
+        const keyMap = {
+            'task_directory': 'nearpro_task_directory',
+            'task_save_lead': 'nearpro_task_save_lead',
+            'task_proposal': 'nearpro_task_proposal',
+            'task_enrichment_keys': 'nearpro_task_enrichment_keys',
+            'task_sequence': 'nearpro_task_sequence',
+            'task_audit': 'nearpro_task_audit'
+        };
+        return localStorage.getItem(keyMap[taskId]) === 'true';
+    };
 
     const tasks = [
         {
             id: 'task_directory',
-            completed: taskDirectory,
+            completed: isCompleted('task_directory'),
             title: 'Search local leads in the business directory',
             desc: 'Find verified local businesses with review counts or unoptimized websites.',
             btnText: 'Go to directory',
@@ -24,7 +37,7 @@ export function renderPlatformOverviewLayout() {
         },
         {
             id: 'task_save_lead',
-            completed: taskSaveLead,
+            completed: isCompleted('task_save_lead'),
             title: 'Save a lead to start building your pipeline',
             desc: 'Add contacts from searches to your workspace lead database.',
             btnText: 'Save a prospect',
@@ -32,7 +45,7 @@ export function renderPlatformOverviewLayout() {
         },
         {
             id: 'task_proposal',
-            completed: taskProposal,
+            completed: isCompleted('task_proposal'),
             title: 'Generate a 1-click PDF proposal for a prospect',
             desc: 'Create personalized audits featuring revenue loss estimates and competitor comparison grids.',
             btnText: 'Create proposal',
@@ -40,7 +53,7 @@ export function renderPlatformOverviewLayout() {
         },
         {
             id: 'task_enrichment_keys',
-            completed: taskEnrichmentKeys,
+            completed: isCompleted('task_enrichment_keys'),
             title: 'Configure your personalized API keys to bypass limits',
             desc: 'Add personal credential keys (Hunter.io or Apollo) to run waterfall enrichment logs.',
             btnText: 'Configure keys',
@@ -48,7 +61,7 @@ export function renderPlatformOverviewLayout() {
         },
         {
             id: 'task_sequence',
-            completed: taskSequence,
+            completed: isCompleted('task_sequence'),
             title: 'Launch an automated outreach sequence campaign',
             desc: 'Set up multi-channel email, WhatsApp, or twilio drip sequences.',
             btnText: 'Create sequence',
@@ -56,7 +69,7 @@ export function renderPlatformOverviewLayout() {
         },
         {
             id: 'task_audit',
-            completed: taskAudit,
+            completed: isCompleted('task_audit'),
             title: 'Run a technical SEO & website health check audit',
             desc: 'Perform technical lighthouse, mobile speed, and security check scans.',
             btnText: 'Run audit',
@@ -73,7 +86,7 @@ export function renderPlatformOverviewLayout() {
             <!-- HEADER SECTION -->
             <div>
                 <h1 style="font-size: 24px; font-weight: 800; color: #0f172a; margin: 0 0 6px 0; font-family: var(--font-heading);">
-                    Get started with NearPro
+                    Get started with NearPro, ${userName}
                 </h1>
                 <p style="color: #475569; font-size: 13.5px; margin: 0; line-height: 1.5;">
                     Complete these tasks in your first 14 days to earn up to 75 credits and start reaching prospects and booking meetings.
@@ -97,7 +110,7 @@ export function renderPlatformOverviewLayout() {
                 <!-- CHECKLIST GRID -->
                 <div style="display: flex; flex-direction: column; border-top: 1px solid #f1f5f9;">
                     ${tasks.map(t => `
-                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 0; border-bottom: 1.5px solid #f1f5f9;">
+                        <div class="onboarding-row" data-hash="${t.hash}" data-task-id="${t.id}" style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 12px; border-bottom: 1.5px solid #f1f5f9; cursor: pointer; border-radius: 8px; transition: all 0.2s ease; margin: 2px 0;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
                             <div style="display: flex; align-items: flex-start; gap: 12px; flex: 1;">
                                 <!-- Custom Styled Checkbox -->
                                 <div class="onboarding-checkbox" data-id="${t.id}" style="width: 20px; height: 20px; border-radius: 4px; border: 1.5px solid ${t.completed ? '#10b981' : '#cbd5e1'}; background: ${t.completed ? '#e8f5e9' : '#ffffff'}; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; margin-top: 2px;">
@@ -186,52 +199,96 @@ export function bindPlatformOverviewEvents() {
     localStorage.setItem('nearpro_onboarding_completed', 'true');
     if (window.refreshLucideIcons) window.refreshLucideIcons();
 
-    // Bind onboarding buttons to automatically check tasks when clicked
-    document.querySelectorAll('.onboarding-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const taskId = btn.getAttribute('data-task-id');
-            const keyMap = {
-                'task_directory': 'nearpro_task_directory',
-                'task_save_lead': 'nearpro_task_save_lead',
-                'task_proposal': 'nearpro_task_proposal',
-                'task_enrichment_keys': 'nearpro_task_enrichment_keys',
-                'task_sequence': 'nearpro_task_sequence',
-                'task_audit': 'nearpro_task_audit'
-            };
-            
-            const storageKey = keyMap[taskId];
-            if (storageKey) {
-                localStorage.setItem(storageKey, 'true');
+    // Bind click anywhere on the row to navigate to the target hash and trigger the tour
+    document.querySelectorAll('.onboarding-row').forEach(row => {
+        row.addEventListener('click', (e) => {
+            // If the user clicked the checkbox, don't trigger row navigation
+            if (e.target.closest('.onboarding-checkbox')) {
+                return;
             }
+            
+            const hash = row.getAttribute('data-hash');
+            const taskId = row.getAttribute('data-task-id');
+            
+            // Set active tour key so that target page can auto-run it
+            localStorage.setItem('nearpro_active_tour', taskId);
+            
+            // Navigate to route
+            window.location.hash = hash;
         });
     });
 
-    // Also allow manual toggling of the checkboxes
+    // Bind onboarding buttons to automatically set active tour when clicked
+    document.querySelectorAll('.onboarding-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Avoid double action on row click
+            const taskId = btn.getAttribute('data-task-id');
+            localStorage.setItem('nearpro_active_tour', taskId);
+        });
+    });
+
+    // Allow toggling of the checkboxes manually
     document.querySelectorAll('.onboarding-checkbox').forEach(box => {
-        box.addEventListener('click', () => {
+        box.addEventListener('click', async (e) => {
+            e.stopPropagation(); // Stop propagation to row click handler
             const taskId = box.getAttribute('data-id');
-            const keyMap = {
-                'task_directory': 'nearpro_task_directory',
-                'task_save_lead': 'nearpro_task_save_lead',
-                'task_proposal': 'nearpro_task_proposal',
-                'task_enrichment_keys': 'nearpro_task_enrichment_keys',
-                'task_sequence': 'nearpro_task_sequence',
-                'task_audit': 'nearpro_task_audit'
-            };
             
-            const storageKey = keyMap[taskId];
-            if (storageKey) {
-                const current = localStorage.getItem(storageKey) === 'true';
-                localStorage.setItem(storageKey, (!current).toString());
-                
-                // Refresh view dynamically
-                const content = document.getElementById('dashboardContent');
-                if (content) {
-                    content.innerHTML = renderPlatformOverviewLayout();
-                    bindPlatformOverviewEvents();
+            if (State.user) {
+                // DB-backed toggle
+                try {
+                    const completedTasks = State.profile?.onboarding_tasks_completed || [];
+                    const isCompleted = completedTasks.includes(taskId);
+                    const { Api } = await import('../api.js');
+                    const result = await Api.updateOnboardingTask(State.user.id, taskId, !isCompleted);
+                    
+                    State.profile = result.profile;
+                    State.notify();
+                    
+                    if (result.creditsAwarded) {
+                        alert("🎉 Congratulations! You have completed all onboarding steps and earned 30 enrichment credits!");
+                    }
+                    
+                    // Refresh view dynamically
+                    const content = document.getElementById('dashboardContent');
+                    if (content) {
+                        content.innerHTML = renderPlatformOverviewLayout();
+                        bindPlatformOverviewEvents();
+                    }
+                } catch (err) {
+                    console.error("Failed to toggle onboarding task:", err);
+                    alert("Failed to update task completion.");
+                }
+            } else {
+                // Guest local storage fallback
+                const keyMap = {
+                    'task_directory': 'nearpro_task_directory',
+                    'task_save_lead': 'nearpro_task_save_lead',
+                    'task_proposal': 'nearpro_task_proposal',
+                    'task_enrichment_keys': 'nearpro_task_enrichment_keys',
+                    'task_sequence': 'nearpro_task_sequence',
+                    'task_audit': 'nearpro_task_audit'
+                };
+                const storageKey = keyMap[taskId];
+                if (storageKey) {
+                    const current = localStorage.getItem(storageKey) === 'true';
+                    localStorage.setItem(storageKey, (!current).toString());
+                    
+                    // Check if all are completed in guest mode
+                    const allKeys = Object.values(keyMap);
+                    const completedAll = allKeys.every(k => localStorage.getItem(k) === 'true');
+                    if (completedAll && !localStorage.getItem('nearpro_guest_credits_notified')) {
+                        alert("🎉 You checked all steps! Sign up / Log in to claim your 30 onboarding credits.");
+                        localStorage.setItem('nearpro_guest_credits_notified', 'true');
+                    }
+                    
+                    // Refresh view dynamically
+                    const content = document.getElementById('dashboardContent');
+                    if (content) {
+                        content.innerHTML = renderPlatformOverviewLayout();
+                        bindPlatformOverviewEvents();
+                    }
                 }
             }
         });
     });
 }
-
